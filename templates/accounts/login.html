@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/accounts/login.css">
+{% endblock %}
+
+{% block content %}
+<div class="login-page">
+    <div class="login-form-container card">
+        <div class="login-header">
+            <h1>Вход в систему</h1>
+            <p>Для доступа к функциям системы Billify необходимо войти</p>
+        </div>
+        
+        {% if form.errors %}
+            <div class="alert alert-error">
+                Неверное имя пользователя или пароль. Пожалуйста, попробуйте снова.
+            </div>
+        {% endif %}
+        
+        <form method="post" class="login-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_username">Имя пользователя</label>
+                <input type="text" name="username" id="id_username" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="id_password">Пароль</label>
+                <input type="password" name="password" id="id_password" required>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn">Войти</button>
+            </div>
+            
+            <input type="hidden" name="next" value="{{ next }}">
+        </form>
+        
+        <div class="login-footer">
+            <p>Нет учетной записи? Обратитесь к администратору системы.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/accounts/login.js"></script>
+{% endblock %} 

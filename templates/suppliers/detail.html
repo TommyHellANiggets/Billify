@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/suppliers/detail.css">
+{% endblock %}
+
+{% block content %}
+<div class="supplier-detail-page">
+    <div class="page-header">
+        <div class="breadcrumbs">
+            <a href="{% url 'suppliers:list' %}">Поставщики</a> &gt; 
+            <span>{{ supplier.name }}</span>
+        </div>
+        
+        <div class="d-flex justify-content-between align-items-center">
+            <h1>{{ supplier.name }}</h1>
+            <div class="action-buttons">
+                <a href="{% url 'suppliers:edit' supplier_id=supplier.id %}" class="btn">Редактировать</a>
+                <a href="{% url 'suppliers:delete' supplier_id=supplier.id %}" class="btn btn-secondary">Удалить</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="supplier-info-section card">
+        <div class="section-header">
+            <h2>Основная информация</h2>
+        </div>
+        
+        <div class="supplier-info-grid">
+            <div class="info-item">
+                <div class="info-label">Тип поставщика</div>
+                <div class="info-value">{{ supplier.get_type_display }}</div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-label">Название организации / ФИО ИП</div>
+                <div class="info-value">{{ supplier.name }}</div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-label">Email</div>
+                <div class="info-value">{{ supplier.email|default:"Не указано" }}</div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-label">Телефон</div>
+                <div class="info-value">{{ supplier.phone|default:"Не указано" }}</div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-label">Юридический адрес</div>
+                <div class="info-value">{{ supplier.address|default:"Не указано" }}</div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-label">Почтовый адрес</div>
+                <div class="info-value">{{ supplier.postal_address|default:"Не указано" }}</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="supplier-info-section card">
+        <div class="section-header">
+            <h2>Реквизиты</h2>
+        </div>
+        
+        <div class="supplier-info-grid">
+            <div class="info-item">
+                <div class="info-label">ИНН</div>
+                <div class="info-value">{{ supplier.inn|default:"Не указано" }}</div>
+            </div>
+            
+            {% if supplier.type == 'business' %}
+            <div class="info-item">
+                <div class="info-label">КПП</div>
+                <div class="info-value">{{ supplier.kpp|default:"Не указано" }}</div>
+            </div>
+            {% endif %}
+            
+            <div class="info-item">
+                <div class="info-label">ОГРН / ОГРНИП</div>
+                <div class="info-value">{{ supplier.ogrn|default:"Не указано" }}</div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-label">ОКПО</div>
+                <div class="info-value">{{ supplier.okpo|default:"Не указано" }}</div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-label">Название банка</div>
+                <div class="info-value">{{ supplier.bank_name|default:"Не указано" }}</div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-label">Расчетный счет</div>
+                <div class="info-value">{{ supplier.bank_account|default:"Не указано" }}</div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-label">Корреспондентский счет</div>
+                <div class="info-value">{{ supplier.bank_corr_account|default:"Не указано" }}</div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-label">БИК</div>
+                <div class="info-value">{{ supplier.bank_bik|default:"Не указано" }}</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="supplier-info-section card">
+        <div class="section-header">
+            <h2>Контактная информация</h2>
+        </div>
+        
+        <div class="supplier-info-grid">
+            <div class="info-item">
+                <div class="info-label">Контактное лицо</div>
+                <div class="info-value">{{ supplier.contact_person|default:"Не указано" }}</div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-label">Должность</div>
+                <div class="info-value">{{ supplier.contact_position|default:"Не указано" }}</div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-label">Телефон контактного лица</div>
+                <div class="info-value">{{ supplier.contact_phone|default:"Не указано" }}</div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-label">Email контактного лица</div>
+                <div class="info-value">{{ supplier.contact_email|default:"Не указано" }}</div>
+            </div>
+        </div>
+    </div>
+    
+    {% if supplier.comment %}
+    <div class="supplier-info-section card">
+        <div class="section-header">
+            <h2>Комментарий</h2>
+        </div>
+        
+        <div class="comment-content">
+            {{ supplier.comment|linebreaks }}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/suppliers/detail.js"></script>
+{% endblock %} 

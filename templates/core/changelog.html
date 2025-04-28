@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/core/changelog.css">
+{% endblock %}
+
+{% block content %}
+<section class="changelog-header">
+    <div class="container">
+        <h1>Журнал изменений Billify</h1>
+        <p class="changelog-subtitle">История обновлений и улучшений нашей системы</p>
+    </div>
+</section>
+
+<section class="changelog-content">
+    <div class="container">
+        <div class="timeline">
+            <div class="timeline-line"></div>
+            
+            <!-- Версия 1.2.0 -->
+            <div class="timeline-item">
+                <div class="timeline-date">
+                    <div class="date">15 мая 2023</div>
+                    <div class="version">v1.2.0</div>
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-point"></div>
+                    <h2>Улучшения интерфейса</h2>
+                    <div class="timeline-content">
+                        <p>В этом обновлении мы значительно улучшили интерфейс приложения, сделав его более современным и удобным в использовании.</p>
+                        <h3>Что нового:</h3>
+                        <ul class="changelog-list">
+                            <li>Обновлен дизайн хедера с полупрозрачным фоном и закругленными краями</li>
+                            <li>Добавлен новый раздел ченджлога для отслеживания обновлений</li>
+                            <li>Улучшена навигация для более удобного перемещения по системе</li>
+                            <li>Обновлен дизайн карточек и блоков на главной странице</li>
+                            <li>Добавлены микроанимации для улучшения пользовательского опыта</li>
+                        </ul>
+                        <div class="changelog-screenshot">
+                            <img src="{% static 'img/changelog/v1.2.0.jpg' %}" alt="Скриншот обновления v1.2.0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Версия 1.1.5 -->
+            <div class="timeline-item">
+                <div class="timeline-date">
+                    <div class="date">2 мая 2023</div>
+                    <div class="version">v1.1.5</div>
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-point"></div>
+                    <h2>Новые функции</h2>
+                    <div class="timeline-content">
+                        <p>Мы расширили функциональность системы, добавив несколько важных возможностей для улучшения работы с финансовыми документами.</p>
+                        <h3>Что нового:</h3>
+                        <ul class="changelog-list">
+                            <li>Добавлена возможность создания повторяющихся счетов</li>
+                            <li>Интеграция с платежными системами для быстрого приема платежей</li>
+                            <li>Добавлены новые шаблоны для счетов и актов</li>
+                            <li>Улучшен процесс создания и редактирования клиентов</li>
+                            <li>Добавлена возможность экспорта счетов в различных форматах</li>
+                        </ul>
+                        <div class="changelog-screenshot">
+                            <img src="{% static 'img/changelog/v1.1.5.jpg' %}" alt="Скриншот обновления v1.1.5">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Версия 1.1.0 -->
+            <div class="timeline-item">
+                <div class="timeline-date">
+                    <div class="date">15 апреля 2023</div>
+                    <div class="version">v1.1.0</div>
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-point"></div>
+                    <h2>Производительность и безопасность</h2>
+                    <div class="timeline-content">
+                        <p>Это обновление фокусируется на улучшении производительности системы и повышении уровня безопасности данных.</p>
+                        <h3>Что нового:</h3>
+                        <ul class="changelog-list">
+                            <li>Значительно улучшена скорость работы системы</li>
+                            <li>Внедрена двухфакторная аутентификация для повышения безопасности</li>
+                            <li>Исправлены мелкие ошибки и улучшена стабильность работы</li>
+                            <li>Оптимизирована работа с базой данных</li>
+                            <li>Улучшен механизм резервного копирования данных</li>
+                        </ul>
+                        <div class="changelog-screenshot">
+                            <img src="{% static 'img/changelog/v1.1.0.jpg' %}" alt="Скриншот обновления v1.1.0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Версия 1.0.5 -->
+            <div class="timeline-item">
+                <div class="timeline-date">
+                    <div class="date">1 апреля 2023</div>
+                    <div class="version">v1.0.5</div>
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-point"></div>
+                    <h2>Аналитика и отчеты</h2>
+                    <div class="timeline-content">
+                        <p>Мы добавили расширенные возможности для анализа данных и формирования отчетов о деятельности вашего бизнеса.</p>
+                        <h3>Что нового:</h3>
+                        <ul class="changelog-list">
+                            <li>Добавлены интерактивные графики для анализа финансовых показателей</li>
+                            <li>Разработаны новые типы отчетов для более детального анализа</li>
+                            <li>Создан дашборд с ключевыми показателями эффективности</li>
+                            <li>Реализована возможность настройки автоматической отправки отчетов</li>
+                            <li>Добавлен прогноз движения денежных средств</li>
+                        </ul>
+                        <div class="changelog-screenshot">
+                            <img src="{% static 'img/changelog/v1.0.5.jpg' %}" alt="Скриншот обновления v1.0.5">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Версия 1.0.0 -->
+            <div class="timeline-item">
+                <div class="timeline-date">
+                    <div class="date">15 марта 2023</div>
+                    <div class="version">v1.0.0</div>
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-point"></div>
+                    <h2>Запуск Billify</h2>
+                    <div class="timeline-content">
+                        <p>Мы с гордостью представляем первую версию Billify — системы для автоматизации финансового учета и документооборота.</p>
+                        <h3>Основные функции:</h3>
+                        <ul class="changelog-list">
+                            <li>Создание и управление счетами</li>
+                            <li>Ведение базы клиентов</li>
+                            <li>Отслеживание платежей</li>
+                            <li>Формирование отчетов</li>
+                            <li>Базовая аналитика финансовых показателей</li>
+                        </ul>
+                        <div class="changelog-screenshot">
+                            <img src="{% static 'img/changelog/v1.0.0.jpg' %}" alt="Скриншот версии v1.0.0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="subscribe-section">
+    <div class="container">
+        <div class="subscribe-card">
+            <h2>Будьте в курсе всех обновлений</h2>
+            <p>Подпишитесь на нашу рассылку, чтобы первыми узнавать о новых функциях и улучшениях Billify</p>
+            <form class="subscribe-form">
+                <input type="email" placeholder="Ваш email" required>
+                <button type="submit" class="btn btn-primary">Подписаться</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/core/changelog.js"></script>
+{% endblock %} 

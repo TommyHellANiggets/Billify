@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/suppliers/list.css">
+{% endblock %}
+
+{% block content %}
+<div class="suppliers-page">
+    <div class="page-header">
+        <h1>Поставщики</h1>
+        <a href="{% url 'suppliers:create' %}" class="btn btn-primary">Добавить поставщика</a>
+    </div>
+    
+    <div class="suppliers-list card">
+        <div class="filters">
+            <input type="text" id="search-suppliers" class="form-control" placeholder="Поиск по названию, ИНН...">
+        </div>
+        
+        {% if suppliers %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Название</th>
+                    <th>ИНН</th>
+                    <th>Телефон</th>
+                    <th>Email</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for supplier in suppliers %}
+                <tr>
+                    <td>
+                        <a href="{% url 'suppliers:detail' supplier_id=supplier.id %}">{{ supplier.name }}</a>
+                        <div class="supplier-type">{{ supplier.get_type_display }}</div>
+                    </td>
+                    <td>{{ supplier.inn|default:"-" }}</td>
+                    <td>{{ supplier.phone|default:"-" }}</td>
+                    <td>{{ supplier.email|default:"-" }}</td>
+                    <td class="actions">
+                        <a href="{% url 'suppliers:edit' supplier_id=supplier.id %}" class="btn btn-sm">Изменить</a>
+                        <a href="{% url 'suppliers:delete' supplier_id=supplier.id %}" class="btn btn-sm btn-secondary">Удалить</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-message">
+            <div class="empty-icon">📋</div>
+            <p>У вас пока нет поставщиков</p>
+            <a href="{% url 'suppliers:create' %}" class="btn">Добавить первого поставщика</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/suppliers/list.js"></script>
+{% endblock %} 

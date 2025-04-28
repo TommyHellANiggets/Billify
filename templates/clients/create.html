@@ -1,0 +1,244 @@
+{% extends 'base.html' %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/clients/form.css">
+{% endblock %}
+
+{% block content %}
+<div class="client-form-page">
+    <div class="page-header">
+        <div class="breadcrumbs">
+            <a href="{% url 'clients:list' %}">Клиенты</a> &gt; 
+            <span>Новый клиент</span>
+        </div>
+        
+        <h1>Создание клиента</h1>
+    </div>
+    
+    <div class="wizard-container card">
+        <div class="wizard-steps">
+            <div class="step active" data-step="1">
+                <div class="step-number">1</div>
+                <div class="step-label">Основная информация</div>
+            </div>
+            <div class="step" data-step="2">
+                <div class="step-number">2</div>
+                <div class="step-label">Реквизиты</div>
+            </div>
+            <div class="step" data-step="3">
+                <div class="step-number">3</div>
+                <div class="step-label">Завершение</div>
+            </div>
+        </div>
+        
+        <form method="post" class="client-form" id="client-form">
+            {% csrf_token %}
+            
+            <!-- Шаг 1: Основная информация -->
+            <div class="wizard-panel active" data-panel="1">
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label>Тип клиента</label>
+                        <div class="client-type-switch">
+                            <input type="hidden" id="type" name="type" value="individual">
+                            <div class="switch-container">
+                                <div class="switch-option active" data-value="individual">Физическое лицо</div>
+                                <div class="switch-option" data-value="business">Юридическое лицо</div>
+                                <div class="switch-slider"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="name">Имя / Название организации</label>
+                        <input type="text" id="name" name="name" class="form-control" required>
+                    </div>
+                
+                    <div class="form-group">
+                        <label for="phone">Телефон</label>
+                        <input type="text" id="phone" name="phone" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" class="form-control">
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="address">Адрес</label>
+                        <textarea id="address" name="address" class="form-control" rows="2"></textarea>
+                    </div>
+                </div>
+                
+                <div class="wizard-actions">
+                    <a href="{% url 'clients:list' %}" class="btn btn-light">Отмена</a>
+                    <button type="button" class="btn btn-primary next-step" data-goto="2">Далее</button>
+                </div>
+            </div>
+            
+            <!-- Шаг 2: Реквизиты -->
+            <div class="wizard-panel" data-panel="2">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="tax_id">ИНН</label>
+                        <input type="text" id="tax_id" name="tax_id" class="form-control" maxlength="12">
+                    </div>
+                    
+                    <div class="form-group business-only">
+                        <label for="kpp">КПП</label>
+                        <input type="text" id="kpp" name="kpp" class="form-control" maxlength="9">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ogrn">ОГРН / ОГРНИП</label>
+                        <input type="text" id="ogrn" name="ogrn" class="form-control" maxlength="15">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="bank_name">Название банка</label>
+                        <input type="text" id="bank_name" name="bank_name" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="bank_account">Р/с</label>
+                        <input type="text" id="bank_account" name="bank_account" class="form-control" maxlength="20">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="bank_bik">БИК</label>
+                        <input type="text" id="bank_bik" name="bank_bik" class="form-control" maxlength="9">
+                    </div>
+                </div>
+                
+                <div class="wizard-actions">
+                    <button type="button" class="btn btn-light prev-step" data-goto="1">Назад</button>
+                    <button type="button" class="btn btn-primary next-step" data-goto="3">Далее</button>
+                </div>
+            </div>
+            
+            <!-- Шаг 3: Завершение -->
+            <div class="wizard-panel" data-panel="3">
+                <div class="form-group">
+                    <label for="comment">Комментарий</label>
+                    <textarea id="comment" name="comment" class="form-control" rows="3"></textarea>
+                </div>
+                
+                <div class="summary-container">
+                    <h3>Проверьте введенную информацию</h3>
+                    <div class="summary-grid" id="summary-container">
+                        <!-- Сюда будет вставлен обзор данных через JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="wizard-actions">
+                    <button type="button" class="btn btn-light prev-step" data-goto="2">Назад</button>
+                    <button type="submit" class="btn btn-success">Создать клиента</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/clients/form.js"></script>
+
+<script>
+    // Переключение шагов
+    document.querySelectorAll('.next-step, .prev-step').forEach(button => {
+        button.addEventListener('click', function() {
+            const goToStep = this.getAttribute('data-goto');
+            
+            // Валидация перед переходом вперед
+            if (this.classList.contains('next-step') && !validateStep(getCurrentStep())) {
+                return;
+            }
+            
+            // Обновление активного шага
+            document.querySelectorAll('.wizard-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            document.querySelector(`.wizard-panel[data-panel="${goToStep}"]`).classList.add('active');
+            
+            // Обновление индикатора шагов
+            document.querySelectorAll('.step').forEach(step => {
+                step.classList.remove('active');
+                if (parseInt(step.getAttribute('data-step')) <= parseInt(goToStep)) {
+                    step.classList.add('completed');
+                } else {
+                    step.classList.remove('completed');
+                }
+            });
+            document.querySelector(`.step[data-step="${goToStep}"]`).classList.add('active');
+            
+            // Обновление обзора на последнем шаге
+            if (goToStep === '3') {
+                updateSummary();
+            }
+        });
+    });
+    
+    // Скрытие/отображение полей для юр. лиц
+    document.getElementById('type').addEventListener('change', function() {
+        const businessFields = document.querySelectorAll('.business-only');
+        if (this.value === 'business') {
+            businessFields.forEach(field => field.style.display = 'block');
+        } else {
+            businessFields.forEach(field => field.style.display = 'none');
+        }
+    });
+    
+    // Инициализация при загрузке страницы
+    document.addEventListener('DOMContentLoaded', function() {
+        const typeSelect = document.getElementById('type');
+        if (typeSelect.value !== 'business') {
+            document.querySelectorAll('.business-only').forEach(field => field.style.display = 'none');
+        }
+    });
+    
+    // Получение текущего шага
+    function getCurrentStep() {
+        const activePanel = document.querySelector('.wizard-panel.active');
+        return activePanel ? activePanel.getAttribute('data-panel') : '1';
+    }
+    
+    // Валидация полей на шаге
+    function validateStep(step) {
+        if (step === '1') {
+            const nameInput = document.getElementById('name');
+            if (!nameInput.value.trim()) {
+                alert('Пожалуйста, укажите имя клиента');
+                nameInput.focus();
+                return false;
+            }
+            return true;
+        }
+        return true;
+    }
+    
+    // Обновление сводки на последнем шаге
+    function updateSummary() {
+        const summaryContainer = document.getElementById('summary-container');
+        summaryContainer.innerHTML = '';
+        
+        const fields = [
+            { id: 'name', label: 'Имя / Организация' },
+            { id: 'phone', label: 'Телефон' },
+            { id: 'email', label: 'Email' },
+            { id: 'tax_id', label: 'ИНН' },
+            { id: 'bank_name', label: 'Банк' }
+        ];
+        
+        fields.forEach(field => {
+            const value = document.getElementById(field.id).value;
+            if (value) {
+                const item = document.createElement('div');
+                item.className = 'summary-item';
+                item.innerHTML = `<div class="summary-label">${field.label}:</div>
+                                <div class="summary-value">${value}</div>`;
+                summaryContainer.appendChild(item);
+            }
+        });
+    }
+</script>
+{% endblock %} 

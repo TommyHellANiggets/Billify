@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/clients/delete.css">
+{% endblock %}
+
+{% block content %}
+<div class="client-delete-page">
+    <div class="page-header">
+        <div class="breadcrumbs">
+            <a href="{% url 'clients:list' %}">Клиенты</a> &gt; 
+            <a href="{% url 'clients:detail' client_id=client.id %}">{{ client.name }}</a> &gt;
+            <span>Удаление</span>
+        </div>
+        
+        <h1>Удаление клиента</h1>
+    </div>
+    
+    <div class="delete-confirmation card">
+        <div class="warning-icon">⚠️</div>
+        <h2>Вы уверены, что хотите удалить клиента "{{ client.name }}"?</h2>
+        <p>Это действие нельзя будет отменить. Клиент будет помечен как неактивный и скрыт из системы.</p>
+        
+        <div class="client-info">
+            <div class="info-row">
+                <span class="info-label">Тип клиента:</span>
+                <span class="info-value">{{ client.get_type_display }}</span>
+            </div>
+            
+            <div class="info-row">
+                <span class="info-label">ИНН:</span>
+                <span class="info-value">{{ client.tax_id|default:"Не указано" }}</span>
+            </div>
+            
+            <div class="info-row">
+                <span class="info-label">Телефон:</span>
+                <span class="info-value">{{ client.phone|default:"Не указано" }}</span>
+            </div>
+            
+            <div class="info-row">
+                <span class="info-label">Email:</span>
+                <span class="info-value">{{ client.email|default:"Не указано" }}</span>
+            </div>
+        </div>
+        
+        <form method="post" class="delete-form">
+            {% csrf_token %}
+            <div class="form-actions">
+                <button type="submit" class="btn btn-danger">Удалить клиента</button>
+                <a href="{% url 'clients:detail' client_id=client.id %}" class="btn">Отмена</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %} 

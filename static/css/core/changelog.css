@@ -1,0 +1,358 @@
+/* Стили для страницы changelog */
+.changelog-header {
+    background: linear-gradient(135deg, rgba(247, 250, 255, 0.95), rgba(235, 244, 255, 0.95));
+    padding: 5rem 0 3rem;
+    border-radius: var(--radius-lg);
+    margin-bottom: 4rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.changelog-header::before {
+    content: '';
+    position: absolute;
+    top: -100px;
+    right: -100px;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: rgba(77, 139, 248, 0.05);
+    z-index: 0;
+}
+
+.changelog-header::after {
+    content: '';
+    position: absolute;
+    bottom: -80px;
+    left: -80px;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: rgba(77, 139, 248, 0.08);
+    z-index: 0;
+}
+
+.changelog-header h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: var(--color-text);
+    position: relative;
+    z-index: 1;
+}
+
+.changelog-subtitle {
+    font-size: 1.25rem;
+    color: var(--color-text-light);
+    max-width: 700px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+/* Таймлайн с вертикальной линией */
+.changelog-content {
+    padding: 0 0 5rem;
+}
+
+.timeline {
+    position: relative;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem 0;
+}
+
+.timeline-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 3px;
+    background: linear-gradient(to bottom, transparent, var(--color-primary) 5%, var(--color-primary) 95%, transparent);
+    transform: translateX(-50%);
+}
+
+.timeline-item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-bottom: 4rem;
+}
+
+.timeline-item:last-child {
+    margin-bottom: 0;
+}
+
+.timeline-date {
+    text-align: right;
+    padding-right: 3rem;
+    align-self: center;
+}
+
+.timeline-date .date {
+    font-size: 1.25rem;
+    color: var(--color-text-light);
+    margin-bottom: 0.5rem;
+}
+
+.timeline-date .version {
+    display: inline-block;
+    background-color: rgba(77, 139, 248, 0.1);
+    color: var(--color-primary);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-full);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.timeline-card {
+    position: relative;
+    background-color: var(--color-white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 2rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.timeline-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.timeline-point {
+    position: absolute;
+    left: -36px;
+    top: 30px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: var(--color-primary);
+    border: 3px solid var(--color-white);
+    box-shadow: 0 0 0 3px rgba(77, 139, 248, 0.3);
+    z-index: 2;
+}
+
+.timeline-card h2 {
+    color: var(--color-primary);
+    margin-bottom: 1.5rem;
+    font-size: 1.75rem;
+}
+
+.timeline-content p {
+    margin-bottom: 1.5rem;
+    color: var(--color-text-light);
+    line-height: 1.6;
+}
+
+.timeline-content h3 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    color: var(--color-text);
+}
+
+.changelog-list {
+    list-style-type: none;
+    padding-left: 0;
+    margin-bottom: 2rem;
+}
+
+.changelog-list li {
+    position: relative;
+    padding-left: 1.75rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+    color: var(--color-text);
+}
+
+.changelog-list li:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.5rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    background-color: var(--color-primary);
+    border-radius: 50%;
+}
+
+.changelog-screenshot {
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    margin-top: 1.5rem;
+}
+
+.changelog-screenshot img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Нечетные элементы справа */
+.timeline-item:nth-child(odd) {
+    grid-template-columns: 1fr 1fr;
+}
+
+.timeline-item:nth-child(odd) .timeline-date {
+    grid-column: 1;
+    grid-row: 1;
+    text-align: right;
+    padding-right: 3rem;
+}
+
+.timeline-item:nth-child(odd) .timeline-card {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.timeline-item:nth-child(odd) .timeline-point {
+    left: -36px;
+}
+
+/* Четные элементы слева */
+.timeline-item:nth-child(even) {
+    grid-template-columns: 1fr 1fr;
+}
+
+.timeline-item:nth-child(even) .timeline-date {
+    grid-column: 2;
+    grid-row: 1;
+    text-align: left;
+    padding-left: 3rem;
+    padding-right: 0;
+}
+
+.timeline-item:nth-child(even) .timeline-card {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.timeline-item:nth-child(even) .timeline-point {
+    right: -36px;
+    left: auto;
+}
+
+/* Секция подписки */
+.subscribe-section {
+    padding: 2rem 0 5rem;
+}
+
+.subscribe-card {
+    background: linear-gradient(135deg, rgba(247, 250, 255, 0.95), rgba(235, 244, 255, 0.95));
+    border-radius: var(--radius-lg);
+    padding: 3rem;
+    text-align: center;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+}
+
+.subscribe-card::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: rgba(77, 139, 248, 0.05);
+    z-index: 0;
+}
+
+.subscribe-card h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: var(--color-text);
+    position: relative;
+    z-index: 1;
+}
+
+.subscribe-card p {
+    margin-bottom: 2rem;
+    color: var(--color-text-light);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    z-index: 1;
+}
+
+.subscribe-form {
+    display: flex;
+    max-width: 500px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.subscribe-form input {
+    flex: 1;
+    padding: 1rem;
+    border: 1px solid var(--color-gray);
+    border-radius: var(--radius-full) 0 0 var(--radius-full);
+    font-size: 1rem;
+    outline: none;
+}
+
+.subscribe-form .btn {
+    border-radius: 0 var(--radius-full) var(--radius-full) 0;
+    padding: 1rem 2rem;
+    font-weight: 500;
+}
+
+/* Адаптивность */
+@media (max-width: 992px) {
+    .timeline {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .changelog-header h1 {
+        font-size: 2.5rem;
+    }
+    
+    .timeline-line {
+        left: 0;
+    }
+    
+    .timeline-item {
+        grid-template-columns: 1fr;
+        margin-left: 2rem;
+    }
+    
+    .timeline-item:nth-child(odd) .timeline-date,
+    .timeline-item:nth-child(even) .timeline-date {
+        grid-column: 1;
+        grid-row: 1;
+        text-align: left;
+        padding: 0 0 1rem 0;
+    }
+    
+    .timeline-item:nth-child(odd) .timeline-card,
+    .timeline-item:nth-child(even) .timeline-card {
+        grid-column: 1;
+        grid-row: 2;
+    }
+    
+    .timeline-item:nth-child(odd) .timeline-point,
+    .timeline-item:nth-child(even) .timeline-point {
+        left: -28px;
+        right: auto;
+        top: 30px;
+    }
+    
+    .subscribe-form {
+        flex-direction: column;
+    }
+    
+    .subscribe-form input {
+        border-radius: var(--radius-full);
+        margin-bottom: 1rem;
+    }
+    
+    .subscribe-form .btn {
+        border-radius: var(--radius-full);
+    }
+} 

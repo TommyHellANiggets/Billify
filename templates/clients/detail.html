@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/clients/detail.css">
+{% endblock %}
+
+{% block content %}
+<div class="client-detail-page">
+    <div class="page-header">
+        <div class="breadcrumbs">
+            <a href="{% url 'clients:list' %}">Клиенты</a> &gt; 
+            <span>{{ client.name }}</span>
+        </div>
+        
+        <div class="d-flex justify-content-between align-items-center">
+            <h1>{{ client.name }}</h1>
+            <div class="action-buttons">
+                <a href="{% url 'clients:edit' client_id=client.id %}" class="btn">Редактировать</a>
+                <a href="{% url 'clients:delete' client_id=client.id %}" class="btn btn-secondary">Удалить</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="client-info-section card">
+        <div class="section-header">
+            <h2>Основная информация</h2>
+        </div>
+        
+        <div class="client-info-grid">
+            <div class="info-item">
+                <div class="info-label">Тип клиента</div>
+                <div class="info-value">{{ client.get_type_display }}</div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-label">Имя / Название организации</div>
+                <div class="info-value">{{ client.name }}</div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-label">Email</div>
+                <div class="info-value">{{ client.email|default:"Не указано" }}</div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-label">Телефон</div>
+                <div class="info-value">{{ client.phone|default:"Не указано" }}</div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-label">Адрес</div>
+                <div class="info-value">{{ client.address|default:"Не указано" }}</div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-label">Дата создания</div>
+                <div class="info-value">{{ client.created_at|date:"d.m.Y H:i" }}</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="client-info-section card">
+        <div class="section-header">
+            <h2>Реквизиты</h2>
+        </div>
+        
+        <div class="client-info-grid">
+            <div class="info-item">
+                <div class="info-label">ИНН</div>
+                <div class="info-value">{{ client.tax_id|default:"Не указано" }}</div>
+            </div>
+            
+            {% if client.type == 'business' %}
+            <div class="info-item">
+                <div class="info-label">КПП</div>
+                <div class="info-value">{{ client.kpp|default:"Не указано" }}</div>
+            </div>
+            {% endif %}
+            
+            <div class="info-item">
+                <div class="info-label">ОГРН / ОГРНИП</div>
+                <div class="info-value">{{ client.ogrn|default:"Не указано" }}</div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-label">Название банка</div>
+                <div class="info-value">{{ client.bank_name|default:"Не указано" }}</div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-label">Банковский счет</div>
+                <div class="info-value">{{ client.bank_account|default:"Не указано" }}</div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-label">БИК</div>
+                <div class="info-value">{{ client.bank_bik|default:"Не указано" }}</div>
+            </div>
+        </div>
+    </div>
+    
+    {% if client.comment %}
+    <div class="client-info-section card">
+        <div class="section-header">
+            <h2>Комментарий</h2>
+        </div>
+        
+        <div class="comment-content">
+            {{ client.comment|linebreaks }}
+        </div>
+    </div>
+    {% endif %}
+    
+    <div class="related-section card">
+        <div class="section-header d-flex justify-content-between align-items-center">
+            <h2>Счета клиента</h2>
+            <a href="#" class="btn">Создать счет</a>
+        </div>
+        
+        <div class="empty-message">
+            <div class="empty-icon">📄</div>
+            <p>У этого клиента пока нет счетов</p>
+        </div>
+        
+        <!-- Здесь будет таблица со счетами клиента -->
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/clients/detail.js"></script>
+{% endblock %} 

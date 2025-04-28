@@ -1,0 +1,422 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/core/home.css">
+{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-content">
+        <h1>Billify - Ваш финансовый учет стал проще</h1>
+        <p class="hero-subtitle">Автоматизация финансового учета и документооборота для малого бизнеса и индивидуальных предпринимателей</p>
+        <div class="hero-buttons">
+            <a href="{% url 'clients:list' %}" class="btn btn-primary btn-lg">Управление клиентами</a>
+            <a href="{% url 'invoices:list' %}" class="btn btn-secondary btn-lg">Создать счет</a>
+        </div>
+    </div>
+    <div class="hero-image">
+        <img src="{% static '/images/hero.png' %}" alt="Billify Dashboard" class="dashboard-preview">
+    </div>
+    <div class="hero-scroll-indicator">
+        <span>Узнать больше</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 13l5 5 5-5M7 6l5 5 5-5"/></svg>
+    </div>
+</section>
+
+<section class="stats-section">
+    <div class="stats-container">
+        <div class="stat-item">
+            <div class="stat-number">10,000+</div>
+            <div class="stat-label">Довольных клиентов</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">1M+</div>
+            <div class="stat-label">Выставлено счетов</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">5.0</div>
+            <div class="stat-label">Рейтинг приложения</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">99.9%</div>
+            <div class="stat-label">Время работы системы</div>
+        </div>
+    </div>
+</section>
+
+<section class="about-section">
+    <div class="section-header">
+        <h2>О системе Billify</h2>
+        <p class="section-subtitle">Мы делаем финансовый учет простым и понятным для малого бизнеса</p>
+    </div>
+    
+    <div class="about-grid">
+        <div class="about-content">
+            <h3>Наша миссия</h3>
+            <p>Billify разработан с целью помочь малому бизнесу и индивидуальным предпринимателям эффективно управлять своими финансами без необходимости в специальных бухгалтерских знаниях.</p>
+            <p>Мы стремимся сделать процесс учета и документооборота максимально простым, автоматизированным и интуитивно понятным.</p>
+            <div class="about-features-list">
+                <div class="about-feature">
+                    <div class="about-feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    </div>
+                    <div class="about-feature-text">Простота интеграции</div>
+                </div>
+                <div class="about-feature">
+                    <div class="about-feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    </div>
+                    <div class="about-feature-text">Экономия времени</div>
+                </div>
+                <div class="about-feature">
+                    <div class="about-feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                    </div>
+                    <div class="about-feature-text">Уведомления и напоминания</div>
+                </div>
+            </div>
+        </div>
+        <div class="about-image">
+            <img src="/static/img/about-mission.jpg" alt="Наша миссия" class="about-img">
+        </div>
+    </div>
+    
+    <div class="about-grid reverse">
+        <div class="about-content">
+            <h3>Для кого это решение?</h3>
+            <ul class="feature-list">
+                <li>Малый бизнес, который хочет упростить финансовый учет</li>
+                <li>Фрилансеры, которым нужно управлять счетами и клиентами</li>
+                <li>Индивидуальные предприниматели, стремящиеся автоматизировать рутинные задачи</li>
+                <li>Стартапы, которым нужно эффективное решение без больших затрат</li>
+            </ul>
+            <a href="#" class="btn btn-outline">Узнать больше</a>
+        </div>
+        <div class="about-image">
+            <img src="/static/img/about-target.jpg" alt="Для кого это решение" class="about-img">
+        </div>
+    </div>
+</section>
+
+<section class="features-section">
+    <div class="section-header">
+        <h2>Возможности системы</h2>
+        <p class="section-subtitle">Комплексное решение для ваших финансовых задач</p>
+    </div>
+    
+    <div class="features-tabs">
+        <div class="features-tab-headers">
+            <button class="tab-header active" data-tab="invoices">Счета и платежи</button>
+            <button class="tab-header" data-tab="clients">Управление клиентами</button>
+            <button class="tab-header" data-tab="analytics">Аналитика</button>
+            <button class="tab-header" data-tab="security">Безопасность</button>
+        </div>
+        
+        <div class="features-tab-content">
+            <div class="tab-content active" id="invoices-tab">
+                <div class="tab-grid">
+                    <div class="tab-image">
+                        <img src="{% static '/images/financial.png' %}" alt="Счета и платежи" class="feature-img">
+                    </div>
+                    <div class="tab-details">
+                        <h3>Управление счетами и платежами</h3>
+                        <p>Создавайте профессиональные счета и предложения по настраиваемым шаблонам. Автоматическая генерация PDF документов и отправка клиентам.</p>
+                        <ul class="tab-features-list">
+                            <li>Создание и отправка счетов в несколько кликов</li>
+                            <li>Настраиваемые шаблоны с вашим брендом</li>
+                            <li>Автоматические напоминания об оплате</li>
+                            <li>Онлайн-оплата через интегрированные платежные системы</li>
+                            <li>Отслеживание статуса платежей</li>
+                        </ul>
+                        <a href="#" class="btn btn-primary">Попробовать</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="clients-tab">
+                <div class="tab-grid">
+                    <div class="tab-image">
+                        <img src="{% static '/images/client_manage.png' %}" alt="Управление клиентами" class="feature-img">
+                    </div>
+                    <div class="tab-details">
+                        <h3>Управление клиентами</h3>
+                        <p>Удобное хранение и управление контактной информацией и реквизитами ваших клиентов в едином интерфейсе.</p>
+                        <ul class="tab-features-list">
+                            <li>Полная история взаимодействия с клиентами</li>
+                            <li>Категоризация и группировка клиентов</li>
+                            <li>Централизованное хранение всех реквизитов</li>
+                            <li>Автоматическое заполнение данных в документах</li>
+                            <li>Индивидуальные условия работы для разных клиентов</li>
+                        </ul>
+                        <a href="#" class="btn btn-primary">Попробовать</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="analytics-tab">
+                <div class="tab-grid">
+                    <div class="tab-image">
+                        <img src="{% static '/images/analytics.png' %}" alt="Аналитика" class="feature-img">
+                    </div>
+                    <div class="tab-details">
+                        <h3>Продвинутая аналитика</h3>
+                        <p>Интерактивные графики и диаграммы для анализа ваших финансовых показателей в режиме реального времени.</p>
+                        <ul class="tab-features-list">
+                            <li>Наглядные отчеты о движении денежных средств</li>
+                            <li>Анализ доходов и расходов по категориям</li>
+                            <li>Прогнозирование финансовых показателей</li>
+                            <li>Оценка эффективности работы с клиентами</li>
+                            <li>Экспорт отчетов в различных форматах</li>
+                        </ul>
+                        <a href="#" class="btn btn-primary">Попробовать</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="security-tab">
+                <div class="tab-grid">
+                    <div class="tab-image">
+                        <img src="{% static '/images/safety.png' %}" alt="Безопасность" class="feature-img">
+                    </div>
+                    <div class="tab-details">
+                        <h3>Высокий уровень безопасности</h3>
+                        <p>Ваши данные надежно защищены с помощью современных технологий шифрования и многоуровневой системы безопасности.</p>
+                        <ul class="tab-features-list">
+                            <li>Шифрование данных на всех этапах передачи</li>
+                            <li>Двухфакторная аутентификация</li>
+                            <li>Резервное копирование данных</li>
+                            <li>Защита от несанкционированного доступа</li>
+                            <li>Соответствие международным стандартам безопасности</li>
+                        </ul>
+                        <a href="#" class="btn btn-primary">Попробовать</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="testimonials-section">
+    <div class="section-header">
+        <h2>Отзывы наших клиентов</h2>
+        <p class="section-subtitle">Присоединяйтесь к тысячам довольных пользователей</p>
+    </div>
+    
+    <div class="testimonials-container">
+        <div class="testimonial-card">
+            <div class="testimonial-content">
+                <p>"Billify существенно упростил процесс выставления счетов и отслеживания платежей. Теперь я трачу на финансовый учет в 5 раз меньше времени!"</p>
+            </div>
+            <div class="testimonial-author">
+                <img src="/static/img/testimonial-1.jpg" alt="Фото клиента" class="testimonial-avatar">
+                <div class="testimonial-info">
+                    <div class="testimonial-name">Елена Петрова</div>
+                    <div class="testimonial-position">Фрилансер, дизайнер</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="testimonial-card">
+            <div class="testimonial-content">
+                <p>"Нам нравится аналитика в Billify. Благодаря наглядным отчетам мы смогли оптимизировать наши расходы и увеличить прибыль на 20% за квартал."</p>
+            </div>
+            <div class="testimonial-author">
+                <img src="/static/img/testimonial-2.jpg" alt="Фото клиента" class="testimonial-avatar">
+                <div class="testimonial-info">
+                    <div class="testimonial-name">Алексей Иванов</div>
+                    <div class="testimonial-position">Директор, ООО "ТехСервис"</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="testimonial-card">
+            <div class="testimonial-content">
+                <p>"Я перепробовал множество систем для учета, но Billify оказался самым понятным и функциональным. Рекомендую всем предпринимателям!"</p>
+            </div>
+            <div class="testimonial-author">
+                <img src="/static/img/testimonial-3.jpg" alt="Фото клиента" class="testimonial-avatar">
+                <div class="testimonial-info">
+                    <div class="testimonial-name">Сергей Новиков</div>
+                    <div class="testimonial-position">ИП, консультант</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="brands-section">
+        <p class="brands-title">Нам доверяют</p>
+        <div class="brands-container">
+            <img src="/static/img/brand-1.png" alt="Логотип компании" class="brand-logo">
+            <img src="/static/img/brand-2.png" alt="Логотип компании" class="brand-logo">
+            <img src="/static/img/brand-3.png" alt="Логотип компании" class="brand-logo">
+            <img src="/static/img/brand-4.png" alt="Логотип компании" class="brand-logo">
+            <img src="/static/img/brand-5.png" alt="Логотип компании" class="brand-logo">
+        </div>
+    </div>
+</section>
+
+<section id="pricing" class="pricing-section">
+    <div class="container">
+        <div class="section-header text-center">
+            <h2>Подходящий тариф для каждого</h2>
+            <p>Выберите тарифный план, который лучше всего соответствует вашим потребностям</p>
+        </div>
+
+        <div class="pricing-toggle">
+            <span class="toggle-label">Ежемесячно</span>
+            <label class="switch">
+                <input type="checkbox" id="billing-toggle">
+                <span class="slider round"></span>
+            </label>
+            <span class="toggle-label">Ежегодно <span class="discount">Скидка 20%</span></span>
+        </div>
+
+        <div class="pricing-grid">
+            <!-- Basic Plan -->
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <h3>Базовый</h3>
+                    <div class="price monthly">₽990<span>/мес</span></div>
+                    <div class="price yearly" style="display: none;">₽9,504<span>/год</span></div>
+                </div>
+                <ul class="pricing-features">
+                    <li>Неограниченное количество счетов</li>
+                    <li>До 25 клиентов</li>
+                    <li>Шаблоны счетов</li>
+                    <li>Экспорт PDF</li>
+                    <li>Базовая аналитика</li>
+                </ul>
+                <div class="pricing-footer">
+                    <a href="#" class="btn btn-outline">Выбрать тариф</a>
+                </div>
+            </div>
+
+            <!-- Pro Plan -->
+            <div class="pricing-card featured">
+                <div class="pricing-badge">Популярный</div>
+                <div class="pricing-header">
+                    <h3>Профессиональный</h3>
+                    <div class="price monthly">₽1,990<span>/мес</span></div>
+                    <div class="price yearly" style="display: none;">₽19,104<span>/год</span></div>
+                </div>
+                <ul class="pricing-features">
+                    <li>Все функции Базового тарифа</li>
+                    <li>До 100 клиентов</li>
+                    <li>Настраиваемые шаблоны</li>
+                    <li>Автоматические напоминания</li>
+                    <li>Интеграция с CRM</li>
+                    <li>Расширенная аналитика</li>
+                    <li>Приоритетная поддержка</li>
+                </ul>
+                <div class="pricing-footer">
+                    <a href="#" class="btn btn-primary">Выбрать тариф</a>
+                </div>
+            </div>
+
+            <!-- Enterprise Plan -->
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <h3>Корпоративный</h3>
+                    <div class="price monthly">₽4,990<span>/мес</span></div>
+                    <div class="price yearly" style="display: none;">₽47,904<span>/год</span></div>
+                </div>
+                <ul class="pricing-features">
+                    <li>Все функции Профессионального тарифа</li>
+                    <li>Неограниченное количество клиентов</li>
+                    <li>Специальные интеграции</li>
+                    <li>Мультивалютные счета</li>
+                    <li>Бизнес-аналитика</li>
+                    <li>Управление несколькими пользователями</li>
+                    <li>Выделенный менеджер</li>
+                    <li>API доступ</li>
+                </ul>
+                <div class="pricing-footer">
+                    <a href="#" class="btn btn-outline">Выбрать тариф</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="pricing-guarantee">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+            <p>30-дневная гарантия возврата денег без вопросов</p>
+        </div>
+    </div>
+</section>
+
+<section class="faq-section">
+    <div class="section-header">
+        <h2>Часто задаваемые вопросы</h2>
+        <p class="section-subtitle">Ответы на популярные вопросы о Billify</p>
+    </div>
+    
+    <div class="faq-container">
+        <div class="faq-item">
+            <div class="faq-question">
+                <h3>Как начать пользоваться Billify?</h3>
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                <p>Для начала работы с Billify просто зарегистрируйтесь на сайте, выберите подходящий тариф и начните создавать документы. У нас есть подробные руководства и видеоуроки, которые помогут вам быстро освоиться.</p>
+            </div>
+        </div>
+        
+        <div class="faq-item">
+            <div class="faq-question">
+                <h3>Могу ли я перейти с бесплатного тарифа на платный позже?</h3>
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                <p>Да, вы можете начать с бесплатного тарифа и в любой момент перейти на любой из платных тарифов. Все ваши данные и настройки сохранятся при переходе.</p>
+            </div>
+        </div>
+        
+        <div class="faq-item">
+            <div class="faq-question">
+                <h3>Насколько безопасны мои финансовые данные в системе?</h3>
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                <p>Безопасность данных - наш приоритет. Мы используем шифрование данных, двухфакторную аутентификацию и регулярное резервное копирование. Наша система соответствует всем стандартам безопасности и защиты персональных данных.</p>
+            </div>
+        </div>
+        
+        <div class="faq-item">
+            <div class="faq-question">
+                <h3>Можно ли интегрировать Billify с другими сервисами?</h3>
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                <p>Да, Billify предлагает интеграцию с популярными сервисами для бизнеса, включая CRM-системы, банковские сервисы, облачные хранилища и платежные платформы. На тарифе "Премиум" доступен API для создания собственных интеграций.</p>
+            </div>
+        </div>
+        
+        <div class="faq-item">
+            <div class="faq-question">
+                <h3>Каким образом я получаю техническую поддержку?</h3>
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                <p>Мы предлагаем техническую поддержку через email для всех пользователей. Клиенты с тарифами "Бизнес" и "Премиум" получают приоритетную поддержку, а пользователи "Премиум" - персонального менеджера.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="cta-section">
+    <div class="cta-content">
+        <h2>Готовы оптимизировать свой бизнес?</h2>
+        <p>Присоединяйтесь к тысячам предпринимателей, которые уже оптимизировали свой финансовый учет с Billify</p>
+        <div class="cta-buttons">
+            <a href="#" class="btn btn-primary btn-lg">Начать бесплатно</a>
+            <a href="#" class="btn btn-outline btn-lg">Запросить демо</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/core/home.js"></script>
+{% endblock %} 

@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/clients/form.css">
+{% endblock %}
+
+{% block content %}
+<div class="client-form-page">
+    <div class="page-header">
+        <div class="breadcrumbs">
+            <a href="{% url 'clients:list' %}">Клиенты</a> &gt; 
+            <a href="{% url 'clients:detail' client_id=client.id %}">{{ client.name }}</a> &gt;
+            <span>Редактирование</span>
+        </div>
+        
+        <h1>Редактирование клиента</h1>
+    </div>
+    
+    <form method="post" class="client-form card">
+        {% csrf_token %}
+        
+        <div class="form-section">
+            <h2>Основная информация</h2>
+            
+            <div class="form-group">
+                <label for="type">Тип клиента</label>
+                <select id="type" name="type" class="form-control" required>
+                    <option value="individual" {% if client.type == 'individual' %}selected{% endif %}>Физическое лицо</option>
+                    <option value="business" {% if client.type == 'business' %}selected{% endif %}>Юридическое лицо</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="name">Имя / Название организации</label>
+                <input type="text" id="name" name="name" class="form-control" value="{{ client.name }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" class="form-control" value="{{ client.email }}">
+            </div>
+            
+            <div class="form-group">
+                <label for="phone">Телефон</label>
+                <input type="text" id="phone" name="phone" class="form-control" value="{{ client.phone }}">
+            </div>
+            
+            <div class="form-group">
+                <label for="address">Адрес</label>
+                <textarea id="address" name="address" class="form-control" rows="3">{{ client.address }}</textarea>
+            </div>
+        </div>
+        
+        <div class="form-section form-section-requisites">
+            <h2>Реквизиты</h2>
+            
+            <div class="form-group">
+                <label for="tax_id">ИНН</label>
+                <input type="text" id="tax_id" name="tax_id" class="form-control" maxlength="12" value="{{ client.tax_id }}">
+            </div>
+            
+            <div class="form-group business-only">
+                <label for="kpp">КПП</label>
+                <input type="text" id="kpp" name="kpp" class="form-control" maxlength="9" value="{{ client.kpp }}">
+                <div class="help-text">Только для юридических лиц</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="ogrn">ОГРН / ОГРНИП</label>
+                <input type="text" id="ogrn" name="ogrn" class="form-control" maxlength="15" value="{{ client.ogrn }}">
+            </div>
+            
+            <div class="form-group">
+                <label for="bank_name">Название банка</label>
+                <input type="text" id="bank_name" name="bank_name" class="form-control" value="{{ client.bank_name }}">
+            </div>
+            
+            <div class="form-group">
+                <label for="bank_account">Банковский счет</label>
+                <input type="text" id="bank_account" name="bank_account" class="form-control" maxlength="20" value="{{ client.bank_account }}">
+            </div>
+            
+            <div class="form-group">
+                <label for="bank_bik">БИК</label>
+                <input type="text" id="bank_bik" name="bank_bik" class="form-control" maxlength="9" value="{{ client.bank_bik }}">
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h2>Дополнительная информация</h2>
+            
+            <div class="form-group">
+                <label for="comment">Комментарий</label>
+                <textarea id="comment" name="comment" class="form-control" rows="4">{{ client.comment }}</textarea>
+            </div>
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+            <a href="{% url 'clients:detail' client_id=client.id %}" class="btn">Отмена</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/clients/form.js"></script>
+
+<script>
+    // Скрытие/отображение полей для юр. лиц
+    document.getElementById('type').addEventListener('change', function() {
+        const businessFields = document.querySelectorAll('.business-only');
+        if (this.value === 'business') {
+            businessFields.forEach(field => field.style.display = 'block');
+        } else {
+            businessFields.forEach(field => field.style.display = 'none');
+        }
+    });
+    
+    // Инициализация при загрузке страницы
+    document.addEventListener('DOMContentLoaded', function() {
+        const typeSelect = document.getElementById('type');
+        if (typeSelect.value !== 'business') {
+            document.querySelectorAll('.business-only').forEach(field => field.style.display = 'none');
+        }
+    });
+</script>
+{% endblock %} 
