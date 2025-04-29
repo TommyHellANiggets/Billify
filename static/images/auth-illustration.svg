@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" fill="none">
+  <g clip-path="url(#clip0_1_2)">
+    <!-- Фоновые элементы -->
+    <path d="M700 500C755.228 500 800 455.228 800 400C800 344.772 755.228 300 700 300C644.772 300 600 344.772 600 400C600 455.228 644.772 500 700 500Z" fill="#F3E6FF" fill-opacity="0.5"/>
+    <path d="M200 200C255.228 200 300 155.228 300 100C300 44.7715 255.228 0 200 0C144.772 0 100 44.7715 100 100C100 155.228 144.772 200 200 200Z" fill="#F3E6FF" fill-opacity="0.5"/>
+    
+    <!-- Основной документ -->
+    <rect x="250" y="170" width="300" height="400" rx="20" fill="white" stroke="#C5AFFA" stroke-width="4"/>
+    
+    <!-- Заголовок документа -->
+    <rect x="290" y="210" width="220" height="20" rx="5" fill="#673AB7" fill-opacity="0.2"/>
+    <rect x="290" y="240" width="180" height="20" rx="5" fill="#673AB7" fill-opacity="0.2"/>
+    
+    <!-- Строки документа -->
+    <rect x="290" y="290" width="220" height="14" rx="5" fill="#E5E7EB"/>
+    <rect x="290" y="320" width="220" height="14" rx="5" fill="#E5E7EB"/>
+    <rect x="290" y="350" width="220" height="14" rx="5" fill="#E5E7EB"/>
+    <rect x="290" y="380" width="180" height="14" rx="5" fill="#E5E7EB"/>
+    <rect x="290" y="410" width="150" height="14" rx="5" fill="#E5E7EB"/>
+    
+    <!-- Иконка замка (безопасность) -->
+    <path d="M510 490C515.523 490 520 485.523 520 480C520 474.477 515.523 470 510 470C504.477 470 500 474.477 500 480C500 485.523 504.477 490 510 490Z" fill="#9C27B0"/>
+    <rect x="502" y="460" width="16" height="20" rx="3" fill="#673AB7"/>
+    <path d="M505 460V455C505 452.239 507.239 450 510 450V450C512.761 450 515 452.239 515 455V460" stroke="#673AB7" stroke-width="3" stroke-linecap="round"/>
+    
+    <!-- Человечек -->
+    <circle cx="380" cy="480" r="30" fill="#9C27B0" fill-opacity="0.3"/>
+    <circle cx="380" cy="460" r="10" fill="#673AB7"/>
+    <path d="M362 480C362 470.611 369.611 463 379 463C388.389 463 396 470.611 396 480C396 489.389 388.389 497 379 497C369.611 497 362 489.389 362 480Z" fill="#673AB7"/>
+    
+    <!-- Чекмарки (галочки) -->
+    <circle cx="290" cy="480" r="15" fill="#673AB7" fill-opacity="0.2"/>
+    <path d="M285 480L290 485L295 475" stroke="#673AB7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    
+    <circle cx="330" cy="480" r="15" fill="#673AB7" fill-opacity="0.2"/>
+    <path d="M325 480L330 485L335 475" stroke="#673AB7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    
+    <!-- Облако данных -->
+    <path d="M550 220C577.614 220 600 197.614 600 170C600 142.386 577.614 120 550 120C522.386 120 500 142.386 500 170C500 197.614 522.386 220 550 220Z" fill="#673AB7" fill-opacity="0.1"/>
+    <path d="M570 170C570 180.493 561.493 189 551 189C540.507 189 532 180.493 532 170C532 159.507 540.507 151 551 151C561.493 151 570 159.507 570 170Z" fill="#9C27B0" fill-opacity="0.2"/>
+    <path d="M560 140V120M540 140V120M550 150V130" stroke="#673AB7" stroke-width="2" stroke-linecap="round"/>
+    
+    <!-- Украшение снизу -->
+    <path d="M100 550C155.228 550 200 505.228 200 450C200 394.772 155.228 350 100 350C44.7715 350 0 394.772 0 450C0 505.228 44.7715 550 100 550Z" fill="#F3E6FF" fill-opacity="0.5"/>
+    
+    <!-- Фирменный элемент логотипа Billify -->
+    <rect x="120" y="430" width="60" height="40" rx="10" fill="#673AB7"/>
+    <path d="M130 450H170" stroke="white" stroke-width="3" stroke-linecap="round"/>
+    <path d="M140 440H160" stroke="white" stroke-width="3" stroke-linecap="round"/>
+    <path d="M135 460H165" stroke="white" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <defs>
+    <clipPath id="clip0_1_2">
+      <rect width="800" height="600" fill="white"/>
+    </clipPath>
+  </defs>
+</svg> 

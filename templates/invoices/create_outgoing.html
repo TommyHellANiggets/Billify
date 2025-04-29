@@ -1,0 +1,434 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Новый исходящий счет{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/invoices/create.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="create-invoice-page">
+    <div class="page-header">
+        <div class="header-content">
+            <h1>Создание исходящего счета</h1>
+            <p class="page-subtitle">Заполните данные для создания нового исходящего счета</p>
+        </div>
+        <div class="header-actions">
+            <a href="{% url 'invoices:list' %}?type=outgoing" class="btn btn-outline">
+                <i class="fas fa-arrow-left"></i> Вернуться к списку
+            </a>
+        </div>
+    </div>
+
+    <div class="form-container">
+        <div class="form-info-card">
+            <div class="form-info-header">
+                <i class="fas fa-info-circle"></i>
+                <h3>Исходящий счет</h3>
+            </div>
+            <div class="form-info-content">
+                <p>Исходящий счет используется для выставления счетов клиентам и учета доходов.</p>
+                <ul class="info-list">
+                    <li><i class="fas fa-check"></i> Отслеживайте доходы</li>
+                    <li><i class="fas fa-check"></i> Контролируйте оплаты от клиентов</li>
+                    <li><i class="fas fa-check"></i> Учитывайте продажи</li>
+                </ul>
+            </div>
+            <div class="form-info-image">
+                <img src="{% static 'images/outgoing-invoice.svg' %}" alt="Исходящий счет" class="info-image">
+            </div>
+        </div>
+
+        <form method="post" action="{% url 'invoices:create_outgoing' %}" class="invoice-form">
+            {% csrf_token %}
+            
+            <!-- Данные профиля компании для JavaScript -->
+            {{ company_profile|json_script:"company-profile-data" }}
+            
+            <div class="form-section">
+                <h3 class="section-title">Основная информация</h3>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="invoice_number">Номер счета</label>
+                        <input type="text" id="invoice_number" name="invoice_number" value="{{ next_invoice_number }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="invoice_date">Дата счета</label>
+                        <input type="date" id="invoice_date" name="invoice_date" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="due_date">Срок оплаты</label>
+                        <input type="date" id="due_date" name="due_date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="status">Статус</label>
+                        <select id="status" name="status" required>
+                            <option value="new">Новый</option>
+                            <option value="sent">Отправлен</option>
+                            <option value="pending">Ожидает оплаты</option>
+                            <option value="paid">Оплачен</option>
+                            <option value="cancelled">Отменен</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3 class="section-title">Информация о клиенте</h3>
+                
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="client">Клиент</label>
+                        <div class="select-wrapper">
+                            <input type="hidden" id="client_id" name="client" required>
+                            <div class="supplier-select" id="client-select" tabindex="0">
+                                <span>Выберите клиента</span>
+                            </div>
+                            <div class="supplier-dropdown" id="client-dropdown">
+                                <input type="text" class="select-search" id="client-search" placeholder="Поиск клиента...">
+                                <div class="supplier-list" id="client-list">
+                                    {% if clients %}
+                                        {% for client in clients %}
+                                            <div class="client-item" data-id="{{ client.id }}" data-contact="{{ client.name }}" data-email="{{ client.email }}" data-bank-name="{{ client.bank_name }}" data-bank-bik="{{ client.bank_bik }}" data-bank-account="{{ client.bank_account }}">
+                                                <div class="client-item-name">{{ client.name }}</div>
+                                                <div class="client-item-info">
+                                                    {% if client.tax_id %}
+                                                    <span class="client-item-inn">ИНН: {{ client.tax_id }}</span>
+                                                    {% endif %}
+                                                    {% if client.phone %}
+                                                    <span class="client-item-phone">Тел: {{ client.phone }}</span>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    {% else %}
+                                        <div class="no-results">Список клиентов пуст</div>
+                                    {% endif %}
+                                </div>
+                                <div class="add-new-item" id="add-client">
+                                    <i class="fas fa-plus"></i> Добавить нового клиента
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="contact_name">Контактное лицо</label>
+                        <input type="text" id="contact_name" name="contact_name">
+                    </div>
+                    <div class="form-group">
+                        <label for="contact_email">Email</label>
+                        <input type="email" id="contact_email" name="contact_email">
+                    </div>
+                </div>
+                
+                <!-- Банковские реквизиты клиента -->
+                <div id="client_bank_details" class="bank-details-container" style="display: none;">
+                    <h4 class="subsection-title">Банковские реквизиты клиента</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="client_name_display">Название организации</label>
+                            <input type="text" id="client_name_display" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="client_inn_display">ИНН</label>
+                            <input type="text" id="client_inn_display" readonly>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="client_bank_display">Банк</label>
+                            <input type="text" id="client_bank_display" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="client_bik_display">БИК</label>
+                            <input type="text" id="client_bik_display" readonly>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="client_account_display">Расчетный счет</label>
+                            <input type="text" id="client_account_display" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3 class="section-title">Позиции счета</h3>
+                
+                <table class="invoice-items-table">
+                    <thead>
+                        <tr>
+                            <th>Наименование</th>
+                            <th>Количество</th>
+                            <th>Цена, ₽</th>
+                            <th>Сумма, ₽</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="invoice-items">
+                        <tr class="invoice-item">
+                            <td>
+                                <input type="text" name="item_name[]" title="Наименование товара/услуги" required>
+                            </td>
+                            <td>
+                                <input type="number" name="item_quantity[]" title="Количество" min="1" value="1" required>
+                            </td>
+                            <td>
+                                <input type="number" name="item_price[]" title="Цена за единицу" min="0" step="0.01" required>
+                            </td>
+                            <td class="item-total">0.00</td>
+                            <td>
+                                <button type="button" class="btn-icon remove-item" title="Удалить позицию">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <button type="button" id="add-item" class="btn btn-outline">
+                    <i class="fas fa-plus"></i> Добавить позицию
+                </button>
+                
+                <div class="invoice-totals">
+                    <div class="totals-row">
+                        <span class="total-label">Подытог:</span>
+                        <span class="total-value" id="subtotal">0.00 ₽</span>
+                    </div>
+                    <div class="totals-row">
+                        <span class="total-label">НДС (20%):</span>
+                        <span class="total-value" id="tax">0.00 ₽</span>
+                    </div>
+                    <div class="totals-row total-final">
+                        <span class="total-label">Итого:</span>
+                        <span class="total-value" id="total">0.00 ₽</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3 class="section-title">Дополнительная информация</h3>
+                
+                <div class="form-group full-width">
+                    <label for="notes">Примечания к счету</label>
+                    <textarea id="notes" name="notes" rows="3" placeholder="Любая дополнительная информация для клиента"></textarea>
+                </div>
+                
+                <div class="form-section-divider"></div>
+                
+                <h4 class="subsection-title">Реквизиты для оплаты</h4>
+                <div class="bank-details-container">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="company_name">Название организации</label>
+                            <input type="text" id="company_name" name="company_name" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="company_inn">ИНН</label>
+                            <input type="text" id="company_inn" name="company_inn" readonly>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="company_bank">Банк</label>
+                            <input type="text" id="company_bank" name="company_bank" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="company_bik">БИК</label>
+                            <input type="text" id="company_bik" name="company_bik" readonly>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="company_account">Расчетный счет</label>
+                            <input type="text" id="company_account" name="company_account" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="company_corr_account">Корр. счет</label>
+                            <input type="text" id="company_corr_account" name="company_corr_account" readonly>
+                        </div>
+                    </div>
+                    
+                    <input type="hidden" id="payment_details" name="payment_details">
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Сохранить счет
+                </button>
+                <button type="button" class="btn btn-secondary">
+                    <i class="fas fa-paper-plane"></i> Отправить клиенту
+                </button>
+                <button type="button" class="btn btn-outline">
+                    <i class="fas fa-eye"></i> Предпросмотр
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/invoices/create.js' %}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Инициализация улучшенного выпадающего списка клиентов
+        const clientSelect = document.getElementById('client-select');
+        const clientDropdown = document.getElementById('client-dropdown');
+        const clientList = document.getElementById('client-list');
+        const clientSearch = document.getElementById('client-search');
+        const clientItems = document.querySelectorAll('.client-item');
+        const clientIdInput = document.getElementById('client_id');
+        const contactNameInput = document.getElementById('contact_name');
+        const contactEmailInput = document.getElementById('contact_email');
+        const addClientButton = document.getElementById('add-client');
+        
+        // Показать/скрыть выпадающий список при клике
+        clientSelect.addEventListener('click', function(e) {
+            e.stopPropagation();
+            this.classList.toggle('active');
+            clientDropdown.classList.toggle('show');
+            if (clientDropdown.classList.contains('show')) {
+                clientSearch.focus();
+            }
+        });
+        
+        // Закрыть выпадающий список при клике вне него
+        document.addEventListener('click', function(e) {
+            if (!clientSelect.contains(e.target) && !clientDropdown.contains(e.target)) {
+                clientSelect.classList.remove('active');
+                clientDropdown.classList.remove('show');
+            }
+        });
+        
+        // Обработчик для поиска клиентов
+        clientSearch.addEventListener('input', function() {
+            const searchValue = this.value.toLowerCase();
+            let hasResults = false;
+            
+            clientItems.forEach(item => {
+                const name = item.querySelector('.client-item-name').textContent.toLowerCase();
+                const info = item.querySelector('.client-item-info').textContent.toLowerCase();
+                
+                if (name.includes(searchValue) || info.includes(searchValue)) {
+                    item.style.display = 'block';
+                    hasResults = true;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+            
+            // Показать/скрыть сообщение об отсутствии результатов
+            let noResults = clientList.querySelector('.no-results');
+            if (!hasResults) {
+                if (!noResults) {
+                    noResults = document.createElement('div');
+                    noResults.className = 'no-results';
+                    noResults.textContent = 'Нет результатов для "' + searchValue + '"';
+                    clientList.appendChild(noResults);
+                } else {
+                    noResults.textContent = 'Нет результатов для "' + searchValue + '"';
+                    noResults.style.display = 'block';
+                }
+            } else if (noResults) {
+                noResults.style.display = 'none';
+            }
+        });
+        
+        // Обработчик для выбора клиента
+        clientItems.forEach(function(item) {
+            item.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                const name = this.querySelector('.client-item-name').textContent;
+                const contact = this.getAttribute('data-contact') || '';
+                const email = this.getAttribute('data-email') || '';
+                
+                // Обновляем выбранное значение
+                clientSelect.querySelector('span').textContent = name;
+                clientIdInput.value = id;
+                contactNameInput.value = contact;
+                contactEmailInput.value = email;
+                
+                // Отмечаем выбранный элемент
+                clientItems.forEach(i => i.classList.remove('selected'));
+                this.classList.add('selected');
+                
+                // Закрываем выпадающий список
+                clientSelect.classList.remove('active');
+                clientDropdown.classList.remove('show');
+                
+                // Получаем данные клиента из элемента
+                const clientData = {
+                    name: this.querySelector('.client-item-name').textContent,
+                    inn: this.querySelector('.client-item-inn')?.textContent.replace('ИНН: ', '') || '',
+                    bank_name: this.getAttribute('data-bank-name') || '',
+                    bank_bik: this.getAttribute('data-bank-bik') || '',
+                    bank_account: this.getAttribute('data-bank-account') || ''
+                };
+                
+                populateClientBankDetails(clientData);
+                
+                // Показываем реквизиты клиента (здесь должны быть реальные данные)
+                document.getElementById('client_bank_details').style.display = 'block';
+            });
+        });
+        
+        // Обработчик для клавиатурной навигации по выпадающему списку
+        clientSelect.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                this.click();
+            }
+        });
+        
+        // Обработчик для добавления нового клиента
+        addClientButton.addEventListener('click', function() {
+            window.location.href = '/clients/create/';
+        });
+    });
+</script>
+
+<script>
+    // Проверка ошибок при отправке формы
+    document.querySelector('.invoice-form').addEventListener('submit', function(e) {
+        // Проверка клиента
+        const clientId = document.getElementById('client_id');
+        if (!clientId.value) {
+            e.preventDefault();
+            showNotification('Выберите клиента', 'error');
+        }
+        
+        // Проверка наличия позиций в счете
+        const invoiceItems = document.querySelectorAll('.invoice-item');
+        let hasEmptyItem = false;
+        
+        invoiceItems.forEach(item => {
+            const itemName = item.querySelector('input[name="item_name[]"]');
+            const itemPrice = item.querySelector('input[name="item_price[]"]');
+            
+            if (!itemName.value || !itemPrice.value) {
+                hasEmptyItem = true;
+            }
+        });
+        
+        if (hasEmptyItem) {
+            e.preventDefault();
+            showNotification('Заполните все поля для позиций счета', 'error');
+        }
+    });
+</script>
+{% endblock %} 

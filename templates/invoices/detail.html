@@ -1,0 +1,316 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/invoices/detail.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="invoice-detail-page">
+    <div class="page-header">
+        <div class="header-content">
+            <h1>{{ invoice.number }}</h1>
+            <p class="page-subtitle">
+                {% if is_outgoing %}
+                    Исходящий счет для {{ invoice.client.name }}
+                {% else %}
+                    Входящий счет от {{ invoice.supplier_name }}
+                {% endif %}
+            </p>
+        </div>
+        <div class="header-actions">
+            <a href="{% url 'invoices:list' %}?type={{ invoice_type }}" class="btn btn-outline">
+                <i class="fas fa-arrow-left"></i> Вернуться к списку
+            </a>
+            <button id="print-invoice" class="btn btn-primary">
+                <i class="fas fa-print"></i> Печать
+            </button>
+            <button id="pdf-invoice" class="btn btn-success">
+                <i class="fas fa-file-pdf"></i> Сохранить PDF
+            </button>
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" id="invoice-actions">
+                    <i class="fas fa-ellipsis-v"></i> Действия
+                </button>
+                <div class="dropdown-menu">
+                    <a href="#" class="dropdown-item" id="send-email">
+                        <i class="fas fa-envelope"></i> Отправить по email
+                    </a>
+                    <a href="#" class="dropdown-item" id="duplicate-invoice">
+                        <i class="fas fa-copy"></i> Создать копию
+                    </a>
+                    <a href="#" class="dropdown-item" id="mark-paid">
+                        <i class="fas fa-check-circle"></i> Отметить как оплаченный
+                    </a>
+                    <a href="#" class="dropdown-item" id="edit-invoice">
+                        <i class="fas fa-edit"></i> Редактировать
+                    </a>
+                    <a href="#" class="dropdown-item text-danger" id="delete-invoice">
+                        <i class="fas fa-trash"></i> Удалить
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="invoice-container">
+        <div class="invoice-status-bar">
+            <div class="status-badge status-{{ invoice.status }}">
+                {% if invoice.status == 'draft' %}
+                    <i class="fas fa-pencil-alt"></i> Черновик
+                {% elif invoice.status == 'sent' %}
+                    <i class="fas fa-paper-plane"></i> Отправлен
+                {% elif invoice.status == 'paid' %}
+                    <i class="fas fa-check-circle"></i> Оплачен
+                {% elif invoice.status == 'overdue' %}
+                    <i class="fas fa-exclamation-circle"></i> Просрочен
+                {% elif invoice.status == 'cancelled' %}
+                    <i class="fas fa-ban"></i> Отменен
+                {% endif %}
+            </div>
+            <div class="status-timeline">
+                <div class="status-step {% if invoice.status != 'draft' %}complete{% endif %}">
+                    <div class="step-icon"><i class="fas fa-pencil-alt"></i></div>
+                    <div class="step-label">Создан</div>
+                    <div class="step-date">{{ invoice.created_at|date:"d.m.Y" }}</div>
+                </div>
+                <div class="status-connector"></div>
+                <div class="status-step {% if invoice.status == 'sent' or invoice.status == 'paid' %}complete{% endif %}">
+                    <div class="step-icon"><i class="fas fa-paper-plane"></i></div>
+                    <div class="step-label">Отправлен</div>
+                    <div class="step-date">{% if invoice.status == 'sent' or invoice.status == 'paid' %}{{ invoice.updated_at|date:"d.m.Y" }}{% endif %}</div>
+                </div>
+                <div class="status-connector"></div>
+                <div class="status-step {% if invoice.status == 'paid' %}complete{% endif %}">
+                    <div class="step-icon"><i class="fas fa-check-circle"></i></div>
+                    <div class="step-label">Оплачен</div>
+                    <div class="step-date">{% if invoice.payment_date %}{{ invoice.payment_date|date:"d.m.Y" }}{% endif %}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="invoice-wrapper" id="invoice-printable">
+            <div class="invoice-header">
+                <div class="invoice-title">
+                    <h2>{{ invoice.number }}</h2>
+                    <div class="invoice-dates">
+                        <div class="date-item">
+                            <span class="date-label">Дата выставления:</span>
+                            <span class="date-value">{{ invoice.issue_date|date:"d.m.Y" }}</span>
+                        </div>
+                        <div class="date-item">
+                            <span class="date-label">Срок оплаты:</span>
+                            <span class="date-value">{{ invoice.due_date|date:"d.m.Y" }}</span>
+                        </div>
+                        {% if invoice.payment_date %}
+                        <div class="date-item">
+                            <span class="date-label">Дата оплаты:</span>
+                            <span class="date-value">{{ invoice.payment_date|date:"d.m.Y" }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% if company_profile.logo %}
+                <div class="company-logo">
+                    <img src="{{ company_profile.logo.url }}" alt="{{ company_profile.company_name }}">
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="invoice-parties">
+                <div class="invoice-party">
+                    <h3>Поставщик</h3>
+                    <div class="party-details">
+                        <div class="party-name">{{ invoice.supplier_name }}</div>
+                        <div class="party-info">
+                            {% if invoice.supplier_address %}
+                            <div class="info-row">
+                                <span class="info-label">Адрес:</span>
+                                <span class="info-value">{{ invoice.supplier_address }}</span>
+                            </div>
+                            {% endif %}
+                            {% if invoice.supplier_inn %}
+                            <div class="info-row">
+                                <span class="info-label">ИНН:</span>
+                                <span class="info-value">{{ invoice.supplier_inn }}</span>
+                            </div>
+                            {% endif %}
+                            {% if invoice.supplier_kpp %}
+                            <div class="info-row">
+                                <span class="info-label">КПП:</span>
+                                <span class="info-value">{{ invoice.supplier_kpp }}</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% if invoice.supplier_bank or invoice.supplier_bank_bik or invoice.supplier_bank_account %}
+                    <div class="party-bank-details">
+                        <h4>Банковские реквизиты</h4>
+                        <div class="bank-info">
+                            {% if invoice.supplier_bank %}
+                            <div class="info-row">
+                                <span class="info-label">Банк:</span>
+                                <span class="info-value">{{ invoice.supplier_bank }}</span>
+                            </div>
+                            {% endif %}
+                            {% if invoice.supplier_bank_bik %}
+                            <div class="info-row">
+                                <span class="info-label">БИК:</span>
+                                <span class="info-value">{{ invoice.supplier_bank_bik }}</span>
+                            </div>
+                            {% endif %}
+                            {% if invoice.supplier_bank_account %}
+                            <div class="info-row">
+                                <span class="info-label">Р/с:</span>
+                                <span class="info-value">{{ invoice.supplier_bank_account }}</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="invoice-party">
+                    <h3>Клиент</h3>
+                    <div class="party-details">
+                        <div class="party-name">{{ invoice.client.name }}</div>
+                        <div class="party-info">
+                            {% if invoice.client.address %}
+                            <div class="info-row">
+                                <span class="info-label">Адрес:</span>
+                                <span class="info-value">{{ invoice.client.address }}</span>
+                            </div>
+                            {% endif %}
+                            {% if invoice.client.tax_id %}
+                            <div class="info-row">
+                                <span class="info-label">ИНН:</span>
+                                <span class="info-value">{{ invoice.client.tax_id }}</span>
+                            </div>
+                            {% endif %}
+                            {% if invoice.client.contact_person %}
+                            <div class="info-row">
+                                <span class="info-label">Контактное лицо:</span>
+                                <span class="info-value">{{ invoice.client.contact_person }}</span>
+                            </div>
+                            {% endif %}
+                            {% if invoice.client.phone %}
+                            <div class="info-row">
+                                <span class="info-label">Телефон:</span>
+                                <span class="info-value">{{ invoice.client.phone }}</span>
+                            </div>
+                            {% endif %}
+                            {% if invoice.client.email %}
+                            <div class="info-row">
+                                <span class="info-label">Email:</span>
+                                <span class="info-value">{{ invoice.client.email }}</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="invoice-items">
+                <table class="items-table">
+                    <thead>
+                        <tr>
+                            <th>№</th>
+                            <th>Наименование</th>
+                            <th>Кол-во</th>
+                            <th>Ед.</th>
+                            <th>Цена, ₽</th>
+                            <th>Сумма, ₽</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in invoice_items %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ item.description }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>{{ item.unit }}</td>
+                            <td>{{ item.price|floatformat:2 }}</td>
+                            <td>{{ item.amount|floatformat:2 }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="invoice-totals">
+                <div class="totals-section">
+                    <div class="total-row">
+                        <span class="total-label">Итого без НДС:</span>
+                        <span class="total-value">{{ invoice.subtotal|floatformat:2 }} ₽</span>
+                    </div>
+                    <div class="total-row">
+                        <span class="total-label">НДС ({{ invoice.tax_rate }}%):</span>
+                        <span class="total-value">{{ invoice.tax_amount|floatformat:2 }} ₽</span>
+                    </div>
+                    {% if invoice.discount > 0 %}
+                    <div class="total-row">
+                        <span class="total-label">Скидка:</span>
+                        <span class="total-value">{{ invoice.discount|floatformat:2 }} ₽</span>
+                    </div>
+                    {% endif %}
+                    <div class="total-row grand-total">
+                        <span class="total-label">Всего к оплате:</span>
+                        <span class="total-value">{{ invoice.total|floatformat:2 }} ₽</span>
+                    </div>
+                </div>
+            </div>
+
+            {% if invoice.notes %}
+            <div class="invoice-notes">
+                <h3>Примечания</h3>
+                <div class="notes-content">{{ invoice.notes|linebreaks }}</div>
+            </div>
+            {% endif %}
+
+            {% if invoice.payment_info %}
+            <div class="invoice-payment-info">
+                <h3>Информация об оплате</h3>
+                <div class="payment-info-content">{{ invoice.payment_info|linebreaks }}</div>
+            </div>
+            {% endif %}
+
+            <div class="invoice-footer">
+                <div class="signatures">
+                    <div class="signature-box">
+                        <div class="signature-label">Руководитель</div>
+                        <div class="signature-line">
+                            {% if company_profile.signature %}
+                            <img src="{{ company_profile.signature.url }}" alt="Подпись" class="signature-image">
+                            {% endif %}
+                        </div>
+                        <div class="signature-name">/ {{ company_profile.company_name }} /</div>
+                    </div>
+                    
+                    <div class="stamp-box">
+                        {% if company_profile.stamp %}
+                        <img src="{{ company_profile.stamp.url }}" alt="Печать" class="stamp-image">
+                        {% endif %}
+                    </div>
+                    
+                    <div class="signature-box">
+                        <div class="signature-label">Бухгалтер</div>
+                        <div class="signature-line"></div>
+                        <div class="signature-name">/ ______________ /</div>
+                    </div>
+                </div>
+                
+                <div class="invoice-meta">
+                    <div class="meta-item">Создан: {{ invoice.created_at|date:"d.m.Y H:i" }}</div>
+                    <div class="meta-item">Обновлен: {{ invoice.updated_at|date:"d.m.Y H:i" }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/invoices/detail.js' %}"></script>
+{% endblock %} 

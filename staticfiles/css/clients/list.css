@@ -1,0 +1,226 @@
+.clients-page {
+    padding: 1rem 0;
+}
+
+.page-header {
+    margin-bottom: 2rem;
+}
+
+.filters {
+    padding: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+.filters form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+}
+
+.search-box {
+    flex: 2;
+    min-width: 250px;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+}
+
+.type-filter {
+    flex: 1;
+    min-width: 150px;
+}
+
+.type-filter select {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1rem;
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.clients-list {
+    background-color: var(--color-white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    overflow: hidden;
+}
+
+.clients-list table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.clients-list th {
+    background-color: #f9f9f9;
+    font-weight: 600;
+    text-align: left;
+    padding: 1rem;
+    border-bottom: 2px solid var(--color-border);
+}
+
+.clients-list td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--color-border);
+    vertical-align: middle;
+}
+
+.clients-list tr:last-child td {
+    border-bottom: none;
+}
+
+.clients-list tr:hover {
+    background-color: var(--color-light-gray);
+}
+
+.client-name {
+    color: var(--color-blue);
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.client-name:hover {
+    text-decoration: underline;
+}
+
+.actions {
+    display: flex;
+    gap: 0.6rem;
+    justify-content: flex-end;
+}
+
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+    text-decoration: none;
+}
+
+.view-btn:hover {
+    background-color: rgba(0, 102, 204, 0.1);
+}
+
+.edit-btn:hover {
+    background-color: rgba(255, 193, 7, 0.1);
+}
+
+.delete-btn:hover {
+    background-color: rgba(220, 53, 69, 0.1);
+}
+
+.pagination {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+}
+
+.pagination-list {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    gap: 0.3rem;
+}
+
+.pagination-list li {
+    margin: 0 0.2rem;
+}
+
+.pagination-list li a,
+.pagination-list li span {
+    display: inline-block;
+    padding: 0.5rem 0.8rem;
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    border: 1px solid var(--color-border);
+    min-width: 40px;
+    text-align: center;
+}
+
+.pagination-list li a {
+    color: var(--color-dark-text);
+    background-color: var(--color-white);
+}
+
+.pagination-list li a:hover {
+    background-color: var(--color-light-gray);
+}
+
+.pagination-list li.active span {
+    background-color: var(--color-blue);
+    color: var(--color-white);
+    border-color: var(--color-blue);
+}
+
+.empty-state {
+    padding: 3rem;
+    text-align: center;
+}
+
+.empty-state-content {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.empty-state h2 {
+    margin-bottom: 1rem;
+}
+
+.empty-state p {
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+
+.empty-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+    .filters form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .search-box,
+    .type-filter {
+        width: 100%;
+    }
+    
+    .filter-buttons {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .clients-list {
+        overflow-x: auto;
+    }
+    
+    .actions {
+        flex-direction: row;
+    }
+} 

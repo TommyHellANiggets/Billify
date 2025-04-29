@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ invoice.number }}</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2cm;
+        }
+        body {
+            font-family: 'DejaVu Sans', Arial, sans-serif;
+            line-height: 1.4;
+            color: #333;
+            font-size: 12px;
+        }
+        h1, h2, h3, h4 {
+            color: #222;
+            margin-bottom: 0.5em;
+        }
+        .invoice-header {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .invoice-title {
+            flex: 1;
+        }
+        .invoice-title h2 {
+            font-size: 22px;
+            margin: 0 0 10px;
+        }
+        .company-logo {
+            text-align: right;
+        }
+        .company-logo img {
+            max-height: 80px;
+            max-width: 200px;
+        }
+        .invoice-dates {
+            margin-top: 10px;
+        }
+        .date-item {
+            margin-bottom: 5px;
+        }
+        .date-label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .invoice-parties {
+            margin-bottom: 30px;
+        }
+        .invoice-party {
+            margin-bottom: 20px;
+        }
+        .party-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        .info-row {
+            margin-bottom: 3px;
+        }
+        .info-label {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        .party-bank-details h4 {
+            font-size: 14px;
+            margin: 10px 0 5px;
+        }
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        .items-table th,
+        .items-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .items-table th {
+            background-color: #f5f5f5;
+            font-weight: bold;
+        }
+        .invoice-totals {
+            margin-bottom: 30px;
+        }
+        .totals-section {
+            width: 300px;
+            margin-left: auto;
+        }
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        .total-label {
+            font-weight: normal;
+        }
+        .grand-total {
+            font-weight: bold;
+            font-size: 14px;
+            border-top: 1px solid #ddd;
+            padding-top: 5px;
+            margin-top: 5px;
+        }
+        .invoice-notes,
+        .invoice-payment-info {
+            margin-bottom: 30px;
+        }
+        .notes-content,
+        .payment-info-content {
+            white-space: pre-line;
+        }
+        .signatures {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+        }
+        .signature-box {
+            width: 30%;
+        }
+        .signature-label {
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+        .signature-line {
+            border-bottom: 1px solid #000;
+            margin-bottom: 5px;
+            height: 40px;
+        }
+        .signature-image,
+        .stamp-image {
+            max-height: 80px;
+            max-width: 100%;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .status-draft {
+            background-color: #e6e6e6;
+            color: #666;
+        }
+        .status-sent {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+        .status-paid {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .status-overdue {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .status-cancelled {
+            background-color: #f5f5f5;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice-wrapper">
+        <div class="invoice-header">
+            <div class="invoice-title">
+                <h2>{{ invoice.number }}</h2>
+                <div class="invoice-dates">
+                    <div class="date-item">
+                        <span class="date-label">Дата выставления:</span>
+                        <span class="date-value">{{ invoice.issue_date|date:"d.m.Y" }}</span>
+                    </div>
+                    <div class="date-item">
+                        <span class="date-label">Срок оплаты:</span>
+                        <span class="date-value">{{ invoice.due_date|date:"d.m.Y" }}</span>
+                    </div>
+                    {% if invoice.payment_date %}
+                    <div class="date-item">
+                        <span class="date-label">Дата оплаты:</span>
+                        <span class="date-value">{{ invoice.payment_date|date:"d.m.Y" }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% if company_profile.logo %}
+            <div class="company-logo">
+                <img src="{{ company_profile.logo.url }}" alt="{{ company_profile.company_name }}">
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="status-badge status-{{ invoice.status }}">
+            {% if invoice.status == 'draft' %}
+                Черновик
+            {% elif invoice.status == 'sent' %}
+                Отправлен
+            {% elif invoice.status == 'paid' %}
+                Оплачен
+            {% elif invoice.status == 'overdue' %}
+                Просрочен
+            {% elif invoice.status == 'cancelled' %}
+                Отменен
+            {% endif %}
+        </div>
+
+        <div class="invoice-parties">
+            <div class="invoice-party">
+                <h3>Поставщик</h3>
+                <div class="party-details">
+                    <div class="party-name">{{ invoice.supplier_name }}</div>
+                    <div class="party-info">
+                        {% if invoice.supplier_address %}
+                        <div class="info-row">
+                            <span class="info-label">Адрес:</span>
+                            <span class="info-value">{{ invoice.supplier_address }}</span>
+                        </div>
+                        {% endif %}
+                        {% if invoice.supplier_inn %}
+                        <div class="info-row">
+                            <span class="info-label">ИНН:</span>
+                            <span class="info-value">{{ invoice.supplier_inn }}</span>
+                        </div>
+                        {% endif %}
+                        {% if invoice.supplier_kpp %}
+                        <div class="info-row">
+                            <span class="info-label">КПП:</span>
+                            <span class="info-value">{{ invoice.supplier_kpp }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% if invoice.supplier_bank or invoice.supplier_bank_bik or invoice.supplier_bank_account %}
+                <div class="party-bank-details">
+                    <h4>Банковские реквизиты</h4>
+                    <div class="bank-info">
+                        {% if invoice.supplier_bank %}
+                        <div class="info-row">
+                            <span class="info-label">Банк:</span>
+                            <span class="info-value">{{ invoice.supplier_bank }}</span>
+                        </div>
+                        {% endif %}
+                        {% if invoice.supplier_bank_bik %}
+                        <div class="info-row">
+                            <span class="info-label">БИК:</span>
+                            <span class="info-value">{{ invoice.supplier_bank_bik }}</span>
+                        </div>
+                        {% endif %}
+                        {% if invoice.supplier_bank_account %}
+                        <div class="info-row">
+                            <span class="info-label">Р/с:</span>
+                            <span class="info-value">{{ invoice.supplier_bank_account }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="invoice-party">
+                <h3>Клиент</h3>
+                <div class="party-details">
+                    <div class="party-name">{{ invoice.client.name }}</div>
+                    <div class="party-info">
+                        {% if invoice.client.address %}
+                        <div class="info-row">
+                            <span class="info-label">Адрес:</span>
+                            <span class="info-value">{{ invoice.client.address }}</span>
+                        </div>
+                        {% endif %}
+                        {% if invoice.client.tax_id %}
+                        <div class="info-row">
+                            <span class="info-label">ИНН:</span>
+                            <span class="info-value">{{ invoice.client.tax_id }}</span>
+                        </div>
+                        {% endif %}
+                        {% if invoice.client.contact_person %}
+                        <div class="info-row">
+                            <span class="info-label">Контактное лицо:</span>
+                            <span class="info-value">{{ invoice.client.contact_person }}</span>
+                        </div>
+                        {% endif %}
+                        {% if invoice.client.phone %}
+                        <div class="info-row">
+                            <span class="info-label">Телефон:</span>
+                            <span class="info-value">{{ invoice.client.phone }}</span>
+                        </div>
+                        {% endif %}
+                        {% if invoice.client.email %}
+                        <div class="info-row">
+                            <span class="info-label">Email:</span>
+                            <span class="info-value">{{ invoice.client.email }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="invoice-items">
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th>№</th>
+                        <th>Наименование</th>
+                        <th>Кол-во</th>
+                        <th>Ед.</th>
+                        <th>Цена, ₽</th>
+                        <th>Сумма, ₽</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in invoice_items %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ item.description }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.unit }}</td>
+                        <td>{{ item.price|floatformat:2 }}</td>
+                        <td>{{ item.amount|floatformat:2 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="invoice-totals">
+            <div class="totals-section">
+                <div class="total-row">
+                    <span class="total-label">Итого без НДС:</span>
+                    <span class="total-value">{{ invoice.subtotal|floatformat:2 }} ₽</span>
+                </div>
+                <div class="total-row">
+                    <span class="total-label">НДС ({{ invoice.tax_rate }}%):</span>
+                    <span class="total-value">{{ invoice.tax_amount|floatformat:2 }} ₽</span>
+                </div>
+                {% if invoice.discount > 0 %}
+                <div class="total-row">
+                    <span class="total-label">Скидка:</span>
+                    <span class="total-value">{{ invoice.discount|floatformat:2 }} ₽</span>
+                </div>
+                {% endif %}
+                <div class="total-row grand-total">
+                    <span class="total-label">Всего к оплате:</span>
+                    <span class="total-value">{{ invoice.total|floatformat:2 }} ₽</span>
+                </div>
+            </div>
+        </div>
+
+        {% if invoice.notes %}
+        <div class="invoice-notes">
+            <h3>Примечания</h3>
+            <div class="notes-content">{{ invoice.notes|linebreaks }}</div>
+        </div>
+        {% endif %}
+
+        {% if invoice.payment_info %}
+        <div class="invoice-payment-info">
+            <h3>Информация об оплате</h3>
+            <div class="payment-info-content">{{ invoice.payment_info|linebreaks }}</div>
+        </div>
+        {% endif %}
+
+        <div class="signatures">
+            <div class="signature-box">
+                <div class="signature-label">Руководитель</div>
+                <div class="signature-line">
+                    {% if company_profile.signature %}
+                    <img src="{{ company_profile.signature.url }}" alt="Подпись" class="signature-image">
+                    {% endif %}
+                </div>
+                <div class="signature-name">/ {{ company_profile.company_name }} /</div>
+            </div>
+            
+            <div class="stamp-box">
+                {% if company_profile.stamp %}
+                <img src="{{ company_profile.stamp.url }}" alt="Печать" class="stamp-image">
+                {% endif %}
+            </div>
+            
+            <div class="signature-box">
+                <div class="signature-label">Бухгалтер</div>
+                <div class="signature-line"></div>
+                <div class="signature-name">/ ______________ /</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
