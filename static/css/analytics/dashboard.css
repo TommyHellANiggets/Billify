@@ -1,0 +1,328 @@
+/* Компактный стиль для страницы аналитики */
+:root {
+    --primary-color: #4361ee;
+    --primary-light: #eef2ff;
+    --secondary-color: #6c757d;
+    --accent-color: #3ccf91;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+    --border-color: #e9ecef;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+    --border-radius: 6px;
+    --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --purple: #6b47ed;
+    --purple-light: rgba(107, 71, 237, 0.1);
+}
+
+body {
+    font-family: var(--font-main);
+    color: var(--dark-color);
+    background-color: #f5f7fa;
+}
+
+.analytics-container {
+    padding: 12px 0;
+    max-width: 100%;
+}
+
+/* Верхняя сводка */
+.analytics-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.summary-card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 12px;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.summary-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.summary-title {
+    font-size: 0.8rem;
+    color: var(--secondary-color);
+    margin: 0 0 8px 0;
+    font-weight: 500;
+}
+
+.summary-data {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.summary-value {
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.summary-icon {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--purple-light);
+    color: var(--purple);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+}
+
+/* Карточки статусов */
+.data-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.status-card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 12px;
+    box-shadow: var(--shadow-sm);
+}
+
+.status-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.status-title {
+    font-size: 0.8rem;
+    margin: 0;
+    font-weight: 500;
+}
+
+.status-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 0.7rem;
+    color: white;
+}
+
+.status-value {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.status-trend {
+    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+}
+
+.status-trend i {
+    margin-right: 4px;
+}
+
+.trend-up {
+    color: var(--accent-color);
+}
+
+.trend-down {
+    color: #ff4d6d;
+}
+
+/* Цвета статусов */
+.status-draft .status-icon {
+    background-color: #6c757d;
+}
+
+.status-sent .status-icon {
+    background-color: #17a2b8;
+}
+
+.status-paid .status-icon {
+    background-color: #28a745;
+}
+
+.status-overdue .status-icon {
+    background-color: #dc3545;
+}
+
+/* Строка с графиками */
+.charts-row {
+    display: grid;
+    grid-template-columns: 60% 40%;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.revenue-chart-card .chart-container {
+    height: 250px;
+}
+
+/* Графики */
+.chart-card {
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.chart-title {
+    font-size: 0.9rem;
+    margin: 0;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+.chart-title i {
+    margin-right: 8px;
+    color: var(--purple);
+}
+
+.chart-options {
+    display: flex;
+    gap: 6px;
+}
+
+.chart-option {
+    font-size: 0.7rem;
+    padding: 4px 8px;
+    background-color: var(--light-color);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.chart-option.active {
+    background-color: var(--purple-light);
+    color: var(--purple);
+    font-weight: 500;
+}
+
+.chart-body {
+    padding: 15px;
+}
+
+.chart-container {
+    position: relative;
+}
+
+/* Таблица транзакций */
+.transactions-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+}
+
+.transactions-table th {
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--secondary-color);
+    font-weight: 500;
+}
+
+.transactions-table td {
+    padding: 6px 12px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.7rem;
+    text-align: center;
+}
+
+.status-badge.draft {
+    background-color: #e9ecef;
+    color: #495057;
+}
+
+.status-badge.sent {
+    background-color: #e3f2fd;
+    color: #0d6efd;
+}
+
+.status-badge.paid {
+    background-color: #d1e7dd;
+    color: #198754;
+}
+
+.status-badge.overdue {
+    background-color: #f8d7da;
+    color: #dc3545;
+}
+
+.see-all {
+    font-size: 0.75rem;
+    color: var(--purple);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.see-all i {
+    font-size: 0.7rem;
+    margin-left: 4px;
+    transition: transform 0.2s;
+}
+
+.see-all:hover i {
+    transform: translateX(2px);
+}
+
+/* Адаптивные стили */
+@media (max-width: 992px) {
+    .data-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .charts-row {
+        grid-template-columns: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .analytics-summary {
+        grid-template-columns: 100%;
+    }
+    
+    .data-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .charts-row {
+        grid-template-columns: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .data-grid {
+        grid-template-columns: 100%;
+    }
+    
+    .chart-options {
+        display: none;
+    }
+} 

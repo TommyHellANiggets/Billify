@@ -1,0 +1,519 @@
+/* Стили для страницы детального просмотра счета */
+
+.invoice-detail-page {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.header-content h1 {
+    font-size: 24px;
+    margin: 0 0 5px;
+    color: #333;
+}
+
+.page-subtitle {
+    color: #666;
+    margin: 0;
+    font-size: 16px;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn {
+    padding: 8px 15px;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.btn i {
+    margin-right: 6px;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid #ddd;
+    color: #555;
+}
+
+.btn-outline:hover {
+    background: #f5f5f5;
+    border-color: #ccc;
+}
+
+.btn-primary {
+    background: #4a89dc;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: #3a79cc;
+}
+
+.btn-success {
+    background: #37bc9b;
+    color: #fff;
+}
+
+.btn-success:hover {
+    background: #2caa8f;
+}
+
+.btn-secondary {
+    background: #656d78;
+    color: #fff;
+}
+
+.btn-secondary:hover {
+    background: #565d68;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 1000;
+    display: none;
+    min-width: 200px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    background-color: #fff;
+    border: 1px solid rgba(0,0,0,0.15);
+    border-radius: 4px;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 15px;
+    clear: both;
+    font-weight: normal;
+    line-height: 1.42857143;
+    color: #333;
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+.dropdown-item:hover {
+    background-color: #f5f5f5;
+    color: #262626;
+}
+
+.dropdown-item i {
+    margin-right: 8px;
+    width: 16px;
+    text-align: center;
+}
+
+.text-danger {
+    color: #e74c3c !important;
+}
+
+.invoice-container {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    overflow: hidden;
+}
+
+.invoice-status-bar {
+    padding: 20px;
+    background: #f9f9f9;
+    border-bottom: 1px solid #eee;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.status-badge i {
+    margin-right: 6px;
+}
+
+.status-draft {
+    background-color: #f5f5f5;
+    color: #777;
+}
+
+.status-sent {
+    background-color: #e8f4fd;
+    color: #3498db;
+}
+
+.status-paid {
+    background-color: #e8f8f5;
+    color: #27ae60;
+}
+
+.status-overdue {
+    background-color: #fdf3f2;
+    color: #e74c3c;
+}
+
+.status-cancelled {
+    background-color: #f9f9f9;
+    color: #999;
+}
+
+.status-timeline {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.status-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 120px;
+    position: relative;
+}
+
+.status-connector {
+    flex: 1;
+    height: 2px;
+    background: #ddd;
+    margin: 0 10px;
+}
+
+.step-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    margin-bottom: 8px;
+    border: 2px solid #ddd;
+}
+
+.status-step.complete .step-icon {
+    background: #4a89dc;
+    color: #fff;
+    border-color: #3a79cc;
+}
+
+.step-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #777;
+}
+
+.status-step.complete .step-label {
+    color: #333;
+}
+
+.step-date {
+    font-size: 11px;
+    color: #999;
+    margin-top: 3px;
+}
+
+.invoice-wrapper {
+    padding: 30px;
+}
+
+.invoice-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.invoice-title h2 {
+    font-size: 24px;
+    margin: 0 0 15px;
+    color: #333;
+}
+
+.invoice-dates {
+    font-size: 14px;
+}
+
+.date-item {
+    margin-bottom: 5px;
+}
+
+.date-label {
+    font-weight: 600;
+    color: #777;
+    margin-right: 5px;
+}
+
+.company-logo img {
+    max-height: 80px;
+    max-width: 200px;
+}
+
+.invoice-parties {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.invoice-party {
+    width: 48%;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    padding: 15px;
+}
+
+.invoice-party h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 18px;
+    color: #555;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 8px;
+}
+
+.party-name {
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.party-info {
+    font-size: 14px;
+    color: #555;
+}
+
+.info-row {
+    margin-bottom: 5px;
+}
+
+.info-label {
+    font-weight: 600;
+    color: #777;
+}
+
+.party-bank-details {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px dashed #eee;
+}
+
+.party-bank-details h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #555;
+}
+
+.items-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+}
+
+.items-table th,
+.items-table td {
+    border: 1px solid #eee;
+    padding: 12px 15px;
+    text-align: left;
+}
+
+.items-table th {
+    background-color: #f9f9f9;
+    font-weight: 600;
+    color: #555;
+}
+
+.items-table tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+.invoice-totals {
+    margin-bottom: 30px;
+}
+
+.totals-section {
+    width: 350px;
+    margin-left: auto;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    padding: 15px;
+    background: #fafafa;
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    font-size: 14px;
+    color: #555;
+}
+
+.total-label {
+    font-weight: 600;
+}
+
+.grand-total {
+    margin-top: 10px;
+    border-top: 2px solid #eee;
+    padding-top: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.invoice-notes,
+.invoice-payment-info {
+    border: 1px solid #eee;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.invoice-notes h3,
+.invoice-payment-info h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: #555;
+}
+
+.notes-content,
+.payment-info-content {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.5;
+}
+
+.invoice-footer {
+    margin-top: 40px;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
+.signatures {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.signature-box {
+    width: 32%;
+    text-align: center;
+}
+
+.signature-label {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 30px;
+}
+
+.signature-line {
+    height: 40px;
+    border-bottom: 1px solid #999;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.signature-image {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    max-height: 40px;
+    max-width: 100%;
+}
+
+.signature-name {
+    font-size: 14px;
+    color: #555;
+}
+
+.stamp-box {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.stamp-image {
+    max-height: 80px;
+    max-width: 100%;
+}
+
+.invoice-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    font-size: 12px;
+    color: #999;
+    border-top: 1px dashed #eee;
+    padding-top: 10px;
+}
+
+/* Стили для печати */
+@media print {
+    .page-header,
+    .invoice-status-bar,
+    .header-actions,
+    .nav-sidebar,
+    .navbar,
+    .dropdown {
+        display: none !important;
+    }
+    
+    .invoice-container {
+        box-shadow: none;
+        border: none;
+    }
+    
+    .invoice-wrapper {
+        padding: 0;
+    }
+    
+    .invoice-meta {
+        display: none;
+    }
+    
+    @page {
+        size: A4;
+        margin: 2cm;
+    }
+    
+    body {
+        margin: 0;
+        padding: 0;
+        background: #fff;
+    }
+} 

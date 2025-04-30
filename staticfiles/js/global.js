@@ -20,6 +20,77 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // Глобальная функция для отображения уведомлений
+    window.showNotification = function(message, type = 'info') {
+        const notificationsContainer = document.getElementById('notifications-container');
+        if (!notificationsContainer) return;
+        
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        
+        const icon = document.createElement('div');
+        icon.className = 'notification-icon';
+        
+        let iconHtml = '<i class="fas fa-info-circle"></i>';
+        if (type === 'success') {
+            iconHtml = '<i class="fas fa-check-circle"></i>';
+        } else if (type === 'error') {
+            iconHtml = '<i class="fas fa-exclamation-circle"></i>';
+        } else if (type === 'warning') {
+            iconHtml = '<i class="fas fa-exclamation-triangle"></i>';
+        }
+        
+        icon.innerHTML = iconHtml;
+        
+        const content = document.createElement('div');
+        content.className = 'notification-content';
+        content.textContent = message;
+        
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'notification-close';
+        closeBtn.innerHTML = '&times;';
+        closeBtn.addEventListener('click', function() {
+            notification.style.animation = 'fadeOut 0.3s ease-out forwards';
+            setTimeout(() => {
+                notification.remove();
+            }, 300);
+        });
+        
+        notification.appendChild(icon);
+        notification.appendChild(content);
+        notification.appendChild(closeBtn);
+        
+        notificationsContainer.appendChild(notification);
+        
+        // Автоматическое закрытие через 5 секунд
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.style.animation = 'fadeOut 0.3s ease-out forwards';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                }, 300);
+            }
+        }, 5000);
+        
+        return notification;
+    };
+    
+    // Обработка закрытия уведомлений
+    const notificationsContainer = document.getElementById('notifications-container');
+    if (notificationsContainer) {
+        notificationsContainer.addEventListener('click', function(e) {
+            if (e.target && e.target.classList.contains('notification-close')) {
+                const notification = e.target.closest('.notification');
+                notification.style.animation = 'fadeOut 0.3s ease-out forwards';
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }
+        });
+    }
+    
     // Закрытие алертов
     const alertCloseButtons = document.querySelectorAll('.alert-close');
     alertCloseButtons.forEach(button => {
@@ -156,4 +227,50 @@ window.addEventListener('scroll', function() {
     }
     
     lastScrollPosition = currentScrollPosition;
-}); 
+});
+
+// Управление модальным окном подтверждения выхода
+const logoutBtn = document.getElementById('logout-btn');
+const logoutModal = document.getElementById('logout-modal');
+const modalClose = document.querySelector('.modal-close');
+const modalCancel = document.querySelector('.modal-cancel');
+
+if (logoutBtn && logoutModal) {
+    // Открытие модального окна
+    logoutBtn.addEventListener('click', function() {
+        logoutModal.classList.add('show');
+        document.body.style.overflow = 'hidden'; // Блокируем прокрутку
+    });
+
+    // Закрытие модального окна по клику на крестик
+    if (modalClose) {
+        modalClose.addEventListener('click', function() {
+            logoutModal.classList.remove('show');
+            document.body.style.overflow = '';
+        });
+    }
+
+    // Закрытие модального окна по клику на кнопку "Отмена"
+    if (modalCancel) {
+        modalCancel.addEventListener('click', function() {
+            logoutModal.classList.remove('show');
+            document.body.style.overflow = '';
+        });
+    }
+
+    // Закрытие модального окна по клику вне его области
+    logoutModal.addEventListener('click', function(event) {
+        if (event.target === logoutModal) {
+            logoutModal.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+    });
+
+    // Закрытие модального окна по нажатию Escape
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape' && logoutModal.classList.contains('show')) {
+            logoutModal.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+    });
+} 

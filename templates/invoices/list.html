@@ -16,42 +16,40 @@
 
     <div class="invoice-categories">
         <div class="category-tile incoming {% if current_type == 'incoming' %}active{% endif %}">
+            <div class="tile-background"></div>
             <div class="tile-content">
-                <div class="tile-icon">
-                    <i class="fas fa-arrow-down"></i>
-                </div>
-                <div class="tile-info">
+                <div class="tile-header">
+                    <div class="tile-icon">
+                        <i class="fas fa-arrow-down"></i>
+                    </div>
                     <h3>Входящие счета</h3>
-                    <p>Счета от поставщиков</p>
-                    <div class="tile-counter">{{ incoming_count|default:"0" }}</div>
                 </div>
+                <p class="tile-description">Счета от поставщиков</p>
+                <div class="tile-counter">{{ incoming_count|default:"0" }}</div>
                 <div class="invoice-actions">
-                    <a href="{% url 'invoices:create_incoming' %}" class="btn btn-primary">
-                        <i class="fas fa-plus"></i> Создать входящий счет
-                    </a>
-                    <a href="{% url 'invoices:list' %}?type=incoming" class="btn btn-outline">
-                        <i class="fas fa-list"></i> Просмотреть
+                    <a href="{% url 'invoices:create_incoming' %}" class="tile-button">
+                        <span class="button-icon"><i class="fas fa-plus"></i></span>
+                        <span class="button-text">Создать счет</span>
                     </a>
                 </div>
             </div>
         </div>
 
         <div class="category-tile outgoing {% if current_type == 'outgoing' %}active{% endif %}">
+            <div class="tile-background"></div>
             <div class="tile-content">
-                <div class="tile-icon">
-                    <i class="fas fa-arrow-up"></i>
-                </div>
-                <div class="tile-info">
+                <div class="tile-header">
+                    <div class="tile-icon">
+                        <i class="fas fa-arrow-up"></i>
+                    </div>
                     <h3>Исходящие счета</h3>
-                    <p>Счета для клиентов</p>
-                    <div class="tile-counter">{{ outgoing_count|default:"0" }}</div>
                 </div>
+                <p class="tile-description">Счета для клиентов</p>
+                <div class="tile-counter">{{ outgoing_count|default:"0" }}</div>
                 <div class="invoice-actions">
-                    <a href="{% url 'invoices:create_outgoing' %}" class="btn btn-primary">
-                        <i class="fas fa-plus"></i> Создать исходящий счет
-                    </a>
-                    <a href="{% url 'invoices:list' %}?type=outgoing" class="btn btn-outline">
-                        <i class="fas fa-list"></i> Просмотреть
+                    <a href="{% url 'invoices:create_outgoing' %}" class="tile-button">
+                        <span class="button-icon"><i class="fas fa-plus"></i></span>
+                        <span class="button-text">Создать счет</span>
                     </a>
                 </div>
             </div>
@@ -64,18 +62,30 @@
         </div>
         <div class="stats-container">
             <div class="stat-item">
+                <div class="stat-icon">
+                    <i class="fas fa-file-invoice"></i>
+                </div>
                 <div class="stat-number">{{ total_count|default:"0" }}</div>
                 <div class="stat-label">Всего счетов</div>
             </div>
             <div class="stat-item">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
                 <div class="stat-number">{{ pending_count|default:"0" }}</div>
                 <div class="stat-label">Ожидают оплаты</div>
             </div>
             <div class="stat-item">
+                <div class="stat-icon">
+                    <i class="fas fa-exclamation-circle"></i>
+                </div>
                 <div class="stat-number">{{ overdue_count|default:"0" }}</div>
                 <div class="stat-label">Просрочены</div>
             </div>
             <div class="stat-item">
+                <div class="stat-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
                 <div class="stat-number">{{ paid_count|default:"0" }}</div>
                 <div class="stat-label">Оплачены</div>
             </div>
@@ -123,7 +133,13 @@
                     {% if invoices %}
                         {% for invoice in invoices %}
                         <tr>
-                            <td>{{ invoice.number }}</td>
+                            <td>
+                                {% if invoice.type == 'incoming' or invoice.supplier_name != user.company_profile.company_name %}
+                                    <span class="invoice-number incoming-invoice">{{ invoice.number }}</span>
+                                {% else %}
+                                    <span class="invoice-number outgoing-invoice">{{ invoice.number }}</span>
+                                {% endif %}
+                            </td>
                             <td>
                                 {% if current_type == 'incoming' %}
                                     {{ invoice.supplier_name }}
@@ -162,11 +178,14 @@
                                 <a href="{% url 'invoices:detail' invoice.id %}" class="btn-icon" data-tooltip="Просмотр">
                                     <i class="fas fa-eye"></i>
                                 </a>
-                                <a href="#" class="btn-icon" data-tooltip="Редактировать">
+                                <a href="{% url 'invoices:edit' invoice.id %}" class="btn-icon" data-tooltip="Редактировать">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <a href="#" class="btn-icon" data-tooltip="Печать">
+                                <a href="{% url 'invoices:pdf' invoice.id %}" class="btn-icon" data-tooltip="Печать">
                                     <i class="fas fa-print"></i>
+                                </a>
+                                <a href="{% url 'invoices:delete' invoice.id %}" class="btn-icon btn-icon-danger" data-tooltip="Удалить" onclick="return confirm('Вы уверены, что хотите удалить этот счет?');">
+                                    <i class="fas fa-trash-alt"></i>
                                 </a>
                             </td>
                         </tr>

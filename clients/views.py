@@ -53,6 +53,7 @@ def client_create(request):
     if request.method == 'POST':
         # Здесь будет обработка формы
         client_type = request.POST.get('type')
+        entity_type = request.POST.get('entity_type', 'client')  # 'client' или 'supplier'
         name = request.POST.get('name')
         email = request.POST.get('email', '')
         phone = request.POST.get('phone', '')
@@ -72,6 +73,7 @@ def client_create(request):
         client = Client(
             user=request.user,  # Привязка к текущему пользователю
             type=client_type,
+            entity_type=entity_type,  # Добавляем новое поле 
             name=name,
             email=email,
             phone=phone,
@@ -86,7 +88,8 @@ def client_create(request):
         )
         
         client.save()
-        messages.success(request, f'Клиент {client.name} успешно создан')
+        entity_text = 'поставщик' if entity_type == 'supplier' else 'клиент'
+        messages.success(request, f'{entity_text.capitalize()} {client.name} успешно создан')
         return redirect('clients:detail', client_id=client.id)
     
     return render(request, 'clients/create.html', {'title': 'Новый клиент'})

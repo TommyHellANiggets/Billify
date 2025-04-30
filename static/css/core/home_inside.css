@@ -1,4 +1,4 @@
-/* Стили для внутренней домашней страницы - минималистичный стиль */
+/* Стили для внутренней домашней страницы - простой, минималистичный стиль */
 :root {
     --primary-color: #4361ee;
     --primary-light: #eef2ff;
@@ -8,10 +8,10 @@
     --dark-color: #343a40;
     --border-color: #e9ecef;
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.08);
-    --border-radius: 6px;
+    --border-radius: 8px;
     --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    --transition: all 0.2s ease;
+    --purple: #6b47ed;
+    --purple-light: rgba(107, 71, 237, 0.1);
 }
 
 body {
@@ -22,14 +22,13 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
+    margin-top: 0;
 }
 
-/* Dashboard Grid */
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-gap: 24px;
-    margin: 20px 0;
+.section-title {
+    font-size: 1.2rem;
+    margin: 1.2rem 0 1rem 0;
+    color: var(--dark-color);
 }
 
 /* Dashboard Welcome */
@@ -47,7 +46,6 @@ h1, h2, h3, h4, h5, h6 {
 .welcome-info h1 {
     font-size: 1.35rem;
     margin: 0 0 4px 0;
-    color: var(--dark-color);
 }
 
 .welcome-info p {
@@ -62,237 +60,191 @@ h1, h2, h3, h4, h5, h6 {
     gap: 8px;
 }
 
-/* Dashboard Stats */
-.dashboard-stats-wrapper {
-    margin-bottom: 0;
+/* Основной макет */
+.dashboard-layout {
+    display: flex;
+    gap: 24px;
 }
 
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
+.dashboard-left {
+    flex: 1;
 }
 
-.stat-card {
-    background-color: white;
-    padding: 16px;
+.dashboard-right {
+    flex: 0 0 30%;
+    background: white;
     border-radius: var(--border-radius);
+    min-height: 600px;
+    padding: 20px;
     box-shadow: var(--shadow-sm);
+}
+
+/* Стили статистики */
+.stats-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.stat-item {
+    background-color: white;
+    border-radius: var(--border-radius);
+    padding: 15px;
     display: flex;
     align-items: center;
-    transition: var(--transition);
-}
-
-.stat-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
+    flex: 1;
+    min-width: 200px;
+    box-shadow: var(--shadow-sm);
 }
 
 .stat-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background-color: var(--primary-light);
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--primary-color);
-    font-size: 0.9rem;
-    margin-right: 12px;
-    flex-shrink: 0;
+    background-color: var(--purple-light);
+    color: var(--purple);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    margin-right: 15px;
 }
 
-.stat-content {
-    flex-grow: 1;
-}
-
-.stat-number {
+.stat-value {
     font-size: 1.25rem;
     font-weight: 700;
-    color: var(--dark-color);
-    margin: 0;
-    line-height: 1.2;
 }
 
 .stat-label {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     color: var(--secondary-color);
-    margin: 0;
+    margin-left: 8px;
 }
 
-/* Quick Actions and Recent Activity */
-.quick-actions-wrapper, 
-.recent-activity-wrapper {
+/* Стили быстрых действий */
+.quick-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
     background-color: white;
     border-radius: var(--border-radius);
-    box-shadow: var(--shadow-sm);
     padding: 20px;
-}
-
-.quick-actions-wrapper h2, 
-.recent-activity-wrapper h2 {
-    font-size: 1rem;
-    font-weight: 600;
-    margin: 0 0 16px 0;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--border-color);
-    color: var(--dark-color);
-}
-
-/* Quick Actions */
-.actions-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    margin-top: 24px;
+    box-shadow: var(--shadow-sm);
 }
 
 .action-link {
+    display: flex;
+    align-items: center;
     text-decoration: none;
-    color: inherit;
-}
-
-.action-card {
-    display: flex;
-    align-items: center;
-    padding: 12px;
+    color: var(--purple);
+    font-size: 0.9rem;
+    padding: 10px;
+    flex: 1;
+    min-width: 200px;
+    border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
-    background-color: var(--light-color);
-    transition: var(--transition);
-    border: 1px solid transparent;
+    transition: all 0.2s;
 }
 
-.action-card:hover {
-    background-color: var(--primary-light);
-    border-color: rgba(67, 97, 238, 0.1);
+.action-link i {
+    margin-right: 10px;
+    font-size: 1.1rem;
+    width: 20px;
 }
 
-.action-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    background-color: white;
-    border-radius: 50%;
-    color: var(--primary-color);
-    font-size: 0.9rem;
-    margin-right: 12px;
-    flex-shrink: 0;
-    box-shadow: var(--shadow-sm);
+.action-link:hover {
+    background-color: var(--purple-light);
+    border-color: var(--purple);
+    text-decoration: none;
 }
 
-.action-card h3 {
-    font-size: 0.9rem;
-    font-weight: 500;
-    margin: 0;
-}
-
-/* Recent Activity */
-.activity-container {
-    max-height: 280px;
-    overflow-y: auto;
-}
-
-.activity-container::-webkit-scrollbar {
-    width: 4px;
-}
-
-.activity-container::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-}
-
-.activity-container::-webkit-scrollbar-thumb {
-    background: #ddd;
-    border-radius: 4px;
-}
-
+/* Стили недавней активности */
 .activity-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
 }
 
 .activity-item {
     display: flex;
-    padding: 12px;
-    border-radius: var(--border-radius);
-    background-color: var(--light-color);
-    border-left: 3px solid var(--primary-color);
+    align-items: flex-start;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.activity-item:last-child {
+    border-bottom: none;
 }
 
 .activity-icon {
+    width: 30px;
+    height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 28px;
-    height: 28px;
-    background-color: white;
-    color: var(--primary-color);
-    border-radius: 50%;
-    font-size: 0.8rem;
-    margin-right: 12px;
+    background-color: var(--purple-light);
+    color: var(--purple);
+    border-radius: var(--border-radius);
+    margin-right: 15px;
     flex-shrink: 0;
 }
 
-.activity-details {
-    flex-grow: 1;
+.activity-content {
+    flex: 1;
 }
 
-.activity-details h4 {
+.activity-title {
+    font-weight: 600;
     font-size: 0.9rem;
-    margin: 0 0 4px 0;
-    color: var(--dark-color);
+    margin-bottom: 4px;
+    color: var(--purple);
 }
 
-.activity-details p {
-    font-size: 0.8rem;
-    margin: 0 0 4px 0;
-    color: var(--secondary-color);
+.activity-desc {
+    font-size: 0.85rem;
+    margin-bottom: 4px;
 }
 
 .activity-time {
     font-size: 0.75rem;
-    color: #adb5bd;
-}
-
-.empty-state {
-    display: flex;
-    align-items: center;
-    padding: 20px;
     color: var(--secondary-color);
 }
 
+.empty-state {
+    text-align: center;
+    padding: 50px 0;
+    color: #aaa;
+}
+
 .empty-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    background-color: var(--light-color);
-    border-radius: 50%;
-    color: #adb5bd;
-    font-size: 1rem;
-    margin-right: 12px;
+    font-size: 2rem;
+    opacity: 0.5;
+    margin-bottom: 10px;
+    display: block;
 }
 
 .empty-state p {
-    font-size: 0.85rem;
     margin: 0;
+    font-size: 0.9rem;
 }
 
-/* Buttons */
+/* Кнопки */
 .btn {
     display: inline-flex;
     align-items: center;
-    padding: 6px 12px;
-    border-radius: var(--border-radius);
+    justify-content: center;
     font-weight: 500;
-    font-size: 0.85rem;
-    transition: var(--transition);
-    text-decoration: none;
-    border: none;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
     cursor: pointer;
+    border: 1px solid transparent;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    border-radius: var(--border-radius);
+    transition: all 0.2s;
 }
 
 .btn i {
@@ -301,7 +253,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-sm {
-    padding: 4px 10px;
+    padding: 0.35rem 0.8rem;
     font-size: 0.8rem;
 }
 
@@ -311,8 +263,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-primary:hover {
-    background-color: #3551d1;
-    box-shadow: 0 2px 4px rgba(67, 97, 238, 0.15);
+    background-color: #3051d3;
 }
 
 .btn-secondary {
@@ -330,72 +281,74 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-accent:hover {
-    background-color: #34b982;
+    background-color: #2bba7c;
 }
 
 .btn-light {
     background-color: var(--light-color);
     color: var(--dark-color);
-    border: 1px solid #ddd;
+    border: 1px solid #e2e6ea;
 }
 
 .btn-light:hover {
-    background-color: #e9ecef;
+    background-color: #e2e6ea;
 }
 
-/* Desktop view */
-@media (min-width: 992px) {
-    .dashboard-grid {
-        grid-template-columns: 7fr 5fr;
+/* Медиа-запросы для адаптивности */
+@media (max-width: 991px) {
+    .dashboard-layout {
+        flex-direction: column;
     }
     
-    .dashboard-stats-wrapper {
-        grid-column: span 2;
-    }
-}
-
-/* Tablet view */
-@media (max-width: 991px) {
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
+    .dashboard-left, 
+    .dashboard-right {
+        flex: 1 1 100%;
     }
     
     .dashboard-welcome {
         flex-direction: column;
-        align-items: flex-start;
+        text-align: center;
     }
     
     .welcome-info {
-        margin-bottom: 12px;
+        margin-bottom: 15px;
     }
     
     .quick-buttons {
-        width: 100%;
+        justify-content: center;
+    }
+    
+    .dashboard-right {
+        margin-top: 24px;
     }
 }
 
-/* Mobile view */
 @media (max-width: 767px) {
-    .actions-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .stat-card {
-        padding: 12px;
+    .stat-item {
+        flex-direction: column;
+        text-align: center;
     }
     
     .stat-icon {
-        width: 32px;
-        height: 32px;
-        font-size: 0.8rem;
+        margin-right: 0;
+        margin-bottom: 10px;
     }
     
-    .stat-number {
-        font-size: 1.1rem;
+    .stat-value {
+        margin-bottom: 5px;
     }
     
-    .quick-actions-wrapper, 
-    .recent-activity-wrapper {
-        padding: 16px;
+    .stat-label {
+        margin-left: 0;
     }
-} 
+}
+
+@media (max-width: 480px) {
+    .dashboard-welcome {
+        padding: 15px;
+    }
+    
+    .welcome-info h1 {
+        font-size: 1.2rem;
+    }
+}

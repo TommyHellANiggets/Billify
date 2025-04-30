@@ -1,18 +1,31 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Новый входящий счет{% endblock %}
+{% block title %}{% if is_edit %}Редактирование счета{% else %}Новый входящий счет{% endif %}{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/invoices/create.css' %}">
+<style>
+    .form-grid-row {
+        display: grid;
+        grid-template-columns: 50% 25% 25%;
+        gap: 15px;
+        padding-right: 15px;
+    }
+    .supplier-select-custom {
+        height: 44px;
+        display: flex;
+        align-items: center;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
 <section class="create-invoice-page">
     <div class="page-header">
         <div class="header-content">
-            <h1>Создание входящего счета</h1>
-            <p class="page-subtitle">Заполните данные для создания нового входящего счета</p>
+            <h1>{% if is_edit %}Редактирование счета {{ invoice.number }}{% else %}Создание входящего счета{% endif %}</h1>
+            <p class="page-subtitle">{% if is_edit %}Измените данные счета{% else %}Заполните данные для создания нового входящего счета{% endif %}</p>
         </div>
         <div class="header-actions">
             <a href="{% url 'invoices:list' %}?type=incoming" class="btn btn-outline">
@@ -22,25 +35,7 @@
     </div>
 
     <div class="form-container">
-        <div class="form-info-card">
-            <div class="form-info-header">
-                <i class="fas fa-info-circle"></i>
-                <h3>Входящий счет</h3>
-            </div>
-            <div class="form-info-content">
-                <p>Входящий счет используется для учета расходов и счетов от поставщиков.</p>
-                <ul class="info-list">
-                    <li><i class="fas fa-check"></i> Отслеживайте расходы</li>
-                    <li><i class="fas fa-check"></i> Контролируйте оплаты поставщикам</li>
-                    <li><i class="fas fa-check"></i> Регистрируйте закупки</li>
-                </ul>
-            </div>
-            <div class="form-info-image">
-                <img src="{% static 'images/incoming-invoice.svg' %}" alt="Входящий счет" class="info-image">
-            </div>
-        </div>
-
-        <form method="post" action="{% url 'invoices:create_incoming' %}" class="invoice-form">
+        <form method="post" action="{% if is_edit %}{% url 'invoices:edit' invoice.id %}{% else %}{% url 'invoices:create_incoming' %}{% endif %}" class="invoice-form" {% if is_edit %}data-is-edit="true"{% endif %}>
             {% csrf_token %}
             
             <div class="form-section">
@@ -49,26 +44,23 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="invoice_number">Номер счета</label>
-                        <input type="text" id="invoice_number" name="invoice_number" value="{{ next_invoice_number }}" required>
+                        <input type="text" id="invoice_number" name="invoice_number" value="{% if is_edit %}{{ invoice.number }}{% else %}{{ next_invoice_number }}{% endif %}" required>
                     </div>
                     <div class="form-group">
                         <label for="invoice_date">Дата счета</label>
-                        <input type="date" id="invoice_date" name="invoice_date" required>
+                        <input type="date" id="invoice_date" name="invoice_date" value="{% if is_edit %}{{ invoice.issue_date|date:'Y-m-d' }}{% endif %}" required>
                     </div>
-                </div>
-                
-                <div class="form-row">
                     <div class="form-group">
                         <label for="due_date">Срок оплаты</label>
-                        <input type="date" id="due_date" name="due_date" required>
+                        <input type="date" id="due_date" name="due_date" value="{% if is_edit %}{{ invoice.due_date|date:'Y-m-d' }}{% endif %}" required>
                     </div>
                     <div class="form-group">
                         <label for="status">Статус</label>
                         <select id="status" name="status" required>
-                            <option value="new">Новый</option>
-                            <option value="pending">Ожидает оплаты</option>
-                            <option value="paid">Оплачен</option>
-                            <option value="cancelled">Отменен</option>
+                            <option value="new" {% if is_edit and invoice.status == 'new' %}selected{% endif %}>Новый</option>
+                            <option value="pending" {% if is_edit and invoice.status == 'pending' %}selected{% endif %}>Ожидает оплаты</option>
+                            <option value="paid" {% if is_edit and invoice.status == 'paid' %}selected{% endif %}>Оплачен</option>
+                            <option value="cancelled" {% if is_edit and invoice.status == 'cancelled' %}selected{% endif %}>Отменен</option>
                         </select>
                     </div>
                 </div>
@@ -77,13 +69,13 @@
             <div class="form-section">
                 <h3 class="section-title">Информация о поставщике</h3>
                 
-                <div class="form-row">
-                    <div class="form-group full-width">
+                <div class="form-row form-grid-row">
+                    <div class="form-group">
                         <label for="supplier">Поставщик</label>
                         <div class="select-wrapper">
-                            <input type="hidden" id="supplier_id" name="supplier" required>
-                            <div class="supplier-select" id="supplier-select" tabindex="0">
-                                <span>Выберите поставщика</span>
+                            <input type="hidden" id="supplier_id" name="supplier" value="{% if is_edit %}{{ invoice.supplier.id }}{% endif %}" required>
+                            <div class="supplier-select supplier-select-custom" id="supplier-select" tabindex="0">
+                                <span>{% if is_edit %}{{ invoice.supplier_name }}{% else %}Выберите поставщика{% endif %}</span>
                             </div>
                             <div class="supplier-dropdown" id="supplier-dropdown">
                                 <input type="text" class="select-search" id="supplier-search" placeholder="Поиск поставщика...">
@@ -110,16 +102,13 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="form-row">
                     <div class="form-group">
                         <label for="contact_name">Контактное лицо</label>
-                        <input type="text" id="contact_name" name="contact_name">
+                        <input type="text" id="contact_name" name="contact_name" value="{% if is_edit %}{{ invoice.contact_person }}{% endif %}">
                     </div>
                     <div class="form-group">
                         <label for="contact_email">Email</label>
-                        <input type="email" id="contact_email" name="contact_email">
+                        <input type="email" id="contact_email" name="contact_email" value="{% if is_edit %}{{ invoice.contact_email }}{% endif %}">
                     </div>
                 </div>
             </div>
@@ -138,23 +127,45 @@
                         </tr>
                     </thead>
                     <tbody id="invoice-items">
-                        <tr class="invoice-item">
-                            <td>
-                                <input type="text" name="item_name[]" title="Наименование товара/услуги" required>
-                            </td>
-                            <td>
-                                <input type="number" name="item_quantity[]" title="Количество" min="1" value="1" required>
-                            </td>
-                            <td>
-                                <input type="number" name="item_price[]" title="Цена за единицу" min="0" step="0.01" required>
-                            </td>
-                            <td class="item-total">0.00</td>
-                            <td>
-                                <button type="button" class="btn-icon remove-item" title="Удалить позицию">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
+                        {% if is_edit and invoice_items %}
+                            {% for item in invoice_items %}
+                                <tr class="invoice-item">
+                                    <td>
+                                        <input type="text" name="item_name[]" title="Наименование товара/услуги" value="{{ item.description }}" required>
+                                    </td>
+                                    <td>
+                                        <input type="number" name="item_quantity[]" title="Количество" min="1" value="{{ item.quantity }}" required>
+                                    </td>
+                                    <td>
+                                        <input type="number" name="item_price[]" title="Цена за единицу" min="0" step="0.01" value="{{ item.price }}" required>
+                                    </td>
+                                    <td class="item-total">{{ item.amount }}</td>
+                                    <td>
+                                        <button type="button" class="btn-icon remove-item" title="Удалить позицию">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr class="invoice-item">
+                                <td>
+                                    <input type="text" name="item_name[]" title="Наименование товара/услуги" required>
+                                </td>
+                                <td>
+                                    <input type="number" name="item_quantity[]" title="Количество" min="1" value="1" required>
+                                </td>
+                                <td>
+                                    <input type="number" name="item_price[]" title="Цена за единицу" min="0" step="0.01" required>
+                                </td>
+                                <td class="item-total">0.00</td>
+                                <td>
+                                    <button type="button" class="btn-icon remove-item" title="Удалить позицию">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endif %}
                     </tbody>
                 </table>
                 
@@ -165,15 +176,15 @@
                 <div class="invoice-totals">
                     <div class="totals-row">
                         <span class="total-label">Подытог:</span>
-                        <span class="total-value" id="subtotal">0.00 ₽</span>
+                        <span class="total-value" id="subtotal">{% if is_edit %}{{ invoice.subtotal }} ₽{% else %}0.00 ₽{% endif %}</span>
                     </div>
                     <div class="totals-row">
                         <span class="total-label">НДС (20%):</span>
-                        <span class="total-value" id="tax">0.00 ₽</span>
+                        <span class="total-value" id="tax">{% if is_edit %}{{ invoice.tax_amount }} ₽{% else %}0.00 ₽{% endif %}</span>
                     </div>
                     <div class="totals-row total-final">
                         <span class="total-label">Итого:</span>
-                        <span class="total-value" id="total">0.00 ₽</span>
+                        <span class="total-value" id="total">{% if is_edit %}{{ invoice.total }} ₽{% else %}0.00 ₽{% endif %}</span>
                     </div>
                 </div>
             </div>
@@ -183,7 +194,7 @@
                 
                 <div class="form-group full-width">
                     <label for="notes">Примечания</label>
-                    <textarea id="notes" name="notes" rows="3"></textarea>
+                    <textarea id="notes" name="notes" rows="3">{% if is_edit %}{{ invoice.notes }}{% endif %}</textarea>
                 </div>
                 
                 <div class="form-section-divider"></div>
@@ -193,43 +204,39 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="supplier_name_display">Название организации</label>
-                            <input type="text" id="supplier_name_display" readonly>
+                            <input type="text" id="supplier_name_display" value="{% if is_edit %}{{ invoice.supplier_name }}{% endif %}" readonly>
                         </div>
                         <div class="form-group">
                             <label for="supplier_inn_display">ИНН</label>
-                            <input type="text" id="supplier_inn_display" readonly>
+                            <input type="text" id="supplier_inn_display" value="{% if is_edit %}{{ invoice.supplier_inn }}{% endif %}" readonly>
                         </div>
-                    </div>
-                    
-                    <div class="form-row">
                         <div class="form-group">
                             <label for="supplier_bank_display">Банк</label>
-                            <input type="text" id="supplier_bank_display" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="supplier_bik_display">БИК</label>
-                            <input type="text" id="supplier_bik_display" readonly>
+                            <input type="text" id="supplier_bank_display" value="{% if is_edit %}{{ invoice.supplier_bank }}{% endif %}" readonly>
                         </div>
                     </div>
                     
                     <div class="form-row">
                         <div class="form-group">
+                            <label for="supplier_bik_display">БИК</label>
+                            <input type="text" id="supplier_bik_display" value="{% if is_edit %}{{ invoice.supplier_bank_bik }}{% endif %}" readonly>
+                        </div>
+                        <div class="form-group">
                             <label for="supplier_account_display">Расчетный счет</label>
-                            <input type="text" id="supplier_account_display" readonly>
+                            <input type="text" id="supplier_account_display" value="{% if is_edit %}{{ invoice.supplier_bank_account }}{% endif %}" readonly>
                         </div>
                         <div class="form-group">
                             <label for="supplier_corr_account_display">Корр. счет</label>
-                            <input type="text" id="supplier_corr_account_display" readonly>
+                            <input type="text" id="supplier_corr_account_display" value="{% if is_edit %}{{ invoice.supplier_bank_corr_account }}{% endif %}" readonly>
                         </div>
                     </div>
-                    
-                    <input type="hidden" id="payment_details" name="payment_details">
+                    <input type="hidden" id="payment_details" name="payment_details" value="{% if is_edit %}{{ invoice.payment_info }}{% endif %}">
                 </div>
             </div>
             
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save"></i> Сохранить счет
+                    <i class="fas fa-save"></i> {% if is_edit %}Обновить{% else %}Сохранить{% endif %} счет
                 </button>
                 <button type="button" class="btn btn-secondary">
                     <i class="fas fa-eye"></i> Предпросмотр
@@ -245,7 +252,79 @@
 
 {% block extra_js %}
 <script src="{% static 'js/invoices/create.js' %}"></script>
+{% if is_edit %}
+<script id="invoice-data" type="application/json">
+{
+    "id": {{ invoice.id }},
+    "number": "{{ invoice.number|escapejs }}",
+    "issue_date": "{{ invoice.issue_date|date:'Y-m-d' }}",
+    "due_date": "{{ invoice.due_date|date:'Y-m-d' }}",
+    "status": "{{ invoice.status }}",
+    "supplier_id": "{{ invoice.supplier.id }}",
+    "supplier_name": "{{ invoice.supplier_name|escapejs }}",
+    "supplier_inn": "{{ invoice.supplier_inn|escapejs }}",
+    "supplier_bank": "{{ invoice.supplier_bank|escapejs }}",
+    "supplier_bank_bik": "{{ invoice.supplier_bank_bik|escapejs }}",
+    "supplier_bank_account": "{{ invoice.supplier_bank_account|escapejs }}",
+    "supplier_bank_corr_account": "{{ invoice.supplier_bank_corr_account|escapejs }}",
+    "contact_person": "{{ invoice.contact_person|escapejs }}",
+    "contact_email": "{{ invoice.contact_email|escapejs }}",
+    "notes": "{{ invoice.notes|escapejs }}",
+    "payment_info": "{{ invoice.payment_info|escapejs }}",
+    "items": [
+        {% for item in invoice_items %}
+        {
+            "id": {{ item.id }},
+            "description": "{{ item.description|escapejs }}",
+            "quantity": {{ item.quantity|stringformat:".2f"|cut:"," }},
+            "unit": "{{ item.unit|escapejs }}",
+            "price": {{ item.price|stringformat:".2f"|cut:"," }},
+            "amount": {{ item.amount|stringformat:".2f"|cut:"," }}
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ]
+}
+</script>
+{% endif %}
 <script>
+    // Базовая функция для суммирования строк если основной скрипт еще не загружен
+    function updateTotals() {
+        if (window.updateTotalsLoaded) return; // Используем глобальную функцию если она уже загружена
+        
+        let subtotal = 0;
+        
+        // Перебираем все строки товаров
+        document.querySelectorAll('.invoice-item').forEach(item => {
+            const quantityInput = item.querySelector('input[name="item_quantity[]"]');
+            const priceInput = item.querySelector('input[name="item_price[]"]');
+            const totalCell = item.querySelector('.item-total');
+            
+            if (!quantityInput || !priceInput || !totalCell) return;
+            
+            const quantity = parseFloat(quantityInput.value.replace(',', '.')) || 0;
+            const price = parseFloat(priceInput.value.replace(',', '.')) || 0;
+            const itemTotal = quantity * price;
+            
+            // Обновляем сумму по строке
+            totalCell.textContent = itemTotal.toFixed(2);
+            
+            // Добавляем к подытогу
+            subtotal += itemTotal;
+        });
+        
+        // Расчет НДС (20%)
+        const tax = subtotal * 0.2;
+        
+        // Обновляем итоговые значения
+        const subtotalElem = document.getElementById('subtotal');
+        const taxElem = document.getElementById('tax');
+        const totalElem = document.getElementById('total');
+        
+        if (subtotalElem) subtotalElem.textContent = subtotal.toFixed(2) + ' ₽';
+        if (taxElem) taxElem.textContent = tax.toFixed(2) + ' ₽';
+        if (totalElem) totalElem.textContent = (subtotal + tax).toFixed(2) + ' ₽';
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         // Инициализация улучшенного выпадающего списка поставщиков
         const supplierSelect = document.getElementById('supplier-select');

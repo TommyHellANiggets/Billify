@@ -1,7 +1,6 @@
 .invoices-page {
     margin: 0 auto;
     max-width: 1200px;
-    padding: 2rem;
 }
 
 .page-header {
@@ -39,19 +38,20 @@
 
 .category-tile {
     flex: 1;
-    border-radius: 16px;
-    height: 260px;
+    border-radius: 18px;
+    height: auto;
     padding: 0;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
     overflow: hidden;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .category-tile:hover {
-    transform: translateY(-7px);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
 }
 
 .tile-background {
@@ -64,74 +64,115 @@
 }
 
 .category-tile.incoming .tile-background {
-    background: linear-gradient(135deg, #8a2be2, #9370db);
-    opacity: 0.9;
+    background: linear-gradient(135deg, #5c35ca, #8150d9);
+    opacity: 1;
 }
 
 .category-tile.outgoing .tile-background {
-    background: linear-gradient(135deg, #673ab7, #9c27b0);
-    opacity: 0.9;
+    background: linear-gradient(135deg, #0084ff, #46b3ff);
+    opacity: 1;
 }
 
 .tile-content {
     display: flex;
     flex-direction: column;
     height: 100%;
-    padding: 2rem;
+    padding: 1.75rem;
     position: relative;
     z-index: 2;
     color: white;
 }
 
+.tile-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
 .tile-icon {
-    font-size: 2rem;
-    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    background-color: rgba(255, 255, 255, 0.25);
+    border-radius: 12px;
+    margin-right: 0.85rem;
 }
 
-.tile-info {
-    margin-bottom: auto;
+.tile-icon i {
+    font-size: 1.25rem;
 }
 
-.tile-info h3 {
-    font-size: 1.75rem;
-    margin: 0 0 0.75rem 0;
+.tile-header h3 {
+    font-size: 1.5rem;
+    margin: 0;
     font-weight: 600;
+    letter-spacing: -0.5px;
 }
 
-.tile-info p {
-    font-size: 1rem;
-    opacity: 0.9;
-    margin: 0 0 1rem 0;
+.tile-description {
+    font-size: 0.95rem;
+    opacity: 0.85;
+    margin: 0 0 1.25rem 0;
+    letter-spacing: 0.2px;
 }
 
 .tile-counter {
-    font-size: 3rem;
+    font-size: 3.25rem;
     font-weight: 700;
-    margin: 0.5rem 0;
+    margin: 0.5rem 0 1.5rem;
+    letter-spacing: -1px;
 }
 
 .invoice-actions {
     margin-top: auto;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    z-index: 3;
 }
 
-.invoice-actions .btn-outline {
-    background-color: transparent;
-    border: 2px solid rgba(255, 255, 255, 0.7);
+.tile-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background-color: rgba(255, 255, 255, 0.2);
     color: white;
-    padding: 0.6rem 1.2rem;
-    transition: all 0.2s;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 14px;
+    padding: 0.75rem 1.25rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.25s ease;
+    text-decoration: none;
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    width: 100%;
 }
 
-.invoice-actions .btn-outline:hover {
-    background-color: rgba(255, 255, 255, 0.15);
-    border-color: white;
+.tile-button:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-3px);
+}
+
+.button-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button-text {
+    margin-left: 4px;
 }
 
 /* Статистика счетов */
 .invoice-statistics {
     background-color: #f8f9fa;
     border-radius: 16px;
-    padding: 2rem;
+    padding: 1.75rem;
     margin-bottom: 3rem;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
 }
@@ -153,21 +194,37 @@
 .stats-container {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 1.5rem;
+    gap: 1.25rem;
 }
 
 .stat-item {
     background-color: white;
-    border-radius: 12px;
-    padding: 1.5rem;
+    border-radius: 14px;
+    padding: 1.5rem 1rem;
     text-align: center;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .stat-item:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.stat-icon {
+    margin-bottom: 0.75rem;
+    font-size: 1.5rem;
+    color: #673ab7;
+    width: 48px;
+    height: 48px;
+    background-color: rgba(103, 58, 183, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .stat-number {
@@ -175,12 +232,16 @@
     font-weight: 700;
     color: #673ab7;
     margin-bottom: 0.5rem;
+    line-height: 1;
 }
 
 .stat-label {
     font-size: 0.9rem;
     color: #6c757d;
     font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* Недавние счета */
@@ -278,6 +339,26 @@
     font-size: 1.1rem;
 }
 
+/* Стили для номеров счетов */
+.invoice-number {
+    display: inline-block;
+    padding: 0.35rem 0.85rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.25px;
+}
+
+.incoming-invoice {
+    background-color: rgba(103, 58, 183, 0.15);
+    color: #5c35ca;
+}
+
+.outgoing-invoice {
+    background-color: rgba(0, 132, 255, 0.15);
+    color: #0084ff;
+}
+
 /* Статусы счетов */
 .status-badge {
     display: inline-block;
@@ -330,6 +411,16 @@
     color: white;
 }
 
+.btn-icon-danger {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+}
+
+.btn-icon-danger:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
 /* Стили для кнопок */
 .btn {
     display: inline-block;
@@ -374,14 +465,36 @@
 @media (max-width: 992px) {
     .invoice-categories {
         flex-direction: column;
+        gap: 1.5rem;
     }
     
     .category-tile {
-        height: 220px;
+        width: 100%;
+    }
+    
+    .tile-counter {
+        font-size: 2.75rem;
+        margin: 0.35rem 0 1.25rem;
     }
     
     .stats-container {
         grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    
+    .stat-item {
+        padding: 1.25rem 1rem;
+    }
+    
+    .stat-number {
+        font-size: 2.25rem;
+    }
+    
+    .stat-icon {
+        width: 42px;
+        height: 42px;
+        font-size: 1.35rem;
+        margin-bottom: 0.6rem;
     }
 }
 
@@ -390,13 +503,60 @@
         font-size: 2rem;
     }
     
+    .tile-content {
+        padding: 1.5rem;
+    }
+    
+    .tile-counter {
+        font-size: 2.5rem;
+    }
+    
+    .tile-header h3 {
+        font-size: 1.3rem;
+    }
+    
+    .tile-icon {
+        width: 38px;
+        height: 38px;
+    }
+    
+    .invoice-statistics {
+        padding: 1.5rem;
+    }
+    
+    .section-header h2 {
+        font-size: 1.5rem;
+    }
+    
+    .stat-number {
+        font-size: 1.75rem;
+    }
+    
+    .stat-label {
+        font-size: 0.8rem;
+    }
+    
+    .stat-icon {
+        width: 38px;
+        height: 38px;
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+    }
+}
+
+@media (max-width: 576px) {
     .stats-container {
-        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    
+    .stat-item {
+        padding: 0.25rem;
     }
     
     .section-header {
         flex-direction: column;
         align-items: flex-start;
+        margin-bottom: 1.25rem;
     }
     
     .filter-container {
@@ -416,5 +576,33 @@
     .actions-cell {
         display: flex;
         flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 480px) {
+    .tile-button {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .tile-header h3 {
+        font-size: 1.2rem;
+    }
+    
+    .tile-description {
+        font-size: 0.85rem;
+    }
+    
+    .tile-counter {
+        font-size: 2.2rem;
+        margin: 0.25rem 0 1rem;
+    }
+    
+    .invoice-statistics {
+        padding: 0.5rem;
+    }
+    
+    .section-header h2 {
+        font-size: 1.35rem;
     }
 } 

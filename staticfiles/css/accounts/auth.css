@@ -1,0 +1,344 @@
+/* Основные стили для страницы аутентификации */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 200px);
+    padding: 2rem 1rem;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 1000px;
+    background-color: var(--color-white);
+    border-radius: 20px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+.auth-sides-container {
+    display: flex;
+    min-height: 600px;
+}
+
+/* Стили для левой стороны с иллюстрацией */
+.auth-side {
+    flex: 1;
+    padding: 3rem;
+}
+
+.auth-illustration {
+    background: linear-gradient(135deg, #673ab7, #9c27b0);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-illustration::before {
+    content: '';
+    position: absolute;
+    top: -100px;
+    right: -100px;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.auth-illustration::after {
+    content: '';
+    position: absolute;
+    bottom: -80px;
+    left: -80px;
+    width: 200px;
+    height: A200px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.illustration-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+}
+
+.auth-image {
+    width: 80%;
+    max-width: 300px;
+    margin-bottom: 2rem;
+}
+
+.auth-illustration h2 {
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+}
+
+.auth-illustration p {
+    opacity: 0.9;
+    line-height: 1.6;
+    max-width: 80%;
+    margin: 0 auto;
+}
+
+/* Стили для правой стороны с формами */
+.auth-forms {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.forms-wrapper {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+/* Стили для табов */
+.auth-tabs {
+    display: flex;
+    margin-bottom: 2rem;
+    position: relative;
+    border-bottom: 1px solid var(--color-light-gray);
+}
+
+.tab-btn {
+    flex: 1;
+    background: none;
+    border: none;
+    padding: 1rem 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text-light);
+    cursor: pointer;
+    transition: color 0.3s;
+    position: relative;
+}
+
+.tab-btn.active {
+    color: #673ab7;
+}
+
+.tab-indicator {
+    position: absolute;
+    height: 3px;
+    background-color: #673ab7;
+    bottom: -1px;
+    width: 50%;
+    transition: transform 0.3s ease;
+}
+
+.tab-btn:nth-child(2).active ~ .tab-indicator {
+    transform: translateX(100%);
+}
+
+/* Сообщения и ошибки */
+.auth-messages, .auth-errors {
+    margin-bottom: 1.5rem;
+}
+
+.auth-message, .auth-error {
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+}
+
+.auth-message.success {
+    background-color: rgba(52, 211, 153, 0.1);
+    border-left: 3px solid #34d399;
+    color: #065f46;
+}
+
+.auth-message.error, .auth-error {
+    background-color: rgba(239, 68, 68, 0.1);
+    border-left: 3px solid #ef4444;
+    color: #b91c1c;
+}
+
+.field-error {
+    color: #ef4444;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+}
+
+/* Стили для форм */
+.auth-form-container {
+    display: none;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.auth-form-container.active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.auth-form-container h3 {
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+    color: var(--color-text);
+}
+
+.form-subtitle {
+    color: var(--color-text-light);
+    margin-bottom: 2rem;
+}
+
+.auth-form {
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--color-text);
+}
+
+.input-with-icon {
+    position: relative;
+}
+
+.input-with-icon i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-text-light);
+}
+
+.input-with-icon input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
+    border: 1px solid var(--color-gray);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.input-with-icon input:focus {
+    border-color: #673ab7;
+    box-shadow: 0 0 0 3px rgba(103, 58, 183, 0.2);
+    outline: none;
+}
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.remember-me, .terms-agree {
+    display: flex;
+    align-items: center;
+}
+
+.remember-me input, .terms-agree input {
+    margin-right: 0.5rem;
+}
+
+.forgot-password {
+    color: #673ab7;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s;
+}
+
+.forgot-password:hover {
+    color: #9c27b0;
+    text-decoration: underline;
+}
+
+.btn-auth {
+    width: 100%;
+    padding: 0.9rem;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #673ab7, #9c27b0);
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.btn-auth:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(103, 58, 183, 0.3);
+}
+
+.form-footer {
+    text-align: center;
+    color: var(--color-text-light);
+}
+
+.form-footer a {
+    color: #673ab7;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.form-footer a:hover {
+    color: #9c27b0;
+    text-decoration: underline;
+}
+
+/* Анимации и эффекты */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideLeft {
+    from { transform: translateX(50px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+/* Медиа-запросы для адаптивности */
+@media (max-width: 992px) {
+    .auth-sides-container {
+        flex-direction: column;
+    }
+    
+    .auth-illustration {
+        padding: 2rem;
+        min-height: auto;
+    }
+    
+    .auth-image {
+        max-width: 200px;
+        margin-bottom: 1.5rem;
+    }
+    
+    .auth-illustration h2 {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .auth-side {
+        padding: 2rem 1.5rem;
+    }
+    
+    .auth-card {
+        border-radius: 12px;
+    }
+    
+    .auth-illustration {
+        padding: 1.5rem;
+    }
+    
+    .auth-tabs {
+        margin-bottom: 1.5rem;
+    }
+} 

@@ -3,392 +3,510 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ invoice.number }}</title>
+    <title>Счет №{{ invoice.number }}</title>
+    <meta name="description" content="Счет №{{ invoice.number }}">
     <style>
         @page {
             size: A4;
-            margin: 2cm;
+            margin: 1.5cm 1cm;
         }
         body {
-            font-family: 'DejaVu Sans', Arial, sans-serif;
-            line-height: 1.4;
+            font-family: 'Noto Sans', Arial, sans-serif;
+            font-size: 10pt;
+            line-height: 1.3;
+            margin: 0;
+            padding: 0;
             color: #333;
-            font-size: 12px;
+            background-color: #ffffff;
         }
-        h1, h2, h3, h4 {
-            color: #222;
-            margin-bottom: 0.5em;
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
         }
-        .invoice-header {
-            margin-bottom: 30px;
+        .header {
             display: flex;
             justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            position: relative;
+        }
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e0e6ed;
+        }
+        .header-left {
+            text-align: left;
+            max-width: 70%;
+        }
+        .header-right {
+            text-align: right;
+            min-width: 120px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-start;
+        }
+        .logo-img {
+            max-width: 120px;
+            max-height: 80px;
+            object-fit: contain;
         }
         .invoice-title {
-            flex: 1;
+            font-size: 24pt;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #1a365d;
+            letter-spacing: 1px;
         }
-        .invoice-title h2 {
-            font-size: 22px;
-            margin: 0 0 10px;
-        }
-        .company-logo {
-            text-align: right;
-        }
-        .company-logo img {
-            max-height: 80px;
-            max-width: 200px;
-        }
-        .invoice-dates {
+        .date-info {
             margin-top: 10px;
+            font-size: 11pt;
+            color: #555;
         }
-        .date-item {
-            margin-bottom: 5px;
-        }
-        .date-label {
-            font-weight: bold;
-            margin-right: 10px;
-        }
-        .invoice-parties {
-            margin-bottom: 30px;
-        }
-        .invoice-party {
-            margin-bottom: 20px;
-        }
-        .party-name {
-            font-weight: bold;
-            margin-bottom: 5px;
-            font-size: 14px;
-        }
-        .info-row {
+        .date-info div {
             margin-bottom: 3px;
         }
-        .info-label {
-            font-weight: bold;
-            margin-right: 5px;
-        }
-        .party-bank-details h4 {
-            font-size: 14px;
-            margin: 10px 0 5px;
-        }
-        .items-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 30px;
-        }
-        .items-table th,
-        .items-table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        .items-table th {
-            background-color: #f5f5f5;
-            font-weight: bold;
-        }
-        .invoice-totals {
-            margin-bottom: 30px;
-        }
-        .totals-section {
-            width: 300px;
-            margin-left: auto;
-        }
-        .total-row {
+        .parties-container {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 5px;
+            margin-bottom: 25px;
+            gap: 20px;
         }
-        .total-label {
-            font-weight: normal;
+        .info-box {
+            flex: 1;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f8faff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid #eaeef5;
         }
-        .grand-total {
+        .info-title {
             font-weight: bold;
-            font-size: 14px;
-            border-top: 1px solid #ddd;
-            padding-top: 5px;
-            margin-top: 5px;
+            margin-bottom: 10px;
+            font-size: 12pt;
+            color: #1a365d;
+            border-bottom: 1px solid #e0e6ed;
+            padding-bottom: 5px;
         }
-        .invoice-notes,
-        .invoice-payment-info {
-            margin-bottom: 30px;
+        table.items {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border-radius: 8px;
+            overflow: hidden;
         }
-        .notes-content,
-        .payment-info-content {
-            white-space: pre-line;
+        table.items th, table.items td {
+            border: 1px solid #e0e6ed;
+            padding: 8px 10px;
+            text-align: left;
+            font-size: 10pt;
+        }
+        table.items tr {
+            border-bottom: 1px solid #e0e6ed;
+        }
+        table.items th {
+            background-color: #f1f5fb;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        table.items tr:nth-child(even) {
+            background-color: #f8faff;
+        }
+        table.items tr:hover {
+            background-color: #f1f5fb;
+        }
+        /* Выравнивание в таблице товаров */
+        .column-number {
+            text-align: center;
+        }
+        .column-name {
+            text-align: left;
+        }
+        .column-quantity {
+            text-align: center;
+        }
+        .column-unit {
+            text-align: center;
+        }
+        .column-price {
+            text-align: right;
+        }
+        .column-amount {
+            text-align: right;
+        }
+        .text-right {
+            text-align: right;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .summary-table {
+            width: 40%;
+            float: right;
+            margin-top: 15px;
+            margin-bottom: 25px;
+        }
+        .summary-table table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 5px;
+        }
+        .summary-table td {
+            padding: 5px 10px;
+        }
+        .summary-table .label {
+            text-align: right;
+            font-weight: bold;
+            color: #555;
+        }
+        .summary-table .value {
+            text-align: right;
+            font-weight: bold;
+            background-color: #f8faff;
+            border-radius: 4px;
+            padding: 6px 10px;
+            width: 140px;
+        }
+        .summary-table .total {
+            color: #16a34a;
+            font-size: 12pt;
+        }
+        .section-divider {
+            height: 1px;
+            background-color: #e0e6ed;
+            margin: 30px 0;
+            width: 100%;
+            clear: both;
         }
         .signatures {
             display: flex;
+            width: 100%;
+            margin-top: 60px;
             justify-content: space-between;
-            margin-top: 50px;
+            border-top: 1px solid #e0e6ed;
+            padding-top: 30px;
         }
-        .signature-box {
-            width: 30%;
+        .signature {
+            width: 45%;
+            position: relative;
         }
-        .signature-label {
+        .signature-title {
             font-weight: bold;
-            margin-bottom: 30px;
+            font-size: 11pt;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .signature-position {
+            font-size: 10pt;
+            color: #555;
+            margin-bottom: 15px;
         }
         .signature-line {
+            position: relative;
+            width: 100%;
+            margin-top: 50px; 
+        }
+        .signature-underline {
             border-bottom: 1px solid #000;
-            margin-bottom: 5px;
-            height: 40px;
+            width: 100%;
         }
-        .signature-image,
-        .stamp-image {
-            max-height: 80px;
-            max-width: 100%;
+        .signature-name {
+            font-style: italic;
+            font-size: 10pt;
+            white-space: nowrap;
+            text-align: center;
+            position: absolute;
+            width: 150px;
+            right: 0;
+            bottom: -25px;
         }
-        .status-badge {
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 4px;
+        .stamp {
+            margin-top: 30px;
+            width: 150px;
+            height: 150px;
+            position: relative;
+        }
+        .stamp-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #8c9bab;
+            font-style: italic;
+        }
+        .small-text {
+            font-size: 9pt;
+            color: #8c9bab;
+        }
+        .banking-info {
+            margin-top: 10px;
+            border-top: 1px dotted #e0e6ed;
+            padding-top: 8px;
+        }
+        .banking-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 9pt;
+        }
+        .banking-table td {
+            padding: 3px 5px;
+        }
+        .banking-label {
+            font-weight: normal;
+            width: 40%;
+            color: #6c7a89;
+        }
+        .party-info {
+            line-height: 1.5;
+        }
+        .party-info div {
+            margin-bottom: 3px;
+        }
+        .payment-terms {
             font-weight: bold;
-            margin-bottom: 20px;
+            color: #2c3e50;
+            margin-bottom: 5px;
         }
-        .status-draft {
-            background-color: #e6e6e6;
-            color: #666;
+        .payment-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
         }
-        .status-sent {
-            background-color: #cce5ff;
-            color: #004085;
+        .payment-row {
+            display: flex;
+            width: 100%;
+            margin-bottom: 10px;
+            flex-wrap: nowrap;
+            justify-content: space-between;
         }
-        .status-paid {
-            background-color: #d4edda;
-            color: #155724;
+        .payment-detail-item {
+            display: flex;
+            overflow: hidden;
+            box-sizing: border-box;
+            padding: 0;
+            white-space: nowrap;
+            min-width: 10%;
+            margin-right: 10px;
+            flex-direction: row;
+            align-items: baseline;
         }
-        .status-overdue {
-            background-color: #f8d7da;
-            color: #721c24;
+        .payment-detail-item:last-child {
+            margin-right: 0;
         }
-        .status-cancelled {
-            background-color: #f5f5f5;
-            color: #999;
+        .payment-detail-label {
+            font-weight: bold;
+            color: #555;
+            margin-right: 5px;
+            white-space: nowrap;
+            width: auto;
+            flex-shrink: 0;
+        }
+        .payment-detail-value {
+            color: #333;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-break: break-word;
+            text-align: left;
+            padding-right: 0;
+            flex: 1;
+        }
+        .payment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .company-contacts {
+            font-size: 9pt;
+            color: #6c7a89;
+            margin-top: 5px;
         }
     </style>
 </head>
 <body>
-    <div class="invoice-wrapper">
-        <div class="invoice-header">
-            <div class="invoice-title">
-                <h2>{{ invoice.number }}</h2>
-                <div class="invoice-dates">
-                    <div class="date-item">
-                        <span class="date-label">Дата выставления:</span>
-                        <span class="date-value">{{ invoice.issue_date|date:"d.m.Y" }}</span>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <div class="invoice-title">{{ invoice.number }}</div>
+                <div class="date-info">
+                    <div>Дата выставления: {{ invoice.issue_date|date:"d.m.Y" }}</div>
+                    <div>Срок оплаты: {{ invoice.due_date|date:"d.m.Y"|default:"05.05.2025" }}</div>
+                </div>
+            </div>
+            <div class="header-right">
+                {% if logo_url %}
+                <img src="{{ logo_url }}" alt="Логотип" class="logo-img">
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="parties-container">
+            <div class="info-box">
+                <div class="info-title">Поставщик:</div>
+                <div class="party-info">
+                    <div><strong>{{ invoice.supplier_name }}</strong></div>
+                    <div>ИНН: {{ invoice.supplier_inn }}{% if invoice.supplier_kpp %}, КПП: {{ invoice.supplier_kpp }}{% endif %}</div>
+                    <div>{{ invoice.supplier_address }}</div>
+                </div>
+                
+                <div class="banking-info">
+                    <table class="banking-table">
+                        <tr>
+                            <td class="banking-label">Банк:</td>
+                            <td><strong>АО "{{ invoice.supplier_bank|default:"Сбербанк" }}"</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="banking-label">БИК:</td>
+                            <td>{{ invoice.supplier_bank_bik }}</td>
+                        </tr>
+                        <tr>
+                            <td class="banking-label">Расчетный счет:</td>
+                            <td>{{ invoice.supplier_bank_account }}</td>
+                        </tr>
+                        {% if invoice.supplier_bank_corr_account %}
+                        <tr>
+                            <td class="banking-label">Корр. счет:</td>
+                            <td>{{ invoice.supplier_bank_corr_account }}</td>
+                        </tr>
+                        {% endif %}
+                    </table>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-title">Покупатель:</div>
+                <div class="party-info">
+                    <div><strong>{{ invoice.client.name }}</strong></div>
+                    <div>ИНН: {{ invoice.client.tax_id }}</div>
+                    <div>{{ invoice.client.address }}</div>
+                    {% if invoice.client.phone or invoice.client.email %}
+                    <div class="company-contacts">
+                        {% if invoice.client.phone %}Тел.: {{ invoice.client.phone }}{% endif %}
+                        {% if invoice.client.phone and invoice.client.email %} | {% endif %}
+                        {% if invoice.client.email %}Email: {{ invoice.client.email }}{% endif %}
                     </div>
-                    <div class="date-item">
-                        <span class="date-label">Срок оплаты:</span>
-                        <span class="date-value">{{ invoice.due_date|date:"d.m.Y" }}</span>
-                    </div>
-                    {% if invoice.payment_date %}
-                    <div class="date-item">
-                        <span class="date-label">Дата оплаты:</span>
-                        <span class="date-value">{{ invoice.payment_date|date:"d.m.Y" }}</span>
-                    </div>
+                    {% endif %}
+                    {% if invoice.contact_person %}
+                    <div>Контактное лицо: {{ invoice.contact_person }}</div>
                     {% endif %}
                 </div>
             </div>
-            {% if company_profile.logo %}
-            <div class="company-logo">
-                <img src="{{ company_profile.logo.url }}" alt="{{ company_profile.company_name }}">
-            </div>
-            {% endif %}
         </div>
 
-        <div class="status-badge status-{{ invoice.status }}">
-            {% if invoice.status == 'draft' %}
-                Черновик
-            {% elif invoice.status == 'sent' %}
-                Отправлен
-            {% elif invoice.status == 'paid' %}
-                Оплачен
-            {% elif invoice.status == 'overdue' %}
-                Просрочен
-            {% elif invoice.status == 'cancelled' %}
-                Отменен
-            {% endif %}
-        </div>
+        <div class="section-divider"></div>
 
-        <div class="invoice-parties">
-            <div class="invoice-party">
-                <h3>Поставщик</h3>
-                <div class="party-details">
-                    <div class="party-name">{{ invoice.supplier_name }}</div>
-                    <div class="party-info">
-                        {% if invoice.supplier_address %}
-                        <div class="info-row">
-                            <span class="info-label">Адрес:</span>
-                            <span class="info-value">{{ invoice.supplier_address }}</span>
-                        </div>
-                        {% endif %}
-                        {% if invoice.supplier_inn %}
-                        <div class="info-row">
-                            <span class="info-label">ИНН:</span>
-                            <span class="info-value">{{ invoice.supplier_inn }}</span>
-                        </div>
-                        {% endif %}
-                        {% if invoice.supplier_kpp %}
-                        <div class="info-row">
-                            <span class="info-label">КПП:</span>
-                            <span class="info-value">{{ invoice.supplier_kpp }}</span>
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
-                {% if invoice.supplier_bank or invoice.supplier_bank_bik or invoice.supplier_bank_account %}
-                <div class="party-bank-details">
-                    <h4>Банковские реквизиты</h4>
-                    <div class="bank-info">
-                        {% if invoice.supplier_bank %}
-                        <div class="info-row">
-                            <span class="info-label">Банк:</span>
-                            <span class="info-value">{{ invoice.supplier_bank }}</span>
-                        </div>
-                        {% endif %}
-                        {% if invoice.supplier_bank_bik %}
-                        <div class="info-row">
-                            <span class="info-label">БИК:</span>
-                            <span class="info-value">{{ invoice.supplier_bank_bik }}</span>
-                        </div>
-                        {% endif %}
-                        {% if invoice.supplier_bank_account %}
-                        <div class="info-row">
-                            <span class="info-label">Р/с:</span>
-                            <span class="info-value">{{ invoice.supplier_bank_account }}</span>
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
+        <table class="items">
+            <thead>
+                <tr>
+                    <th width="5%" class="column-number">№</th>
+                    <th width="50%" class="column-name">Наименование товаров, работ, услуг</th>
+                    <th width="10%" class="column-quantity">Кол-во</th>
+                    <th width="5%" class="column-unit">Ед.</th>
+                    <th width="15%" class="column-price">Цена, ₽</th>
+                    <th width="15%" class="column-amount">Сумма, ₽</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in invoice_items %}
+                <tr>
+                    <td class="column-number">{{ forloop.counter }}</td>
+                    <td class="column-name">{{ item.description }}</td>
+                    <td class="column-quantity">{{ item.quantity|floatformat:2 }}</td>
+                    <td class="column-unit">{{ item.unit|default:"шт." }}</td>
+                    <td class="column-price">{{ item.price|floatformat:2 }}</td>
+                    <td class="column-amount">{{ item.amount|floatformat:2 }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="summary-table">
+            <table>
+                <tr>
+                    <td class="label">Итого без НДС:</td>
+                    <td class="value">{{ invoice.subtotal|floatformat:2 }}</td>
+                </tr>
+                {% if invoice.tax_rate > 0 %}
+                <tr>
+                    <td class="label">НДС ({{ invoice.tax_rate }}%):</td>
+                    <td class="value">{{ invoice.tax_amount|floatformat:2 }}</td>
+                </tr>
                 {% endif %}
-            </div>
-
-            <div class="invoice-party">
-                <h3>Клиент</h3>
-                <div class="party-details">
-                    <div class="party-name">{{ invoice.client.name }}</div>
-                    <div class="party-info">
-                        {% if invoice.client.address %}
-                        <div class="info-row">
-                            <span class="info-label">Адрес:</span>
-                            <span class="info-value">{{ invoice.client.address }}</span>
-                        </div>
-                        {% endif %}
-                        {% if invoice.client.tax_id %}
-                        <div class="info-row">
-                            <span class="info-label">ИНН:</span>
-                            <span class="info-value">{{ invoice.client.tax_id }}</span>
-                        </div>
-                        {% endif %}
-                        {% if invoice.client.contact_person %}
-                        <div class="info-row">
-                            <span class="info-label">Контактное лицо:</span>
-                            <span class="info-value">{{ invoice.client.contact_person }}</span>
-                        </div>
-                        {% endif %}
-                        {% if invoice.client.phone %}
-                        <div class="info-row">
-                            <span class="info-label">Телефон:</span>
-                            <span class="info-value">{{ invoice.client.phone }}</span>
-                        </div>
-                        {% endif %}
-                        {% if invoice.client.email %}
-                        <div class="info-row">
-                            <span class="info-label">Email:</span>
-                            <span class="info-value">{{ invoice.client.email }}</span>
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="invoice-items">
-            <table class="items-table">
-                <thead>
-                    <tr>
-                        <th>№</th>
-                        <th>Наименование</th>
-                        <th>Кол-во</th>
-                        <th>Ед.</th>
-                        <th>Цена, ₽</th>
-                        <th>Сумма, ₽</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in invoice_items %}
-                    <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ item.description }}</td>
-                        <td>{{ item.quantity }}</td>
-                        <td>{{ item.unit }}</td>
-                        <td>{{ item.price|floatformat:2 }}</td>
-                        <td>{{ item.amount|floatformat:2 }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
+                <tr>
+                    <td class="label">Всего к оплате:</td>
+                    <td class="value total">{{ invoice.total|floatformat:2 }}</td>
+                </tr>
             </table>
         </div>
 
-        <div class="invoice-totals">
-            <div class="totals-section">
-                <div class="total-row">
-                    <span class="total-label">Итого без НДС:</span>
-                    <span class="total-value">{{ invoice.subtotal|floatformat:2 }} ₽</span>
-                </div>
-                <div class="total-row">
-                    <span class="total-label">НДС ({{ invoice.tax_rate }}%):</span>
-                    <span class="total-value">{{ invoice.tax_amount|floatformat:2 }} ₽</span>
-                </div>
-                {% if invoice.discount > 0 %}
-                <div class="total-row">
-                    <span class="total-label">Скидка:</span>
-                    <span class="total-value">{{ invoice.discount|floatformat:2 }} ₽</span>
-                </div>
-                {% endif %}
-                <div class="total-row grand-total">
-                    <span class="total-label">Всего к оплате:</span>
-                    <span class="total-value">{{ invoice.total|floatformat:2 }} ₽</span>
-                </div>
-            </div>
-        </div>
-
-        {% if invoice.notes %}
-        <div class="invoice-notes">
-            <h3>Примечания</h3>
-            <div class="notes-content">{{ invoice.notes|linebreaks }}</div>
-        </div>
-        {% endif %}
-
-        {% if invoice.payment_info %}
-        <div class="invoice-payment-info">
-            <h3>Информация об оплате</h3>
-            <div class="payment-info-content">{{ invoice.payment_info|linebreaks }}</div>
-        </div>
-        {% endif %}
+        <div class="section-divider"></div>
 
         <div class="signatures">
-            <div class="signature-box">
-                <div class="signature-label">Руководитель</div>
+            <div class="signature">
+                <div class="signature-title">Руководитель</div>
+                <div class="signature-position">Генеральный директор</div>
                 <div class="signature-line">
-                    {% if company_profile.signature %}
-                    <img src="{{ company_profile.signature.url }}" alt="Подпись" class="signature-image">
-                    {% endif %}
+                    <div class="signature-underline"></div>
+                    <div class="signature-name">/ {{ invoice.director_name|default:"Акулов П.П." }} /</div>
                 </div>
-                <div class="signature-name">/ {{ company_profile.company_name }} /</div>
-            </div>
-            
-            <div class="stamp-box">
-                {% if company_profile.stamp %}
-                <img src="{{ company_profile.stamp.url }}" alt="Печать" class="stamp-image">
+                
+                {% if invoice.stamp_image %}
+                <div class="stamp">
+                    <img src="{{ invoice.stamp_image }}" alt="Печать" style="max-width: 150px; max-height: 150px;">
+                </div>
+                {% else %}
+                <div style="margin-top: 40px; font-style: italic; color: #8c9bab;">М.П.</div>
                 {% endif %}
             </div>
-            
-            <div class="signature-box">
-                <div class="signature-label">Бухгалтер</div>
-                <div class="signature-line"></div>
-                <div class="signature-name">/ ______________ /</div>
+            <div class="signature">
+                <div class="signature-title">Бухгалтер</div>
+                <div class="signature-position">Главный бухгалтер</div>
+                <div class="signature-line">
+                    <div class="signature-underline"></div>
+                    <div class="signature-name">/ {{ invoice.accountant_name|default:"__________" }} /</div>
+                </div>
             </div>
         </div>
+
+        <div class="small-text text-center" style="margin-top: 50px; font-weight: bold;">
+            Счет действителен к оплате до {{ invoice.due_date|date:"d.m.Y"|default:"05.05.2025" }}
+        </div>
     </div>
+    
+    <script>
+        // Форматирование чисел с разделителями тысяч
+        function formatNumber(number) {
+            return parseFloat(number).toLocaleString('ru-RU', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+        
+        // Применяем форматирование ко всем числовым ячейкам
+        document.addEventListener('DOMContentLoaded', function() {
+            var priceElements = document.querySelectorAll('.column-price, .column-amount, .column-quantity, .summary-table .value');
+            for (var i = 0; i < priceElements.length; i++) {
+                var value = priceElements[i].textContent.trim();
+                if (!isNaN(parseFloat(value))) {
+                    priceElements[i].textContent = formatNumber(value);
+                }
+            }
+            
+            // Добавляем зебру для строк таблицы
+            var rows = document.querySelectorAll('table.items tbody tr');
+            for (var i = 0; i < rows.length; i++) {
+                rows[i].style.borderBottom = '1px solid #e0e6ed';
+                if (i % 2 === 1) {
+                    rows[i].style.backgroundColor = '#f8faff';
+                }
+            }
+        });
+    </script>
 </body>
 </html> 

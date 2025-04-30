@@ -1,0 +1,401 @@
+/* Стили для дашборда - современный и компактный дизайн */
+:root {
+    --primary-color: #4361ee;
+    --primary-light: #eef2ff;
+    --secondary-color: #6c757d;
+    --accent-color: #3ccf91;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+    --border-color: #e9ecef;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+    --border-radius: 8px;
+    --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --purple: #6b47ed;
+    --purple-light: rgba(107, 71, 237, 0.1);
+    --warning-color: #ffc107;
+    --warning-light: #fff8e1;
+    --info-color: #17a2b8;
+    --info-light: #e3f4f6;
+}
+
+body {
+    font-family: var(--font-main);
+    color: var(--dark-color);
+    background-color: #f5f7fa;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    margin-top: 0;
+}
+
+.section-title {
+    font-size: 1.1rem;
+    margin: 0 0 1rem 0;
+    color: var(--dark-color);
+    display: flex;
+    align-items: center;
+}
+
+.section-title i {
+    margin-right: 8px;
+    color: var(--purple);
+}
+
+/* Новая структура дашборда */
+.dashboard-container {
+    min-height: calc(100vh - 200px);
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.dashboard-main {
+    width: 100%;
+}
+
+/* Уведомления */
+.notification-card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 16px 20px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.notification-content {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.notification-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    margin-right: 16px;
+    flex-shrink: 0;
+}
+
+.notification-text {
+    flex: 1;
+}
+
+.notification-text h3 {
+    font-size: 1rem;
+    margin: 0 0 4px 0;
+}
+
+.notification-text p {
+    font-size: 0.85rem;
+    color: var(--secondary-color);
+    margin: 0;
+}
+
+.email-notification .notification-icon {
+    background-color: var(--info-light);
+    color: var(--info-color);
+}
+
+.profile-notification .notification-icon {
+    background-color: var(--warning-light);
+    color: var(--warning-color);
+}
+
+/* Главные карточки KPI */
+.kpi-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.kpi-card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 16px;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.kpi-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.kpi-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--purple-light);
+    color: var(--purple);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+}
+
+.kpi-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.kpi-label {
+    font-size: 0.85rem;
+    color: var(--secondary-color);
+}
+
+.kpi-change {
+    font-size: 0.8rem;
+    color: var(--accent-color);
+    display: flex;
+    align-items: center;
+}
+
+.kpi-change i {
+    margin-right: 4px;
+}
+
+.kpi-change.negative {
+    color: #ff4d6d;
+}
+
+/* Раздел быстрых действий */
+.quick-actions {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-sm);
+}
+
+.action-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+}
+
+.action-card {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border-radius: var(--border-radius);
+    background-color: var(--light-color);
+    transition: all 0.2s;
+    text-decoration: none;
+    color: var(--dark-color);
+    border: 1px solid var(--border-color);
+}
+
+.action-card:hover {
+    background-color: var(--purple-light);
+    border-color: var(--purple);
+    color: var(--purple);
+}
+
+.action-icon {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    color: var(--purple);
+    border-radius: var(--border-radius);
+    margin-right: 12px;
+    flex-shrink: 0;
+    box-shadow: var(--shadow-sm);
+}
+
+.action-text {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* Блок недавней активности */
+.activity-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.activity-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.see-all {
+    font-size: 0.85rem;
+    color: var(--purple);
+    text-decoration: none;
+}
+
+.activity-feed {
+    flex: 1;
+    overflow-y: auto;
+    padding: 4px 0;
+}
+
+.activity-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.activity-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.2s;
+}
+
+.activity-item:hover {
+    background-color: var(--light-color);
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-icon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--purple-light);
+    color: var(--purple);
+    border-radius: 50%;
+    margin-right: 12px;
+    flex-shrink: 0;
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-title {
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 3px;
+}
+
+.activity-desc {
+    font-size: 0.85rem;
+    margin-bottom: 4px;
+    color: var(--secondary-color);
+}
+
+.activity-time {
+    font-size: 0.75rem;
+    color: var(--secondary-color);
+}
+
+.activity-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    color: var(--secondary-color);
+    text-align: center;
+}
+
+.activity-empty i {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    opacity: 0.3;
+}
+
+/* Кнопки */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+}
+
+.btn i {
+    margin-right: 6px;
+    font-size: 0.9em;
+}
+
+.btn-sm {
+    padding: 4px 10px;
+    font-size: 0.8rem;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #3551d1;
+    box-shadow: 0 2px 4px rgba(67, 97, 238, 0.15);
+}
+
+.btn-accent {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.btn-accent:hover {
+    background-color: #34b982;
+}
+
+.btn-white {
+    background-color: rgba(255, 255, 255, 0.9);
+    color: var(--dark-color);
+}
+
+.btn-white:hover {
+    background-color: white;
+}
+
+/* Адаптивные стили */
+@media (max-width: 767px) {
+    .notification-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .notification-card .btn {
+        margin-top: 12px;
+        align-self: flex-end;
+    }
+    
+    .action-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .action-grid {
+        grid-template-columns: 1fr;
+    }
+} 

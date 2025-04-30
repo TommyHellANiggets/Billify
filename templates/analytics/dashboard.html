@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.css">
+<link rel="stylesheet" href="{% static 'css/analytics/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="analytics-container">
+  <!-- Верхняя сводка -->
+  <div class="analytics-summary">
+    <div class="summary-card">
+      <h2 class="summary-title">Общая сумма счетов</h2>
+      <div class="summary-data">
+        <div class="summary-value">{{ total_amount|floatformat:0|intcomma }}₽</div>
+        <div class="summary-icon">
+          <i class="fas fa-file-invoice-dollar"></i>
+        </div>
+      </div>
+    </div>
+    
+    <div class="summary-card">
+      <h2 class="summary-title">Оплаченные счета</h2>
+      <div class="summary-data">
+        <div class="summary-value">{{ paid_amount|floatformat:0|intcomma }}₽</div>
+        <div class="summary-icon">
+          <i class="fas fa-check-circle"></i>
+        </div>
+      </div>
+    </div>
+    
+    <div class="summary-card">
+      <h2 class="summary-title">Просроченные платежи</h2>
+      <div class="summary-data">
+        <div class="summary-value">{{ overdue_amount|floatformat:0|intcomma }}₽</div>
+        <div class="summary-icon">
+          <i class="fas fa-exclamation-circle"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Статусы счетов (плашки) -->
+  <div class="data-grid">
+    <div class="status-card status-draft">
+      <div class="status-header">
+        <h3 class="status-title">Черновики</h3>
+        <div class="status-icon">
+          <i class="fas fa-edit"></i>
+        </div>
+      </div>
+      <div class="status-value">{{ status_counts.draft }}</div>
+      <div class="status-trend {% if status_trends.draft.is_up %}trend-up{% else %}trend-down{% endif %}">
+        <i class="fas fa-arrow-{% if status_trends.draft.is_up %}up{% else %}down{% endif %}"></i> 
+        {{ status_trends.draft.value }}% с прошлого месяца
+      </div>
+    </div>
+    
+    <div class="status-card status-sent">
+      <div class="status-header">
+        <h3 class="status-title">Отправленные</h3>
+        <div class="status-icon">
+          <i class="fas fa-paper-plane"></i>
+        </div>
+      </div>
+      <div class="status-value">{{ status_counts.sent }}</div>
+      <div class="status-trend {% if status_trends.sent.is_up %}trend-up{% else %}trend-down{% endif %}">
+        <i class="fas fa-arrow-{% if status_trends.sent.is_up %}up{% else %}down{% endif %}"></i>
+        {{ status_trends.sent.value }}% с прошлого месяца
+      </div>
+    </div>
+    
+    <div class="status-card status-paid">
+      <div class="status-header">
+        <h3 class="status-title">Оплаченные</h3>
+        <div class="status-icon">
+          <i class="fas fa-money-bill-wave"></i>
+        </div>
+      </div>
+      <div class="status-value">{{ status_counts.paid }}</div>
+      <div class="status-trend {% if status_trends.paid.is_up %}trend-up{% else %}trend-down{% endif %}">
+        <i class="fas fa-arrow-{% if status_trends.paid.is_up %}up{% else %}down{% endif %}"></i>
+        {{ status_trends.paid.value }}% с прошлого месяца
+      </div>
+    </div>
+    
+    <div class="status-card status-overdue">
+      <div class="status-header">
+        <h3 class="status-title">Просроченные</h3>
+        <div class="status-icon">
+          <i class="fas fa-clock"></i>
+        </div>
+      </div>
+      <div class="status-value">{{ status_counts.overdue }}</div>
+      <div class="status-trend {% if status_trends.overdue.is_up %}trend-up{% else %}trend-down{% endif %}">
+        <i class="fas fa-arrow-{% if status_trends.overdue.is_up %}up{% else %}down{% endif %}"></i>
+        {{ status_trends.overdue.value }}% с прошлого месяца
+      </div>
+    </div>
+  </div>
+  
+  <!-- Строка с графиком доходов и транзакциями -->
+  <div class="charts-row">
+    <!-- График доходов -->
+    <div class="chart-card revenue-chart-card">
+      <div class="chart-header">
+        <h3 class="chart-title">
+          <i class="fas fa-chart-line"></i> Динамика доходов
+        </h3>
+        <div class="chart-options">
+          <div class="chart-option active" data-period="month">30 дней</div>
+          <div class="chart-option" data-period="halfyear">6 месяцев</div>
+          <div class="chart-option" data-period="year">Год</div>
+        </div>
+      </div>
+      <div class="chart-body">
+        <div class="chart-container">
+          <canvas id="revenueChart"></canvas>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Последние транзакции -->
+    <div class="chart-card transactions-card">
+      <div class="chart-header">
+        <h3 class="chart-title">
+          <i class="fas fa-exchange-alt"></i> Последние транзакции
+        </h3>
+        <a href="{% url 'invoices:list' %}" class="see-all">Все счета <i class="fas fa-chevron-right"></i></a>
+      </div>
+      <div class="chart-body" style="padding: 0;">
+        <table class="transactions-table">
+          <thead>
+            <tr>
+              <th>№ счета</th>
+              <th>Клиент</th>
+              <th>Дата</th>
+              <th>Сумма</th>
+              <th>Статус</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for invoice in recent_invoices %}
+            <tr>
+              <td>{{ invoice.number }}</td>
+              <td>{{ invoice.client.name|truncatechars:15 }}</td>
+              <td>{{ invoice.issue_date|date:"d.m.Y" }}</td>
+              <td>{{ invoice.total|floatformat:0|intcomma }}₽</td>
+              <td>
+                <span class="status-badge {{ invoice.status }}">
+                  {{ invoice.get_status_display }}
+                </span>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="5" class="text-center">Нет данных</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Скрытые элементы с данными для графиков -->
+<script id="revenue-data" type="application/json">{{ revenue_data_json|safe }}</script>
+<script id="period-data" type="application/json">{{ period_data_json|safe }}</script>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+<script src="{% static 'js/analytics/charts.js' %}"></script>
+{% endblock %} 

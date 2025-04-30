@@ -9,4 +9,5 @@ urlpatterns = [
     path('about/', views.about, name='about'),
     path('changelog/', views.changelog, name='changelog'),
     path('profile/', views.profile, name='profile'),
+    path('verify-email/<int:user_id>/', views.verify_email, name='verify_email'),
 ] 

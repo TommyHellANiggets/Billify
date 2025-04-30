@@ -5,6 +5,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/global.css' %}">
+<link rel="stylesheet" href="{% static 'css/core/profile.css' %}">
 <style>
     .company-type-toggle {
         display: flex;
@@ -104,252 +105,463 @@
 {% block content %}
 <div class="page-header">
     <h1 class="profile-title">Профиль компании</h1>
-    <p class="page-description">Заполните данные своей компании, которые будут использоваться при создании счетов.</p>
+    <p class="page-description">Управление профилем компании и настройками аккаунта</p>
 </div>
 
-<div class="card profile-form">
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        
-        <h2 class="profile-subtitle">Основная информация</h2>
-        <div class="form-grid">
-            <div class="form-group form-grid-full">
-                <label>{{ form.company_type.label }}</label>
-                <div class="company-type-toggle">
-                    <input type="radio" id="type_individual" name="company_type" value="individual" {% if form.instance.company_type == 'individual' or not form.instance.company_type %}checked{% endif %}>
-                    <label for="type_individual">Индивидуальный предприниматель</label>
-                    
-                    <input type="radio" id="type_business" name="company_type" value="business" {% if form.instance.company_type == 'business' %}checked{% endif %}>
-                    <label for="type_business">Юридическое лицо</label>
-                </div>
-            </div>
-            
-            <div class="form-group form-grid-full">
-                <label for="id_company_name">{{ form.company_name.label }}</label>
-                {{ form.company_name }}
-                {% if form.company_name.errors %}
-                <div class="form-error">{{ form.company_name.errors }}</div>
-                {% endif %}
-            </div>
-        </div>
-        
-        <div class="form-grid">
-            <div class="form-group form-grid-full">
-                <label for="id_legal_address">{{ form.legal_address.label }}</label>
-                {{ form.legal_address }}
-                {% if form.legal_address.errors %}
-                <div class="form-error">{{ form.legal_address.errors }}</div>
-                {% endif %}
-            </div>
-            
-            <div class="form-group form-grid-full">
-                <label for="id_postal_address">{{ form.postal_address.label }}</label>
-                {{ form.postal_address }}
-                {% if form.postal_address.errors %}
-                <div class="form-error">{{ form.postal_address.errors }}</div>
-                {% endif %}
-            </div>
-        </div>
-        
-        <h2 class="profile-subtitle">Контактная информация</h2>
-        <div class="form-grid">
-            <div class="form-group">
-                <label for="id_phone">{{ form.phone.label }}</label>
-                {{ form.phone }}
-                {% if form.phone.errors %}
-                <div class="form-error">{{ form.phone.errors }}</div>
-                {% endif %}
-            </div>
-            
-            <div class="form-group">
-                <label for="id_email">{{ form.email.label }}</label>
-                {{ form.email }}
-                {% if form.email.errors %}
-                <div class="form-error">{{ form.email.errors }}</div>
-                {% endif %}
-            </div>
-            
-            <div class="form-group">
-                <label for="id_website">{{ form.website.label }}</label>
-                {{ form.website }}
-                {% if form.website.errors %}
-                <div class="form-error">{{ form.website.errors }}</div>
-                {% endif %}
-            </div>
-        </div>
-        
-        <h2 class="profile-subtitle">Реквизиты</h2>
-        <div class="form-grid">
-            <div class="form-group">
-                <label for="id_inn">{{ form.inn.label }}</label>
-                {{ form.inn }}
-                <small class="form-help">{{ form.inn.help_text }}</small>
-                {% if form.inn.errors %}
-                <div class="form-error">{{ form.inn.errors }}</div>
-                {% endif %}
-            </div>
-            
-            <div class="form-group business-only">
-                <label for="id_kpp">{{ form.kpp.label }}</label>
-                {{ form.kpp }}
-                <small class="form-help">{{ form.kpp.help_text }}</small>
-                {% if form.kpp.errors %}
-                <div class="form-error">{{ form.kpp.errors }}</div>
-                {% endif %}
-            </div>
-            
-            <div class="form-group">
-                <label for="id_ogrn">{{ form.ogrn.label }}</label>
-                {{ form.ogrn }}
-                {% if form.ogrn.errors %}
-                <div class="form-error">{{ form.ogrn.errors }}</div>
-                {% endif %}
-            </div>
-            
-            <div class="form-group">
-                <label for="id_okpo">{{ form.okpo.label }}</label>
-                {{ form.okpo }}
-                {% if form.okpo.errors %}
-                <div class="form-error">{{ form.okpo.errors }}</div>
-                {% endif %}
-            </div>
-        </div>
-        
-        <h2 class="profile-subtitle">Банковские реквизиты</h2>
-        <div class="form-grid">
-            <div class="form-group">
-                <label for="id_bank_name">{{ form.bank_name.label }}</label>
-                {{ form.bank_name }}
-                {% if form.bank_name.errors %}
-                <div class="form-error">{{ form.bank_name.errors }}</div>
-                {% endif %}
-            </div>
-            
-            <div class="form-group">
-                <label for="id_bank_account">{{ form.bank_account.label }}</label>
-                {{ form.bank_account }}
-                {% if form.bank_account.errors %}
-                <div class="form-error">{{ form.bank_account.errors }}</div>
-                {% endif %}
-            </div>
-            
-            <div class="form-group">
-                <label for="id_bank_corr_account">{{ form.bank_corr_account.label }}</label>
-                {{ form.bank_corr_account }}
-                {% if form.bank_corr_account.errors %}
-                <div class="form-error">{{ form.bank_corr_account.errors }}</div>
-                {% endif %}
-            </div>
-            
-            <div class="form-group">
-                <label for="id_bank_bik">{{ form.bank_bik.label }}</label>
-                {{ form.bank_bik }}
-                {% if form.bank_bik.errors %}
-                <div class="form-error">{{ form.bank_bik.errors }}</div>
-                {% endif %}
-            </div>
-        </div>
-        
-        <h2 class="profile-subtitle">Изображения и файлы</h2>
-        <div class="form-grid">
-            <div class="form-group">
-                <label for="id_logo">{{ form.logo.label }}</label>
+<div class="profile-container">
+    <!-- Боковая панель с навигацией -->
+    <div class="profile-sidebar">
+        <div class="profile-sidebar-header">
+            <div class="profile-avatar">
                 {% if form.instance.logo %}
-                <div class="current-file">
-                    <img src="{{ form.instance.logo.url }}" alt="Текущий логотип" style="max-width: 150px; max-height: 150px;">
-                    <p>Текущий файл: {{ form.instance.logo.name }}</p>
-                </div>
-                {% endif %}
-                <div class="file-upload-container">
-                    <input type="file" id="id_logo" name="logo" accept="image/*" class="file-input">
-                    <label for="id_logo" class="file-upload-button">Выбрать логотип</label>
-                    <span class="file-name" id="logo_filename"></span>
-                </div>
-                {% if form.logo.errors %}
-                <div class="form-error">{{ form.logo.errors }}</div>
+                    <img src="{{ form.instance.logo.url }}" alt="{{ request.user.username }}">
+                {% else %}
+                    <i class="fas fa-building"></i>
                 {% endif %}
             </div>
+            <div class="profile-username">{{ form.instance.company_name|default:request.user.username }}</div>
+            <div class="profile-email">{{ request.user.email }}</div>
+        </div>
+        
+        <ul class="profile-nav">
+            <li class="profile-nav-item">
+                <a href="#company-info" class="profile-nav-link active" data-tab="company-info">
+                    <span class="profile-nav-icon"><i class="fas fa-building"></i></span>
+                    Информация о компании
+                </a>
+            </li>
+            <li class="profile-nav-item">
+                <a href="#email-verification" class="profile-nav-link" data-tab="email-verification">
+                    <span class="profile-nav-icon"><i class="fas fa-envelope"></i></span>
+                    Подтверждение почты
+                </a>
+            </li>
+            <li class="profile-nav-item">
+                <a href="#change-password" class="profile-nav-link" data-tab="change-password">
+                    <span class="profile-nav-icon"><i class="fas fa-lock"></i></span>
+                    Смена пароля
+                </a>
+            </li>
+            <li class="profile-nav-item">
+                <a href="#language-currency" class="profile-nav-link" data-tab="language-currency">
+                    <span class="profile-nav-icon"><i class="fas fa-globe"></i></span>
+                    Язык и валюта
+                </a>
+            </li>
+            <li class="profile-nav-item">
+                <a href="#upload-files" class="profile-nav-link" data-tab="upload-files">
+                    <span class="profile-nav-icon"><i class="fas fa-file-upload"></i></span>
+                    Загрузка файлов
+                </a>
+            </li>
+        </ul>
+    </div>
+    
+    <!-- Содержимое вкладок -->
+    <div class="profile-content">
+        <!-- Вкладка с информацией о компании -->
+        <div id="company-info" class="profile-tab active">
+            <h2 class="profile-tab-title">Информация о компании</h2>
             
-            <div class="form-group">
-                <label for="id_stamp">{{ form.stamp.label }}</label>
-                {% if form.instance.stamp %}
-                <div class="current-file">
-                    <img src="{{ form.instance.stamp.url }}" alt="Текущая печать" style="max-width: 150px; max-height: 150px;">
-                    <p>Текущий файл: {{ form.instance.stamp.name }}</p>
+            <form method="post" enctype="multipart/form-data" id="company-form">
+                {% csrf_token %}
+                
+                <div class="profile-card">
+                    <h3 class="profile-card-title">Основная информация</h3>
+                    
+                    <div class="profile-form-group">
+                        <label>{{ form.company_type.label }}</label>
+                        <div class="company-type-toggle">
+                            <input type="radio" id="type_individual" name="company_type" value="individual" {% if form.instance.company_type == 'individual' or not form.instance.company_type %}checked{% endif %}>
+                            <label for="type_individual">Индивидуальный предприниматель</label>
+                            
+                            <input type="radio" id="type_business" name="company_type" value="business" {% if form.instance.company_type == 'business' %}checked{% endif %}>
+                            <label for="type_business">Юридическое лицо</label>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-form-group">
+                        <label for="id_company_name">{{ form.company_name.label }}</label>
+                        {{ form.company_name }}
+                        {% if form.company_name.errors %}
+                        <div class="form-error">{{ form.company_name.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="profile-form-grid">
+                        <div class="profile-form-group">
+                            <label for="id_legal_address">{{ form.legal_address.label }}</label>
+                            {{ form.legal_address }}
+                            {% if form.legal_address.errors %}
+                            <div class="form-error">{{ form.legal_address.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="profile-form-group">
+                            <label for="id_postal_address">{{ form.postal_address.label }}</label>
+                            {{ form.postal_address }}
+                            {% if form.postal_address.errors %}
+                            <div class="form-error">{{ form.postal_address.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
-                {% endif %}
-                <div class="file-upload-container">
-                    <input type="file" id="id_stamp" name="stamp" accept="image/*" class="file-input">
-                    <label for="id_stamp" class="file-upload-button">Выбрать печать</label>
-                    <span class="file-name" id="stamp_filename"></span>
+                
+                <div class="profile-card">
+                    <h3 class="profile-card-title">Контактная информация</h3>
+                    
+                    <div class="profile-form-grid">
+                        <div class="profile-form-group">
+                            <label for="id_phone">{{ form.phone.label }}</label>
+                            {{ form.phone }}
+                            {% if form.phone.errors %}
+                            <div class="form-error">{{ form.phone.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="profile-form-group">
+                            <label for="id_email">{{ form.email.label }}</label>
+                            {{ form.email }}
+                            {% if form.email.errors %}
+                            <div class="form-error">{{ form.email.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="profile-form-group">
+                            <label for="id_website">{{ form.website.label }}</label>
+                            {{ form.website }}
+                            {% if form.website.errors %}
+                            <div class="form-error">{{ form.website.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
-                {% if form.stamp.errors %}
-                <div class="form-error">{{ form.stamp.errors }}</div>
-                {% endif %}
-            </div>
+                
+                <div class="profile-card">
+                    <h3 class="profile-card-title">Реквизиты</h3>
+                    
+                    <div class="profile-form-grid">
+                        <div class="profile-form-group">
+                            <label for="id_inn">{{ form.inn.label }}</label>
+                            {{ form.inn }}
+                            <small class="form-help">{{ form.inn.help_text }}</small>
+                            {% if form.inn.errors %}
+                            <div class="form-error">{{ form.inn.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="profile-form-group business-only">
+                            <label for="id_kpp">{{ form.kpp.label }}</label>
+                            {{ form.kpp }}
+                            <small class="form-help">{{ form.kpp.help_text }}</small>
+                            {% if form.kpp.errors %}
+                            <div class="form-error">{{ form.kpp.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="profile-form-group">
+                            <label for="id_ogrn">{{ form.ogrn.label }}</label>
+                            {{ form.ogrn }}
+                            {% if form.ogrn.errors %}
+                            <div class="form-error">{{ form.ogrn.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="profile-form-group">
+                            <label for="id_okpo">{{ form.okpo.label }}</label>
+                            {{ form.okpo }}
+                            {% if form.okpo.errors %}
+                            <div class="form-error">{{ form.okpo.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="profile-card">
+                    <h3 class="profile-card-title">Банковские реквизиты</h3>
+                    
+                    <div class="profile-form-grid">
+                        <div class="profile-form-group">
+                            <label for="id_bank_name">{{ form.bank_name.label }}</label>
+                            {{ form.bank_name }}
+                            {% if form.bank_name.errors %}
+                            <div class="form-error">{{ form.bank_name.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="profile-form-group">
+                            <label for="id_bank_account">{{ form.bank_account.label }}</label>
+                            {{ form.bank_account }}
+                            {% if form.bank_account.errors %}
+                            <div class="form-error">{{ form.bank_account.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="profile-form-group">
+                            <label for="id_bank_corr_account">{{ form.bank_corr_account.label }}</label>
+                            {{ form.bank_corr_account }}
+                            {% if form.bank_corr_account.errors %}
+                            <div class="form-error">{{ form.bank_corr_account.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="profile-form-group">
+                            <label for="id_bank_bik">{{ form.bank_bik.label }}</label>
+                            {{ form.bank_bik }}
+                            {% if form.bank_bik.errors %}
+                            <div class="form-error">{{ form.bank_bik.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="profile-tab-footer">
+                    <button type="submit" class="profile-btn profile-btn-primary" name="action" value="company_info">Сохранить изменения</button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Вкладка подтверждения почты -->
+        <div id="email-verification" class="profile-tab">
+            <h2 class="profile-tab-title">Подтверждение электронной почты</h2>
             
-            <div class="form-group">
-                <label for="id_signature">{{ form.signature.label }}</label>
-                {% if form.instance.signature %}
-                <div class="current-file">
-                    <img src="{{ form.instance.signature.url }}" alt="Текущая подпись" style="max-width: 150px; max-height: 150px;">
-                    <p>Текущий файл: {{ form.instance.signature.name }}</p>
+            {% if user.email %}
+                {% if user.is_active %}
+                <div class="profile-alert profile-alert-success">
+                    <p><i class="fas fa-check-circle"></i> Ваша электронная почта подтверждена.</p>
+                </div>
+                {% else %}
+                <div class="profile-alert profile-alert-warning">
+                    <p><i class="fas fa-exclamation-triangle"></i> Ваша электронная почта не подтверждена.</p>
+                    <p>На адрес <strong>{{ user.email }}</strong> было отправлено письмо с инструкциями по подтверждению.</p>
+                </div>
+                
+                <div class="profile-card">
+                    <h3 class="profile-card-title">Отправить письмо повторно</h3>
+                    <p>Если вы не получили письмо с подтверждением, вы можете запросить повторную отправку.</p>
+                    <div class="profile-form-footer">
+                        <form method="post">
+                            {% csrf_token %}
+                            <button type="submit" name="action" value="resend_verification" class="profile-btn profile-btn-primary">Отправить повторно</button>
+                        </form>
+                    </div>
                 </div>
                 {% endif %}
-                <div class="file-upload-container">
-                    <input type="file" id="id_signature" name="signature" accept="image/*" class="file-input">
-                    <label for="id_signature" class="file-upload-button">Выбрать подпись</label>
-                    <span class="file-name" id="signature_filename"></span>
+            {% else %}
+                <div class="profile-alert profile-alert-info">
+                    <p><i class="fas fa-info-circle"></i> У вас не указана электронная почта. Пожалуйста, добавьте её в разделе "Информация о компании".</p>
                 </div>
-                {% if form.signature.errors %}
-                <div class="form-error">{{ form.signature.errors }}</div>
-                {% endif %}
+            {% endif %}
+        </div>
+        
+        <!-- Вкладка смены пароля -->
+        <div id="change-password" class="profile-tab">
+            <h2 class="profile-tab-title">Смена пароля</h2>
+            
+            <div class="profile-card">
+                <h3 class="profile-card-title">Изменение пароля</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="profile-form-group">
+                        <label for="id_old_password">Текущий пароль</label>
+                        <input type="password" name="old_password" id="id_old_password" class="profile-form-control" required>
+                    </div>
+                    
+                    <div class="profile-form-group">
+                        <label for="id_new_password1">Новый пароль</label>
+                        <input type="password" name="new_password1" id="id_new_password1" class="profile-form-control" required>
+                        <small class="form-help">Пароль должен содержать не менее 8 символов, включая буквы и цифры.</small>
+                    </div>
+                    
+                    <div class="profile-form-group">
+                        <label for="id_new_password2">Подтверждение нового пароля</label>
+                        <input type="password" name="new_password2" id="id_new_password2" class="profile-form-control" required>
+                    </div>
+                    
+                    <div class="profile-form-footer">
+                        <button type="submit" name="action" value="change_password" class="profile-btn profile-btn-primary">Изменить пароль</button>
+                    </div>
+                </form>
             </div>
         </div>
         
-        <div class="form-footer">
-            <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+        <!-- Вкладка выбора языка и валюты -->
+        <div id="language-currency" class="profile-tab">
+            <h2 class="profile-tab-title">Язык и валюта</h2>
+            
+            <div class="profile-card">
+                <h3 class="profile-card-title">Предпочтения языка</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="profile-form-group">
+                        <label for="id_language">Язык интерфейса</label>
+                        <select name="language" id="id_language" class="profile-form-control">
+                            <option value="ru" selected>Русский</option>
+                            <option value="en">English</option>
+                            <option value="de">Deutsch</option>
+                        </select>
+                    </div>
+                    
+                    <div class="profile-form-footer">
+                        <button type="submit" name="action" value="change_language" class="profile-btn profile-btn-primary">Сохранить настройки языка</button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="profile-card">
+                <h3 class="profile-card-title">Настройки валюты</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="profile-form-group">
+                        <label for="id_currency">Основная валюта</label>
+                        <select name="currency" id="id_currency" class="profile-form-control">
+                            <option value="RUB" selected>Российский рубль (₽)</option>
+                            <option value="USD">Доллар США ($)</option>
+                            <option value="EUR">Евро (€)</option>
+                            <option value="GBP">Фунт стерлингов (£)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="profile-form-footer">
+                        <button type="submit" name="action" value="change_currency" class="profile-btn profile-btn-primary">Сохранить настройки валюты</button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </form>
+        
+        <!-- Вкладка загрузки файлов -->
+        <div id="upload-files" class="profile-tab">
+            <h2 class="profile-tab-title">Загрузка файлов</h2>
+            
+            <div class="profile-card">
+                <h3 class="profile-card-title">Логотип, печать и подпись</h3>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="profile-form-grid">
+                        <div class="profile-form-group">
+                            <label for="id_logo">{{ form.logo.label }}</label>
+                            {% if form.instance.logo %}
+                            <div class="current-file">
+                                <img src="{{ form.instance.logo.url }}" alt="Текущий логотип" style="max-width: 150px; max-height: 150px;">
+                                <p>Текущий файл: {{ form.instance.logo.name }}</p>
+                            </div>
+                            {% endif %}
+                            <div class="file-upload-container">
+                                <input type="file" id="id_logo" name="logo" accept="image/*" class="file-input">
+                                <label for="id_logo" class="file-upload-button">Выбрать логотип</label>
+                                <span class="file-name" id="logo_filename"></span>
+                            </div>
+                            {% if form.logo.errors %}
+                            <div class="form-error">{{ form.logo.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="profile-form-group">
+                            <label for="id_stamp">{{ form.stamp.label }}</label>
+                            {% if form.instance.stamp %}
+                            <div class="current-file">
+                                <img src="{{ form.instance.stamp.url }}" alt="Текущая печать" style="max-width: 150px; max-height: 150px;">
+                                <p>Текущий файл: {{ form.instance.stamp.name }}</p>
+                            </div>
+                            {% endif %}
+                            <div class="file-upload-container">
+                                <input type="file" id="id_stamp" name="stamp" accept="image/*" class="file-input">
+                                <label for="id_stamp" class="file-upload-button">Выбрать печать</label>
+                                <span class="file-name" id="stamp_filename"></span>
+                            </div>
+                            {% if form.stamp.errors %}
+                            <div class="form-error">{{ form.stamp.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="profile-form-group">
+                            <label for="id_signature">{{ form.signature.label }}</label>
+                            {% if form.instance.signature %}
+                            <div class="current-file">
+                                <img src="{{ form.instance.signature.url }}" alt="Текущая подпись" style="max-width: 150px; max-height: 150px;">
+                                <p>Текущий файл: {{ form.instance.signature.name }}</p>
+                            </div>
+                            {% endif %}
+                            <div class="file-upload-container">
+                                <input type="file" id="id_signature" name="signature" accept="image/*" class="file-input">
+                                <label for="id_signature" class="file-upload-button">Выбрать подпись</label>
+                                <span class="file-name" id="signature_filename"></span>
+                            </div>
+                            {% if form.signature.errors %}
+                            <div class="form-error">{{ form.signature.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="profile-tab-footer">
+                        <button type="submit" name="action" value="upload_files" class="profile-btn profile-btn-primary">Сохранить файлы</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Функция для отображения/скрытия полей в зависимости от типа компании
-        function toggleBusinessFields() {
-            const companyType = document.querySelector('input[name="company_type"]:checked').value;
-            const businessFields = document.querySelectorAll('.business-only');
-            
-            businessFields.forEach(field => {
-                if (companyType === 'business') {
-                    field.style.display = 'block';
-                } else {
-                    field.style.display = 'none';
-                }
+        // Переключение вкладок
+        const tabLinks = document.querySelectorAll('.profile-nav-link');
+        const tabs = document.querySelectorAll('.profile-tab');
+        
+        tabLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Убираем активный класс со всех ссылок и вкладок
+                tabLinks.forEach(l => l.classList.remove('active'));
+                tabs.forEach(t => t.classList.remove('active'));
+                
+                // Добавляем активный класс текущей ссылке и вкладке
+                this.classList.add('active');
+                const tabId = this.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+                
+                // Обновляем URL с помощью хэша
+                window.location.hash = tabId;
             });
+        });
+        
+        // Проверяем хэш при загрузке страницы
+        if (window.location.hash) {
+            const tabId = window.location.hash.substring(1);
+            const tabLink = document.querySelector(`.profile-nav-link[data-tab="${tabId}"]`);
+            
+            if (tabLink) {
+                tabLink.click();
+            }
         }
         
-        // Отображение имени выбранного файла
+        // Обновление названия файла при загрузке
         document.querySelectorAll('.file-input').forEach(input => {
             input.addEventListener('change', function() {
-                const fileNameSpan = document.getElementById(this.id + '_filename');
-                if (this.files.length > 0) {
-                    fileNameSpan.textContent = this.files[0].name;
-                } else {
-                    fileNameSpan.textContent = '';
-                }
+                const filename = this.files[0] ? this.files[0].name : '';
+                document.getElementById(this.id + '_filename').textContent = filename;
             });
         });
         
-        // Запускаем при загрузке страницы
-        toggleBusinessFields();
+        // Показываем/скрываем поле КПП в зависимости от типа компании
+        const companyTypeInputs = document.querySelectorAll('input[name="company_type"]');
+        const kppField = document.querySelector('.business-only');
         
-        // Добавляем слушатель событий на изменение типа компании
-        document.querySelectorAll('input[name="company_type"]').forEach(input => {
-            input.addEventListener('change', toggleBusinessFields);
+        function updateKppVisibility() {
+            const isBusinessType = document.getElementById('type_business').checked;
+            kppField.style.display = isBusinessType ? 'block' : 'none';
+        }
+        
+        companyTypeInputs.forEach(input => {
+            input.addEventListener('change', updateKppVisibility);
         });
+        
+        // Вызываем при загрузке страницы
+        updateKppVisibility();
     });
 </script>
 {% endblock %} 

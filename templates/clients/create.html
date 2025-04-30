@@ -2,6 +2,246 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="/static/css/clients/form.css">
+<style>
+    .client-form-page {
+        max-width: 900px; /* Увеличение ширины формы */
+    }
+    
+    .switch-toggles {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 10px;
+    }
+    
+    .toggle-container {
+        background-color: #f6f6f6;
+        border-radius: 50px;
+        padding: 4px;
+        position: relative;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+    
+    .toggle-options {
+        display: flex;
+        position: relative;
+        z-index: 3; /* Повышаем z-index чтобы текст был всегда поверх слайдера */
+    }
+    
+    .toggle-option {
+        flex: 1;
+        padding: 12px 0;
+        text-align: center;
+        cursor: pointer;
+        border-radius: 50px;
+        font-weight: 500;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        position: relative;
+        z-index: 3; /* Повышаем z-index */
+        color: #555;
+    }
+    
+    .toggle-option.active {
+        color: white;
+        font-weight: 700;
+        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+        letter-spacing: 0.5px;
+    }
+    
+    .toggle-slider {
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        width: calc(50% - 4px);
+        height: calc(100% - 8px);
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        z-index: 1; /* Убедимся, что слайдер под текстом */
+    }
+    
+    /* Фиолетовый градиент для левой капсулы (Статус) */
+    .entity-toggle .toggle-slider {
+        background: linear-gradient(135deg, #5c35ca, #8150d9);
+        box-shadow: 0 2px 8px rgba(92, 53, 202, 0.35);
+    }
+    
+    .entity-toggle[data-active="supplier"] .toggle-slider {
+        left: calc(50% + 0px);
+    }
+    
+    /* Синий градиент для правой капсулы (Тип) */
+    .type-toggle .toggle-slider {
+        background: linear-gradient(135deg, #0084ff, #46b3ff);
+        box-shadow: 0 2px 8px rgba(0, 132, 255, 0.35);
+    }
+    
+    .type-toggle[data-active="business"] .toggle-slider {
+        left: calc(50% + 0px);
+    }
+    
+    .toggle-container:hover {
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    }
+    
+    .entity-toggle .toggle-option:hover:not(.active) {
+        color: #5c35ca;
+    }
+    
+    .type-toggle .toggle-option:hover:not(.active) {
+        color: #0084ff;
+    }
+    
+    .toggle-option.active:hover {
+        color: white !important;
+    }
+    
+    .toggle-label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #444;
+        font-size: 0.9rem;
+    }
+    
+    /* Сетка для трех полей в строку */
+    .form-grid-triple {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+    
+    /* Стили для адресной формы */
+    .address-form {
+        background-color: #f9f9f9;
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 5px;
+    }
+    
+    .address-form .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 15px;
+    }
+    
+    .address-form .form-group {
+        margin-bottom: 10px;
+    }
+    
+    .address-form label {
+        font-size: 0.85rem;
+        margin-bottom: 3px;
+    }
+    
+    .address-form input {
+        font-size: 0.9rem;
+        padding: 8px 10px;
+    }
+    
+    /* Стили для валидации */
+    .form-control.error {
+        border-color: #dc3545;
+    }
+    
+    .error-message {
+        color: #dc3545;
+        font-size: 12px;
+        margin-top: 4px;
+        display: none;
+    }
+    
+    .error-message.show {
+        display: block;
+    }
+    
+    /* Адаптивность для мобильных устройств */
+    @media (max-width: 768px) {
+        .form-grid-triple {
+            grid-template-columns: 1fr;
+        }
+        
+        .address-form .form-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .address-form .form-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    .summary-container {
+        margin-top: 30px;
+        margin-bottom: 20px;
+    }
+    
+    .summary-container h3 {
+        margin-bottom: 20px;
+        color: #444;
+        font-size: 1.2rem;
+    }
+    
+    .summary-section {
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        padding: 15px 20px;
+        margin-bottom: 15px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    
+    .summary-section-title {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 15px;
+        font-size: 1rem;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .summary-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 5px;
+    }
+    
+    .summary-row {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        padding: 6px 0;
+    }
+    
+    .summary-label {
+        color: #666;
+        font-size: 0.9rem;
+    }
+    
+    .summary-value {
+        font-weight: 500;
+        color: #333;
+        font-size: 0.9rem;
+    }
+
+    .autosave-info {
+        margin-top: 10px;
+        padding: 8px 12px;
+        background-color: #f3f4f6;
+        border-radius: 6px;
+        color: #666;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .autosave-info i {
+        color: #4caf50;
+        font-size: 14px;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -23,10 +263,14 @@
             </div>
             <div class="step" data-step="2">
                 <div class="step-number">2</div>
-                <div class="step-label">Реквизиты</div>
+                <div class="step-label">Адрес</div>
             </div>
             <div class="step" data-step="3">
                 <div class="step-number">3</div>
+                <div class="step-label">Реквизиты</div>
+            </div>
+            <div class="step" data-step="4">
+                <div class="step-number">4</div>
                 <div class="step-label">Завершение</div>
             </div>
         </div>
@@ -38,35 +282,55 @@
             <div class="wizard-panel active" data-panel="1">
                 <div class="form-grid">
                     <div class="form-group full-width">
-                        <label>Тип клиента</label>
-                        <div class="client-type-switch">
-                            <input type="hidden" id="type" name="type" value="individual">
-                            <div class="switch-container">
-                                <div class="switch-option active" data-value="individual">Физическое лицо</div>
-                                <div class="switch-option" data-value="business">Юридическое лицо</div>
-                                <div class="switch-slider"></div>
+                        <div class="switch-toggles">
+                            <div>
+                                <label class="toggle-label">Статус</label>
+                                <div class="toggle-container entity-toggle" id="entity-toggle" data-active="client">
+                                    <div class="toggle-slider"></div>
+                                    <input type="hidden" id="entity_type" name="entity_type" value="client">
+                                    <div class="toggle-options">
+                                        <div class="toggle-option active" data-value="client">Клиент</div>
+                                        <div class="toggle-option" data-value="supplier">Поставщик</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="toggle-label">Тип клиента</label>
+                                <div class="toggle-container type-toggle" id="type-toggle" data-active="individual">
+                                    <div class="toggle-slider"></div>
+                                    <input type="hidden" id="type" name="type" value="individual">
+                                    <div class="toggle-options">
+                                        <div class="toggle-option active" data-value="individual">Физическое лицо</div>
+                                        <div class="toggle-option" data-value="business">Юридическое лицо</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="name">Имя / Название организации</label>
-                        <input type="text" id="name" name="name" class="form-control" required>
-                    </div>
-                
-                    <div class="form-group">
-                        <label for="phone">Телефон</label>
-                        <input type="text" id="phone" name="phone" class="form-control">
+                    <!-- Три поля в одну строку -->
+                    <div class="form-grid-triple full-width">
+                        <div class="form-group">
+                            <label for="name">Имя / Название организации</label>
+                            <input type="text" id="name" name="name" class="form-control" required>
+                        </div>
+                    
+                        <div class="form-group">
+                            <label for="phone">Телефон</label>
+                            <input type="tel" id="phone" name="phone" class="form-control" placeholder="+7 ___ ___-__-__">
+                            <div class="error-message" id="phone-error">Введите корректный номер телефона</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" class="form-control">
+                            <div class="error-message" id="email-error">Введите корректный email</div>
+                        </div>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" class="form-control">
-                    </div>
-                    
-                    <div class="form-group full-width">
-                        <label for="address">Адрес</label>
-                        <textarea id="address" name="address" class="form-control" rows="2"></textarea>
+                    <div class="autosave-info">
+                        <small><i class="fas fa-save"></i> Данные формы автоматически сохраняются и будут доступны при возвращении на эту страницу.</small>
                     </div>
                 </div>
                 
@@ -76,8 +340,65 @@
                 </div>
             </div>
             
-            <!-- Шаг 2: Реквизиты -->
+            <!-- Шаг 2: Адрес -->
             <div class="wizard-panel" data-panel="2">
+                <div class="form-grid">
+                    <!-- Структурированный адрес -->
+                    <div class="form-group full-width">
+                        <label>Адрес</label>
+                        <div class="address-form">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="postal_code">Индекс</label>
+                                    <input type="text" id="postal_code" name="postal_code" class="form-control" maxlength="6" placeholder="123456">
+                                    <div class="error-message" id="postal-code-error">Индекс должен содержать 6 цифр</div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="region">Регион</label>
+                                    <input type="text" id="region" name="region" class="form-control" placeholder="Московская область">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="city">Город / Населенный пункт</label>
+                                    <input type="text" id="city" name="city" class="form-control" placeholder="Москва">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="street">Улица</label>
+                                    <input type="text" id="street" name="street" class="form-control" placeholder="ул. Ленина">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="house">Дом</label>
+                                    <input type="text" id="house" name="house" class="form-control" placeholder="10">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="building">Корпус/строение</label>
+                                    <input type="text" id="building" name="building" class="form-control" placeholder="1">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="apartment">Квартира/офис</label>
+                                    <input type="text" id="apartment" name="apartment" class="form-control" placeholder="101">
+                                </div>
+                            </div>
+                            
+                            <!-- Скрытое поле для полного адреса -->
+                            <input type="hidden" id="address" name="address">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="wizard-actions">
+                    <button type="button" class="btn btn-light prev-step" data-goto="1">Назад</button>
+                    <button type="button" class="btn btn-primary next-step" data-goto="3">Далее</button>
+                </div>
+            </div>
+            
+            <!-- Шаг 3: Реквизиты -->
+            <div class="wizard-panel" data-panel="3">
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="tax_id">ИНН</label>
@@ -111,13 +432,13 @@
                 </div>
                 
                 <div class="wizard-actions">
-                    <button type="button" class="btn btn-light prev-step" data-goto="1">Назад</button>
-                    <button type="button" class="btn btn-primary next-step" data-goto="3">Далее</button>
+                    <button type="button" class="btn btn-light prev-step" data-goto="2">Назад</button>
+                    <button type="button" class="btn btn-primary next-step" data-goto="4">Далее</button>
                 </div>
             </div>
             
-            <!-- Шаг 3: Завершение -->
-            <div class="wizard-panel" data-panel="3">
+            <!-- Шаг 4: Завершение -->
+            <div class="wizard-panel" data-panel="4">
                 <div class="form-group">
                     <label for="comment">Комментарий</label>
                     <textarea id="comment" name="comment" class="form-control" rows="3"></textarea>
@@ -131,8 +452,8 @@
                 </div>
                 
                 <div class="wizard-actions">
-                    <button type="button" class="btn btn-light prev-step" data-goto="2">Назад</button>
-                    <button type="submit" class="btn btn-success">Создать клиента</button>
+                    <button type="button" class="btn btn-light prev-step" data-goto="3">Назад</button>
+                    <button type="submit" class="btn btn-success" id="submit-button">Создать клиента</button>
                 </div>
             </div>
         </form>
@@ -141,9 +462,197 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="/static/js/clients/form.js"></script>
-
 <script>
+    // Функция для сохранения данных формы в localStorage
+    function saveFormData() {
+        const formData = {};
+        
+        // Сохраняем все поля ввода
+        document.querySelectorAll('#client-form input, #client-form textarea, #client-form select').forEach(input => {
+            if (input.id && input.value) {
+                formData[input.id] = input.value;
+            }
+        });
+        
+        // Сохраняем состояние переключателей
+        formData['entity_toggle_active'] = document.getElementById('entity-toggle').getAttribute('data-active');
+        formData['type_toggle_active'] = document.getElementById('type-toggle').getAttribute('data-active');
+        
+        // Сохраняем текущий шаг
+        formData['current_step'] = getCurrentStep();
+        
+        // Сохраняем данные в localStorage
+        localStorage.setItem('clientFormData', JSON.stringify(formData));
+    }
+    
+    // Функция для восстановления данных формы из localStorage
+    function restoreFormData() {
+        const savedData = localStorage.getItem('clientFormData');
+        if (!savedData) return;
+        
+        try {
+            const formData = JSON.parse(savedData);
+            
+            // Восстанавливаем все поля ввода
+            Object.keys(formData).forEach(key => {
+                const input = document.getElementById(key);
+                if (input && key !== 'entity_toggle_active' && key !== 'type_toggle_active' && key !== 'current_step') {
+                    input.value = formData[key];
+                }
+            });
+            
+            // Восстанавливаем состояние переключателей
+            if (formData['entity_toggle_active']) {
+                const entityToggle = document.getElementById('entity-toggle');
+                const entityValue = formData['entity_toggle_active'];
+                entityToggle.setAttribute('data-active', entityValue);
+                
+                // Обновляем активную опцию
+                const entityOptions = entityToggle.querySelectorAll('.toggle-option');
+                entityOptions.forEach(option => {
+                    if (option.getAttribute('data-value') === entityValue) {
+                        option.classList.add('active');
+                    } else {
+                        option.classList.remove('active');
+                    }
+                });
+                
+                // Обновляем скрытое поле
+                document.getElementById('entity_type').value = entityValue;
+                
+                // Обновляем заголовок и кнопку отправки
+                const entityText = entityValue === 'supplier' ? 'поставщика' : 'клиента';
+                document.querySelector('h1').textContent = 'Создание ' + entityText;
+                document.querySelector('#submit-button').textContent = 'Создать ' + entityText;
+            }
+            
+            if (formData['type_toggle_active']) {
+                const typeToggle = document.getElementById('type-toggle');
+                const typeValue = formData['type_toggle_active'];
+                typeToggle.setAttribute('data-active', typeValue);
+                
+                // Обновляем активную опцию
+                const typeOptions = typeToggle.querySelectorAll('.toggle-option');
+                typeOptions.forEach(option => {
+                    if (option.getAttribute('data-value') === typeValue) {
+                        option.classList.add('active');
+                    } else {
+                        option.classList.remove('active');
+                    }
+                });
+                
+                // Обновляем скрытое поле
+                document.getElementById('type').value = typeValue;
+                
+                // Скрываем/показываем поля для юр. лиц
+                const businessFields = document.querySelectorAll('.business-only');
+                if (typeValue === 'business') {
+                    businessFields.forEach(field => field.style.display = 'block');
+                } else {
+                    businessFields.forEach(field => field.style.display = 'none');
+                }
+            }
+            
+            // Переходим на сохраненный шаг, если он был указан
+            if (formData['current_step']) {
+                const step = formData['current_step'];
+                
+                // Обновление активного шага
+                document.querySelectorAll('.wizard-panel').forEach(panel => {
+                    panel.classList.remove('active');
+                });
+                const panelToActivate = document.querySelector(`.wizard-panel[data-panel="${step}"]`);
+                if (panelToActivate) {
+                    panelToActivate.classList.add('active');
+                }
+                
+                // Обновление индикатора шагов
+                document.querySelectorAll('.step').forEach(stepIndicator => {
+                    stepIndicator.classList.remove('active');
+                    if (parseInt(stepIndicator.getAttribute('data-step')) <= parseInt(step)) {
+                        stepIndicator.classList.add('completed');
+                    } else {
+                        stepIndicator.classList.remove('completed');
+                    }
+                });
+                document.querySelector(`.step[data-step="${step}"]`).classList.add('active');
+            }
+            
+            // Если мы на последнем шаге, обновляем сводку
+            if (getCurrentStep() === '4') {
+                updateSummary();
+            }
+            
+        } catch (e) {
+            console.error('Ошибка при восстановлении данных формы:', e);
+            // В случае ошибки очищаем данные
+            localStorage.removeItem('clientFormData');
+        }
+    }
+    
+    // Обработка отправки формы при нажатии Enter
+    document.getElementById('client-form').addEventListener('submit', function(e) {
+        e.preventDefault(); // Отменяем стандартную отправку формы
+        
+        // Определяем текущий шаг
+        const currentStep = getCurrentStep();
+        
+        // Выполняем валидацию текущего шага
+        if (validateStep(currentStep)) {
+            // Если валидация успешна, переходим к следующему шагу
+            const nextStep = parseInt(currentStep) + 1;
+            if (nextStep <= 4) {
+                // Имитируем нажатие на кнопку "Далее"
+                document.querySelector(`.next-step[data-goto="${nextStep}"]`).click();
+            } else if (nextStep > 4) {
+                // Если мы на последнем шаге, очищаем сохраненные данные и отправляем форму
+                localStorage.removeItem('clientFormData');
+                this.submit();
+            }
+        }
+    });
+    
+    // Обработка нажатия Enter в полях ввода
+    document.querySelectorAll('.form-control').forEach(input => {
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault(); // Предотвращаем отправку формы
+                
+                // Находим все поля ввода текущего шага
+                const currentStep = getCurrentStep();
+                const currentPanel = document.querySelector(`.wizard-panel[data-panel="${currentStep}"]`);
+                const inputs = Array.from(currentPanel.querySelectorAll('input, select, textarea'));
+                
+                // Находим индекс текущего поля
+                const currentIndex = inputs.indexOf(this);
+                
+                if (currentIndex < inputs.length - 1) {
+                    // Если это не последнее поле, перемещаемся к следующему полю
+                    inputs[currentIndex + 1].focus();
+                } else {
+                    // Если это последнее поле, имитируем нажатие кнопки "Далее"
+                    const nextStep = parseInt(currentStep) + 1;
+                    if (nextStep <= 4) {
+                        // Проверяем валидность текущего шага
+                        if (validateStep(currentStep)) {
+                            document.querySelector(`.next-step[data-goto="${nextStep}"]`).click();
+                        }
+                    } else {
+                        // Если это последний шаг, имитируем отправку формы
+                        if (validateStep(currentStep)) {
+                            localStorage.removeItem('clientFormData');
+                            document.getElementById('submit-button').click();
+                        }
+                    }
+                }
+            }
+            
+            // Сохраняем данные формы при изменении полей
+            input.addEventListener('input', saveFormData);
+            input.addEventListener('change', saveFormData);
+        });
+    });
+
     // Переключение шагов
     document.querySelectorAll('.next-step, .prev-step').forEach(button => {
         button.addEventListener('click', function() {
@@ -172,27 +681,230 @@
             document.querySelector(`.step[data-step="${goToStep}"]`).classList.add('active');
             
             // Обновление обзора на последнем шаге
-            if (goToStep === '3') {
+            if (goToStep === '4') {
                 updateSummary();
             }
+            
+            // Сохраняем данные формы после переключения шага
+            saveFormData();
         });
     });
     
-    // Скрытие/отображение полей для юр. лиц
-    document.getElementById('type').addEventListener('change', function() {
-        const businessFields = document.querySelectorAll('.business-only');
-        if (this.value === 'business') {
-            businessFields.forEach(field => field.style.display = 'block');
+    // Переключатель типа клиента (физ/юр лицо)
+    const typeToggle = document.getElementById('type-toggle');
+    const typeOptions = typeToggle.querySelectorAll('.toggle-option');
+    const typeInput = document.getElementById('type');
+    
+    typeOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            const value = this.getAttribute('data-value');
+            
+            // Обновляем активный элемент
+            typeOptions.forEach(opt => opt.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Обновляем скрытое поле и атрибут контейнера
+            typeInput.value = value;
+            typeToggle.setAttribute('data-active', value);
+            
+            // Скрываем/показываем поля для юр. лиц
+            const businessFields = document.querySelectorAll('.business-only');
+            if (value === 'business') {
+                businessFields.forEach(field => field.style.display = 'block');
+            } else {
+                businessFields.forEach(field => field.style.display = 'none');
+            }
+            
+            // Сохраняем данные формы после изменения типа
+            saveFormData();
+        });
+    });
+    
+    // Переключатель сущности (клиент/поставщик)
+    const entityToggle = document.getElementById('entity-toggle');
+    const entityOptions = entityToggle.querySelectorAll('.toggle-option');
+    const entityInput = document.getElementById('entity_type');
+    
+    entityOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            const value = this.getAttribute('data-value');
+            
+            // Обновляем активный элемент
+            entityOptions.forEach(opt => opt.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Обновляем скрытое поле и атрибут контейнера
+            entityInput.value = value;
+            entityToggle.setAttribute('data-active', value);
+            
+            // Обновляем заголовок и кнопку отправки
+            const entityText = value === 'supplier' ? 'поставщика' : 'клиента';
+            document.querySelector('h1').textContent = 'Создание ' + entityText;
+            document.querySelector('#submit-button').textContent = 'Создать ' + entityText;
+            
+            // Обновляем заголовок типа клиента
+            const typeLabel = document.querySelector('.type-toggle').previousElementSibling;
+            typeLabel.textContent = value === 'supplier' ? 'Тип поставщика' : 'Тип клиента';
+            
+            // Сохраняем данные формы после изменения сущности
+            saveFormData();
+        });
+    });
+    
+    // Маска ввода для телефона
+    const phoneInput = document.getElementById('phone');
+    const emailInput = document.getElementById('email');
+    
+    // Форматирование телефона
+    phoneInput.addEventListener('input', function(e) {
+        let value = this.value.replace(/\D/g, ''); // Удаляем все, кроме цифр
+        
+        if (value.length > 0) {
+            // Удостоверимся, что число начинается с 7
+            if (value[0] !== '7') {
+                value = '7' + value;
+            }
+            
+            // Форматирование в соответствии с шаблоном +7 XXX XXX-XX-XX
+            let formattedValue = '+7';
+            
+            if (value.length > 1) {
+                formattedValue += ' ' + value.substring(1, Math.min(4, value.length));
+            }
+            
+            if (value.length > 4) {
+                formattedValue += ' ' + value.substring(4, Math.min(7, value.length));
+            }
+            
+            if (value.length > 7) {
+                formattedValue += '-' + value.substring(7, Math.min(9, value.length));
+            }
+            
+            if (value.length > 9) {
+                formattedValue += '-' + value.substring(9, Math.min(11, value.length));
+            }
+            
+            this.value = formattedValue;
+        }
+        
+        // Валидация
+        validatePhone();
+    });
+    
+    // Валидация телефона
+    function validatePhone() {
+        const value = phoneInput.value;
+        const phoneError = document.getElementById('phone-error');
+        
+        // Проверка формата +7 XXX XXX-XX-XX (должно быть ровно 16 символов с форматированием)
+        const isValid = /^\+7 \d{3} \d{3}-\d{2}-\d{2}$/.test(value) || value === '';
+        
+        if (!isValid && value !== '') {
+            phoneInput.classList.add('error');
+            phoneError.classList.add('show');
+            return false;
         } else {
-            businessFields.forEach(field => field.style.display = 'none');
+            phoneInput.classList.remove('error');
+            phoneError.classList.remove('show');
+            return true;
+        }
+    }
+    
+    // Валидация email
+    emailInput.addEventListener('blur', validateEmail);
+    
+    function validateEmail() {
+        const value = emailInput.value;
+        const emailError = document.getElementById('email-error');
+        
+        // Проверка формата email
+        const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || value === '';
+        
+        if (!isValid && value !== '') {
+            emailInput.classList.add('error');
+            emailError.classList.add('show');
+            return false;
+        } else {
+            emailInput.classList.remove('error');
+            emailError.classList.remove('show');
+            return true;
+        }
+    }
+    
+    // Валидация индекса
+    const postalCodeInput = document.getElementById('postal_code');
+    postalCodeInput.addEventListener('input', function() {
+        // Разрешаем только цифры
+        this.value = this.value.replace(/\D/g, '');
+        validatePostalCode();
+    });
+    
+    function validatePostalCode() {
+        const value = postalCodeInput.value;
+        const postalCodeError = document.getElementById('postal-code-error');
+        
+        // Российский индекс: 6 цифр
+        const isValid = /^\d{6}$/.test(value) || value === '';
+        
+        if (!isValid && value !== '') {
+            postalCodeInput.classList.add('error');
+            postalCodeError.classList.add('show');
+            return false;
+        } else {
+            postalCodeInput.classList.remove('error');
+            postalCodeError.classList.remove('show');
+            return true;
+        }
+    }
+    
+    // Вешаем обработчик на кнопку отправки формы
+    document.getElementById('submit-button').addEventListener('click', function() {
+        if (validateStep('4')) {
+            // Перед отправкой формы формируем полный адрес
+            const postalCode = document.getElementById('postal_code').value;
+            const region = document.getElementById('region').value;
+            const city = document.getElementById('city').value;
+            const street = document.getElementById('street').value;
+            const house = document.getElementById('house').value;
+            const building = document.getElementById('building').value;
+            const apartment = document.getElementById('apartment').value;
+            
+            // Формируем полный адрес
+            let fullAddress = '';
+            
+            if (postalCode) fullAddress += postalCode + ', ';
+            if (region) fullAddress += region + ', ';
+            if (city) fullAddress += city + ', ';
+            if (street) fullAddress += street + ', ';
+            if (house) fullAddress += 'д. ' + house;
+            if (building) fullAddress += ', корп. ' + building;
+            if (apartment) fullAddress += ', кв. ' + apartment;
+            
+            // Сохраняем в скрытое поле
+            document.getElementById('address').value = fullAddress;
+            
+            // Очищаем данные формы в localStorage
+            localStorage.removeItem('clientFormData');
         }
     });
     
-    // Инициализация при загрузке страницы
+    // Восстанавливаем данные формы при загрузке страницы
     document.addEventListener('DOMContentLoaded', function() {
+        restoreFormData();
+        
+        // Настройка полей для юр. лиц
         const typeSelect = document.getElementById('type');
         if (typeSelect.value !== 'business') {
             document.querySelectorAll('.business-only').forEach(field => field.style.display = 'none');
+        }
+    });
+    
+    // Сохраняем данные при уходе со страницы
+    window.addEventListener('beforeunload', function() {
+        // Если форма не пустая (имя заполнено), сохраняем данные
+        const nameField = document.getElementById('name');
+        if (nameField && nameField.value.trim()) {
+            saveFormData();
         }
     });
     
@@ -206,13 +918,49 @@
     function validateStep(step) {
         if (step === '1') {
             const nameInput = document.getElementById('name');
-            if (!nameInput.value.trim()) {
-                alert('Пожалуйста, укажите имя клиента');
+            const name = nameInput.value.trim();
+            if (name === '') {
+                showNotification('Пожалуйста, укажите имя', 'error');
                 nameInput.focus();
                 return false;
             }
+            
+            // Валидация телефона и email
+            const isPhoneValid = validatePhone();
+            const isEmailValid = validateEmail();
+            
+            if (!isPhoneValid && phoneInput.value !== '') {
+                showNotification('Введите корректный номер телефона', 'error');
+                phoneInput.focus();
+                return false;
+            }
+            
+            if (!isEmailValid && emailInput.value !== '') {
+                showNotification('Введите корректный email', 'error');
+                emailInput.focus();
+                return false;
+            }
+            
             return true;
         }
+        else if (step === '2') {
+            // Валидация адреса
+            // Индекс необязателен, но если указан, должен быть в правильном формате
+            const isPostalCodeValid = validatePostalCode();
+            if (!isPostalCodeValid && postalCodeInput.value !== '') {
+                showNotification('Индекс должен содержать 6 цифр', 'error');
+                postalCodeInput.focus();
+                return false;
+            }
+            
+            return true;
+        }
+        else if (step === '3') {
+            // Валидация реквизитов
+            // Здесь можно добавить валидацию ИНН, БИК и т.д.
+            return true;
+        }
+        
         return true;
     }
     
@@ -221,23 +969,121 @@
         const summaryContainer = document.getElementById('summary-container');
         summaryContainer.innerHTML = '';
         
-        const fields = [
-            { id: 'name', label: 'Имя / Организация' },
-            { id: 'phone', label: 'Телефон' },
-            { id: 'email', label: 'Email' },
-            { id: 'tax_id', label: 'ИНН' },
-            { id: 'bank_name', label: 'Банк' }
+        // Информация о типе клиента
+        const entityType = document.getElementById('entity_type').value;
+        const entityText = entityType === 'supplier' ? 'Поставщик' : 'Клиент';
+        const type = document.getElementById('type').value;
+        const typeText = type === 'business' ? 'Юридическое лицо' : 'Физическое лицо';
+        
+        // Формируем полный адрес для отображения
+        const postalCode = document.getElementById('postal_code').value;
+        const region = document.getElementById('region').value;
+        const city = document.getElementById('city').value;
+        const street = document.getElementById('street').value;
+        const house = document.getElementById('house').value;
+        const building = document.getElementById('building').value;
+        const apartment = document.getElementById('apartment').value;
+        
+        let addressText = '';
+        if (postalCode) addressText += postalCode + ', ';
+        if (region) addressText += region + ', ';
+        if (city) addressText += city + ', ';
+        if (street) addressText += street + ', ';
+        if (house) addressText += 'д. ' + house;
+        if (building) addressText += ', корп. ' + building;
+        if (apartment) addressText += ', кв. ' + apartment;
+        
+        // Определяем поля для отображения в сводке по секциям
+        const sections = [
+            {
+                title: 'Основная информация',
+                fields: [
+                    { label: 'Статус', value: entityText },
+                    { label: 'Тип', value: typeText },
+                    { label: 'Имя / Организация', id: 'name' },
+                    { label: 'Телефон', id: 'phone' },
+                    { label: 'Email', id: 'email' }
+                ]
+            },
+            {
+                title: 'Адрес',
+                fields: [
+                    { label: 'Полный адрес', value: addressText || 'Не указан' }
+                ]
+            },
+            {
+                title: 'Реквизиты',
+                fields: [
+                    { label: 'ИНН', id: 'tax_id' },
+                    { label: 'КПП', id: 'kpp', condition: type === 'business' },
+                    { label: 'ОГРН / ОГРНИП', id: 'ogrn' },
+                    { label: 'Банк', id: 'bank_name' },
+                    { label: 'Р/с', id: 'bank_account' },
+                    { label: 'БИК', id: 'bank_bik' }
+                ]
+            }
         ];
         
-        fields.forEach(field => {
-            const value = document.getElementById(field.id).value;
-            if (value) {
-                const item = document.createElement('div');
-                item.className = 'summary-item';
-                item.innerHTML = `<div class="summary-label">${field.label}:</div>
-                                <div class="summary-value">${value}</div>`;
-                summaryContainer.appendChild(item);
-            }
+        // Создаем секции
+        sections.forEach(section => {
+            // Создаем секцию только если в ней есть хотя бы одно непустое поле
+            const hasNonEmptyFields = section.fields.some(field => {
+                let value = field.value;
+                if (!value && field.id) {
+                    const element = document.getElementById(field.id);
+                    value = element ? element.value : '';
+                }
+                return value && (field.condition === undefined || field.condition);
+            });
+            
+            if (!hasNonEmptyFields) return;
+            
+            // Создаем блок секции
+            const sectionElement = document.createElement('div');
+            sectionElement.className = 'summary-section';
+            
+            // Добавляем заголовок секции
+            const titleElement = document.createElement('div');
+            titleElement.className = 'summary-section-title';
+            titleElement.textContent = section.title;
+            sectionElement.appendChild(titleElement);
+            
+            // Добавляем поля
+            section.fields.forEach(field => {
+                // Пропускаем поле, если есть условие и оно не выполнено
+                if (field.condition !== undefined && !field.condition) {
+                    return;
+                }
+                
+                // Получаем значение поля
+                let value = field.value;
+                if (!value && field.id) {
+                    const element = document.getElementById(field.id);
+                    value = element ? element.value : '';
+                }
+                
+                // Пропускаем пустые поля
+                if (!value) return;
+                
+                // Создаем строку с данными
+                const rowElement = document.createElement('div');
+                rowElement.className = 'summary-row';
+                
+                const labelElement = document.createElement('div');
+                labelElement.className = 'summary-label';
+                labelElement.textContent = field.label + ':';
+                
+                const valueElement = document.createElement('div');
+                valueElement.className = 'summary-value';
+                valueElement.textContent = value;
+                
+                rowElement.appendChild(labelElement);
+                rowElement.appendChild(valueElement);
+                sectionElement.appendChild(rowElement);
+            });
+            
+            // Добавляем секцию в контейнер
+            summaryContainer.appendChild(sectionElement);
         });
     }
 </script>

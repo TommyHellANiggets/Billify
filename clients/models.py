@@ -1,15 +1,23 @@
 from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
+from django.conf import settings
 
 class Client(models.Model):
+    """Модель клиента/поставщика"""
     TYPE_CHOICES = (
         ('individual', 'Физическое лицо'),
         ('business', 'Юридическое лицо'),
     )
     
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='clients', verbose_name='Пользователь', null=True)
-    type = models.CharField('Тип клиента', max_length=20, choices=TYPE_CHOICES, default='individual')
+    ENTITY_TYPE_CHOICES = (
+        ('client', 'Клиент'),
+        ('supplier', 'Поставщик'),
+    )
+    
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='clients', verbose_name='Пользователь', null=True)
+    type = models.CharField(max_length=20, choices=TYPE_CHOICES, default='individual')
+    entity_type = models.CharField(max_length=20, choices=ENTITY_TYPE_CHOICES, default='client')
     name = models.CharField('Имя / Название организации', max_length=200)
     email = models.EmailField('Email', blank=True)
     phone = models.CharField('Телефон', max_length=20, blank=True)
@@ -51,3 +59,11 @@ class Client(models.Model):
         
     def get_type_display_name(self):
         return dict(self.TYPE_CHOICES).get(self.type, '')
+
+    def get_type_display(self):
+        """Получение отображаемого значения типа"""
+        return dict(self.TYPE_CHOICES).get(self.type)
+        
+    def get_entity_type_display(self):
+        """Получение отображаемого значения типа сущности (клиент/поставщик)"""
+        return dict(self.ENTITY_TYPE_CHOICES).get(self.entity_type)

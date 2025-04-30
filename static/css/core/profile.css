@@ -1,0 +1,361 @@
+/* Стили для страницы профиля с вкладками и боковой панелью */
+:root {
+    --profile-sidebar-width: 260px;
+    --profile-sidebar-bg: #f8f9fa;
+    --profile-sidebar-hover: #eff1f4;
+    --profile-sidebar-active: #e9ecef;
+    --profile-sidebar-border: #dee2e6;
+    --profile-tab-content-padding: 24px;
+    --profile-card-border: #eaeaea;
+    --profile-border-radius: 8px;
+    --profile-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --profile-transition: all 0.2s ease;
+    --profile-primary: #4d8bf8;
+    --profile-primary-hover: #3570dd;
+    --profile-error: #dc3545;
+    --profile-success: #28a745;
+    --profile-warning: #ffc107;
+    --profile-info: #17a2b8;
+}
+
+/* Основной контейнер профиля */
+.profile-container {
+    display: flex;
+    background-color: #fff;
+    border-radius: var(--profile-border-radius);
+    box-shadow: var(--profile-shadow);
+    margin-bottom: 30px;
+    overflow: hidden;
+    min-height: 600px;
+}
+
+/* Боковая панель навигации */
+.profile-sidebar {
+    width: var(--profile-sidebar-width);
+    background-color: var(--profile-sidebar-bg);
+    border-right: 1px solid var(--profile-sidebar-border);
+    flex-shrink: 0;
+    padding: 25px 0;
+}
+
+.profile-sidebar-header {
+    padding: 0 20px 20px;
+    border-bottom: 1px solid var(--profile-sidebar-border);
+    margin-bottom: 15px;
+}
+
+.profile-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #6c757d;
+    margin: 0 auto 12px;
+    overflow: hidden;
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-username {
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    margin: 0 0 4px;
+}
+
+.profile-email {
+    font-size: 13px;
+    color: #6c757d;
+    text-align: center;
+    word-break: break-all;
+}
+
+.profile-nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.profile-nav-item {
+    margin-bottom: 1px;
+}
+
+.profile-nav-link {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    color: #495057;
+    text-decoration: none;
+    transition: var(--profile-transition);
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.profile-nav-link:hover {
+    background-color: var(--profile-sidebar-hover);
+    color: #212529;
+}
+
+.profile-nav-link.active {
+    background-color: var(--profile-sidebar-active);
+    color: var(--profile-primary);
+    border-left: 3px solid var(--profile-primary);
+}
+
+.profile-nav-icon {
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+    font-size: 16px;
+}
+
+/* Основное содержимое вкладок */
+.profile-content {
+    flex: 1;
+    padding: var(--profile-tab-content-padding);
+    overflow-y: auto;
+}
+
+.profile-tab {
+    display: none;
+}
+
+.profile-tab.active {
+    display: block;
+}
+
+.profile-tab-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--profile-sidebar-border);
+}
+
+/* Карточки для содержимого вкладок */
+.profile-card {
+    background: #fff;
+    border: 1px solid var(--profile-card-border);
+    border-radius: var(--profile-border-radius);
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: var(--profile-transition);
+}
+
+.profile-card:hover {
+    box-shadow: var(--profile-shadow);
+}
+
+.profile-card-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+/* Стили для форм в профиле */
+.profile-form-group {
+    margin-bottom: 20px;
+}
+
+.profile-form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.profile-form-control {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    transition: var(--profile-transition);
+}
+
+.profile-form-control:focus {
+    border-color: var(--profile-primary);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(77, 139, 248, 0.1);
+}
+
+.profile-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.profile-form-footer {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--profile-sidebar-border);
+}
+
+/* Стили для оповещений */
+.profile-alert {
+    padding: 15px;
+    border-radius: var(--profile-border-radius);
+    margin-bottom: 20px;
+    border-left: 4px solid;
+}
+
+.profile-alert-success {
+    background-color: rgba(40, 167, 69, 0.1);
+    border-left-color: var(--profile-success);
+}
+
+.profile-alert-danger {
+    background-color: rgba(220, 53, 69, 0.1);
+    border-left-color: var(--profile-error);
+}
+
+.profile-alert-warning {
+    background-color: rgba(255, 193, 7, 0.1);
+    border-left-color: var(--profile-warning);
+}
+
+.profile-alert-info {
+    background-color: rgba(23, 162, 184, 0.1);
+    border-left-color: var(--profile-info);
+}
+
+/* Нижний колонтитул вкладки */
+.profile-tab-footer {
+    margin-top: 30px;
+    padding-top: 15px;
+    border-top: 1px solid var(--profile-sidebar-border);
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Стили кнопки */
+.profile-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 15px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--profile-transition);
+    border: none;
+    text-decoration: none;
+}
+
+.profile-btn-primary {
+    background-color: var(--profile-primary);
+    color: #fff;
+}
+
+.profile-btn-primary:hover {
+    background-color: var(--profile-primary-hover);
+    color: #fff;
+}
+
+.profile-btn-outline {
+    background-color: transparent;
+    border: 1px solid var(--profile-sidebar-border);
+    color: #495057;
+}
+
+.profile-btn-outline:hover {
+    background-color: #f8f9fa;
+}
+
+.profile-btn-danger {
+    background-color: var(--profile-error);
+    color: #fff;
+}
+
+.profile-btn-danger:hover {
+    background-color: #c82333;
+}
+
+.profile-btn-sm {
+    padding: 6px 10px;
+    font-size: 13px;
+}
+
+/* Адаптивность */
+@media (max-width: 992px) {
+    .profile-container {
+        flex-direction: column;
+    }
+    
+    .profile-sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--profile-sidebar-border);
+        padding: 15px;
+    }
+    
+    .profile-sidebar-header {
+        display: flex;
+        align-items: center;
+        padding: 0 0 15px;
+        margin-bottom: 15px;
+    }
+    
+    .profile-avatar {
+        width: 60px;
+        height: 60px;
+        margin: 0 15px 0 0;
+    }
+    
+    .profile-username, .profile-email {
+        text-align: left;
+    }
+    
+    .profile-nav {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    
+    .profile-nav-item {
+        margin-right: 5px;
+        margin-bottom: 5px;
+    }
+    
+    .profile-nav-link {
+        padding: 8px 12px;
+        border-radius: 4px;
+    }
+    
+    .profile-nav-link.active {
+        border-left: none;
+        background-color: var(--profile-primary);
+        color: #fff;
+    }
+    
+    .profile-nav-icon {
+        display: none;
+    }
+    
+    .profile-content {
+        padding: 15px;
+    }
+    
+    .profile-form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 576px) {
+    .profile-tab-footer {
+        flex-direction: column-reverse;
+    }
+    
+    .profile-tab-footer .profile-btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+} 
