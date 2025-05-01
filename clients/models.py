@@ -4,20 +4,14 @@ from django.contrib.auth.models import User
 from django.conf import settings
 
 class Client(models.Model):
-    """Модель клиента/поставщика"""
+    """Модель клиента"""
     TYPE_CHOICES = (
         ('individual', 'Физическое лицо'),
         ('business', 'Юридическое лицо'),
     )
     
-    ENTITY_TYPE_CHOICES = (
-        ('client', 'Клиент'),
-        ('supplier', 'Поставщик'),
-    )
-    
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='clients', verbose_name='Пользователь', null=True)
     type = models.CharField(max_length=20, choices=TYPE_CHOICES, default='individual')
-    entity_type = models.CharField(max_length=20, choices=ENTITY_TYPE_CHOICES, default='client')
     name = models.CharField('Имя / Название организации', max_length=200)
     email = models.EmailField('Email', blank=True)
     phone = models.CharField('Телефон', max_length=20, blank=True)
@@ -28,6 +22,9 @@ class Client(models.Model):
     bank_name = models.CharField('Название банка', max_length=200, blank=True)
     bank_account = models.CharField('Банковский счет', max_length=20, blank=True)
     bank_bik = models.CharField('БИК', max_length=9, blank=True)
+    bank_corr_account = models.CharField('Корр. счет', max_length=20, blank=True)
+    contact_person = models.CharField('Контактное лицо', max_length=200, blank=True)
+    contact_email = models.EmailField('Email контактного лица', blank=True)
     comment = models.TextField('Комментарий', blank=True)
     created_at = models.DateTimeField('Дата создания', auto_now_add=True)
     updated_at = models.DateTimeField('Дата обновления', auto_now=True)
@@ -63,7 +60,3 @@ class Client(models.Model):
     def get_type_display(self):
         """Получение отображаемого значения типа"""
         return dict(self.TYPE_CHOICES).get(self.type)
-        
-    def get_entity_type_display(self):
-        """Получение отображаемого значения типа сущности (клиент/поставщик)"""
-        return dict(self.ENTITY_TYPE_CHOICES).get(self.entity_type)

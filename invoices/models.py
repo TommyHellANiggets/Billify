@@ -6,6 +6,7 @@ from django.core.validators import MinValueValidator
 from django.db.models import Sum
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from django.conf import settings
 
 class Invoice(models.Model):
     STATUS_CHOICES = (
@@ -16,6 +17,11 @@ class Invoice(models.Model):
         ('cancelled', _('Отменен')),
     )
     
+    INVOICE_TYPE_CHOICES = (
+        ('incoming', _('Входящий')),
+        ('outgoing', _('Исходящий')),
+    )
+    
     TAX_CHOICES = (
         (Decimal('0.00'), 'Без НДС'),
         (Decimal('10.00'), '10%'),
@@ -24,6 +30,9 @@ class Invoice(models.Model):
     
     number = models.CharField(_('Номер счета'), max_length=50, unique=True)
     client = models.ForeignKey(Client, verbose_name=_('Клиент'), related_name='invoices', on_delete=models.CASCADE)
+    supplier = models.ForeignKey(Client, verbose_name=_('Поставщик'), related_name='supplier_invoices', on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='invoices', verbose_name='Пользователь', null=True)
+    invoice_type = models.CharField(_('Тип счета'), max_length=10, choices=INVOICE_TYPE_CHOICES, default='outgoing')
     issue_date = models.DateField(_('Дата выставления'), default=timezone.now)
     due_date = models.DateField(_('Срок оплаты'), default=timezone.now)
     payment_date = models.DateField('Дата оплаты', null=True, blank=True)
@@ -34,6 +43,18 @@ class Invoice(models.Model):
     supplier_address = models.TextField(_('Адрес поставщика'))
     supplier_inn = models.CharField(_('ИНН поставщика'), max_length=20)
     supplier_kpp = models.CharField(_('КПП поставщика'), max_length=20, blank=True, null=True)
+    supplier_phone = models.CharField(_('Телефон поставщика'), max_length=20, blank=True, null=True)
+    supplier_email = models.EmailField(_('Email поставщика'), blank=True, null=True)
+    supplier_contact_person = models.CharField(_('Контактное лицо поставщика'), max_length=100, blank=True, null=True)
+    supplier_tax_id = models.CharField(_('ИНН поставщика (альт.)'), max_length=20, blank=True, null=True)
+    
+    # Поля для клиента
+    client_name = models.CharField(_('Название клиента'), max_length=255, blank=True, null=True)
+    client_address = models.TextField(_('Адрес клиента'), blank=True, null=True)
+    client_tax_id = models.CharField(_('ИНН клиента'), max_length=20, blank=True, null=True)
+    client_phone = models.CharField(_('Телефон клиента'), max_length=20, blank=True, null=True)
+    client_email = models.EmailField(_('Email клиента'), blank=True, null=True)
+    client_contact_person = models.CharField(_('Контактное лицо клиента'), max_length=100, blank=True, null=True)
     
     # Банковские реквизиты
     supplier_bank = models.CharField(_('Название банка'), max_length=255)
@@ -44,6 +65,7 @@ class Invoice(models.Model):
     # Дополнительная информация
     notes = models.TextField(_('Примечания'), blank=True)
     payment_info = models.TextField(_('Информация об оплате'), blank=True)
+    payment_details = models.TextField(_('Детали оплаты'), blank=True)
     
     # Суммы
     subtotal = models.DecimalField(_('Сумма без НДС'), max_digits=15, decimal_places=2, default=Decimal('0.00'))

@@ -7,18 +7,19 @@
 {% block content %}
 <div class="clients-page">
     <div class="page-header d-flex justify-content-between align-items-center mb-3">
-        <h1>Клиенты</h1>
-        <a href="{% url 'clients:create' %}" class="btn">Добавить клиента</a>
+        <h1>Клиенты и поставщики</h1>
+        <a href="{% url 'clients:create' %}" class="btn-add">Добавить</a>
     </div>
     
     <div class="filters card mb-3">
         <form method="get" action="{% url 'clients:list' %}" class="d-flex">
             <div class="search-box">
                 <input type="text" name="search" value="{{ search_query }}" placeholder="Поиск по имени...">
+                <span class="search-icon">🔍</span>
             </div>
             
             <div class="type-filter">
-                <select name="type">
+                <select name="type" aria-label="Фильтр по типу клиента">
                     <option value="">Все типы</option>
                     {% for type_value, type_name in client_types %}
                         <option value="{{ type_value }}" {% if client_type == type_value %}selected{% endif %}>{{ type_name }}</option>
@@ -26,19 +27,28 @@
                 </select>
             </div>
             
+            <div class="entity-filter">
+                <select name="entity_type" aria-label="Фильтр по статусу">
+                    <option value="">Все</option>
+                    <option value="client" {% if entity_type == 'client' %}selected{% endif %}>Клиенты</option>
+                    <option value="supplier" {% if entity_type == 'supplier' %}selected{% endif %}>Поставщики</option>
+                </select>
+            </div>
+            
             <div class="filter-buttons">
-                <button type="submit" class="btn">Применить</button>
-                <a href="{% url 'clients:list' %}" class="btn btn-secondary">Сбросить</a>
+                <button type="submit" class="btn-apply">Применить</button>
+                <a href="{% url 'clients:list' %}" class="btn-reset">Сбросить</a>
             </div>
         </form>
     </div>
     
-    {% if clients %}
+    {% if entities %}
         <div class="clients-list">
             <table>
                 <thead>
                     <tr>
                         <th>Имя / Организация</th>
+                        <th>Статус</th>
                         <th>Тип</th>
                         <th>Телефон</th>
                         <th>Email</th>
@@ -46,20 +56,35 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for client in clients %}
+                    {% for client in entities %}
                         <tr>
                             <td>
                                 <a href="{% url 'clients:detail' client_id=client.id %}" class="client-name">
                                     {{ client.name }}
                                 </a>
                             </td>
-                            <td>{{ client.get_type_display }}</td>
+                            <td>
+                                <span class="entity-badge {% if client.is_supplier %}supplier-badge{% else %}client-badge{% endif %}">
+                                    {% if client.is_supplier %}Поставщик{% else %}Клиент{% endif %}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="type-badge {% if client.type == 'individual' %}individual-badge{% else %}business-badge{% endif %}">
+                                    {{ client.type_display }}
+                                </span>
+                            </td>
                             <td>{{ client.phone|default:"-" }}</td>
                             <td>{{ client.email|default:"-" }}</td>
                             <td class="actions">
-                                <a href="{% url 'clients:detail' client_id=client.id %}" class="action-btn view-btn" title="Просмотр">👁️</a>
-                                <a href="{% url 'clients:edit' client_id=client.id %}" class="action-btn edit-btn" title="Редактировать">✏️</a>
-                                <a href="{% url 'clients:delete' client_id=client.id %}" class="action-btn delete-btn" title="Удалить">🗑️</a>
+                                <a href="{% url 'clients:detail' client_id=client.id %}" class="btn-action btn-view" title="Просмотр">
+                                    <span class="btn-icon">👁️</span>
+                                </a>
+                                <a href="{% url 'clients:edit' client_id=client.id %}" class="btn-action btn-edit" title="Редактировать">
+                                    <span class="btn-icon">✏️</span>
+                                </a>
+                                <a href="{% url 'clients:delete' client_id=client.id %}" class="btn-action btn-delete" title="Удалить">
+                                    <span class="btn-icon">🗑️</span>
+                                </a>
                             </td>
                         </tr>
                     {% endfor %}
@@ -67,25 +92,25 @@
             </table>
         </div>
         
-        {% if clients.has_other_pages %}
+        {% if entities.has_other_pages %}
             <div class="pagination">
                 <ul class="pagination-list">
-                    {% if clients.has_previous %}
-                        <li><a href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if client_type %}&type={{ client_type }}{% endif %}">&laquo; Первая</a></li>
-                        <li><a href="?page={{ clients.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if client_type %}&type={{ client_type }}{% endif %}">Предыдущая</a></li>
+                    {% if entities.has_previous %}
+                        <li><a href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if client_type %}&type={{ client_type }}{% endif %}{% if entity_type %}&entity_type={{ entity_type }}{% endif %}">&laquo; Первая</a></li>
+                        <li><a href="?page={{ entities.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if client_type %}&type={{ client_type }}{% endif %}{% if entity_type %}&entity_type={{ entity_type }}{% endif %}">Предыдущая</a></li>
                     {% endif %}
                     
-                    {% for num in clients.paginator.page_range %}
-                        {% if clients.number == num %}
+                    {% for num in entities.paginator.page_range %}
+                        {% if entities.number == num %}
                             <li class="active"><span>{{ num }}</span></li>
-                        {% elif num > clients.number|add:'-3' and num < clients.number|add:'3' %}
-                            <li><a href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if client_type %}&type={{ client_type }}{% endif %}">{{ num }}</a></li>
+                        {% elif num > entities.number|add:'-3' and num < entities.number|add:'3' %}
+                            <li><a href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if client_type %}&type={{ client_type }}{% endif %}{% if entity_type %}&entity_type={{ entity_type }}{% endif %}">{{ num }}</a></li>
                         {% endif %}
                     {% endfor %}
                     
-                    {% if clients.has_next %}
-                        <li><a href="?page={{ clients.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if client_type %}&type={{ client_type }}{% endif %}">Следующая</a></li>
-                        <li><a href="?page={{ clients.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if client_type %}&type={{ client_type }}{% endif %}">Последняя &raquo;</a></li>
+                    {% if entities.has_next %}
+                        <li><a href="?page={{ entities.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if client_type %}&type={{ client_type }}{% endif %}{% if entity_type %}&entity_type={{ entity_type }}{% endif %}">Следующая</a></li>
+                        <li><a href="?page={{ entities.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if client_type %}&type={{ client_type }}{% endif %}{% if entity_type %}&entity_type={{ entity_type }}{% endif %}">Последняя &raquo;</a></li>
                     {% endif %}
                 </ul>
             </div>
@@ -94,12 +119,12 @@
         <div class="empty-state card">
             <div class="empty-state-content">
                 <div class="empty-icon">👥</div>
-                <h2>Нет клиентов</h2>
-                <p>В системе пока нет клиентов{% if search_query or client_type %}, соответствующих заданным критериям{% endif %}.</p>
+                <h2>Нет клиентов и поставщиков</h2>
+                <p>В системе пока нет клиентов и поставщиков{% if search_query or client_type or entity_type %}, соответствующих заданным критериям{% endif %}.</p>
                 <div class="empty-actions">
-                    <a href="{% url 'clients:create' %}" class="btn">Добавить клиента</a>
-                    {% if search_query or client_type %}
-                        <a href="{% url 'clients:list' %}" class="btn btn-secondary">Сбросить фильтры</a>
+                    <a href="{% url 'clients:create' %}" class="btn-add">Добавить</a>
+                    {% if search_query or client_type or entity_type %}
+                        <a href="{% url 'clients:list' %}" class="btn-reset">Сбросить фильтры</a>
                     {% endif %}
                 </div>
             </div>

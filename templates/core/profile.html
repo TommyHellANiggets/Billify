@@ -391,41 +391,88 @@
             
             <div class="profile-card">
                 <h3 class="profile-card-title">Предпочтения языка</h3>
-                <form method="post">
-                    {% csrf_token %}
-                    <div class="profile-form-group">
-                        <label for="id_language">Язык интерфейса</label>
-                        <select name="language" id="id_language" class="profile-form-control">
-                            <option value="ru" selected>Русский</option>
-                            <option value="en">English</option>
-                            <option value="de">Deutsch</option>
-                        </select>
+                
+                <div class="language-options">
+                    <div class="language-option {% if form.instance.preferred_language == 'ru' %}active{% endif %}" data-lang="ru">
+                        <div class="language-flag">
+                            <img src="{% static 'images/flags/ru.svg' %}" alt="Русский">
+                        </div>
+                        <div class="language-details">
+                            <div class="language-name">Русский</div>
+                            <div class="language-native">Русский</div>
+                        </div>
                     </div>
                     
-                    <div class="profile-form-footer">
-                        <button type="submit" name="action" value="change_language" class="profile-btn profile-btn-primary">Сохранить настройки языка</button>
+                    <div class="language-option {% if form.instance.preferred_language == 'en' %}active{% endif %}" data-lang="en">
+                        <div class="language-flag">
+                            <img src="{% static 'images/flags/gb.svg' %}" alt="English">
+                        </div>
+                        <div class="language-details">
+                            <div class="language-name">English</div>
+                            <div class="language-native">English</div>
+                        </div>
                     </div>
-                </form>
+                    
+                    <div class="language-option {% if form.instance.preferred_language == 'de' %}active{% endif %}" data-lang="de">
+                        <div class="language-flag">
+                            <img src="{% static 'images/flags/de.svg' %}" alt="Deutsch">
+                        </div>
+                        <div class="language-details">
+                            <div class="language-name">Deutsch</div>
+                            <div class="language-native">German</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="profile-form-footer">
+                    <div class="settings-saved language-saved">
+                        <i class="fas fa-check-circle"></i> Язык успешно изменен
+                    </div>
+                </div>
             </div>
             
             <div class="profile-card">
                 <h3 class="profile-card-title">Настройки валюты</h3>
-                <form method="post">
-                    {% csrf_token %}
-                    <div class="profile-form-group">
-                        <label for="id_currency">Основная валюта</label>
-                        <select name="currency" id="id_currency" class="profile-form-control">
-                            <option value="RUB" selected>Российский рубль (₽)</option>
-                            <option value="USD">Доллар США ($)</option>
-                            <option value="EUR">Евро (€)</option>
-                            <option value="GBP">Фунт стерлингов (£)</option>
-                        </select>
+                
+                <div class="currency-options">
+                    <div class="currency-option {% if form.instance.preferred_currency == 'RUB' %}active{% endif %}" data-currency="RUB">
+                        <div class="currency-symbol">₽</div>
+                        <div class="currency-details">
+                            <div class="currency-name">Российский рубль</div>
+                            <div class="currency-code">RUB</div>
+                        </div>
                     </div>
                     
-                    <div class="profile-form-footer">
-                        <button type="submit" name="action" value="change_currency" class="profile-btn profile-btn-primary">Сохранить настройки валюты</button>
+                    <div class="currency-option {% if form.instance.preferred_currency == 'USD' %}active{% endif %}" data-currency="USD">
+                        <div class="currency-symbol">$</div>
+                        <div class="currency-details">
+                            <div class="currency-name">Доллар США</div>
+                            <div class="currency-code">USD</div>
+                        </div>
                     </div>
-                </form>
+                    
+                    <div class="currency-option {% if form.instance.preferred_currency == 'EUR' %}active{% endif %}" data-currency="EUR">
+                        <div class="currency-symbol">€</div>
+                        <div class="currency-details">
+                            <div class="currency-name">Евро</div>
+                            <div class="currency-code">EUR</div>
+                        </div>
+                    </div>
+                    
+                    <div class="currency-option {% if form.instance.preferred_currency == 'GBP' %}active{% endif %}" data-currency="GBP">
+                        <div class="currency-symbol">£</div>
+                        <div class="currency-details">
+                            <div class="currency-name">Фунт стерлингов</div>
+                            <div class="currency-code">GBP</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="profile-form-footer">
+                    <div class="settings-saved currency-saved">
+                        <i class="fas fa-check-circle"></i> Валюта успешно изменена
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -524,8 +571,10 @@
                 const tabId = this.getAttribute('data-tab');
                 document.getElementById(tabId).classList.add('active');
                 
-                // Обновляем URL с помощью хэша
-                window.location.hash = tabId;
+                // Обновляем URL с помощью хэша без прокрутки
+                const scrollPosition = window.scrollY;
+                history.pushState(null, null, '#' + tabId);
+                window.scrollTo(0, scrollPosition);
             });
         });
         
@@ -535,7 +584,12 @@
             const tabLink = document.querySelector(`.profile-nav-link[data-tab="${tabId}"]`);
             
             if (tabLink) {
-                tabLink.click();
+                // Активируем вкладку без прокрутки
+                tabLinks.forEach(l => l.classList.remove('active'));
+                tabs.forEach(t => t.classList.remove('active'));
+                
+                tabLink.classList.add('active');
+                document.getElementById(tabId).classList.add('active');
             }
         }
         
@@ -562,6 +616,80 @@
         
         // Вызываем при загрузке страницы
         updateKppVisibility();
+        
+        // Обработка выбора языка
+        const languageOptions = document.querySelectorAll('.language-option');
+        const languageSaved = document.querySelector('.language-saved');
+        
+        languageOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                // Удаляем активный класс у всех опций
+                languageOptions.forEach(opt => opt.classList.remove('active'));
+                
+                // Добавляем активный класс к выбранной опции
+                this.classList.add('active');
+                
+                // Получаем выбранный язык
+                const language = this.getAttribute('data-lang');
+                
+                // Отправляем AJAX-запрос для сохранения выбранного языка
+                fetch('/api/change-language/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                    },
+                    body: JSON.stringify({ language: language })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Показываем сообщение об успешном сохранении
+                        languageSaved.classList.add('visible');
+                        setTimeout(() => {
+                            languageSaved.classList.remove('visible');
+                        }, 3000);
+                    }
+                });
+            });
+        });
+        
+        // Обработка выбора валюты
+        const currencyOptions = document.querySelectorAll('.currency-option');
+        const currencySaved = document.querySelector('.currency-saved');
+        
+        currencyOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                // Удаляем активный класс у всех опций
+                currencyOptions.forEach(opt => opt.classList.remove('active'));
+                
+                // Добавляем активный класс к выбранной опции
+                this.classList.add('active');
+                
+                // Получаем выбранную валюту
+                const currency = this.getAttribute('data-currency');
+                
+                // Отправляем AJAX-запрос для сохранения выбранной валюты
+                fetch('/api/change-currency/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                    },
+                    body: JSON.stringify({ currency: currency })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Показываем сообщение об успешном сохранении
+                        currencySaved.classList.add('visible');
+                        setTimeout(() => {
+                            currencySaved.classList.remove('visible');
+                        }, 3000);
+                    }
+                });
+            });
+        });
     });
 </script>
 {% endblock %} 

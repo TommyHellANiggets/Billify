@@ -10,4 +10,7 @@ urlpatterns = [
     path('changelog/', views.changelog, name='changelog'),
     path('profile/', views.profile, name='profile'),
     path('verify-email/<int:user_id>/', views.verify_email, name='verify_email'),
+    path('api/change-language/', views.change_language_ajax, name='change_language_ajax'),
+    path('api/change-currency/', views.change_currency_ajax, name='change_currency_ajax'),
+    path('logout/', views.custom_logout, name='logout'),
 ] 

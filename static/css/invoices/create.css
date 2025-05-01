@@ -315,7 +315,7 @@
     }
 }
 
-/* Стили для улучшенного выпадающего списка */
+/* Общие стили для выпадающих списков */
 .select-wrapper {
     position: relative;
     width: 100%;
@@ -324,132 +324,150 @@
 .select-wrapper .select-search {
     width: 100%;
     padding: 0.75rem;
-    border: 1px solid var(--color-gray);
-    border-radius: var(--radius-sm);
-    margin-bottom: 0.5rem;
-    font-size: 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px 4px 0 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 14px;
 }
 
 .select-wrapper .select-search:focus {
     outline: none;
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(77, 139, 248, 0.15);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075);
 }
 
-.supplier-select {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid var(--color-gray);
-    border-radius: var(--radius-sm);
-    background-color: var(--color-white);
-    color: var(--color-text);
-    font-size: 1rem;
-    transition: border-color 0.15s ease;
-    cursor: pointer;
+/* Общий стиль для выпадающих списков (клиенты и поставщики) */
+.entity-select {
     position: relative;
+    width: 100%;
+    height: 44px;
+    padding: 0 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    background-color: #fff;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
-.supplier-select:focus,
-.supplier-select.active {
-    outline: none;
+.entity-select span {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #495057;
+    font-size: 14px;
+}
+
+.entity-select:hover,
+.entity-select:focus,
+.entity-select.active {
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(77, 139, 248, 0.15);
+    box-shadow: 0 0 0 2px rgba(77, 139, 248, 0.15);
+    outline: none;
 }
 
-.supplier-select::after {
-    content: '\f0d7';
-    font-family: 'Font Awesome 5 Free';
-    font-weight: 900;
-    position: absolute;
-    right: 1rem;
+.entity-select::after {
+    content: "";
+    width: 10px;
+    height: 10px;
+    border-right: 2px solid #adb5bd;
+    border-bottom: 2px solid #adb5bd;
+    transform: rotate(45deg);
+    margin-left: 10px;
     transition: transform 0.2s ease;
 }
 
-.supplier-select.active::after {
-    transform: rotate(180deg);
+.entity-select.active::after {
+    transform: rotate(-135deg);
 }
 
-.supplier-dropdown {
+.entity-dropdown {
     position: absolute;
-    top: 100%;
-    left: 0;
     width: 100%;
-    max-height: 300px;
-    overflow-y: auto;
-    background-color: var(--color-white);
-    border: 1px solid var(--color-gray);
-    border-radius: var(--radius-sm);
+    max-height: 0;
+    overflow: hidden;
+    background-color: #fff;
+    border: 0 solid #e0e0e0;
+    border-radius: 0 0 4px 4px;
     z-index: 100;
-    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
     opacity: 0;
     visibility: hidden;
-    transform: translateY(10px);
-    transition: all 0.2s ease;
 }
 
-.supplier-dropdown.show {
+.entity-dropdown.show {
+    max-height: 300px;
+    border-width: 0 1px 1px 1px;
     opacity: 1;
     visibility: visible;
-    transform: translateY(0);
+    overflow-y: auto;
 }
 
-.supplier-dropdown .supplier-item {
-    padding: 0.75rem;
+.entity-dropdown .entity-item {
+    padding: 10px 15px;
+    border-bottom: 1px solid #f0f0f0;
     cursor: pointer;
-    transition: background-color 0.15s ease;
+    transition: background-color 0.2s ease;
 }
 
-.supplier-dropdown .supplier-item:hover {
-    background-color: var(--color-light-gray);
+.entity-dropdown .entity-item:hover {
+    background-color: #f5f9ff;
 }
 
-.supplier-dropdown .supplier-item.selected {
-    background-color: rgba(77, 139, 248, 0.1);
+.entity-dropdown .entity-item.selected {
+    background-color: #f0f7ff;
     font-weight: 500;
 }
 
-.supplier-dropdown .supplier-item .supplier-item-name {
+.entity-dropdown .entity-item .entity-item-name {
     font-weight: 500;
-    margin-bottom: 0.25rem;
+    color: #495057;
 }
 
-.supplier-dropdown .supplier-item .supplier-item-info {
-    font-size: 0.875rem;
-    color: var(--color-text-light);
+.entity-dropdown .entity-item .entity-item-info {
+    font-size: 12px;
+    color: #6c757d;
+    margin-top: 3px;
 }
 
-.supplier-dropdown .supplier-item .supplier-item-inn {
-    margin-right: 0.5rem;
+.entity-dropdown .entity-item .entity-item-inn,
+.entity-dropdown .entity-item .entity-item-phone {
+    margin-right: 10px;
 }
 
-.supplier-dropdown .no-results {
-    padding: 1rem;
+.entity-dropdown .no-results {
+    padding: 15px;
     text-align: center;
-    color: var(--color-text-light);
+    color: #6c757d;
+    font-style: italic;
 }
 
-.supplier-dropdown .add-new-item {
-    padding: 0.75rem;
+.entity-dropdown .add-new-item {
+    padding: 12px 15px;
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    color: var(--color-primary);
+    cursor: pointer;
+    text-align: center;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--color-light);
-    border-top: 1px solid var(--color-gray);
-    cursor: pointer;
-    font-weight: 500;
-    color: var(--color-primary);
-    transition: background-color 0.15s ease;
 }
 
-.supplier-dropdown .add-new-item:hover {
-    background-color: var(--color-light-gray);
+.entity-dropdown .add-new-item:hover {
+    background-color: #e9ecef;
 }
 
-.supplier-dropdown .add-new-item i {
-    margin-right: 0.5rem;
+.entity-dropdown .add-new-item i {
+    margin-right: 8px;
+    font-size: 14px;
 }
 
 /* Стили для разделителя секций и подзаголовков */

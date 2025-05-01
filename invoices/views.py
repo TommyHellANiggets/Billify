@@ -116,43 +116,136 @@ def invoice_create(request):
     # Получаем тип счета из параметров запроса
     invoice_type = request.GET.get('type', 'outgoing')
     
+    # Получаем ID клиента или поставщика (если указаны в URL)
+    client_id = request.GET.get('client_id')
+    supplier_id = request.GET.get('supplier_id')
+    
+    print(f"DEBUG - invoice_create: type={invoice_type}, client_id={client_id}, supplier_id={supplier_id}")
+    
+    # Формируем контекст с необходимыми данными
+    context = {
+        'title': f'Новый {"входящий" if invoice_type == "incoming" else "исходящий"} счет'
+    }
+    
+    # Загружаем списки клиентов и поставщиков, в зависимости от типа счета
+    if invoice_type == 'outgoing':
+        # Для исходящего счета нужны клиенты
+        clients = Client.objects.filter(
+            user=request.user,
+            is_active=True, 
+            entity_type='client'
+        ).order_by('name')
+        
+        # Получаем выбранного клиента, если указан ID
+        selected_client = None
+        if client_id:
+            try:
+                selected_client = Client.objects.get(
+                    id=client_id,
+                    user=request.user, 
+                    entity_type='client', 
+                    is_active=True
+                )
+                print(f"DEBUG - invoice_create: найден выбранный клиент: {selected_client.id} - {selected_client.name}")
+            except Client.DoesNotExist:
+                print(f"DEBUG - invoice_create: клиент с ID {client_id} не найден")
+        
+        # Добавляем данные в контекст
+        context['clients'] = clients
+        context['client_id'] = client_id
+        context['selected_client'] = selected_client
+        
+        # Выводим список ID всех найденных клиентов для отладки
+        client_ids = list(clients.values_list('id', flat=True))
+        print(f"DEBUG - invoice_create: ID найденных клиентов: {client_ids}")
+        print(f"DEBUG - invoice_create: количество клиентов: {clients.count()}")
+    elif invoice_type == 'incoming':
+        # Для входящего счета нужны поставщики из модели Supplier
+        suppliers = Supplier.objects.filter(is_active=True).order_by('name')
+        
+        # Получаем выбранного поставщика, если указан ID
+        selected_supplier = None
+        if supplier_id:
+            try:
+                selected_supplier = Supplier.objects.get(id=supplier_id)
+                print(f"DEBUG - invoice_create: найден выбранный поставщик: {selected_supplier.id} - {selected_supplier.name}")
+            except Supplier.DoesNotExist:
+                print(f"DEBUG - invoice_create: поставщик с ID {supplier_id} не найден")
+        
+        # Добавляем данные в контекст
+        context['suppliers'] = suppliers
+        context['supplier_id'] = supplier_id
+        context['selected_supplier'] = selected_supplier
+        print(f"DEBUG - invoice_create: количество поставщиков: {suppliers.count()}")
+    
+    # Добавляем соответствующие ID в контекст, если они переданы
+    if invoice_type == 'incoming' and supplier_id:
+        context['supplier_id'] = supplier_id
+    elif invoice_type == 'outgoing' and client_id:
+        context['client_id'] = client_id
+    
+    print(f"DEBUG - invoice_create: передаю в контекст: {context.keys()}")
+    
     if invoice_type == 'incoming':
-        return render(request, 'invoices/create_incoming.html', {
-            'title': 'Новый входящий счет'
-        })
+        return render(request, 'invoices/create_incoming.html', context)
     else:
-        return render(request, 'invoices/create_outgoing.html', {
-            'title': 'Новый исходящий счет'
-        })
+        # Генерируем следующий номер счета
+        next_invoice_number = get_next_invoice_number(request.user, 'outgoing')
+        context['next_invoice_number'] = next_invoice_number
+        return render(request, 'invoices/create_outgoing.html', context)
 
-def get_next_invoice_number():
-    """Генерирует следующий номер счета"""
-    # Находим максимальный номер среди существующих счетов
-    max_number = Invoice.objects.aggregate(Max('number'))['number__max']
+def get_next_invoice_number(user=None, invoice_type=None):
+    """Генерирует следующий номер счета, находя первый свободный номер.
+    Учитывает пользователя и тип счета для уникальности, но не включает имя пользователя в номер."""
+    # Получаем все существующие номера счетов этого пользователя
+    existing_invoices = Invoice.objects.all()
+    
+    # Фильтруем счета по пользователю, если он указан
+    if user:
+        existing_invoices = existing_invoices.filter(user=user)
+    
+    # Фильтруем счета по типу, если он указан
+    if invoice_type:
+        existing_invoices = existing_invoices.filter(invoice_type=invoice_type)
     
     # Если счетов еще нет, начинаем с номера 00001
-    if not max_number:
-        return 'Счёт №00001'
+    if not existing_invoices.exists():
+        return f'Счет №00001'
     
-    # Извлекаем числовую часть из номера
-    number_match = re.search(r'№(\d+)', max_number)
-    if not number_match:
-        return 'Счёт №00001'
+    # Извлекаем числовые части из всех номеров счетов
+    existing_numbers = []
     
-    # Увеличиваем числовую часть на 1
-    current_number = int(number_match.group(1))
-    next_number = current_number + 1
+    for invoice in existing_invoices:
+        number_match = re.search(r'№(\d+)', invoice.number)
+        if number_match:
+            existing_numbers.append(int(number_match.group(1)))
+    
+    if not existing_numbers:
+        return f'Счет №00001'
+    
+    # Сортируем номера
+    existing_numbers.sort()
+    
+    # Находим первый свободный номер
+    expected_number = 1
+    for num in existing_numbers:
+        if num > expected_number:
+            # Нашли пропуск в последовательности
+            break
+        expected_number = num + 1
     
     # Форматируем номер с ведущими нулями
-    return f'Счёт №{next_number:05d}'
+    return f'Счет №{expected_number:05d}'
 
 def create_incoming(request):
     """Создание нового входящего счета"""
-    # Получаем список всех активных поставщиков
+    
+    # Получаем список всех активных поставщиков из модели Supplier
     suppliers = Supplier.objects.filter(is_active=True).order_by('name')
+    print(f"DEBUG - найдено поставщиков: {suppliers.count()}")
     
     # Генерируем следующий номер счета
-    next_invoice_number = get_next_invoice_number()
+    next_invoice_number = get_next_invoice_number(request.user, 'incoming')
     
     if request.method == 'POST':
         # Получаем данные из формы
@@ -167,104 +260,137 @@ def create_incoming(request):
         supplier_id = request.POST.get('supplier')
         
         try:
-            # Получаем объект поставщика
+            # Получаем объект поставщика из модели Supplier
             supplier = Supplier.objects.get(id=supplier_id)
             
             # Получаем данные о клиенте (текущая компания пользователя)
-            try:
-                company_profile = request.user.company_profile
-                
-                # Создаем новый счет
-                invoice = Invoice(
-                    number=invoice_number,
-                    client_id=request.user.clients.first().id,  # Первый клиент пользователя
-                    issue_date=datetime.strptime(invoice_date, '%Y-%m-%d').date(),
-                    due_date=datetime.strptime(due_date, '%Y-%m-%d').date(),
-                    status=status,
-                    supplier_name=supplier.name,
-                    supplier_address=supplier.address or '',
-                    supplier_inn=supplier.inn or '',
-                    supplier_kpp=supplier.kpp or '',
-                    supplier_bank=supplier.bank_name or '',
-                    supplier_bank_account=supplier.bank_account or '',
-                    supplier_bank_bik=supplier.bank_bik or '',
-                    notes=notes,
-                    payment_info=payment_details,
-                    subtotal=Decimal('0.00'),  # Временные значения
-                    tax_amount=Decimal('0.00'),
-                    total=Decimal('0.00')
-                )
-                invoice.save()
-                
-                # Обрабатываем позиции счета
-                item_names = request.POST.getlist('item_name[]')
-                item_quantities = request.POST.getlist('item_quantity[]')
-                item_prices = request.POST.getlist('item_price[]')
-                
-                subtotal = Decimal('0.00')
-                
-                for i in range(len(item_names)):
-                    if item_names[i] and item_prices[i]:  # Проверяем, что поля не пустые
-                        quantity = Decimal(item_quantities[i])
-                        price = Decimal(item_prices[i])
-                        amount = quantity * price
-                        subtotal += amount
-                        
-                        # Создаем позицию счета
-                        item = InvoiceItem(
-                            invoice=invoice,
-                            description=item_names[i],
-                            quantity=quantity,
-                            price=price,
-                            amount=amount
-                        )
-                        item.save()
-                
-                # Обновляем итоговые суммы
-                invoice.subtotal = subtotal
-                invoice.tax_amount = subtotal * Decimal('0.20')  # НДС 20%
-                invoice.total = subtotal + invoice.tax_amount
-                invoice.save()
-                
-                messages.success(request, 'Входящий счет успешно создан!')
-                return redirect('invoices:list')
-            except Exception as e:
-                messages.error(request, f'Ошибка при создании счета: {str(e)}')
+            client = Client.objects.filter(user=request.user, is_active=True, entity_type='client').first()
+            
+            if not client:
+                # Если у пользователя нет своей компании, создаем ошибку
+                messages.error(request, 'Необходимо создать свою компанию перед созданием счетов')
+                return redirect('clients:create')
+            
+            # Получаем данные о товарах
+            item_names = request.POST.getlist('item_name[]')
+            item_descriptions = request.POST.getlist('item_description[]')
+            item_quantities = request.POST.getlist('item_quantity[]')
+            item_prices = request.POST.getlist('item_price[]')
+            
+            # Создаем новый счет
+            invoice = Invoice.objects.create(
+                number=invoice_number,
+                issue_date=invoice_date,
+                due_date=due_date,
+                status=status,
+                notes=notes,
+                payment_details=payment_details,
+                invoice_type='incoming',
+                user=request.user,
+                client=client,
+                supplier_name=supplier.name,
+                supplier_address=supplier.address or '',
+                supplier_tax_id=supplier.inn or '',
+                supplier_phone=supplier.phone or '',
+                supplier_email=supplier.email or '',
+                supplier_contact_person=supplier.contact_person or '',
+                supplier_bank=supplier.bank_name or '',
+                supplier_bank_bik=supplier.bank_bik or '',
+                supplier_bank_account=supplier.bank_account or '',
+                supplier_bank_corr_account=supplier.bank_corr_account or '',
+                client_name=client.name,
+                client_address=client.address,
+                client_tax_id=client.tax_id,
+                client_phone=client.phone,
+                client_email=client.email,
+                client_contact_person=client.contact_person
+            )
+            
+            # Создаем позиции счета
+            for i in range(len(item_names)):
+                if item_names[i].strip():  # Проверяем, что название не пустое
+                    try:
+                        quantity = float(item_quantities[i].replace(',', '.')) if item_quantities[i] else 1
+                        price = float(item_prices[i].replace(',', '.')) if item_prices[i] else 0
+                    except ValueError:
+                        quantity = 1
+                        price = 0
+                    
+                    InvoiceItem.objects.create(
+                        invoice=invoice,
+                        description=item_names[i],
+                        quantity=quantity,
+                        price=price,
+                        amount=quantity * price
+                    )
+            
+            # Перенаправляем на страницу счета
+            messages.success(request, f'Счет {invoice.number} успешно создан')
+            return redirect('invoices:detail', pk=invoice.id)
+            
         except Supplier.DoesNotExist:
             messages.error(request, 'Выбранный поставщик не найден')
+        except Exception as e:
+            messages.error(request, f'Ошибка при создании счета: {str(e)}')
     
-    return render(request, 'invoices/create_incoming.html', {
+    # Получаем ID поставщика из URL-параметра
+    supplier_id = request.GET.get('supplier_id')
+    selected_supplier = None
+    
+    if supplier_id:
+        try:
+            selected_supplier = Supplier.objects.get(id=supplier_id)
+        except Supplier.DoesNotExist:
+            pass
+    
+    # Передаем данные в шаблон
+    context = {
         'title': 'Новый входящий счет',
         'suppliers': suppliers,
-        'next_invoice_number': next_invoice_number
-    })
+        'next_invoice_number': next_invoice_number,
+        'is_edit': False,
+        'selected_supplier': selected_supplier,
+        'supplier_id': supplier_id
+    }
+    
+    return render(request, 'invoices/create_incoming.html', context)
 
 def create_outgoing(request):
     """Создание нового исходящего счета"""
-    # Получаем список всех активных клиентов
-    clients = Client.objects.filter(is_active=True).order_by('name')
+    # Получаем ID клиента из URL-параметра
+    client_id = request.GET.get('client_id')
+    print(f"DEBUG - client_id из URL: {client_id}")
+    
+    # Получаем список только активных клиентов текущего пользователя
+    clients = Client.objects.filter(
+        user=request.user,
+        is_active=True, 
+        entity_type='client'
+    ).order_by('name')
+    print(f"DEBUG - найдено клиентов пользователя: {clients.count()}")
+    
+    # Выводим список ID всех найденных клиентов для отладки
+    client_ids = list(clients.values_list('id', flat=True))
+    print(f"DEBUG - ID найденных клиентов: {client_ids}")
     
     # Генерируем следующий номер счета
-    next_invoice_number = get_next_invoice_number()
+    next_invoice_number = get_next_invoice_number(request.user, 'outgoing')
     
-    # Получаем профиль компании пользователя
-    company_profile_data = None
-    if request.user.company_profile:
-        company_profile = request.user.company_profile
-        company_profile_data = {
-            'company_name': company_profile.company_name,
-            'legal_address': company_profile.legal_address,
-            'inn': company_profile.inn,
-            'kpp': company_profile.kpp,
-            'bank_name': company_profile.bank_name,
-            'bank_account': company_profile.bank_account,
-            'bank_bik': company_profile.bank_bik,
-            'bank_corr_account': company_profile.bank_corr_account,
-            'director_name': company_profile.director_name if hasattr(company_profile, 'director_name') else '',
-            'accountant_name': company_profile.accountant_name if hasattr(company_profile, 'accountant_name') else ''
-        }
-    else:
-        messages.warning(request, 'Профиль компании не заполнен или содержит неполные данные. Рекомендуется заполнить профиль для корректного формирования счетов.')
+    selected_client = None
+    
+    if client_id:
+        try:
+            # Ищем клиента по ID, принадлежащего текущему пользователю
+            selected_client = Client.objects.get(
+                id=client_id,
+                user=request.user, 
+                entity_type='client', 
+                is_active=True
+            )
+            print(f"DEBUG - найден выбранный клиент: {selected_client.id} - {selected_client.name}")
+        except Client.DoesNotExist:
+            print(f"DEBUG - клиент с ID {client_id} не найден")
+            selected_client = None
     
     if request.method == 'POST':
         # Получаем данные из формы
@@ -274,84 +400,110 @@ def create_outgoing(request):
         status = request.POST.get('status')
         notes = request.POST.get('notes')
         payment_details = request.POST.get('payment_details')
+        discount = request.POST.get('discount', '0')
         
         # Получаем данные клиента
         client_id = request.POST.get('client')
+        print(f"DEBUG - client_id из POST запроса: {client_id}")
         
         try:
             # Получаем объект клиента
-            client = Client.objects.get(id=client_id)
+            client = Client.objects.get(id=client_id, user=request.user, entity_type='client')
+            print(f"DEBUG - клиент для счета: {client.id} - {client.name}")
             
+            # Получаем данные о поставщике (текущая компания пользователя)
+            supplier = Client.objects.filter(user=request.user, is_active=True, entity_type='supplier').first()
+            
+            if not supplier:
+                # Если у пользователя нет своей компании, создаем ошибку
+                messages.error(request, 'Необходимо создать свою компанию перед созданием счетов')
+                return redirect('clients:create')
+            
+            # Получаем данные о товарах
+            item_names = request.POST.getlist('item_name[]')
+            item_descriptions = request.POST.getlist('item_description[]')
+            item_quantities = request.POST.getlist('item_quantity[]')
+            item_prices = request.POST.getlist('item_price[]')
+            
+            # Обрабатываем скидку
             try:
-                # Создаем новый счет
-                invoice = Invoice(
-                    number=invoice_number,
-                    client=client,
-                    issue_date=datetime.strptime(invoice_date, '%Y-%m-%d').date(),
-                    due_date=datetime.strptime(due_date, '%Y-%m-%d').date(),
-                    status=status,
-                    supplier_name=company_profile_data['company_name'],
-                    supplier_address=company_profile_data['legal_address'],
-                    supplier_inn=company_profile_data['inn'],
-                    supplier_kpp=company_profile_data['kpp'],
-                    supplier_bank=company_profile_data['bank_name'],
-                    supplier_bank_account=company_profile_data['bank_account'],
-                    supplier_bank_bik=company_profile_data['bank_bik'],
-                    supplier_bank_corr_account=company_profile_data['bank_corr_account'],
-                    notes=notes,
-                    payment_info=payment_details,
-                    director_name=company_profile_data['director_name'],
-                    accountant_name=company_profile_data['accountant_name'],
-                    subtotal=Decimal('0.00'),  # Временные значения
-                    tax_amount=Decimal('0.00'),
-                    total=Decimal('0.00')
-                )
-                invoice.save()
-                
-                # Обрабатываем позиции счета
-                item_names = request.POST.getlist('item_name[]')
-                item_quantities = request.POST.getlist('item_quantity[]')
-                item_prices = request.POST.getlist('item_price[]')
-                
-                subtotal = Decimal('0.00')
-                
-                for i in range(len(item_names)):
-                    if item_names[i] and item_prices[i]:  # Проверяем, что поля не пустые
-                        quantity = Decimal(item_quantities[i])
-                        price = Decimal(item_prices[i])
-                        amount = quantity * price
-                        subtotal += amount
-                        
-                        # Создаем позицию счета
-                        item = InvoiceItem(
-                            invoice=invoice,
-                            description=item_names[i],
-                            quantity=quantity,
-                            unit="шт.",  # Можно добавить поле для выбора единиц измерения
-                            price=price,
-                            amount=amount
-                        )
-                        item.save()
-                
-                # Обновляем итоговые суммы
-                invoice.subtotal = subtotal
-                invoice.tax_amount = subtotal * Decimal('0.20')  # НДС 20%
-                invoice.total = subtotal + invoice.tax_amount
-                invoice.save()
-                
-                messages.success(request, 'Счет успешно создан!')
-                return redirect('invoices:list')
-            except Exception as e:
-                messages.error(request, f'Ошибка при создании счета: {str(e)}')
+                discount_value = float(discount.replace(',', '.'))
+            except ValueError:
+                discount_value = 0
+            
+            # Создаем новый счет
+            invoice = Invoice.objects.create(
+                number=invoice_number,
+                issue_date=invoice_date,
+                due_date=due_date,
+                status=status,
+                notes=notes,
+                payment_details=payment_details,
+                invoice_type='outgoing',
+                discount=discount_value,
+                user=request.user,
+                client=client,
+                supplier=supplier,
+                supplier_name=supplier.name,
+                supplier_address=supplier.address,
+                supplier_tax_id=supplier.tax_id,
+                supplier_phone=supplier.phone,
+                supplier_email=supplier.email,
+                supplier_contact_person=supplier.contact_person,
+                supplier_bank=supplier.bank_name,
+                supplier_bank_bik=supplier.bank_bik,
+                supplier_bank_account=supplier.bank_account,
+                supplier_bank_corr_account=supplier.bank_corr_account,
+                client_name=client.name,
+                client_address=client.address,
+                client_tax_id=client.tax_id,
+                client_phone=client.phone,
+                client_email=client.email,
+                client_contact_person=client.contact_person
+            )
+            
+            # Создаем позиции счета
+            for i in range(len(item_names)):
+                if item_names[i].strip():  # Проверяем, что название не пустое
+                    try:
+                        quantity = float(item_quantities[i].replace(',', '.')) if item_quantities[i] else 1
+                        price = float(item_prices[i].replace(',', '.')) if item_prices[i] else 0
+                    except ValueError:
+                        quantity = 1
+                        price = 0
+                    
+                    InvoiceItem.objects.create(
+                        invoice=invoice,
+                        description=item_names[i],
+                        quantity=quantity,
+                        price=price,
+                        amount=quantity * price
+                    )
+            
+            # Перенаправляем на страницу счета
+            messages.success(request, f'Счет {invoice.number} успешно создан')
+            return redirect('invoices:detail', pk=invoice.id)
+            
         except Client.DoesNotExist:
             messages.error(request, 'Выбранный клиент не найден')
+            print(f"DEBUG - клиент с ID {client_id} не найден при создании счета")
+        except Exception as e:
+            messages.error(request, f'Ошибка при создании счета: {str(e)}')
+            print(f"DEBUG - ошибка при создании счета: {str(e)}")
     
-    return render(request, 'invoices/create_outgoing.html', {
+    # Передаем данные в шаблон
+    context = {
         'title': 'Новый исходящий счет',
         'clients': clients,
         'next_invoice_number': next_invoice_number,
-        'company_profile': company_profile_data
-    })
+        'is_edit': False,
+        'selected_client': selected_client,
+        'client_id': client_id
+    }
+    
+    print(f"DEBUG - передаем в контекст: client_id={client_id}, selected_client={selected_client.id if selected_client else None}")
+    
+    return render(request, 'invoices/create_outgoing.html', context)
 
 def invoice_pdf(request, pk):
     """Генерация PDF для счета"""
@@ -452,14 +604,14 @@ def duplicate_invoice(request, pk):
         original_invoice = Invoice.objects.get(pk=pk)
         
         # Генерируем новый номер счета
-        next_invoice_number = get_next_invoice_number()
+        next_invoice_number = get_next_invoice_number(original_invoice.user, original_invoice.invoice_type)
         
         # Создаем новый счет на основе существующего
         new_invoice = Invoice(
             number=next_invoice_number,
             client=original_invoice.client,
             issue_date=datetime.now().date(),
-            due_date=datetime.now().date(),  # Нужно установить новый срок оплаты
+            due_date=datetime.now().date() + timedelta(days=15),  # Устанавливаем новый срок оплаты через 15 дней
             status='draft',  # Новый счет всегда в статусе черновика
             supplier_name=original_invoice.supplier_name,
             supplier_address=original_invoice.supplier_address,
@@ -468,13 +620,16 @@ def duplicate_invoice(request, pk):
             supplier_bank=original_invoice.supplier_bank,
             supplier_bank_account=original_invoice.supplier_bank_account,
             supplier_bank_bik=original_invoice.supplier_bank_bik,
+            supplier_bank_corr_account=original_invoice.supplier_bank_corr_account,
             notes=original_invoice.notes,
             payment_info=original_invoice.payment_info,
             subtotal=original_invoice.subtotal,
             tax_rate=original_invoice.tax_rate,
             tax_amount=original_invoice.tax_amount,
             discount=original_invoice.discount,
-            total=original_invoice.total
+            total=original_invoice.total,
+            director_name=original_invoice.director_name,
+            accountant_name=original_invoice.accountant_name
         )
         new_invoice.save()
         
@@ -494,14 +649,22 @@ def duplicate_invoice(request, pk):
             )
             new_item.save()
         
-        messages.success(request, 'Счет успешно скопирован!')
+        # Пересчитываем суммы нового счета
+        new_invoice.calculate_totals()
+        new_invoice.save()
+        
+        messages.success(request, f'Создана копия счета: {new_invoice.number}')
+        
+        # Перенаправляем на страницу нового счета
         return redirect('invoices:detail', pk=new_invoice.id)
+    
     except Invoice.DoesNotExist:
         messages.error(request, 'Счет не найден')
         return redirect('invoices:list')
+    
     except Exception as e:
-        messages.error(request, f'Ошибка при копировании счета: {str(e)}')
-        return redirect('invoices:detail', pk=pk)
+        messages.error(request, f'Ошибка при дублировании счета: {str(e)}')
+        return redirect('invoices:list')
 
 def edit_invoice(request, pk):
     """Редактирование счета"""
@@ -550,9 +713,9 @@ def edit_invoice(request, pk):
                     contact_email = request.POST.get('contact_email', '')
                     
                     if supplier_id:
-                        supplier = Supplier.objects.get(pk=supplier_id)
+                        supplier = Client.objects.get(pk=supplier_id, entity_type='supplier')
                         invoice.supplier_name = supplier.name
-                        invoice.supplier_inn = supplier.inn
+                        invoice.supplier_inn = supplier.tax_id
                         invoice.supplier_kpp = supplier.kpp
                         invoice.supplier_address = supplier.address
                         invoice.supplier_bank = supplier.bank_name
@@ -620,7 +783,7 @@ def edit_invoice(request, pk):
                 'is_edit': True
             }
         else:
-            suppliers = Supplier.objects.filter(is_active=True).order_by('name')
+            suppliers = Client.objects.filter(is_active=True, entity_type='supplier').order_by('name')
             template_name = 'invoices/create_incoming.html'
             context = {
                 'title': f'Редактирование счета {invoice.number}',

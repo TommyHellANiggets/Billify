@@ -1,4 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Добавляем фавикон, если он не существует
+    if (!document.querySelector('link[rel="icon"]')) {
+        const favicon = document.createElement('link');
+        favicon.rel = 'icon';
+        favicon.href = 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📄</text></svg>';
+        document.head.appendChild(favicon);
+    }
+
     // Получаем элементы формы
     const invoiceForm = document.querySelector('.invoice-form');
     const invoiceItems = document.getElementById('invoice-items');
@@ -115,6 +123,8 @@ function addNewItemRow() {
 function populateSupplierBankDetails(supplier) {
     if (!supplier) return;
     
+    console.log('Заполняем реквизиты поставщика из API:', supplier);
+    
     // Заполнение реквизитов
     const nameDisplay = document.getElementById('supplier_name_display');
     const innDisplay = document.getElementById('supplier_inn_display');
@@ -124,18 +134,29 @@ function populateSupplierBankDetails(supplier) {
     const corrAccountDisplay = document.getElementById('supplier_corr_account_display');
     const paymentDetails = document.getElementById('payment_details');
     
+    // Находим поля для контактного лица и email
+    const contactNameInput = document.getElementById('contact_name');
+    const contactEmailInput = document.getElementById('contact_email');
+    
+    // Определяем ИНН (может быть как inn, так и tax_id в зависимости от источника данных)
+    const inn = supplier.inn || supplier.tax_id || '';
+    
     if (nameDisplay) nameDisplay.value = supplier.name || '';
-    if (innDisplay) innDisplay.value = supplier.inn || '';
+    if (innDisplay) innDisplay.value = inn;
     if (bankDisplay) bankDisplay.value = supplier.bank_name || '';
     if (bikDisplay) bikDisplay.value = supplier.bank_bik || '';
     if (accountDisplay) accountDisplay.value = supplier.bank_account || '';
     if (corrAccountDisplay) corrAccountDisplay.value = supplier.bank_corr_account || '';
     
+    // Заполняем контактную информацию исключительно из API данных
+    if (contactNameInput) contactNameInput.value = supplier.contact_person || '';
+    if (contactEmailInput) contactEmailInput.value = supplier.contact_email || '';
+    
     // Сохранение полных реквизитов в скрытом поле
     if (paymentDetails) {
         const fullDetails = [
             `Название организации: ${supplier.name || '-'}`,
-            `ИНН: ${supplier.inn || '-'}`,
+            `ИНН: ${inn || '-'}`,
             `Банк: ${supplier.bank_name || '-'}`,
             `БИК: ${supplier.bank_bik || '-'}`,
             `Р/с: ${supplier.bank_account || '-'}`,
@@ -242,6 +263,10 @@ function populateClientBankDetails(client) {
     const accountDisplay = document.getElementById('client_account_display');
     const bankDetailsContainer = document.getElementById('client_bank_details');
     
+    // Находим поля для контактного лица и email
+    const contactNameInput = document.getElementById('contact_name');
+    const contactEmailInput = document.getElementById('contact_email');
+    
     // Если таких элементов нет на странице, выходим
     if (!nameDisplay || !innDisplay) return;
     
@@ -251,6 +276,10 @@ function populateClientBankDetails(client) {
     bankDisplay.value = client.bank_name || '';
     bikDisplay.value = client.bank_bik || '';
     accountDisplay.value = client.bank_account || '';
+    
+    // Заполняем контактную информацию
+    if (contactNameInput) contactNameInput.value = client.contact_person || '';
+    if (contactEmailInput) contactEmailInput.value = client.contact_email || '';
     
     // Показываем блок с реквизитами
     if (bankDetailsContainer) bankDetailsContainer.style.display = 'block';
@@ -558,26 +587,60 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Обработчик для выбора поставщика (для входящего счета)
-    const supplierItems = document.querySelectorAll('#supplier-list .supplier-item');
+    const supplierItems = document.querySelectorAll('#supplier-list .entity-item');
     if (supplierItems.length > 0) {
         supplierItems.forEach(item => {
             item.addEventListener('click', function() {
-                // Получаем данные из атрибутов элемента
+                // Получаем ID поставщика
                 const supplierId = this.getAttribute('data-id');
+                console.log(`Выбран поставщик с ID: ${supplierId}`);
                 
-                // В реальном приложении здесь должен быть AJAX-запрос к серверу
-                // для получения полных данных о поставщике
-                // Временно используем заглушку
-                const supplierData = {
-                    name: this.querySelector('.supplier-item-name').textContent,
-                    inn: this.querySelector('.supplier-item-inn').textContent.replace('ИНН: ', ''),
-                    bank_name: 'АО "Банк поставщика"',
-                    bank_bik: '044525123',
-                    bank_account: '40702810200000000456',
-                    bank_corr_account: '30101810400000000123'
-                };
-                
-                populateSupplierBankDetails(supplierData);
+                // Используем API из suppliers для получения данных поставщика
+                fetch(`/suppliers/api/get/${supplierId}/`)
+                    .then(response => {
+                        if (!response.ok) {
+                            console.error(`Ошибка API: ${response.status}. Для поставщика ID=${supplierId}`);
+                            throw new Error(`api_error_${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Проверяем наличие данных
+                        if (!data || typeof data !== 'object') {
+                            console.error('Получены некорректные данные');
+                            throw new Error('invalid_data');
+                        }
+                        
+                        console.log('Получены данные поставщика:', data);
+                        
+                        // Заполняем поля поставщика данными из API
+                        populateSupplierBankDetails(data);
+                        
+                        // Обновляем выбранное имя поставщика в селекте
+                        const supplierSelect = document.getElementById('supplier-select');
+                        if (supplierSelect) {
+                            supplierSelect.querySelector('span').textContent = data.name;
+                        }
+                        
+                        // Закрываем выпадающий список
+                        const supplierDropdown = document.getElementById('supplier-dropdown');
+                        if (supplierDropdown) {
+                            supplierDropdown.classList.remove('show');
+                        }
+                        if (supplierSelect) {
+                            supplierSelect.classList.remove('active');
+                        }
+                        
+                        // Обновляем скрытое поле с ID поставщика
+                        const supplierIdInput = document.getElementById('supplier_id');
+                        if (supplierIdInput) {
+                            supplierIdInput.value = data.id;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Ошибка при получении данных поставщика:', error);
+                        alert('Не удалось получить данные поставщика. Пожалуйста, попробуйте выбрать поставщика снова или обратитесь в техподдержку.');
+                    });
             });
         });
     }
@@ -590,17 +653,36 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Получаем данные из атрибутов элемента
                 const clientId = this.getAttribute('data-id');
                 
-                // В реальном приложении здесь нужен AJAX-запрос к серверу
-                // для получения полных данных о клиенте
-                const clientData = {
-                    name: this.querySelector('.client-item-name').textContent,
-                    inn: this.querySelector('.client-item-inn').textContent.replace('ИНН: ', ''),
-                    bank_name: '',
-                    bank_bik: '',
-                    bank_account: ''
-                };
-                
-                populateClientBankDetails(clientData);
+                // Используем реальный API для получения данных клиента
+                fetch(`/clients/api/get/${clientId}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        populateClientBankDetails(data);
+                        
+                        // Обновляем выбранное имя клиента в селекте
+                        const clientSelect = document.getElementById('client-select');
+                        if (clientSelect) {
+                            clientSelect.querySelector('span').textContent = data.name;
+                        }
+                        
+                        // Закрываем выпадающий список
+                        const clientDropdown = document.getElementById('client-dropdown');
+                        if (clientDropdown) {
+                            clientDropdown.classList.remove('show');
+                        }
+                        if (clientSelect) {
+                            clientSelect.classList.remove('active');
+                        }
+                        
+                        // Обновляем скрытое поле с ID клиента
+                        const clientIdInput = document.getElementById('client_id');
+                        if (clientIdInput) {
+                            clientIdInput.value = data.id;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Ошибка при получении данных клиента:', error);
+                    });
             });
         });
     }

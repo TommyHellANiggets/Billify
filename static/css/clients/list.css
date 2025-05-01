@@ -1,62 +1,166 @@
 .clients-page {
-    padding: 1rem 0;
+    padding: 1.5rem 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
 }
 
 .page-header {
     margin-bottom: 2rem;
 }
 
+.page-header h1 {
+    font-weight: 600;
+    color: #333;
+}
+
+/* Фильтры */
 .filters {
-    padding: 1.2rem;
+    padding: 1.8rem;
     margin-bottom: 2rem;
+    border-radius: 20px;
+    background-color: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+    border: 1px solid #f0f0f0;
 }
 
 .filters form {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 1rem;
+    gap: 1.4rem;
 }
 
 .search-box {
     flex: 2;
     min-width: 250px;
+    position: relative;
 }
 
 .search-box input {
     width: 100%;
-    padding: 0.7rem 1rem;
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius);
+    padding: 0.9rem 1rem 0.9rem 2.5rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 16px;
+    transition: all 0.2s ease-in-out;
+    font-size: 14px;
 }
 
-.type-filter {
+.search-box input:focus {
+    border-color: #5e72e4;
+    box-shadow: 0 0 0 3px rgba(94, 114, 228, 0.12);
+    outline: none;
+}
+
+.search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #adb5bd;
+    font-size: 15px;
+}
+
+.type-filter,
+.entity-filter {
     flex: 1;
     min-width: 150px;
 }
 
-.type-filter select {
+.type-filter select,
+.entity-filter select {
     width: 100%;
-    padding: 0.7rem 1rem;
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius);
+    padding: 0.9rem 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 16px;
     appearance: none;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23adb5bd' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
     background-repeat: no-repeat;
     background-position: right 1rem center;
     background-size: 1rem;
+    transition: all 0.2s ease-in-out;
+    font-size: 14px;
+    color: #495057;
+}
+
+.type-filter select:focus,
+.entity-filter select:focus {
+    border-color: #5e72e4;
+    box-shadow: 0 0 0 3px rgba(94, 114, 228, 0.12);
+    outline: none;
 }
 
 .filter-buttons {
     display: flex;
-    gap: 0.5rem;
+    gap: 1rem;
 }
 
+/* Кнопки */
+.btn-add {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.9rem 1.8rem;
+    background-color: #5e72e4;
+    color: white;
+    font-weight: 500;
+    border-radius: 16px;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    box-shadow: 0 3px 6px rgba(94, 114, 228, 0.12);
+}
+
+.btn-add:hover {
+    background-color: #4756ca;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(94, 114, 228, 0.15);
+}
+
+.btn-apply {
+    padding: 0.9rem 1.8rem;
+    background-color: #5e72e4;
+    color: white;
+    font-weight: 500;
+    border-radius: 16px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    font-size: 14px;
+    box-shadow: 0 3px 6px rgba(94, 114, 228, 0.1);
+}
+
+.btn-apply:hover {
+    background-color: #4756ca;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(94, 114, 228, 0.15);
+}
+
+.btn-reset {
+    padding: 0.9rem 1.8rem;
+    background-color: #f8f9fa;
+    color: #5a6268;
+    font-weight: 500;
+    border-radius: 16px;
+    border: 1px solid #e9ecef;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+    font-size: 14px;
+}
+
+.btn-reset:hover {
+    background-color: #e9ecef;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Список клиентов */
 .clients-list {
-    background-color: var(--color-white);
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
     overflow: hidden;
+    border: 1px solid #f0f0f0;
 }
 
 .clients-list table {
@@ -65,17 +169,26 @@
 }
 
 .clients-list th {
-    background-color: #f9f9f9;
+    background-color: #f8f9fa;
     font-weight: 600;
     text-align: left;
-    padding: 1rem;
-    border-bottom: 2px solid var(--color-border);
+    padding: 0.625rem 0.75rem;
+    border-bottom: 1px solid #edf2f7;
+    color: #6c757d;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .clients-list td {
-    padding: 1rem;
-    border-bottom: 1px solid var(--color-border);
+    padding: 0.625rem 0.75rem;
+    border-bottom: 1px solid #edf2f7;
     vertical-align: middle;
+    color: #495057;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
 }
 
 .clients-list tr:last-child td {
@@ -83,48 +196,123 @@
 }
 
 .clients-list tr:hover {
-    background-color: var(--color-light-gray);
+    background-color: #f9fafb;
 }
 
+/* Имя клиента */
 .client-name {
-    color: var(--color-blue);
+    color: #5e72e4;
     font-weight: 500;
     text-decoration: none;
+    transition: color 0.2s;
 }
 
 .client-name:hover {
+    color: #4756ca;
     text-decoration: underline;
 }
 
+/* Бейджи для статуса */
+.entity-badge {
+    display: inline-block;
+    padding: 0.4rem 0.9rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.client-badge {
+    background-color: #e6f2ff;
+    color: #3182ce;
+}
+
+.supplier-badge {
+    background-color: #f0e7fe;
+    color: #8550c9;
+}
+
+/* Бейджи для типа (физ/юр лицо) */
+.type-badge {
+    display: inline-block;
+    padding: 0.4rem 0.9rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.individual-badge {
+    background-color: #e6f7fe;
+    color: #0396b8;
+}
+
+.business-badge {
+    background-color: #f0e7fe;
+    color: #8550c9;
+    white-space: nowrap;
+}
+
+/* Кнопки действий */
 .actions {
     display: flex;
-    gap: 0.6rem;
+    gap: 0.8rem;
     justify-content: flex-end;
 }
 
-.action-btn {
+.btn-action {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    transition: background-color 0.2s;
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    transition: all 0.2s ease-in-out;
     text-decoration: none;
 }
 
-.view-btn:hover {
-    background-color: rgba(0, 102, 204, 0.1);
+.btn-view {
+    background-color: #f1f4ff;
+    color: #5e72e4;
 }
 
-.edit-btn:hover {
-    background-color: rgba(255, 193, 7, 0.1);
+.btn-edit {
+    background-color: #fff8e6;
+    color: #f6ad55;
 }
 
-.delete-btn:hover {
-    background-color: rgba(220, 53, 69, 0.1);
+.btn-delete {
+    background-color: #feebef;
+    color: #f56565;
 }
 
+.btn-view:hover {
+    background-color: #dfe6ff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(94, 114, 228, 0.1);
+}
+
+.btn-edit:hover {
+    background-color: #ffefd0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(246, 173, 85, 0.1);
+}
+
+.btn-delete:hover {
+    background-color: #fdd6df;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(245, 101, 101, 0.1);
+}
+
+.btn-icon {
+    font-size: 16px;
+}
+
+/* Пагинация */
 .pagination {
     margin-top: 2rem;
     display: flex;
@@ -135,42 +323,52 @@
     display: flex;
     list-style: none;
     padding: 0;
-    gap: 0.3rem;
+    gap: 0.5rem;
 }
 
 .pagination-list li {
-    margin: 0 0.2rem;
+    margin: 0;
 }
 
 .pagination-list li a,
 .pagination-list li span {
     display: inline-block;
-    padding: 0.5rem 0.8rem;
-    border-radius: var(--border-radius);
+    padding: 0.6rem 1rem;
+    border-radius: 12px;
     text-decoration: none;
-    border: 1px solid var(--color-border);
+    border: 1px solid #e9ecef;
     min-width: 40px;
     text-align: center;
+    transition: all 0.2s ease-in-out;
+    font-size: 14px;
 }
 
 .pagination-list li a {
-    color: var(--color-dark-text);
-    background-color: var(--color-white);
+    color: #495057;
+    background-color: white;
 }
 
 .pagination-list li a:hover {
-    background-color: var(--color-light-gray);
+    background-color: #f8f9fa;
+    border-color: #5e72e4;
+    color: #5e72e4;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05);
 }
 
 .pagination-list li.active span {
-    background-color: var(--color-blue);
-    color: var(--color-white);
-    border-color: var(--color-blue);
+    background-color: #5e72e4;
+    color: white;
+    border-color: #5e72e4;
+    box-shadow: 0 3px 6px rgba(94, 114, 228, 0.2);
 }
 
+/* Пустое состояние */
 .empty-state {
-    padding: 3rem;
+    padding: 3.5rem;
     text-align: center;
+    border-radius: 20px;
+    border: 1px solid #f0f0f0;
 }
 
 .empty-state-content {
@@ -179,17 +377,21 @@
 }
 
 .empty-icon {
-    font-size: 3rem;
-    margin-bottom: 1rem;
+    font-size: 3.5rem;
+    margin-bottom: 1.5rem;
+    color: #adb5bd;
 }
 
 .empty-state h2 {
     margin-bottom: 1rem;
+    font-weight: 600;
+    color: #495057;
 }
 
 .empty-state p {
-    color: #666;
-    margin-bottom: 1.5rem;
+    color: #6c757d;
+    margin-bottom: 1.8rem;
+    font-size: 15px;
 }
 
 .empty-actions {
@@ -199,6 +401,7 @@
     flex-wrap: wrap;
 }
 
+/* Адаптивность */
 @media (max-width: 768px) {
     .filters form {
         flex-direction: column;
@@ -206,14 +409,19 @@
     }
     
     .search-box,
-    .type-filter {
+    .type-filter,
+    .entity-filter {
         width: 100%;
     }
     
     .filter-buttons {
         display: flex;
-        flex-direction: column;
         width: 100%;
+    }
+    
+    .btn-apply,
+    .btn-reset {
+        flex: 1;
     }
     
     .clients-list {
@@ -222,5 +430,10 @@
     
     .actions {
         flex-direction: row;
+    }
+    
+    .btn-action {
+        width: 32px;
+        height: 32px;
     }
 } 

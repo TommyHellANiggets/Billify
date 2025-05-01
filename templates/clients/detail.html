@@ -8,93 +8,164 @@
 <div class="client-detail-page">
     <div class="page-header">
         <div class="breadcrumbs">
-            <a href="{% url 'clients:list' %}">Клиенты</a> &gt; 
+            <a href="{% url 'clients:list' %}">Клиенты и поставщики</a> &gt; 
             <span>{{ client.name }}</span>
         </div>
         
         <div class="d-flex justify-content-between align-items-center">
-            <h1>{{ client.name }}</h1>
+            <div class="title-container">
+                <h1>{{ client.name }}</h1>
+                <div class="status-badges">
+                    <span class="badge entity-badge {% if client.entity_type == 'supplier' %}supplier-badge{% else %}client-badge{% endif %}">
+                        {{ client.get_entity_type_display }}
+                    </span>
+                    <span class="badge type-badge">{{ client.get_type_display }}</span>
+                </div>
+            </div>
             <div class="action-buttons">
-                <a href="{% url 'clients:edit' client_id=client.id %}" class="btn">Редактировать</a>
-                <a href="{% url 'clients:delete' client_id=client.id %}" class="btn btn-secondary">Удалить</a>
+                {% if client.entity_type == 'client' %}
+                <a href="{% url 'invoices:create' %}?type=outgoing&client_id={{ client.id }}" class="btn btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                    Создать исходящий счет
+                </a>
+                {% else %}
+                <a href="{% url 'invoices:create' %}?type=incoming&supplier_id={{ client.id }}" class="btn btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                    Создать входящий счет
+                </a>
+                {% endif %}
+                <a href="{% url 'clients:edit' client_id=client.id %}" class="btn btn-secondary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                    Редактировать
+                </a>
+                <a href="{% url 'clients:delete' client_id=client.id %}" class="btn btn-danger">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                    Удалить
+                </a>
             </div>
         </div>
     </div>
     
-    <div class="client-info-section card">
-        <div class="section-header">
-            <h2>Основная информация</h2>
+    <div class="client-info-container">
+        <div class="client-info-section card">
+            <div class="section-header">
+                <h2>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    Основная информация
+                </h2>
+            </div>
+            
+            <div class="client-info-grid">
+                <div class="info-item">
+                    <div class="info-label">Статус</div>
+                    <div class="info-value status-value">
+                        <span class="status-indicator {% if client.entity_type == 'supplier' %}supplier-indicator{% else %}client-indicator{% endif %}"></span>
+                        {{ client.get_entity_type_display }}
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Тип</div>
+                    <div class="info-value">{{ client.get_type_display }}</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Имя / Название организации</div>
+                    <div class="info-value">{{ client.name }}</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Email</div>
+                    <div class="info-value">
+                        {% if client.email %}
+                            <a href="mailto:{{ client.email }}" class="info-link">{{ client.email }}</a>
+                        {% else %}
+                            <span class="empty-value">Не указано</span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Телефон</div>
+                    <div class="info-value">
+                        {% if client.phone %}
+                            <a href="tel:{{ client.phone }}" class="info-link">{{ client.phone }}</a>
+                        {% else %}
+                            <span class="empty-value">Не указано</span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Дата создания</div>
+                    <div class="info-value">{{ client.created_at|date:"d.m.Y H:i" }}</div>
+                </div>
+            </div>
         </div>
         
-        <div class="client-info-grid">
-            <div class="info-item">
-                <div class="info-label">Тип клиента</div>
-                <div class="info-value">{{ client.get_type_display }}</div>
+        <div class="client-info-section card">
+            <div class="section-header">
+                <h2>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    Адрес
+                </h2>
             </div>
             
-            <div class="info-item">
-                <div class="info-label">Имя / Название организации</div>
-                <div class="info-value">{{ client.name }}</div>
-            </div>
-            
-            <div class="info-item">
-                <div class="info-label">Email</div>
-                <div class="info-value">{{ client.email|default:"Не указано" }}</div>
-            </div>
-            
-            <div class="info-item">
-                <div class="info-label">Телефон</div>
-                <div class="info-value">{{ client.phone|default:"Не указано" }}</div>
-            </div>
-            
-            <div class="info-item">
-                <div class="info-label">Адрес</div>
-                <div class="info-value">{{ client.address|default:"Не указано" }}</div>
-            </div>
-            
-            <div class="info-item">
-                <div class="info-label">Дата создания</div>
-                <div class="info-value">{{ client.created_at|date:"d.m.Y H:i" }}</div>
+            <div class="address-block">
+                {% if client.address %}
+                    <div class="info-value address-value">{{ client.address }}</div>
+                    <div class="address-actions">
+                        <a href="https://maps.google.com/?q={{ client.address|urlencode }}" target="_blank" rel="noopener noreferrer" class="address-action-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
+                            Открыть на карте
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="empty-value">Адрес не указан</div>
+                {% endif %}
             </div>
         </div>
     </div>
     
     <div class="client-info-section card">
         <div class="section-header">
-            <h2>Реквизиты</h2>
+            <h2>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                Реквизиты
+            </h2>
         </div>
         
         <div class="client-info-grid">
             <div class="info-item">
                 <div class="info-label">ИНН</div>
-                <div class="info-value">{{ client.tax_id|default:"Не указано" }}</div>
+                <div class="info-value">{{ client.tax_id|default:"<span class='empty-value'>Не указано</span>" }}</div>
             </div>
             
             {% if client.type == 'business' %}
             <div class="info-item">
                 <div class="info-label">КПП</div>
-                <div class="info-value">{{ client.kpp|default:"Не указано" }}</div>
+                <div class="info-value">{{ client.kpp|default:"<span class='empty-value'>Не указано</span>" }}</div>
             </div>
             {% endif %}
             
             <div class="info-item">
-                <div class="info-label">ОГРН / ОГРНИП</div>
-                <div class="info-value">{{ client.ogrn|default:"Не указано" }}</div>
+                <div class="info-label">ОГРН{% if client.type == 'individual' %}ИП{% endif %}</div>
+                <div class="info-value">{{ client.ogrn|default:"<span class='empty-value'>Не указано</span>" }}</div>
             </div>
             
             <div class="info-item">
                 <div class="info-label">Название банка</div>
-                <div class="info-value">{{ client.bank_name|default:"Не указано" }}</div>
+                <div class="info-value">{{ client.bank_name|default:"<span class='empty-value'>Не указано</span>" }}</div>
             </div>
             
             <div class="info-item">
-                <div class="info-label">Банковский счет</div>
-                <div class="info-value">{{ client.bank_account|default:"Не указано" }}</div>
+                <div class="info-label">Расчетный счет</div>
+                <div class="info-value">{{ client.bank_account|default:"<span class='empty-value'>Не указано</span>" }}</div>
             </div>
             
             <div class="info-item">
                 <div class="info-label">БИК</div>
-                <div class="info-value">{{ client.bank_bik|default:"Не указано" }}</div>
+                <div class="info-value">{{ client.bank_bik|default:"<span class='empty-value'>Не указано</span>" }}</div>
             </div>
         </div>
     </div>
@@ -102,7 +173,10 @@
     {% if client.comment %}
     <div class="client-info-section card">
         <div class="section-header">
-            <h2>Комментарий</h2>
+            <h2>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                Комментарий
+            </h2>
         </div>
         
         <div class="comment-content">
@@ -113,13 +187,37 @@
     
     <div class="related-section card">
         <div class="section-header d-flex justify-content-between align-items-center">
-            <h2>Счета клиента</h2>
-            <a href="#" class="btn">Создать счет</a>
+            <h2>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                {% if client.entity_type == 'client' %}Счета клиента{% else %}Счета поставщика{% endif %}
+            </h2>
+            {% if client.entity_type == 'client' %}
+            <a href="{% url 'invoices:create' %}?type=outgoing&client_id={{ client.id }}" class="btn btn-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Выставить счет
+            </a>
+            {% else %}
+            <a href="{% url 'invoices:create' %}?type=incoming&supplier_id={{ client.id }}" class="btn btn-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Добавить счет
+            </a>
+            {% endif %}
         </div>
         
         <div class="empty-message">
-            <div class="empty-icon">📄</div>
-            <p>У этого клиента пока нет счетов</p>
+            <div class="empty-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            </div>
+            <p>У этого {% if client.entity_type == 'client' %}клиента{% else %}поставщика{% endif %} пока нет счетов</p>
+            {% if client.entity_type == 'client' %}
+            <a href="{% url 'invoices:create' %}?type=outgoing&client_id={{ client.id }}" class="btn btn-primary-outlined">
+                Выставить счет
+            </a>
+            {% else %}
+            <a href="{% url 'invoices:create' %}?type=incoming&supplier_id={{ client.id }}" class="btn btn-primary-outlined">
+                Добавить счет
+            </a>
+            {% endif %}
         </div>
         
         <!-- Здесь будет таблица со счетами клиента -->

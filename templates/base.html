@@ -116,7 +116,7 @@
                     <ul class="nav-list">
                         {% if user.is_authenticated %}
                         <li class="nav-item"><a href="{% url 'core:home_inside' %}" {% if request.path == '/dashboard/' %}class="active"{% endif %}>Главная</a></li>
-                        <li class="nav-item"><a href="{% url 'clients:list' %}" {% if '/clients/' in request.path %}class="active"{% endif %}>Клиенты</a></li>
+                        <li class="nav-item"><a href="{% url 'clients:list' %}" {% if '/clients/' in request.path or '/clients-suppliers/' in request.path %}class="active"{% endif %}>Клиенты и поставщики</a></li>
                         <li class="nav-item"><a href="{% url 'invoices:list' %}" {% if '/invoices/' in request.path %}class="active"{% endif %}>Счета</a></li>
                         <li class="nav-item"><a href="{% url 'analytics:dashboard' %}" {% if '/analytics/' in request.path %}class="active"{% endif %}>Аналитика</a></li>
                         {% else %}
@@ -254,7 +254,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary modal-cancel">Отмена</button>
-                <a href="{% url 'logout' %}" class="btn btn-primary">Выйти</a>
+                <a href="{% url 'core:logout' %}" class="btn btn-primary">Выйти</a>
             </div>
         </div>
     </div>

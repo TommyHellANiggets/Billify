@@ -33,6 +33,18 @@
     .form-group {
         margin-bottom: 15px;
     }
+    /* Стили для выравнивания с входящими счетами */
+    .form-grid-row {
+        display: grid;
+        grid-template-columns: 50% 25% 25%;
+        gap: 15px;
+        padding-right: 15px;
+    }
+    .client-select-custom {
+        height: 44px;
+        display: flex;
+        align-items: center;
+    }
 </style>
 {% endblock %}
 
@@ -90,32 +102,21 @@
             <div class="form-section">
                 <h3 class="section-title">Информация о клиенте</h3>
                 
-                <div class="form-grid">
-                    <div class="form-group form-span-4">
+                <div class="form-row form-grid-row">
+                    <div class="form-group">
                         <label for="client">Клиент</label>
                         <div class="select-wrapper">
                             <input type="hidden" id="client_id" name="client" value="{% if is_edit %}{{ invoice.client.id }}{% endif %}" required>
-                            <div class="supplier-select" id="client-select" tabindex="0">
+                            <div class="entity-select" id="client-select" tabindex="0">
                                 <span>{% if is_edit %}{{ invoice.client.name }}{% else %}Выберите клиента{% endif %}</span>
                             </div>
-                            <div class="supplier-dropdown" id="client-dropdown">
+                            <div class="entity-dropdown" id="client-dropdown">
                                 <input type="text" class="select-search" id="client-search" placeholder="Поиск клиента...">
-                                <div class="supplier-list" id="client-list">
-                                    {% if clients %}
-                                        {% for client in clients %}
-                                            <div class="client-item" data-id="{{ client.id }}" data-contact="{{ client.contact_person }}" data-email="{{ client.email }}">
-                                                <div class="client-item-name">{{ client.name }}</div>
-                                                <div class="client-item-info">
-                                                    <span class="client-item-inn">ИНН: {{ client.tax_id }}</span>
-                                                    {% if client.phone %}
-                                                        <span class="client-item-phone">Тел: {{ client.phone }}</span>
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-                                        {% endfor %}
-                                    {% else %}
-                                        <div class="no-results">Список клиентов пуст</div>
-                                    {% endif %}
+                                <div class="client-list" id="client-list">
+                                    <!-- Создаём контейнер для клиентов через JavaScript -->
+                                    <div id="dynamic-clients-list">
+                                        <!-- Здесь будут динамически добавленные клиенты -->
+                                    </div>
                                 </div>
                                 <div class="add-new-item" id="add-client">
                                     <i class="fas fa-plus"></i> Добавить нового клиента
@@ -123,9 +124,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="form-grid-2">
                     <div class="form-group">
                         <label for="contact_name">Контактное лицо</label>
                         <input type="text" id="contact_name" name="contact_name" value="{% if is_edit %}{{ invoice.client_contact_person }}{% endif %}">
@@ -370,80 +368,34 @@
 </script>
 {% endif %}
 <script>
-    // Базовая функция для суммирования строк если основной скрипт еще не загружен
-    function updateTotals() {
-        if (window.updateTotalsLoaded) return; // Используем глобальную функцию если она уже загружена
-        
-        let subtotal = 0;
-        
-        // Перебираем все строки товаров
-        document.querySelectorAll('.invoice-item').forEach(item => {
-            const quantityInput = item.querySelector('input[name="item_quantity[]"]');
-            const priceInput = item.querySelector('input[name="item_price[]"]');
-            const totalCell = item.querySelector('.item-total');
-            
-            if (!quantityInput || !priceInput || !totalCell) return;
-            
-            const quantity = parseFloat((quantityInput.value || '0').replace(',', '.')) || 0;
-            const price = parseFloat((priceInput.value || '0').replace(',', '.')) || 0;
-            const itemTotal = quantity * price;
-            
-            // Обновляем сумму по строке с заменой точки на запятую
-            totalCell.textContent = itemTotal.toFixed(2).replace('.', ',');
-            
-            // Форматируем отображаемое значение с запятой для UI
-            quantityInput.value = quantity.toString().replace('.', ',');
-            priceInput.value = price.toString().replace('.', ',');
-            
-            // Добавляем к подытогу
-            subtotal += itemTotal;
-        });
-        
-        // Получаем скидку, если она есть
-        let discount = 0;
-        const discountInput = document.getElementById('discount');
-        if (discountInput) {
-            discount = parseFloat((discountInput.value || '0').replace(',', '.')) || 0;
-            // Форматируем отображаемое значение с запятой для UI
-            discountInput.value = discount.toString().replace('.', ',');
-        }
-        
-        // Расчет НДС (20%)
-        const tax = subtotal * 0.2;
-        
-        // Обновляем итоговые значения с заменой точки на запятую
-        const subtotalElem = document.getElementById('subtotal');
-        const taxElem = document.getElementById('tax');
-        const totalElem = document.getElementById('total');
-        
-        if (subtotalElem) subtotalElem.textContent = subtotal.toFixed(2).replace('.', ',') + ' ₽';
-        if (taxElem) taxElem.textContent = tax.toFixed(2).replace('.', ',') + ' ₽';
-        if (totalElem) totalElem.textContent = (subtotal + tax - discount).toFixed(2).replace('.', ',') + ' ₽';
-    }
-
     document.addEventListener('DOMContentLoaded', function() {
-        // Инициализация улучшенного выпадающего списка клиентов
+        // Инициализация элементов DOM
         const clientSelect = document.getElementById('client-select');
         const clientDropdown = document.getElementById('client-dropdown');
-        const clientList = document.getElementById('client-list');
         const clientSearch = document.getElementById('client-search');
-        const clientItems = document.querySelectorAll('.client-item');
         const clientIdInput = document.getElementById('client_id');
         const contactNameInput = document.getElementById('contact_name');
         const contactEmailInput = document.getElementById('contact_email');
         const addClientButton = document.getElementById('add-client');
+        const clientsList = document.getElementById('dynamic-clients-list');
         
-        // Показать/скрыть выпадающий список при клике
-        clientSelect.addEventListener('click', function(e) {
-            e.stopPropagation();
-            this.classList.toggle('active');
+        // Функция для открытия/закрытия выпадающего списка
+        function toggleClientDropdown() {
+            clientSelect.classList.toggle('active');
             clientDropdown.classList.toggle('show');
+            
             if (clientDropdown.classList.contains('show')) {
                 clientSearch.focus();
             }
+        }
+        
+        // Обработчик клика на селект - открывает/закрывает выпадающий список
+        clientSelect.addEventListener('click', function(e) {
+            e.stopPropagation();
+            toggleClientDropdown();
         });
         
-        // Закрыть выпадающий список при клике вне него
+        // Закрытие выпадающего списка при клике на документ
         document.addEventListener('click', function(e) {
             if (!clientSelect.contains(e.target) && !clientDropdown.contains(e.target)) {
                 clientSelect.classList.remove('active');
@@ -451,14 +403,84 @@
             }
         });
         
+        // Используем реальные данные клиентов вместо жестко закодированных
+        const realClients = [
+            {% for client in clients %}
+                { 
+                    id: "{{ client.id }}", 
+                    name: "{{ client.name|escapejs }}", 
+                    tax_id: "{{ client.tax_id|default:'' }}", 
+                    phone: "{{ client.phone|default:'' }}",
+                    contact_person: "{{ client.contact_person|default:''|escapejs }}",
+                    contact_email: "{{ client.contact_email|default:''|escapejs }}"
+                }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ];
+        
+        // Добавляем клиентов в список
+        if (clientsList) {
+            // Если список клиентов пуст, заполняем его реальными данными из базы
+            if (realClients.length > 0) {
+                realClients.forEach(client => {
+                    const clientElement = document.createElement('div');
+                    clientElement.className = 'entity-item';
+                    clientElement.setAttribute('data-id', client.id);
+                    clientElement.setAttribute('data-contact', client.contact_person || '');
+                    clientElement.setAttribute('data-email', client.contact_email || '');
+                    
+                    clientElement.innerHTML = `
+                        <div class="entity-item-name">${client.name}</div>
+                        <div class="entity-item-info">
+                            <span class="entity-item-inn">ИНН: ${client.tax_id}</span>
+                            ${client.phone ? `<span class="entity-item-phone">Тел: ${client.phone}</span>` : ''}
+                        </div>
+                    `;
+                    
+                    // Привязываем обработчик клика - будет вызываться при выборе клиента
+                    clientElement.addEventListener('click', function() {
+                        selectClient(this);
+                    });
+                    
+                    clientsList.appendChild(clientElement);
+                });
+            } else {
+                // Если список пуст, показываем сообщение
+                const noResults = document.createElement('div');
+                noResults.className = 'no-results';
+                noResults.textContent = 'Список клиентов пуст';
+                clientsList.appendChild(noResults);
+            }
+        }
+        
+        // Функция выбора клиента
+        function selectClient(clientItem) {
+            const id = clientItem.getAttribute('data-id');
+            const name = clientItem.querySelector('.entity-item-name').textContent;
+            const contact = clientItem.getAttribute('data-contact') || '';
+            const email = clientItem.getAttribute('data-email') || '';
+            
+            // Обновляем выбранное значение
+            clientSelect.querySelector('span').textContent = name;
+            clientIdInput.value = id;
+            
+            // Заполняем контактные данные
+            contactNameInput.value = contact;
+            contactEmailInput.value = email;
+            
+            // Скрываем выпадающий список
+            clientSelect.classList.remove('active');
+            clientDropdown.classList.remove('show');
+        }
+        
         // Обработчик для поиска клиентов
         clientSearch.addEventListener('input', function() {
             const searchValue = this.value.toLowerCase();
+            const clientItems = document.querySelectorAll('.entity-item');
             let hasResults = false;
             
             clientItems.forEach(item => {
-                const name = item.querySelector('.client-item-name').textContent.toLowerCase();
-                const info = item.querySelector('.client-item-info').textContent.toLowerCase();
+                const name = item.querySelector('.entity-item-name').textContent.toLowerCase();
+                const info = item.querySelector('.entity-item-info').textContent.toLowerCase();
                 
                 if (name.includes(searchValue) || info.includes(searchValue)) {
                     item.style.display = 'block';
@@ -469,13 +491,13 @@
             });
             
             // Показать/скрыть сообщение об отсутствии результатов
-            let noResults = clientList.querySelector('.no-results');
+            let noResults = clientsList.querySelector('.no-results');
             if (!hasResults) {
                 if (!noResults) {
                     noResults = document.createElement('div');
                     noResults.className = 'no-results';
                     noResults.textContent = 'Нет результатов для "' + searchValue + '"';
-                    clientList.appendChild(noResults);
+                    clientsList.appendChild(noResults);
                 } else {
                     noResults.textContent = 'Нет результатов для "' + searchValue + '"';
                     noResults.style.display = 'block';
@@ -483,28 +505,6 @@
             } else if (noResults) {
                 noResults.style.display = 'none';
             }
-        });
-        
-        // Обработчик выбора клиента
-        clientItems.forEach(item => {
-            item.addEventListener('click', function() {
-                const id = this.getAttribute('data-id');
-                const name = this.querySelector('.client-item-name').textContent;
-                const contact = this.getAttribute('data-contact') || '';
-                const email = this.getAttribute('data-email') || '';
-                
-                // Обновляем выбранное значение
-                clientSelect.querySelector('span').textContent = name;
-                clientIdInput.value = id;
-                
-                // Заполняем контактные данные
-                contactNameInput.value = contact;
-                contactEmailInput.value = email;
-                
-                // Скрываем выпадающий список
-                clientSelect.classList.remove('active');
-                clientDropdown.classList.remove('show');
-            });
         });
         
         // Обработчик для клавиатурной навигации по выпадающему списку
@@ -517,42 +517,44 @@
         
         // Обработчик для добавления нового клиента
         addClientButton.addEventListener('click', function() {
-            window.location.href = '/clients/create/';
+            window.location.href = '/clients/create/?type=client';
         });
         
-        // Обработчик для поля скидки
-        const discountInput = document.getElementById('discount');
-        if (discountInput) {
-            discountInput.addEventListener('input', updateTotals);
-        }
-    });
-
-    // Проверка ошибок при отправке формы
-    document.querySelector('.invoice-form').addEventListener('submit', function(e) {
-        // Проверка клиента
-        const clientId = document.getElementById('client_id');
-        if (!clientId.value) {
-            e.preventDefault();
-            showNotification('Выберите клиента', 'error');
-        }
-        
-        // Проверка наличия позиций в счете
-        const invoiceItems = document.querySelectorAll('.invoice-item');
-        let hasEmptyItem = false;
-        
-        invoiceItems.forEach(item => {
-            const itemName = item.querySelector('input[name="item_name[]"]');
-            const itemPrice = item.querySelector('input[name="item_price[]"]');
-            
-            if (!itemName.value || !itemPrice.value) {
-                hasEmptyItem = true;
+        // Функция для выбора клиента по ID
+        function selectClientById(clientId) {
+            if (!clientId) {
+                return;
             }
-        });
-        
-        if (hasEmptyItem) {
-            e.preventDefault();
-            showNotification('Заполните все поля для позиций счета', 'error');
+            
+            const clientItems = document.querySelectorAll('.entity-item');
+            
+            // Преобразуем clientId в строку для корректного сравнения
+            const clientIdStr = String(clientId);
+            
+            // Ищем точное совпадение
+            let found = false;
+            for (let i = 0; i < clientItems.length; i++) {
+                const itemId = clientItems[i].getAttribute('data-id');
+                
+                if (itemId === clientIdStr) {
+                    selectClient(clientItems[i]);
+                    found = true;
+                    break;
+                }
+            }
         }
+        
+        // Проверяем наличие указанного клиента (из контекста Django или из URL)
+        const urlClientId = new URLSearchParams(window.location.search).get('client_id');
+        const djangoClientId = "{{ client_id|default:'' }}";
+        
+        {% if selected_client %}
+            selectClientById("{{ selected_client.id }}");
+        {% elif client_id %}
+            selectClientById("{{ client_id }}");
+        {% elif urlClientId %}
+            selectClientById(urlClientId);
+        {% endif %}
     });
 </script>
 {% endblock %} 

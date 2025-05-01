@@ -1,5 +1,6 @@
 .client-detail-page {
-    padding: 1rem 0;
+    padding: 1.5rem 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
 }
 
 .page-header {
@@ -7,21 +8,66 @@
 }
 
 .breadcrumbs {
-    margin-bottom: 1rem;
+    margin-bottom: 1.2rem;
     font-size: 0.9rem;
 }
 
 .breadcrumbs a {
-    color: var(--color-blue);
+    color: var(--color-primary);
     text-decoration: none;
+    transition: color 0.2s;
 }
 
 .breadcrumbs a:hover {
     text-decoration: underline;
+    color: var(--color-primary-dark);
 }
 
 .breadcrumbs span {
     color: #666;
+}
+
+.title-container h1 {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.5rem;
+    font-size: 2rem;
+}
+
+.status-badges {
+    display: flex;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+}
+
+.badge {
+    display: inline-block;
+    padding: 0.4rem 0.9rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+}
+
+.entity-badge {
+    background-color: #e6f2ff;
+    color: #3182ce;
+}
+
+.supplier-badge {
+    background-color: #f0e7fe;
+    color: #8550c9;
+}
+
+.client-badge {
+    background-color: #e6f2ff;
+    color: #3182ce;
+}
+
+.type-badge {
+    background-color: #e6f7fe;
+    color: #0c96d0;
 }
 
 .action-buttons {
@@ -29,19 +75,94 @@
     gap: 0.8rem;
 }
 
+.action-buttons .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.9rem 1.2rem;
+    border-radius: 16px;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.action-buttons .btn-primary {
+    background-color: #5e72e4;
+    color: white;
+    box-shadow: 0 3px 6px rgba(94, 114, 228, 0.12);
+}
+
+.action-buttons .btn-primary:hover {
+    background-color: #4756ca;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(94, 114, 228, 0.15);
+}
+
+.action-buttons .btn-secondary {
+    background-color: #f8f9fa;
+    color: #5a6268;
+    border: 1px solid #e9ecef;
+}
+
+.action-buttons .btn-secondary:hover {
+    background-color: #e9ecef;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.action-buttons .btn-danger {
+    background-color: #fff1f0;
+    color: #e13c3c;
+    border: 1px solid #ffd8d6;
+}
+
+.action-buttons .btn-danger:hover {
+    background-color: #fee6e5;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(225, 60, 60, 0.08);
+}
+
+.client-info-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
 .client-info-section {
     margin-bottom: 2rem;
+    border-radius: 20px;
+    background-color: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+    border: 1px solid #f0f0f0;
+    padding: 1.8rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.client-info-section:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
 }
 
 .section-header {
-    padding-bottom: 1rem;
+    padding-bottom: 1.2rem;
     margin-bottom: 1.5rem;
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 1px solid #edf2f7;
 }
 
 .section-header h2 {
     font-size: 1.5rem;
     margin: 0;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.section-header h2 svg {
+    color: #5e72e4;
 }
 
 .client-info-grid {
@@ -57,20 +178,100 @@
 .info-label {
     font-weight: 500;
     margin-bottom: 0.3rem;
-    color: #666;
+    color: #6c757d;
     font-size: 0.9rem;
 }
 
 .info-value {
     font-size: 1.1rem;
+    color: #333;
 }
 
-.comment-content {
+.empty-value {
+    color: #adb5bd;
+    font-style: italic;
+}
+
+.status-value {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.status-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.client-indicator {
+    background-color: #3182ce;
+}
+
+.supplier-indicator {
+    background-color: #8550c9;
+}
+
+.info-link {
+    color: #5e72e4;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.info-link:hover {
+    color: #4756ca;
+    text-decoration: underline;
+}
+
+.address-block {
     line-height: 1.6;
 }
 
+.address-value {
+    margin-bottom: 0.8rem;
+}
+
+.address-actions {
+    margin-top: 1rem;
+}
+
+.address-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    background-color: #f8f9fa;
+    color: #5a6268;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    border: 1px solid #e9ecef;
+    transition: all 0.2s ease;
+}
+
+.address-action-btn:hover {
+    background-color: #e9ecef;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.comment-content {
+    line-height: 1.7;
+    color: #495057;
+}
+
 .related-section {
+    border-radius: 20px;
+    background-color: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+    border: 1px solid #f0f0f0;
+    padding: 1.8rem;
     margin-bottom: 2rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.related-section:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
 }
 
 .empty-message {
@@ -79,14 +280,53 @@
 }
 
 .empty-icon {
-    font-size: 3rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
     color: #ccc;
 }
 
 .empty-message p {
     color: #888;
     font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+}
+
+.btn-primary-outlined {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.9rem 1.8rem;
+    background-color: transparent;
+    color: #5e72e4;
+    border: 1px solid #5e72e4;
+    font-weight: 500;
+    border-radius: 16px;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+    font-size: 14px;
+}
+
+.btn-primary-outlined:hover {
+    background-color: rgba(94, 114, 228, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(94, 114, 228, 0.1);
+}
+
+.btn-sm {
+    padding: 0.6rem 1rem;
+    font-size: 0.8rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: transparent;
+    color: #5e72e4;
+    border: 1px solid #e9ecef;
+    border-radius: 16px;
+    transition: all 0.2s ease;
+}
+
+.btn-sm:hover {
+    background-color: rgba(94, 114, 228, 0.1);
+    transform: translateY(-2px);
 }
 
 @media (max-width: 768px) {
@@ -98,10 +338,11 @@
     .action-buttons {
         margin-top: 1rem;
         width: 100%;
+        flex-wrap: wrap;
     }
     
-    .action-buttons .btn {
-        flex: 1;
+    .client-info-container {
+        grid-template-columns: 1fr;
     }
     
     .client-info-grid {

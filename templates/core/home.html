@@ -2,7 +2,8 @@
 {% load static %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="/static/css/core/home.css">
+<link rel="stylesheet" href="{% static 'css/core/home.css' %}">
+<link rel="stylesheet" href="{% static 'css/core/features-scroll.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -25,22 +26,55 @@
 </section>
 
 <section class="stats-section">
+    <div class="section-header">
+        <h2>Надежное решение для бизнеса</h2>
+        <p class="section-subtitle">Billify в цифрах - от начинающих предпринимателей до крупных компаний</p>
+    </div>
     <div class="stats-container">
         <div class="stat-item">
-            <div class="stat-number">10,000+</div>
-            <div class="stat-label">Довольных клиентов</div>
+            <div class="stat-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+            </div>
+            <div class="stat-number">{{ total_users|default:"10,000+" }}</div>
+            <div class="stat-label">Активных пользователей</div>
         </div>
         <div class="stat-item">
-            <div class="stat-number">1M+</div>
-            <div class="stat-label">Выставлено счетов</div>
+            <div class="stat-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+            </div>
+            <div class="stat-number">{{ total_invoices|default:"1M+" }}</div>
+            <div class="stat-label">Документов создано</div>
         </div>
         <div class="stat-item">
-            <div class="stat-number">5.0</div>
-            <div class="stat-label">Рейтинг приложения</div>
+            <div class="stat-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+            </div>
+            <div class="stat-number">{{ system_stats.invoices.monthly_growth|floatformat:"1"|default:"12.5" }}%</div>
+            <div class="stat-label">Рост эффективности</div>
         </div>
         <div class="stat-item">
-            <div class="stat-number">99.9%</div>
-            <div class="stat-label">Время работы системы</div>
+            <div class="stat-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+            </div>
+            <div class="stat-number">{{ system_stats.security.uptime_percentage|default:"99.9" }}%</div>
+            <div class="stat-label">Защита данных</div>
         </div>
     </div>
 </section>
@@ -78,7 +112,7 @@
             </div>
         </div>
         <div class="about-image">
-            <img src="/static/img/about-mission.jpg" alt="Наша миссия" class="about-img">
+            <img src="{% static '/images/mission.png' %}" alt="Наша миссия" class="about-img">
         </div>
     </div>
     
@@ -94,7 +128,7 @@
             <a href="#" class="btn btn-outline">Узнать больше</a>
         </div>
         <div class="about-image">
-            <img src="/static/img/about-target.jpg" alt="Для кого это решение" class="about-img">
+            <img src="{% static '/images/idea.png' %}" alt="Для кого это решение" class="about-img">
         </div>
     </div>
 </section>
@@ -127,9 +161,9 @@
                             <li>Настраиваемые шаблоны с вашим брендом</li>
                             <li>Автоматические напоминания об оплате</li>
                             <li>Онлайн-оплата через интегрированные платежные системы</li>
-                            <li>Отслеживание статуса платежей</li>
+                            <li>Отслеживание статуса платежей <span class="stats-badge">{{ system_stats.invoices.paid_percentage|default:"90" }}% оплачиваемость</span></li>
                         </ul>
-                        <a href="#" class="btn btn-primary">Попробовать</a>
+                        <a href="{% url 'invoices:list' %}" class="btn btn-primary">Попробовать</a>
                     </div>
                 </div>
             </div>
@@ -147,9 +181,9 @@
                             <li>Категоризация и группировка клиентов</li>
                             <li>Централизованное хранение всех реквизитов</li>
                             <li>Автоматическое заполнение данных в документах</li>
-                            <li>Индивидуальные условия работы для разных клиентов</li>
+                            <li>Индивидуальные условия работы для разных клиентов <span class="stats-badge">{{ system_stats.clients.active_percentage|default:"95" }}% активных</span></li>
                         </ul>
-                        <a href="#" class="btn btn-primary">Попробовать</a>
+                        <a href="{% url 'clients:list' %}" class="btn btn-primary">Попробовать</a>
                     </div>
                 </div>
             </div>
@@ -165,11 +199,11 @@
                         <ul class="tab-features-list">
                             <li>Наглядные отчеты о движении денежных средств</li>
                             <li>Анализ доходов и расходов по категориям</li>
-                            <li>Прогнозирование финансовых показателей</li>
+                            <li>Прогнозирование финансовых показателей <span class="stats-badge">Рост {{ system_stats.invoices.monthly_growth|floatformat:"1"|default:"12.5" }}%/мес</span></li>
                             <li>Оценка эффективности работы с клиентами</li>
                             <li>Экспорт отчетов в различных форматах</li>
                         </ul>
-                        <a href="#" class="btn btn-primary">Попробовать</a>
+                        <a href="{% url 'invoices:list' %}?view=analytics" class="btn btn-primary">Попробовать</a>
                     </div>
                 </div>
             </div>
@@ -185,7 +219,7 @@
                         <ul class="tab-features-list">
                             <li>Шифрование данных на всех этапах передачи</li>
                             <li>Двухфакторная аутентификация</li>
-                            <li>Резервное копирование данных</li>
+                            <li>Резервное копирование данных <span class="stats-badge">{{ system_stats.security.data_backup_count|default:"5000" }}+ копий</span></li>
                             <li>Защита от несанкционированного доступа</li>
                             <li>Соответствие международным стандартам безопасности</li>
                         </ul>
@@ -193,6 +227,13 @@
                     </div>
                 </div>
             </div>
+        </div>
+        
+        <div class="scroll-indicator">
+            <div>Используйте прокрутку для смены раздела</div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 13l5 5 5-5M7 6l5 5 5-5"/>
+            </svg>
         </div>
     </div>
 </section>
@@ -204,6 +245,21 @@
     </div>
     
     <div class="testimonials-container">
+        {% for testimonial in testimonials %}
+        <div class="testimonial-card">
+            <div class="testimonial-content">
+                <p>"{{ testimonial.text }}"</p>
+            </div>
+            <div class="testimonial-author">
+                <img src="{% static 'img/testimonial-'|add:forloop.counter|add:'.jpg' %}" alt="Фото клиента" class="testimonial-avatar">
+                <div class="testimonial-info">
+                    <div class="testimonial-name">{{ testimonial.name }}</div>
+                    <div class="testimonial-position">{{ testimonial.position }}, {{ testimonial.company }}</div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <!-- Запасные отзывы на случай ошибки -->
         <div class="testimonial-card">
             <div class="testimonial-content">
                 <p>"Billify существенно упростил процесс выставления счетов и отслеживания платежей. Теперь я трачу на финансовый учет в 5 раз меньше времени!"</p>
@@ -242,6 +298,7 @@
                 </div>
             </div>
         </div>
+        {% endfor %}
     </div>
     
     <div class="brands-section">
@@ -263,78 +320,176 @@
             <p>Выберите тарифный план, который лучше всего соответствует вашим потребностям</p>
         </div>
 
-        <div class="pricing-toggle">
-            <span class="toggle-label">Ежемесячно</span>
-            <label class="switch">
-                <input type="checkbox" id="billing-toggle">
-                <span class="slider round"></span>
-            </label>
-            <span class="toggle-label">Ежегодно <span class="discount">Скидка 20%</span></span>
+        <div class="pricing-carousel-container">
+            <button class="pricing-nav-btn prev-btn" id="prevBtn" title="Предыдущие тарифы" aria-label="Показать предыдущие тарифы">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </button>
+            
+            <div class="pricing-carousel">
+                <div class="pricing-grid">
+                    <div class="pricing-group">
+                        <!-- Базовый план -->
+                        {% if pricing_plans.basic %}
+                        <div class="pricing-card">
+                            <div class="pricing-header">
+                                <h3>{{ pricing_plans.basic.name }}</h3>
+                                <div class="price">₽{{ pricing_plans.basic.price|floatformat:"0" }}<span>/{{ pricing_plans.basic.get_subscription_period_display|lower }}</span></div>
+                            </div>
+                            <ul class="pricing-features">
+                                <li>
+                                    {% if pricing_plans.basic.max_clients == 0 %}
+                                    Без ограничений на клиентов
+                                    {% else %}
+                                    До {{ pricing_plans.basic.max_clients }} клиентов/поставщиков
+                                    {% endif %}
+                                </li>
+                                <li>{{ pricing_plans.basic.max_disk_space }} МБ места на диске</li>
+                                <li>Неограниченное кол-во документов</li>
+                                <li>Генерация PDF/XML с водяным знаком</li>
+                                <li>Только базовая аналитика</li>
+                                <li class="disabled">Нет уведомлений</li>
+                                <li class="disabled">Нет сканирования документов (OCR)</li>
+                                <li class="disabled">Нет поддержки</li>
+                            </ul>
+                            <div class="pricing-footer">
+                                <a href="#" class="btn btn-outline">Выбрать тариф</a>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- Премиум план (месяц) -->
+                        {% if pricing_plans.premium %}
+                        <div class="pricing-card featured">
+                            <div class="pricing-badge">Популярный</div>
+                            <div class="pricing-header">
+                                <h3>{{ pricing_plans.premium.name }}</h3>
+                                <div class="price">₽{{ pricing_plans.premium.price|floatformat:"0" }}<span>/{{ pricing_plans.premium.get_subscription_period_display|lower }}</span></div>
+                            </div>
+                            <ul class="pricing-features">
+                                <li>Без ограничений на клиентов и поставщиков</li>
+                                <li>1 ГБ места на диске</li>
+                                <li>Неограниченное кол-во документов</li>
+                                <li>Экспорт PDF/XML без водяного знака</li>
+                                <li>Продвинутая аналитика</li>
+                                <li>Система уведомлений</li>
+                                <li>Сканирование документов (OCR)</li>
+                                <li>Техническая поддержка</li>
+                            </ul>
+                            <div class="pricing-footer">
+                                <a href="#" class="btn btn-primary">Выбрать тариф</a>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- Премиум план (неделя) -->
+                        {% if pricing_plans.premium_week %}
+                        <div class="pricing-card">
+                            <div class="pricing-header">
+                                <h3>{{ pricing_plans.premium_week.name }}</h3>
+                                <div class="price">₽{{ pricing_plans.premium_week.price|floatformat:"0" }}<span>/{{ pricing_plans.premium_week.get_subscription_period_display|lower }}</span></div>
+                            </div>
+                            <ul class="pricing-features">
+                                <li>Без ограничений на клиентов и поставщиков</li>
+                                <li>1 ГБ места на диске</li>
+                                <li>Неограниченное кол-во документов</li>
+                                <li>Экспорт PDF/XML без водяного знака</li>
+                                <li>Продвинутая аналитика</li>
+                                <li>Система уведомлений</li>
+                                <li>Сканирование документов (OCR)</li>
+                                <li>Техническая поддержка</li>
+                            </ul>
+                            <div class="pricing-footer">
+                                <a href="#" class="btn btn-primary">Выбрать тариф</a>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="pricing-group">
+                        <!-- Премиум план (3 месяца) -->
+                        {% if pricing_plans.premium_quarter %}
+                        <div class="pricing-card">
+                            <div class="pricing-header">
+                                <h3>{{ pricing_plans.premium_quarter.name }}</h3>
+                                <div class="price">₽{{ pricing_plans.premium_quarter.price|floatformat:"0" }}<span>/{{ pricing_plans.premium_quarter.get_subscription_period_display|lower }}</span></div>
+                            </div>
+                            <ul class="pricing-features">
+                                <li>Без ограничений на клиентов и поставщиков</li>
+                                <li>1 ГБ места на диске</li>
+                                <li>Неограниченное кол-во документов</li>
+                                <li>Экспорт PDF/XML без водяного знака</li>
+                                <li>Продвинутая аналитика</li>
+                                <li>Система уведомлений</li>
+                                <li>Сканирование документов (OCR)</li>
+                                <li>Техническая поддержка</li>
+                            </ul>
+                            <div class="pricing-footer">
+                                <a href="#" class="btn btn-primary">Выбрать тариф</a>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- Премиум план (6 месяцев) -->
+                        {% if pricing_plans.premium_half_year %}
+                        <div class="pricing-card">
+                            <div class="pricing-header">
+                                <h3>{{ pricing_plans.premium_half_year.name }}</h3>
+                                <div class="price">₽{{ pricing_plans.premium_half_year.price|floatformat:"0" }}<span>/{{ pricing_plans.premium_half_year.get_subscription_period_display|lower }}</span></div>
+                            </div>
+                            <ul class="pricing-features">
+                                <li>Без ограничений на клиентов и поставщиков</li>
+                                <li>1 ГБ места на диске</li>
+                                <li>Неограниченное кол-во документов</li>
+                                <li>Экспорт PDF/XML без водяного знака</li>
+                                <li>Продвинутая аналитика</li>
+                                <li>Система уведомлений</li>
+                                <li>Сканирование документов (OCR)</li>
+                                <li>Техническая поддержка</li>
+                            </ul>
+                            <div class="pricing-footer">
+                                <a href="#" class="btn btn-primary">Выбрать тариф</a>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- Премиум план (год) -->
+                        {% if pricing_plans.premium_year %}
+                        <div class="pricing-card">
+                            <div class="pricing-header">
+                                <h3>{{ pricing_plans.premium_year.name }}</h3>
+                                <div class="price">₽{{ pricing_plans.premium_year.price|floatformat:"0" }}<span>/{{ pricing_plans.premium_year.get_subscription_period_display|lower }}</span></div>
+                            </div>
+                            <ul class="pricing-features">
+                                <li>Без ограничений на клиентов и поставщиков</li>
+                                <li>1 ГБ места на диске</li>
+                                <li>Неограниченное кол-во документов</li>
+                                <li>Экспорт PDF/XML без водяного знака</li>
+                                <li>Продвинутая аналитика</li>
+                                <li>Система уведомлений</li>
+                                <li>Сканирование документов (OCR)</li>
+                                <li>Техническая поддержка</li>
+                            </ul>
+                            <div class="pricing-footer">
+                                <a href="#" class="btn btn-primary">Выбрать тариф</a>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <button class="pricing-nav-btn next-btn" id="nextBtn" title="Следующие тарифы" aria-label="Показать следующие тарифы">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </button>
         </div>
 
-        <div class="pricing-grid">
-            <!-- Basic Plan -->
-            <div class="pricing-card">
-                <div class="pricing-header">
-                    <h3>Базовый</h3>
-                    <div class="price monthly">₽990<span>/мес</span></div>
-                    <div class="price yearly" style="display: none;">₽9,504<span>/год</span></div>
-                </div>
-                <ul class="pricing-features">
-                    <li>Неограниченное количество счетов</li>
-                    <li>До 25 клиентов</li>
-                    <li>Шаблоны счетов</li>
-                    <li>Экспорт PDF</li>
-                    <li>Базовая аналитика</li>
-                </ul>
-                <div class="pricing-footer">
-                    <a href="#" class="btn btn-outline">Выбрать тариф</a>
-                </div>
-            </div>
-
-            <!-- Pro Plan -->
-            <div class="pricing-card featured">
-                <div class="pricing-badge">Популярный</div>
-                <div class="pricing-header">
-                    <h3>Профессиональный</h3>
-                    <div class="price monthly">₽1,990<span>/мес</span></div>
-                    <div class="price yearly" style="display: none;">₽19,104<span>/год</span></div>
-                </div>
-                <ul class="pricing-features">
-                    <li>Все функции Базового тарифа</li>
-                    <li>До 100 клиентов</li>
-                    <li>Настраиваемые шаблоны</li>
-                    <li>Автоматические напоминания</li>
-                    <li>Интеграция с CRM</li>
-                    <li>Расширенная аналитика</li>
-                    <li>Приоритетная поддержка</li>
-                </ul>
-                <div class="pricing-footer">
-                    <a href="#" class="btn btn-primary">Выбрать тариф</a>
-                </div>
-            </div>
-
-            <!-- Enterprise Plan -->
-            <div class="pricing-card">
-                <div class="pricing-header">
-                    <h3>Корпоративный</h3>
-                    <div class="price monthly">₽4,990<span>/мес</span></div>
-                    <div class="price yearly" style="display: none;">₽47,904<span>/год</span></div>
-                </div>
-                <ul class="pricing-features">
-                    <li>Все функции Профессионального тарифа</li>
-                    <li>Неограниченное количество клиентов</li>
-                    <li>Специальные интеграции</li>
-                    <li>Мультивалютные счета</li>
-                    <li>Бизнес-аналитика</li>
-                    <li>Управление несколькими пользователями</li>
-                    <li>Выделенный менеджер</li>
-                    <li>API доступ</li>
-                </ul>
-                <div class="pricing-footer">
-                    <a href="#" class="btn btn-outline">Выбрать тариф</a>
-                </div>
-            </div>
+        <div class="pricing-pagination">
+            <span class="page-indicator active" data-page="0"></span>
+            <span class="page-indicator" data-page="1"></span>
         </div>
 
         <div class="pricing-guarantee">
@@ -418,5 +573,48 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="/static/js/core/home.js"></script>
+<script src="{% static 'js/features-scroll.js' %}"></script>
+<script src="{% static 'js/pricing-carousel.js' %}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Активация FAQ аккордеона
+        const faqItems = document.querySelectorAll('.faq-item');
+        
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            const answer = item.querySelector('.faq-answer');
+            const toggle = item.querySelector('.faq-toggle');
+            
+            question.addEventListener('click', function() {
+                const isOpen = item.classList.contains('active');
+                
+                // Закрыть все остальные элементы
+                faqItems.forEach(otherItem => {
+                    if (otherItem !== item) {
+                        otherItem.classList.remove('active');
+                        const otherAnswer = otherItem.querySelector('.faq-answer');
+                        if (otherAnswer) {
+                            otherAnswer.style.maxHeight = null;
+                        }
+                        const otherToggle = otherItem.querySelector('.faq-toggle');
+                        if (otherToggle) {
+                            otherToggle.textContent = '+';
+                        }
+                    }
+                });
+                
+                // Переключение текущего элемента
+                if (isOpen) {
+                    item.classList.remove('active');
+                    answer.style.maxHeight = null;
+                    toggle.textContent = '+';
+                } else {
+                    item.classList.add('active');
+                    answer.style.maxHeight = answer.scrollHeight + 'px';
+                    toggle.textContent = '−';
+                }
+            });
+        });
+    });
+</script>
 {% endblock %} 

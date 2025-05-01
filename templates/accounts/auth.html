@@ -51,7 +51,7 @@
                     
                     <!-- Форма входа -->
                     <div class="auth-form-container {% if request.path == "/login/" %}active{% endif %}" id="login-form">
-                        <h3>Добро пожаловать!</h3>
+                        <h3>Добро пожаловать</h3>
                         <p class="form-subtitle">Войдите в свою учетную запись</p>
                         
                         <form method="post" action="{% url 'login' %}" class="auth-form">
@@ -83,7 +83,7 @@
                                     <input type="checkbox" name="remember" id="remember">
                                     <label for="remember">Запомнить меня</label>
                                 </div>
-                                <a href="#" class="forgot-password">Забыли пароль?</a>
+                                <a href="{% url 'password_reset' %}" class="forgot-password">Забыли пароль?</a>
                             </div>
                             
                             <button type="submit" class="btn-auth">Войти</button>
@@ -150,7 +150,7 @@
                             <div class="form-options">
                                 <div class="terms-agree">
                                     <input type="checkbox" name="terms" id="terms" required>
-                                    <label for="terms">Я согласен с <a href="#">условиями использования</a></label>
+                                    <label for="terms">Я согласен с <a href="{% url 'terms' %}">условиями использования</a></label>
                                 </div>
                             </div>
                             

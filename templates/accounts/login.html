@@ -1,49 +1,91 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Вход - Billify{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="/static/css/accounts/login.css">
+<link rel="stylesheet" href="{% static 'css/accounts/auth.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="login-page">
-    <div class="login-form-container card">
-        <div class="login-header">
-            <h1>Вход в систему</h1>
-            <p>Для доступа к функциям системы Billify необходимо войти</p>
-        </div>
-        
-        {% if form.errors %}
-            <div class="alert alert-error">
-                Неверное имя пользователя или пароль. Пожалуйста, попробуйте снова.
-            </div>
-        {% endif %}
-        
-        <form method="post" class="login-form">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="id_username">Имя пользователя</label>
-                <input type="text" name="username" id="id_username" required>
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-sides-container">
+            <!-- Левая сторона (иллюстрация) -->
+            <div class="auth-side auth-illustration">
+                <div class="illustration-content">
+                    <img src="{% static 'images/auth-illustration.svg' %}" alt="Иллюстрация" class="auth-image">
+                    <h2>Billify - Ваш финансовый учет</h2>
+                    <p>Автоматизация финансового учета и документооборота для вашего бизнеса</p>
+                </div>
             </div>
             
-            <div class="form-group">
-                <label for="id_password">Пароль</label>
-                <input type="password" name="password" id="id_password" required>
+            <!-- Правая сторона (форма входа) -->
+            <div class="auth-side auth-forms">
+                <div class="forms-wrapper">
+                    <!-- Табы для переключения между формами -->
+                    <div class="auth-tabs">
+                        <button class="tab-btn active" data-tab="login">Вход</button>
+                        <button class="tab-btn" data-tab="register">Регистрация</button>
+                        <div class="tab-indicator"></div>
+                    </div>
+                    
+                    <!-- Сообщения об ошибках/успехе -->
+                    {% if form.errors %}
+                        <div class="auth-errors">
+                            <div class="auth-error">
+                                Неверное имя пользователя или пароль. Пожалуйста, попробуйте снова.
+                            </div>
+                        </div>
+                    {% endif %}
+                    
+                    <!-- Форма входа -->
+                    <div class="auth-form-container active" id="login-form">
+                        <h3>Добро пожаловать</h3>
+                        <p class="form-subtitle">Войдите в свою учетную запись</p>
+                        
+                        <form method="post" action="{% url 'login' %}" class="auth-form">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="id_username">Имя пользователя</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-user"></i>
+                                    <input type="text" name="username" id="id_username" placeholder="Введите имя пользователя" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="id_password">Пароль</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-lock"></i>
+                                    <input type="password" name="password" id="id_password" placeholder="Введите пароль" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-options">
+                                <div class="remember-me">
+                                    <input type="checkbox" name="remember" id="remember">
+                                    <label for="remember">Запомнить меня</label>
+                                </div>
+                                <a href="{% url 'password_reset' %}" class="forgot-password">Забыли пароль?</a>
+                            </div>
+                            
+                            <button type="submit" class="btn-auth">Войти</button>
+                            
+                            <input type="hidden" name="next" value="{{ next }}">
+                        </form>
+                        
+                        <div class="form-footer">
+                            <p>Нет учетной записи? <a href="{% url 'register' %}">Зарегистрироваться</a></p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            
-            <div class="form-actions">
-                <button type="submit" class="btn">Войти</button>
-            </div>
-            
-            <input type="hidden" name="next" value="{{ next }}">
-        </form>
-        
-        <div class="login-footer">
-            <p>Нет учетной записи? Обратитесь к администратору системы.</p>
         </div>
     </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
-<script src="/static/js/accounts/login.js"></script>
+<script src="{% static 'js/accounts/auth.js' %}"></script>
 {% endblock %} 

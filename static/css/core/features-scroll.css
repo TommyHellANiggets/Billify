@@ -1,0 +1,95 @@
+/* Стили для секции с табами */
+.features-section {
+    padding: 5rem 0;
+    min-height: auto;
+    position: relative;
+    z-index: 1;
+}
+
+/* Анимация переключения вкладок */
+.tab-content {
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    opacity: 0;
+    transform: translateY(20px);
+    visibility: hidden;
+    height: 0;
+    overflow: hidden;
+}
+
+.tab-content.active {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+    height: auto;
+    overflow: visible;
+}
+
+/* Стили для контейнера с табами */
+.features-tabs {
+    width: 100%;
+    position: relative;
+}
+
+/* Стили для заголовков табов */
+.features-tab-headers {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+    position: relative;
+    z-index: 2;
+}
+
+/* Анимация индикатора активной вкладки */
+.tab-header {
+    position: relative;
+    transition: color 0.3s ease, transform 0.2s ease;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    margin: 0 0.5rem;
+    font-weight: 500;
+}
+
+.tab-header:hover {
+    transform: translateY(-2px);
+}
+
+.tab-header::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background-color: var(--color-primary);
+    transition: width 0.3s ease;
+}
+
+.tab-header.active {
+    color: var(--color-primary);
+}
+
+.tab-header.active::after {
+    width: 100%;
+}
+
+.scroll-indicator {
+    text-align: center;
+    margin-top: 2rem;
+    opacity: 0.7;
+}
+
+/* Стили для мобильных устройств */
+@media (max-width: 768px) {
+    .features-section {
+        padding: 3rem 0;
+    }
+    
+    .features-tab-headers {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .tab-header {
+        margin-bottom: 1rem;
+    }
+} 
