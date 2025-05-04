@@ -171,6 +171,23 @@ def home_inside(request):
         'recent_activities': []
     }
     
+    # Проверяем, подтверждена ли электронная почта пользователя
+    email_verified = False
+    try:
+        email_verification = EmailVerification.objects.get(user=request.user)
+        email_verified = email_verification.is_verified
+    except EmailVerification.DoesNotExist:
+        # Если записи нет, создаем новую
+        if request.user.email:
+            email_verification = EmailVerification.objects.create(
+                user=request.user,
+                email=request.user.email,
+                is_verified=False
+            )
+    
+    context['email_verified'] = email_verified
+    context['has_email'] = bool(request.user.email)
+    
     # Получаем количество клиентов и поставщиков текущего пользователя
     context['clients_count'] = Client.objects.filter(
         user=request.user, 
@@ -356,7 +373,10 @@ def profile(request):
                 
                 profile_obj.save()
                 messages.success(request, 'Файлы успешно загружены!')
-                return redirect('core:profile#upload-files')
+                # Исправляем redirect с фрагментом URL
+                response = redirect('core:profile')
+                response['Location'] += '#upload-files'
+                return response
         
         elif action == 'change_password':
             # Смена пароля
@@ -365,11 +385,17 @@ def profile(request):
                 user = password_form.save()
                 update_session_auth_hash(request, user)  # Обновление сессии, чтобы не разлогиниться
                 messages.success(request, 'Ваш пароль успешно изменен!')
-                return redirect('core:profile#change-password')
+                # Исправляем redirect с фрагментом URL
+                response = redirect('core:profile')
+                response['Location'] += '#change-password'
+                return response
             else:
                 for error in password_form.errors.values():
                     messages.error(request, error[0])
-                return redirect('core:profile#change-password')
+                # Исправляем redirect с фрагментом URL
+                response = redirect('core:profile')
+                response['Location'] += '#change-password'
+                return response
         
         elif action == 'change_language':
             # Смена языка интерфейса
@@ -377,14 +403,20 @@ def profile(request):
             # Здесь можно сохранить предпочтения пользователя в модели User или отдельной модели настроек
             # В данном примере просто показываем сообщение об успешной смене
             messages.success(request, f'Язык интерфейса изменен на {language}!')
-            return redirect('core:profile#language-currency')
+            # Исправляем redirect с фрагментом URL
+            response = redirect('core:profile')
+            response['Location'] += '#language-currency'
+            return response
         
         elif action == 'change_currency':
             # Смена валюты
             currency = request.POST.get('currency', 'RUB')
             # Здесь можно сохранить предпочтения пользователя в модели User или отдельной модели настроек
             messages.success(request, f'Основная валюта изменена на {currency}!')
-            return redirect('core:profile#language-currency')
+            # Исправляем redirect с фрагментом URL
+            response = redirect('core:profile')
+            response['Location'] += '#language-currency'
+            return response
         
         elif action == 'resend_verification':
             # Повторная отправка письма для подтверждения электронной почты
@@ -397,7 +429,10 @@ def profile(request):
             else:
                 messages.error(request, 'У вас не указана электронная почта!')
             
-            return redirect('core:profile#email-verification')
+            # Исправляем redirect с фрагментом URL
+            response = redirect('core:profile')
+            response['Location'] += '#email-verification'
+            return response
     else:
         form = CompanyProfileForm(instance=profile)
     
@@ -430,7 +465,10 @@ def verify_email(request, user_id, token):
     # Проверяем, совпадает ли ID пользователя
     if str(user.id) != str(user_id):
         messages.error(request, 'Недействительная ссылка подтверждения!')
-        return redirect('core:profile#email-verification')
+        # Исправляем redirect с фрагментом URL
+        response = redirect('core:profile')
+        response['Location'] += '#email-verification'
+        return response
     
     # Получаем данные о верификации из базы данных
     try:
@@ -439,17 +477,26 @@ def verify_email(request, user_id, token):
         # Проверяем токен
         if email_verification.token != token:
             messages.error(request, 'Недействительный токен подтверждения!')
-            return redirect('core:profile#email-verification')
+            # Исправляем redirect с фрагментом URL
+            response = redirect('core:profile')
+            response['Location'] += '#email-verification'
+            return response
         
         # Проверяем срок действия токена (24 часа)
         if timezone.now() - email_verification.token_created_at > timedelta(hours=24):
             messages.error(request, 'Срок действия ссылки подтверждения истек. Запросите новую ссылку.')
-            return redirect('core:profile#email-verification')
+            # Исправляем redirect с фрагментом URL
+            response = redirect('core:profile')
+            response['Location'] += '#email-verification'
+            return response
         
         # Проверяем, совпадает ли почта с текущей почтой пользователя
         if email_verification.email != user.email:
             messages.error(request, 'Электронная почта была изменена после отправки ссылки подтверждения.')
-            return redirect('core:profile#email-verification')
+            # Исправляем redirect с фрагментом URL
+            response = redirect('core:profile')
+            response['Location'] += '#email-verification'
+            return response
         
         # Активируем пользователя
         email_verification.is_verified = True
@@ -460,7 +507,10 @@ def verify_email(request, user_id, token):
     except EmailVerification.DoesNotExist:
         messages.error(request, 'Информация о подтверждении почты не найдена!')
     
-    return redirect('core:profile#email-verification')
+    # Исправляем redirect с фрагментом URL
+    response = redirect('core:profile')
+    response['Location'] += '#email-verification'
+    return response
 
 @login_required
 @require_POST
@@ -538,3 +588,36 @@ def yandex_turbo_feed(request):
     from django.shortcuts import render
     # Здесь можно добавить логику для формирования данных
     return render(request, 'yandex_turbo_feed.html', {}, content_type='application/xml')
+
+@login_required
+@require_POST
+@csrf_exempt
+def send_verification_email_ajax(request):
+    """AJAX-обработчик для отправки письма с подтверждением электронной почты"""
+    try:
+        if not request.user.email:
+            return JsonResponse({
+                'success': False,
+                'message': 'Не указан адрес электронной почты'
+            }, status=400)
+        
+        # Отправляем письмо с подтверждением
+        success = send_verification_email(request, request.user)
+        
+        if success:
+            return JsonResponse({
+                'success': True,
+                'message': 'Письмо с подтверждением успешно отправлено'
+            })
+        else:
+            return JsonResponse({
+                'success': False,
+                'message': 'Не удалось отправить письмо. Пожалуйста, попробуйте позже.'
+            }, status=500)
+    except Exception as e:
+        logger = logging.getLogger('django')
+        logger.error(f"Error sending verification email via AJAX: {str(e)}")
+        return JsonResponse({
+            'success': False,
+            'message': 'Произошла ошибка при отправке письма'
+        }, status=500)

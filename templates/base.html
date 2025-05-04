@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- SEO Meta Tags -->
-    <title>{% block title %}{{ title }}{% endblock %} | Billify</title>
-    <meta name="description" content="{% block meta_description %}Billify - удобная система для автоматизации финансового учета и документооборота, идеальна для малого бизнеса и индивидуальных предпринимателей{% endblock %}">
+    <title>{% block title %}{{ title }}{% endblock %} | Flowfy</title>
+    <meta name="description" content="{% block meta_description %}Flowfy - удобная система для автоматизации финансового учета и документооборота, идеальна для малого бизнеса и индивидуальных предпринимателей{% endblock %}">
     <meta name="keywords" content="{% block meta_keywords %}автоматизация учета, финансовый учет, электронный документооборот, управление счетами, малый бизнес{% endblock %}">
-    <meta name="author" content="Billify">
+    <meta name="author" content="Flowfy">
     
     <!-- Canonical URL -->
     <link rel="canonical" href="{{ request.build_absolute_uri }}">
@@ -17,11 +17,11 @@
     <!-- Open Graph / ВКонтакте -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
-    <meta property="og:title" content="{% block og_title %}{{ title }} | Billify{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}{{ title }} | Flowfy{% endblock %}">
     <meta property="og:description" content="{% block og_description %}{{ block.super }}{% endblock %}">
-    <meta property="og:image" content="{% block og_image %}{% static 'images/billify-social-share.png' %}{% endblock %}">
-    <meta property="og:site_name" content="Billify">
-    <meta property="vk:image" content="{% block vk_image %}{% static 'images/billify-social-share.png' %}{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{% static 'images/flowfy-social-share.png' %}{% endblock %}">
+    <meta property="og:site_name" content="Flowfy">
+    <meta property="vk:image" content="{% block vk_image %}{% static 'images/flowfy-social-share.png' %}{% endblock %}">
     
     <!-- Яндекс микроразметка -->
     <meta property="ya:ovs:phone_number" content="+7 (XXX) XXX-XX-XX">
@@ -137,7 +137,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div class="logo">
                     <a href="{% url 'core:home' %}">
-                        Billify<span class="logo-accent">.</span>
+                        <img src="{% static 'images/logo.svg' %}" alt="Flowfy" width="120" height="40">
                     </a>
                 </div>
                 <nav class="main-nav">
@@ -211,22 +211,22 @@
             <div class="footer-grid">
                 <div class="footer-col">
                     <div class="footer-logo">
-                        Billify<span class="logo-accent">.</span>
+                        <img src="{% static 'images/logo.svg' %}" alt="Flowfy" width="120" height="40">
                     </div>
                     <p class="footer-description">
                         Автоматизация финансового учета и документооборота для малого бизнеса и индивидуальных предпринимателей.
                     </p>
                     <div class="social-links">
-                        <a href="https://vk.com/billify" class="social-link" title="ВКонтакте">
+                        <a href="https://vk.com/flowfy" class="social-link" title="ВКонтакте">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.07 2H8.93C3.33 2 2 3.33 2 8.93v6.14C2 20.67 3.33 22 8.93 22h6.14c5.6 0 6.93-1.33 6.93-6.93V8.93C22 3.33 20.67 2 15.07 2zm.62 14.67h-1.75c-.67 0-.87-.5-2.08-1.75-.94-.94-1.35-1.08-1.58-1.08-.32 0-.41.09-.41.53v1.59c0 .41-.18.71-1.04.71-1.21 0-2.54-.57-3.49-1.62-1.43-1.48-1.91-3.44-1.91-3.54 0-.2.09-.39.53-.39h1.75c.39 0 .53.18.68.53.73 2.06 1.89 3.19 2.35 3.19.19 0 .27-.09.27-.57v-2.35c-.05-.8-.41-1.11-.41-1.48 0-.2.16-.39.41-.39h2.77c.33 0 .43.18.43.57v3.19c0 .34.14.46.23.46.19 0 .34-.12.69-.46.96-1.16 1.64-2.94 1.64-2.94.09-.2.23-.39.62-.39h1.75c.5 0 .62.3.5.57-.19.89-2.12 3.63-2.12 3.63-.16.27-.23.39 0 .66.14.2.68.59 1.02 1.02.66.73 1.14 1.35 1.25 1.8.12.41-.1.64-.53.64z"/></svg>
                         </a>
-                        <a href="https://zen.yandex.ru/billify" class="social-link" title="Яндекс Дзен">
+                        <a href="https://zen.yandex.ru/flowfy" class="social-link" title="Яндекс Дзен">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2c-5.5 0-10 4.5-10 10s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 2c4.4 0 8 3.6 8 8s-3.6 8-8 8-8-3.6-8-8 3.6-8 8-8zm0 2c-3.3 0-6 2.7-6 6s2.7 6 6 6 6-2.7 6-6-2.7-6-6-6zm0 2c2.2 0 4 1.8 4 4s-1.8 4-4 4-4-1.8-4-4 1.8-4 4-4zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
                         </a>
-                        <a href="https://www.youtube.com/channel/billify" class="social-link" title="YouTube">
+                        <a href="https://www.youtube.com/channel/flowfy" class="social-link" title="YouTube">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
                         </a>
-                        <a href="https://t.me/billify" class="social-link" title="Telegram">
+                        <a href="https://t.me/flowfy" class="social-link" title="Telegram">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
                         </a>
                     </div>
@@ -266,7 +266,7 @@
             </div>
             <div class="footer-bottom">
                 <div class="copyright">
-                    &copy; {% now "Y" %} Billify. Все права защищены.
+                    &copy; {% now "Y" %} Flowfy. Все права защищены.
                 </div>
             </div>
         </div>

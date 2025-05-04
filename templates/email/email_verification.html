@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Подтверждение электронной почты - Billify</title>
+    <title>Подтверждение электронной почты - Flowfy</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -72,14 +72,61 @@
 <body>
     <div class="email-container">
         <div class="logo">
-            <img src="https://billify.app/static/images/logo.png" alt="Billify Logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="150" height="50" viewBox="0 0 200 60">
+              <defs>
+                <linearGradient id="blueGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#4D8BF8;stop-opacity:1" />
+                  <stop offset="60%" style="stop-color:#2563EB;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#0F52BA;stop-opacity:1" />
+                </linearGradient>
+                
+                <linearGradient id="accentGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" style="stop-color:#67E8F9;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#3B82F6;stop-opacity:1" />
+                </linearGradient>
+                
+                <filter id="softShadow" x="-10%" y="-10%" width="120%" height="120%">
+                  <feGaussianBlur in="SourceAlpha" stdDeviation="1" />
+                  <feOffset dx="0" dy="1" result="offsetblur" />
+                  <feComponentTransfer>
+                    <feFuncA type="linear" slope="0.3" />
+                  </feComponentTransfer>
+                  <feMerge>
+                    <feMergeNode />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+              
+              <path d="M50,15 C45,15 40,20 40,25 L40,45 M40,28 L55,28" 
+                    stroke="url(#accentGradient)" 
+                    stroke-width="4" 
+                    stroke-linecap="round" 
+                    fill="none" 
+                    filter="url(#softShadow)"
+                    opacity="0.9" />
+              
+              <text x="58" y="38" 
+                    font-family="'Montserrat', 'Segoe UI', sans-serif" 
+                    font-size="32" 
+                    font-weight="600" 
+                    fill="url(#blueGradient)" 
+                    filter="url(#softShadow)"
+                    letter-spacing="0.6">
+                lowfy
+              </text>
+              
+              <circle cx="132" cy="25" r="2.5" fill="url(#accentGradient)" opacity="0.8" />
+              
+              <rect x="58" y="42" width="100" height="1.5" rx="0.75" fill="url(#accentGradient)" opacity="0.5" />
+            </svg>
         </div>
         
         <h1>Подтверждение электронной почты</h1>
         
         <p>Здравствуйте, {{ user.username }}!</p>
         
-        <p>Благодарим вас за регистрацию в системе Billify. Для активации вашей учетной записи и получения полного доступа к функциям системы, пожалуйста, подтвердите свою электронную почту.</p>
+        <p>Благодарим вас за регистрацию в системе Flowfy. Для активации вашей учетной записи и получения полного доступа к функциям системы, пожалуйста, подтвердите свою электронную почту.</p>
         
         <div class="verification-container">
             <a href="{{ verification_link }}" class="button">Подтвердить email</a>
@@ -90,12 +137,12 @@
         <p style="word-break: break-all; font-size: 14px;">{{ verification_link }}</p>
         
         <div class="help-text">
-            <p>Если вы не регистрировались в Billify, пожалуйста, проигнорируйте это письмо.</p>
-            <p>Возникли вопросы? Свяжитесь с нашей службой поддержки: <a href="mailto:support@billify.app">support@billify.app</a></p>
+            <p>Если вы не регистрировались в Flowfy, пожалуйста, проигнорируйте это письмо.</p>
+            <p>Возникли вопросы? Свяжитесь с нашей службой поддержки: <a href="mailto:support@flowfy.ru">support@flowfy.ru</a></p>
         </div>
         
         <div class="footer">
-            <p>&copy; 2025 Billify. Все права защищены.</p>
+            <p>&copy; 2025 Flowfy. Все права защищены.</p>
         </div>
     </div>
 </body>

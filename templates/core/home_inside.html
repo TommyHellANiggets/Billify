@@ -3,14 +3,75 @@
 
 {% block title %}Панель управления{% endblock %}
 
-{% block meta_description %}Удобная панель управления Billify для контроля финансов, счетов, клиентов и анализа показателей вашего бизнеса в одном месте.{% endblock %}
+{% block meta_description %}Удобная панель управления Flowfy для контроля финансов, счетов, клиентов и анализа показателей вашего бизнеса в одном месте.{% endblock %}
 
 {% block meta_keywords %}панель управления, дашборд, управление финансами, контроль счетов, анализ бизнеса, учет клиентов{% endblock %}
 
-{% block og_title %}Панель управления вашего бизнеса | Billify{% endblock %}
+{% block og_title %}Панель управления вашего бизнеса | Flowfy{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/core/dashboard.css' %}">
+<style>
+  /* Стили для уведомлений верификации */
+  .email-notification {
+    position: relative;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    border-left: 4px solid #4d8bf8;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+  }
+  
+  .verification-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+  }
+  
+  .verification-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    border-top-color: #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    display: none;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  .verification-success {
+    background-color: #d4edda;
+    border-left-color: #28a745;
+  }
+  
+  .verification-error {
+    background-color: #f8d7da;
+    border-left-color: #dc3545;
+  }
+  
+  .verification-message {
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    display: none;
+  }
+  
+  .verification-message.success {
+    color: #28a745;
+    display: block;
+  }
+  
+  .verification-message.error {
+    color: #dc3545;
+    display: block;
+  }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -19,7 +80,8 @@
   <!-- Основной контент -->
   <div class="dashboard-main">
     <!-- Уведомления -->
-    <div class="notification-card email-notification">
+    {% if has_email and not email_verified %}
+    <div class="notification-card email-notification" id="email-verification-notification">
       <div class="notification-content">
         <div class="notification-icon">
           <i class="fas fa-envelope"></i>
@@ -27,11 +89,19 @@
         <div class="notification-text">
           <h3>Подтвердите вашу электронную почту</h3>
           <p>Для полного доступа к функциям системы подтвердите вашу электронную почту</p>
+          <div class="verification-message" id="verification-message"></div>
         </div>
       </div>
-      <a href="{% url 'core:profile' %}" class="btn btn-sm btn-primary">Подтвердить почту</a>
+      <button id="send-verification-email" class="btn btn-sm btn-primary">
+        <div class="verification-loading">
+          <div class="verification-spinner" id="verification-spinner"></div>
+        </div>
+        <span>Подтвердить почту</span>
+      </button>
     </div>
+    {% endif %}
     
+    {% if not user.company_profile.company_name %}
     <div class="notification-card profile-notification">
       <div class="notification-content">
         <div class="notification-icon">
@@ -44,6 +114,7 @@
       </div>
       <a href="{% url 'core:profile' %}" class="btn btn-sm btn-primary">Заполнить профиль</a>
     </div>
+    {% endif %}
 
     <!-- Быстрые действия -->
     <div class="quick-actions">
@@ -124,8 +195,8 @@
 {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  "name": "Панель управления | Billify",
-  "description": "Удобная панель управления Billify для контроля финансов, счетов, клиентов и анализа показателей вашего бизнеса в одном месте.",
+  "name": "Панель управления | Flowfy",
+  "description": "Удобная панель управления Flowfy для контроля финансов, счетов, клиентов и анализа показателей вашего бизнеса в одном месте.",
   "breadcrumb": {
     "@type": "BreadcrumbList",
     "itemListElement": [
@@ -145,7 +216,7 @@
   },
   "mainEntity": {
     "@type": "SoftwareApplication",
-    "name": "Billify",
+    "name": "Flowfy",
     "applicationCategory": "BusinessApplication",
     "offers": {
       "@type": "Offer",
@@ -159,9 +230,75 @@
 
 {% block extra_js %}
 <script>
-  // Можно добавить интерактивность, например, обновление данных в реальном времени
   document.addEventListener('DOMContentLoaded', function() {
-    // Код для анимации или дополнительных функций
+    // Обработка отправки письма с подтверждением через AJAX
+    const sendButton = document.getElementById('send-verification-email');
+    if (sendButton) {
+      sendButton.addEventListener('click', function() {
+        const notification = document.getElementById('email-verification-notification');
+        const spinner = document.getElementById('verification-spinner');
+        const messageElement = document.getElementById('verification-message');
+        
+        // Показываем спиннер
+        spinner.style.display = 'block';
+        // Отключаем кнопку
+        sendButton.disabled = true;
+        
+        // Отправляем AJAX-запрос
+        fetch('{% url "core:send_verification_email_ajax" %}', {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({})
+        })
+        .then(response => response.json())
+        .then(data => {
+          // Скрываем спиннер
+          spinner.style.display = 'none';
+          
+          if (data.success) {
+            // Успешная отправка
+            notification.classList.add('verification-success');
+            messageElement.classList.add('success');
+            messageElement.textContent = data.message;
+          } else {
+            // Ошибка при отправке
+            notification.classList.add('verification-error');
+            messageElement.classList.add('error');
+            messageElement.textContent = data.message;
+            // Разблокируем кнопку для повторной попытки
+            sendButton.disabled = false;
+          }
+        })
+        .catch(error => {
+          // Ошибка сети или другая ошибка
+          console.error('Ошибка:', error);
+          spinner.style.display = 'none';
+          notification.classList.add('verification-error');
+          messageElement.classList.add('error');
+          messageElement.textContent = 'Произошла ошибка при отправке письма. Пожалуйста, попробуйте позже.';
+          sendButton.disabled = false;
+        });
+      });
+    }
+    
+    // Функция для получения CSRF-токена из cookies
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
   });
 </script>
 {% endblock %} 
