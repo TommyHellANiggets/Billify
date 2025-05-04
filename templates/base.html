@@ -140,19 +140,16 @@
                         <img src="{% static 'images/logo.svg' %}" alt="Flowfy" width="120" height="40">
                     </a>
                 </div>
+                {% if user.is_authenticated %}
                 <nav class="main-nav">
                     <ul class="nav-list">
-                        {% if user.is_authenticated %}
                         <li class="nav-item"><a href="{% url 'core:home_inside' %}" {% if request.path == '/dashboard/' %}class="active"{% endif %}>Главная</a></li>
                         <li class="nav-item"><a href="{% url 'clients:list' %}" {% if '/clients/' in request.path or '/clients-suppliers/' in request.path %}class="active"{% endif %}>Клиенты и поставщики</a></li>
                         <li class="nav-item"><a href="{% url 'invoices:list' %}" {% if '/invoices/' in request.path %}class="active"{% endif %}>Счета</a></li>
                         <li class="nav-item"><a href="{% url 'analytics:dashboard' %}" {% if '/analytics/' in request.path %}class="active"{% endif %}>Аналитика</a></li>
-                        {% else %}
-                        <li class="nav-item"><a href="{% url 'core:home' %}" {% if request.path == '/' %}class="active"{% endif %}>Главная</a></li>
-                        <li class="nav-item"><a href="{% url 'core:changelog' %}" {% if request.path == '/changelog/' %}class="active"{% endif %}>Ченджлог</a></li>
-                        {% endif %}
                     </ul>
                 </nav>
+                {% endif %}
                 <div class="user-menu">
                     {% if user.is_authenticated %}
                         <div class="user-dropdown">
@@ -166,11 +163,13 @@
                         <a href="{% url 'login' %}" class="btn btn-primary">Вход</a>
                     {% endif %}
                 </div>
+                {% if user.is_authenticated %}
                 <button class="mobile-menu-btn" title="Открыть меню">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
                     </svg>
                 </button>
+                {% endif %}
             </div>
         </div>
     </header>
