@@ -54,6 +54,26 @@ class CompanyProfile(models.Model):
         return f"{self.company_name} ({self.user.username})"
 
 
+class EmailVerification(models.Model):
+    """Модель для отслеживания статуса подтверждения электронной почты пользователя"""
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='email_verification', verbose_name='Пользователь')
+    email = models.EmailField('Email для подтверждения')
+    is_verified = models.BooleanField('Подтверждена', default=False)
+    token = models.CharField('Токен подтверждения', max_length=128, blank=True)
+    token_created_at = models.DateTimeField('Дата создания токена', null=True, blank=True)
+    verified_at = models.DateTimeField('Дата подтверждения', null=True, blank=True)
+    created_at = models.DateTimeField('Дата создания', auto_now_add=True)
+    updated_at = models.DateTimeField('Дата обновления', auto_now=True)
+
+    class Meta:
+        verbose_name = 'Подтверждение email'
+        verbose_name_plural = 'Подтверждения email'
+        
+    def __str__(self):
+        verification_status = 'подтвержден' if self.is_verified else 'не подтвержден'
+        return f"{self.email} ({verification_status})"
+
+
 class PricingPlan(models.Model):
     PLAN_TYPE_CHOICES = (
         ('basic', 'Базовый'),

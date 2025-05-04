@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.contrib import messages
 from django.contrib.auth import login, update_session_auth_hash, logout
 from django.contrib.auth.decorators import login_required
 from .forms import CustomUserCreationForm, CompanyProfileForm
-from .models import CompanyProfile, PricingPlan
+from .models import CompanyProfile, PricingPlan, EmailVerification
 from clients.models import Client
 from invoices.models import Invoice
 from decimal import Decimal
@@ -22,6 +22,9 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 import random
 import logging
+import hashlib
+import uuid
+from datetime import datetime, timedelta
 
 # Create your views here.
 
@@ -252,6 +255,58 @@ def register(request):
     
     return render(request, 'accounts/auth.html', {'form': form})
 
+def send_verification_email(request, user):
+    """Отправляет письмо с подтверждением электронной почты"""
+    if not user.email:
+        return False
+    
+    # Генерируем токен на основе UUID, времени и соли
+    token_salt = settings.SECRET_KEY
+    token_generator = hashlib.sha256()
+    token_generator.update(f"{user.id}:{uuid.uuid4()}:{token_salt}:{datetime.now()}".encode())
+    token = token_generator.hexdigest()
+    
+    # Сохраняем информацию о подтверждении в модель EmailVerification
+    email_verification, created = EmailVerification.objects.get_or_create(
+        user=user,
+        defaults={'email': user.email}
+    )
+    
+    # Обновляем данные токена
+    email_verification.token = token
+    email_verification.token_created_at = timezone.now()
+    email_verification.is_verified = False
+    email_verification.email = user.email  # Обновляем на случай, если email изменился
+    email_verification.save()
+    
+    # Создаем ссылку для подтверждения
+    verification_link = request.build_absolute_uri(
+        reverse('core:verify_email', kwargs={'user_id': user.id, 'token': token})
+    )
+    
+    # Подготовка и отправка письма
+    subject = 'Подтверждение электронной почты в Billify'
+    html_message = render_to_string('email/email_verification.html', {
+        'user': user,
+        'verification_link': verification_link
+    })
+    plain_message = strip_tags(html_message)
+    
+    try:
+        send_mail(
+            subject,
+            plain_message,
+            settings.DEFAULT_FROM_EMAIL,
+            [user.email],
+            html_message=html_message,
+            fail_silently=False,
+        )
+        return True
+    except Exception as e:
+        logger = logging.getLogger('django')
+        logger.error(f"Error sending verification email: {str(e)}")
+        return False
+
 @login_required
 def profile(request):
     """Страница профиля компании пользователя"""
@@ -334,28 +389,11 @@ def profile(request):
         elif action == 'resend_verification':
             # Повторная отправка письма для подтверждения электронной почты
             if request.user.email:
-                # Здесь должна быть логика для генерации токена и отправки письма
-                # Пример простой отправки:
-                verification_link = request.build_absolute_uri(
-                    reverse('core:verify_email', kwargs={'user_id': request.user.id})
-                )
-                subject = 'Подтверждение электронной почты'
-                html_message = render_to_string('email/email_verification.html', {
-                    'user': request.user,
-                    'verification_link': verification_link
-                })
-                plain_message = strip_tags(html_message)
-                
-                send_mail(
-                    subject,
-                    plain_message,
-                    settings.DEFAULT_FROM_EMAIL,
-                    [request.user.email],
-                    html_message=html_message,
-                    fail_silently=False,
-                )
-                
-                messages.success(request, 'Письмо с подтверждением отправлено повторно!')
+                success = send_verification_email(request, request.user)
+                if success:
+                    messages.success(request, 'Письмо с подтверждением отправлено повторно!')
+                else:
+                    messages.error(request, 'Не удалось отправить письмо. Пожалуйста, попробуйте позже.')
             else:
                 messages.error(request, 'У вас не указана электронная почта!')
             
@@ -363,24 +401,64 @@ def profile(request):
     else:
         form = CompanyProfileForm(instance=profile)
     
+    # Получаем статус верификации почты
+    email_verified = False
+    try:
+        email_verification = EmailVerification.objects.get(user=request.user)
+        email_verified = email_verification.is_verified
+    except EmailVerification.DoesNotExist:
+        # Если записи нет, создаем новую
+        if request.user.email:
+            email_verification = EmailVerification.objects.create(
+                user=request.user,
+                email=request.user.email,
+                is_verified=False
+            )
+    
     return render(request, 'core/profile.html', {
         'form': form,
-        'title': 'Профиль компании - Billify'
+        'title': 'Профиль компании - Billify',
+        'email_verified': email_verified
     })
 
-# Добавляем новый маршрут для подтверждения электронной почты
+# Обновляем маршрут для подтверждения электронной почты
 @login_required
-def verify_email(request, user_id):
+def verify_email(request, user_id, token):
     """Подтверждение электронной почты пользователя"""
-    # Здесь должна быть логика для проверки токена и активации учетной записи
-    # В простом примере просто активируем пользователя
     user = request.user
-    if str(user.id) == str(user_id):
-        user.is_active = True
-        user.save()
-        messages.success(request, 'Ваша электронная почта успешно подтверждена!')
-    else:
+    
+    # Проверяем, совпадает ли ID пользователя
+    if str(user.id) != str(user_id):
         messages.error(request, 'Недействительная ссылка подтверждения!')
+        return redirect('core:profile#email-verification')
+    
+    # Получаем данные о верификации из базы данных
+    try:
+        email_verification = EmailVerification.objects.get(user=user)
+        
+        # Проверяем токен
+        if email_verification.token != token:
+            messages.error(request, 'Недействительный токен подтверждения!')
+            return redirect('core:profile#email-verification')
+        
+        # Проверяем срок действия токена (24 часа)
+        if timezone.now() - email_verification.token_created_at > timedelta(hours=24):
+            messages.error(request, 'Срок действия ссылки подтверждения истек. Запросите новую ссылку.')
+            return redirect('core:profile#email-verification')
+        
+        # Проверяем, совпадает ли почта с текущей почтой пользователя
+        if email_verification.email != user.email:
+            messages.error(request, 'Электронная почта была изменена после отправки ссылки подтверждения.')
+            return redirect('core:profile#email-verification')
+        
+        # Активируем пользователя
+        email_verification.is_verified = True
+        email_verification.verified_at = timezone.now()
+        email_verification.save()
+        
+        messages.success(request, 'Ваша электронная почта успешно подтверждена!')
+    except EmailVerification.DoesNotExist:
+        messages.error(request, 'Информация о подтверждении почты не найдена!')
     
     return redirect('core:profile#email-verification')
 

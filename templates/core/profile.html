@@ -119,6 +119,149 @@
             grid-template-columns: 1fr;
         }
     }
+    
+    /* Стили для улучшенного интерфейса подтверждения почты */
+    .verification-status {
+        display: flex;
+        align-items: flex-start;
+        gap: 20px;
+    }
+    
+    .verification-icon {
+        flex-shrink: 0;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+    }
+    
+    .verification-icon.verified {
+        background-color: rgba(40, 167, 69, 0.2);
+        color: #28a745;
+    }
+    
+    .verification-icon.unverified {
+        background-color: rgba(255, 193, 7, 0.2);
+        color: #ffc107;
+    }
+    
+    .verification-icon.no-email {
+        background-color: rgba(23, 162, 184, 0.2);
+        color: #17a2b8;
+    }
+    
+    .verification-info {
+        flex-grow: 1;
+    }
+    
+    .verification-info h3 {
+        margin-top: 0;
+        margin-bottom: 10px;
+        font-size: 18px;
+    }
+    
+    .verification-tip {
+        font-size: 14px;
+        font-style: italic;
+        margin-top: 10px;
+        color: #6c757d;
+    }
+    
+    .verification-steps {
+        margin-top: 30px;
+    }
+    
+    .verification-steps-list {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        margin: 20px 0;
+    }
+    
+    .verification-step {
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .verification-step:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+    
+    .verification-step-number {
+        width: 36px;
+        height: 36px;
+        background-color: var(--color-primary);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 18px;
+        flex-shrink: 0;
+    }
+    
+    .verification-step-content {
+        flex-grow: 1;
+    }
+    
+    .verification-step-content h4 {
+        margin-top: 0;
+        margin-bottom: 5px;
+        font-size: 16px;
+    }
+    
+    .verification-step-content p {
+        margin: 0;
+        color: #6c757d;
+    }
+    
+    .verification-resend {
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #e9ecef;
+    }
+    
+    .verification-resend-title {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+    
+    .verification-resend p {
+        margin-bottom: 15px;
+    }
+    
+    .verification-resend .profile-btn {
+        margin-top: 10px;
+    }
+    
+    .profile-btn-secondary {
+        background-color: #6c757d;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 4px;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 10px;
+        transition: background-color 0.3s;
+    }
+    
+    .profile-btn-secondary:hover {
+        background-color: #5a6268;
+        color: white;
+        text-decoration: none;
+    }
+    
+    .profile-btn i {
+        margin-right: 8px;
+    }
 </style>
 {% endblock %}
 
@@ -348,30 +491,85 @@
             <h2 class="profile-tab-title">Подтверждение электронной почты</h2>
             
             {% if user.email %}
-                {% if user.is_active %}
+                {% if email_verified %}
                 <div class="profile-alert profile-alert-success">
-                    <p><i class="fas fa-check-circle"></i> Ваша электронная почта подтверждена.</p>
+                    <div class="verification-status">
+                        <div class="verification-icon verified">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="verification-info">
+                            <h3>Ваша электронная почта подтверждена!</h3>
+                            <p>Все функции Billify доступны в полном объеме.</p>
+                        </div>
+                    </div>
                 </div>
                 {% else %}
                 <div class="profile-alert profile-alert-warning">
-                    <p><i class="fas fa-exclamation-triangle"></i> Ваша электронная почта не подтверждена.</p>
-                    <p>На адрес <strong>{{ user.email }}</strong> было отправлено письмо с инструкциями по подтверждению.</p>
+                    <div class="verification-status">
+                        <div class="verification-icon unverified">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="verification-info">
+                            <h3>Требуется подтверждение электронной почты</h3>
+                            <p>На адрес <strong>{{ user.email }}</strong> было отправлено письмо с инструкциями по подтверждению.</p>
+                            <p class="verification-tip">Проверьте папку "Спам", если не можете найти письмо.</p>
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="profile-card">
-                    <h3 class="profile-card-title">Отправить письмо повторно</h3>
-                    <p>Если вы не получили письмо с подтверждением, вы можете запросить повторную отправку.</p>
-                    <div class="profile-form-footer">
+                <div class="profile-card verification-steps">
+                    <h3 class="profile-card-title">Как подтвердить электронную почту</h3>
+                    
+                    <div class="verification-steps-list">
+                        <div class="verification-step">
+                            <div class="verification-step-number">1</div>
+                            <div class="verification-step-content">
+                                <h4>Проверьте почту</h4>
+                                <p>Откройте email-клиент и найдите письмо от Billify с темой "Подтверждение электронной почты в Billify"</p>
+                            </div>
+                        </div>
+                        
+                        <div class="verification-step">
+                            <div class="verification-step-number">2</div>
+                            <div class="verification-step-content">
+                                <h4>Откройте письмо</h4>
+                                <p>В письме вы найдете кнопку "Подтвердить email" и ссылку для подтверждения</p>
+                            </div>
+                        </div>
+                        
+                        <div class="verification-step">
+                            <div class="verification-step-number">3</div>
+                            <div class="verification-step-content">
+                                <h4>Завершите подтверждение</h4>
+                                <p>Нажмите на кнопку или перейдите по ссылке, чтобы завершить процесс подтверждения</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="verification-resend">
+                        <h3 class="verification-resend-title">Не получили письмо?</h3>
+                        <p>Если письмо не пришло в течение нескольких минут, вы можете запросить повторную отправку.</p>
                         <form method="post">
                             {% csrf_token %}
-                            <button type="submit" name="action" value="resend_verification" class="profile-btn profile-btn-primary">Отправить повторно</button>
+                            <button type="submit" name="action" value="resend_verification" class="profile-btn profile-btn-primary">
+                                <i class="fas fa-envelope"></i> Отправить письмо повторно
+                            </button>
                         </form>
                     </div>
                 </div>
                 {% endif %}
             {% else %}
                 <div class="profile-alert profile-alert-info">
-                    <p><i class="fas fa-info-circle"></i> У вас не указана электронная почта. Пожалуйста, добавьте её в разделе "Информация о компании".</p>
+                    <div class="verification-status">
+                        <div class="verification-icon no-email">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                        <div class="verification-info">
+                            <h3>Требуется добавить электронную почту</h3>
+                            <p>У вас не указана электронная почта. Пожалуйста, добавьте её в разделе "Информация о компании", чтобы получить доступ ко всем функциям системы.</p>
+                            <a href="#company-info" class="profile-btn profile-btn-secondary">Перейти к настройкам профиля</a>
+                        </div>
+                    </div>
                 </div>
             {% endif %}
         </div>
