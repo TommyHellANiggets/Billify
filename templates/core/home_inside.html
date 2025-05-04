@@ -1,6 +1,14 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block title %}Панель управления{% endblock %}
+
+{% block meta_description %}Удобная панель управления Billify для контроля финансов, счетов, клиентов и анализа показателей вашего бизнеса в одном месте.{% endblock %}
+
+{% block meta_keywords %}панель управления, дашборд, управление финансами, контроль счетов, анализ бизнеса, учет клиентов{% endblock %}
+
+{% block og_title %}Панель управления вашего бизнеса | Billify{% endblock %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/core/dashboard.css' %}">
 {% endblock %}
@@ -111,6 +119,42 @@
     </div>
   </div>
 </div>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Панель управления | Billify",
+  "description": "Удобная панель управления Billify для контроля финансов, счетов, клиентов и анализа показателей вашего бизнеса в одном месте.",
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Главная",
+        "item": "/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Панель управления",
+        "item": "/dashboard/"
+      }
+    ]
+  },
+  "mainEntity": {
+    "@type": "SoftwareApplication",
+    "name": "Billify",
+    "applicationCategory": "BusinessApplication",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "RUB"
+    }
+  }
+}
+</script>
 {% endblock %}
 
 {% block extra_js %}

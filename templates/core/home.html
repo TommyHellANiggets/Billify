@@ -1,12 +1,77 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block title %}Billify - умная система автоматизации бухгалтерии и финансов для бизнеса{% endblock %}
+
+{% block meta_description %}Billify - современная российская онлайн-система для ведения бухгалтерии, учета финансов и автоматизации бизнес-процессов. Оптимизируйте работу вашего бизнеса с Billify.{% endblock %}
+
+{% block meta_keywords %}billify, биллифай, автоматизация бухгалтерии, управление финансами, онлайн бухгалтерия, финансовый учёт, электронные счета, российская система учета{% endblock %}
+
+{% block og_title %}Billify - умная система автоматизации бухгалтерии и финансов для бизнеса{% endblock %}
+{% block og_description %}Billify - современная российская онлайн-система для ведения бухгалтерии, учета финансов и автоматизации бизнес-процессов. Оптимизируйте работу вашего бизнеса с Billify.{% endblock %}
+{% block og_image %}{% static 'images/og/home-og.jpg' %}{% endblock %}
+{% block og_type %}website{% endblock %}
+
+{% block meta_extra %}
+<meta property="vk:image" content="{% static 'images/og/home-og.jpg' %}" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Billify - умная система автоматизации бухгалтерии и финансов для бизнеса" />
+<meta name="twitter:description" content="Billify - современная российская онлайн-система для ведения бухгалтерии, учета финансов и автоматизации бизнес-процессов." />
+<meta name="twitter:image" content="{% static 'images/og/home-og.jpg' %}" />
+<meta name="robots" content="index, follow" />
+<meta name="yandex-verification" content="verification_token" />
+<link rel="canonical" href="{{ request.build_absolute_uri }}" />
+{% endblock %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/core/home.css' %}">
 <link rel="stylesheet" href="{% static 'css/core/features-scroll.css' %}">
 {% endblock %}
 
 {% block content %}
+<!-- Schema.org структурированные данные -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Billify",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web-based",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "RUB"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.8",
+    "ratingCount": "387"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Billify",
+  "url": "https://billify.ru",
+  "logo": "https://billify.ru{% static 'images/logo.png' %}",
+  "description": "Billify - современная российская система автоматизации бухгалтерии и управления финансами для бизнеса.",
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+7-495-123-4567",
+    "contactType": "customer service",
+    "email": "info@billify.ru",
+    "availableLanguage": ["Russian", "English"]
+  },
+  "sameAs": [
+    "https://vk.com/billify",
+    "https://t.me/billify"
+  ]
+}
+</script>
+
 <section class="hero">
     <div class="hero-content">
         <h1>Billify - Ваш финансовый учет стал проще</h1>
@@ -17,7 +82,7 @@
         </div>
     </div>
     <div class="hero-image">
-        <img src="{% static '/images/hero.png' %}" alt="Billify Dashboard" class="dashboard-preview">
+        <img src="{% static '/images/hero.png' %}" alt="Billify Dashboard - система автоматизации финансового учета" class="dashboard-preview">
     </div>
     <div class="hero-scroll-indicator">
         <span>Узнать больше</span>

@@ -1,0 +1,10 @@
+# Базовая конфигурация
+AddDefaultCharset utf-8
+Options +ExecCGI +FollowSymLinks
+
+# Для обработки статических файлов
+RewriteEngine On
+RewriteCond %{REQUEST_URI} ^/static/
+RewriteRule ^static/(.*)$ staticfiles/$1 [L]
+
+# Все остальные запросы обрабатываются Passenger автоматически 

@@ -20,15 +20,39 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 from core import views as core_views
+from django.contrib.sitemaps.views import sitemap
+from core.sitemaps import (
+    StaticViewSitemap, 
+    HomeSitemap, 
+    InvoiceSitemap, 
+    ClientSitemap, 
+    AnalyticsSitemap
+)
+from django.views.generic import RedirectView
+from django.views.generic.base import TemplateView
+from core.views import yandex_turbo_feed
+
+# Определение карт сайта
+sitemaps = {
+    'static': StaticViewSitemap,
+    'home': HomeSitemap,
+    'invoices': InvoiceSitemap,
+    'clients': ClientSitemap,
+    'analytics': AnalyticsSitemap,
+}
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('core.urls')),
     path('invoices/', include('invoices.urls')),
-    path('clients/', include('clients.urls')),  # Сохраняем для обратной совместимости
-    path('clients-suppliers/', include('clients.urls')),  # Новый URL
+    # Настраиваем редирект с '/clients/' на '/clients-suppliers/'
+    path('clients/', RedirectView.as_view(url='/clients-suppliers/', permanent=True)),
+    path('clients-suppliers/', include('clients.urls')),  # Основной URL для клиентов
     path('analytics/', include('analytics.urls')),
     path('suppliers/', include('suppliers.urls')),
+    
+    # Sitemap
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     
     # URL для аутентификации
     path('login/', auth_views.LoginView.as_view(template_name='accounts/auth.html'), name='login'),
@@ -54,6 +78,8 @@ urlpatterns = [
     
     # URL для страницы условий использования
     path('terms/', core_views.terms, name='terms'),
+    path('yandex_turbo_rss.xml', yandex_turbo_feed, name='yandex_turbo_feed'),
+    path('yandex_verification.html', TemplateView.as_view(template_name='yandex_verification.html'), name='yandex_verification'),
 ]
 
 # Добавление маршрутов для статических и медиа файлов в режиме разработки

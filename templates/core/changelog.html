@@ -1,6 +1,14 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block title %}Журнал изменений и обновлений{% endblock %}
+
+{% block meta_description %}Актуальная информация о всех обновлениях и улучшениях системы Billify. Следите за развитием нашего сервиса для автоматизации финансового учета и документооборота.{% endblock %}
+
+{% block meta_keywords %}журнал изменений, обновления Billify, история версий, новые функции Billify, улучшения системы учета{% endblock %}
+
+{% block og_title %}Журнал изменений и обновлений системы Billify{% endblock %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="/static/css/core/changelog.css">
 {% endblock %}
@@ -19,15 +27,17 @@
             <div class="timeline-line"></div>
             
             <!-- Версия 1.2.0 -->
-            <div class="timeline-item">
+            <div class="timeline-item" itemscope itemtype="http://schema.org/SoftwareApplication">
+                <meta itemprop="name" content="Billify">
+                <meta itemprop="applicationCategory" content="BusinessApplication">
                 <div class="timeline-date">
-                    <div class="date">15 мая 2023</div>
-                    <div class="version">v1.2.0</div>
+                    <div class="date" itemprop="datePublished">15 мая 2023</div>
+                    <div class="version" itemprop="softwareVersion">v1.2.0</div>
                 </div>
                 <div class="timeline-card">
                     <div class="timeline-point"></div>
-                    <h2>Улучшения интерфейса</h2>
-                    <div class="timeline-content">
+                    <h2 itemprop="name">Улучшения интерфейса</h2>
+                    <div class="timeline-content" itemprop="releaseNotes">
                         <p>В этом обновлении мы значительно улучшили интерфейс приложения, сделав его более современным и удобным в использовании.</p>
                         <h3>Что нового:</h3>
                         <ul class="changelog-list">
@@ -38,22 +48,24 @@
                             <li>Добавлены микроанимации для улучшения пользовательского опыта</li>
                         </ul>
                         <div class="changelog-screenshot">
-                            <img src="{% static 'img/changelog/v1.2.0.jpg' %}" alt="Скриншот обновления v1.2.0">
+                            <img src="{% static 'img/changelog/v1.2.0.jpg' %}" alt="Улучшения интерфейса Billify в версии 1.2.0" itemprop="screenshot">
                         </div>
                     </div>
                 </div>
             </div>
             
             <!-- Версия 1.1.5 -->
-            <div class="timeline-item">
+            <div class="timeline-item" itemscope itemtype="http://schema.org/SoftwareApplication">
+                <meta itemprop="name" content="Billify">
+                <meta itemprop="applicationCategory" content="BusinessApplication">
                 <div class="timeline-date">
-                    <div class="date">2 мая 2023</div>
-                    <div class="version">v1.1.5</div>
+                    <div class="date" itemprop="datePublished">2 мая 2023</div>
+                    <div class="version" itemprop="softwareVersion">v1.1.5</div>
                 </div>
                 <div class="timeline-card">
                     <div class="timeline-point"></div>
-                    <h2>Новые функции</h2>
-                    <div class="timeline-content">
+                    <h2 itemprop="name">Новые функции</h2>
+                    <div class="timeline-content" itemprop="releaseNotes">
                         <p>Мы расширили функциональность системы, добавив несколько важных возможностей для улучшения работы с финансовыми документами.</p>
                         <h3>Что нового:</h3>
                         <ul class="changelog-list">
@@ -64,22 +76,24 @@
                             <li>Добавлена возможность экспорта счетов в различных форматах</li>
                         </ul>
                         <div class="changelog-screenshot">
-                            <img src="{% static 'img/changelog/v1.1.5.jpg' %}" alt="Скриншот обновления v1.1.5">
+                            <img src="{% static 'img/changelog/v1.1.5.jpg' %}" alt="Новые функции Billify в версии 1.1.5" itemprop="screenshot">
                         </div>
                     </div>
                 </div>
             </div>
             
             <!-- Версия 1.1.0 -->
-            <div class="timeline-item">
+            <div class="timeline-item" itemscope itemtype="http://schema.org/SoftwareApplication">
+                <meta itemprop="name" content="Billify">
+                <meta itemprop="applicationCategory" content="BusinessApplication">
                 <div class="timeline-date">
-                    <div class="date">15 апреля 2023</div>
-                    <div class="version">v1.1.0</div>
+                    <div class="date" itemprop="datePublished">15 апреля 2023</div>
+                    <div class="version" itemprop="softwareVersion">v1.1.0</div>
                 </div>
                 <div class="timeline-card">
                     <div class="timeline-point"></div>
-                    <h2>Производительность и безопасность</h2>
-                    <div class="timeline-content">
+                    <h2 itemprop="name">Производительность и безопасность</h2>
+                    <div class="timeline-content" itemprop="releaseNotes">
                         <p>Это обновление фокусируется на улучшении производительности системы и повышении уровня безопасности данных.</p>
                         <h3>Что нового:</h3>
                         <ul class="changelog-list">
@@ -90,22 +104,24 @@
                             <li>Улучшен механизм резервного копирования данных</li>
                         </ul>
                         <div class="changelog-screenshot">
-                            <img src="{% static 'img/changelog/v1.1.0.jpg' %}" alt="Скриншот обновления v1.1.0">
+                            <img src="{% static 'img/changelog/v1.1.0.jpg' %}" alt="Улучшения производительности и безопасности Billify в версии 1.1.0" itemprop="screenshot">
                         </div>
                     </div>
                 </div>
             </div>
             
             <!-- Версия 1.0.5 -->
-            <div class="timeline-item">
+            <div class="timeline-item" itemscope itemtype="http://schema.org/SoftwareApplication">
+                <meta itemprop="name" content="Billify">
+                <meta itemprop="applicationCategory" content="BusinessApplication">
                 <div class="timeline-date">
-                    <div class="date">1 апреля 2023</div>
-                    <div class="version">v1.0.5</div>
+                    <div class="date" itemprop="datePublished">1 апреля 2023</div>
+                    <div class="version" itemprop="softwareVersion">v1.0.5</div>
                 </div>
                 <div class="timeline-card">
                     <div class="timeline-point"></div>
-                    <h2>Аналитика и отчеты</h2>
-                    <div class="timeline-content">
+                    <h2 itemprop="name">Аналитика и отчеты</h2>
+                    <div class="timeline-content" itemprop="releaseNotes">
                         <p>Мы добавили расширенные возможности для анализа данных и формирования отчетов о деятельности вашего бизнеса.</p>
                         <h3>Что нового:</h3>
                         <ul class="changelog-list">
@@ -116,22 +132,24 @@
                             <li>Добавлен прогноз движения денежных средств</li>
                         </ul>
                         <div class="changelog-screenshot">
-                            <img src="{% static 'img/changelog/v1.0.5.jpg' %}" alt="Скриншот обновления v1.0.5">
+                            <img src="{% static 'img/changelog/v1.0.5.jpg' %}" alt="Новые функции аналитики и отчетов Billify в версии 1.0.5" itemprop="screenshot">
                         </div>
                     </div>
                 </div>
             </div>
             
             <!-- Версия 1.0.0 -->
-            <div class="timeline-item">
+            <div class="timeline-item" itemscope itemtype="http://schema.org/SoftwareApplication">
+                <meta itemprop="name" content="Billify">
+                <meta itemprop="applicationCategory" content="BusinessApplication">
                 <div class="timeline-date">
-                    <div class="date">15 марта 2023</div>
-                    <div class="version">v1.0.0</div>
+                    <div class="date" itemprop="datePublished">15 марта 2023</div>
+                    <div class="version" itemprop="softwareVersion">v1.0.0</div>
                 </div>
                 <div class="timeline-card">
                     <div class="timeline-point"></div>
-                    <h2>Запуск Billify</h2>
-                    <div class="timeline-content">
+                    <h2 itemprop="name">Запуск Billify</h2>
+                    <div class="timeline-content" itemprop="releaseNotes">
                         <p>Мы с гордостью представляем первую версию Billify — системы для автоматизации финансового учета и документооборота.</p>
                         <h3>Основные функции:</h3>
                         <ul class="changelog-list">
@@ -142,7 +160,7 @@
                             <li>Базовая аналитика финансовых показателей</li>
                         </ul>
                         <div class="changelog-screenshot">
-                            <img src="{% static 'img/changelog/v1.0.0.jpg' %}" alt="Скриншот версии v1.0.0">
+                            <img src="{% static 'img/changelog/v1.0.0.jpg' %}" alt="Первая версия системы Billify v1.0.0" itemprop="screenshot">
                         </div>
                     </div>
                 </div>
@@ -157,12 +175,95 @@
             <h2>Будьте в курсе всех обновлений</h2>
             <p>Подпишитесь на нашу рассылку, чтобы первыми узнавать о новых функциях и улучшениях Billify</p>
             <form class="subscribe-form">
-                <input type="email" placeholder="Ваш email" required>
+                <input type="email" placeholder="Ваш email" required aria-label="Ваш email для подписки">
                 <button type="submit" class="btn btn-primary">Подписаться</button>
             </form>
         </div>
     </div>
 </section>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Журнал изменений и обновлений системы Billify",
+  "description": "Актуальная информация о всех обновлениях и улучшениях системы Billify для автоматизации финансового учета и документооборота.",
+  "publisher": {
+    "@type": "Organization",
+    "name": "Billify",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{% static 'images/billify-logo.png' %}"
+    },
+    "sameAs": [
+      "https://vk.com/billify",
+      "https://zen.yandex.ru/billify",
+      "https://www.youtube.com/channel/billify",
+      "https://t.me/billify"
+    ]
+  },
+  "mainEntity": {
+    "@type": "ItemList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "item": {
+          "@type": "SoftwareApplication",
+          "name": "Billify v1.2.0",
+          "softwareVersion": "1.2.0",
+          "datePublished": "2023-05-15",
+          "applicationCategory": "BusinessApplication"
+        }
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "item": {
+          "@type": "SoftwareApplication",
+          "name": "Billify v1.1.5",
+          "softwareVersion": "1.1.5",
+          "datePublished": "2023-05-02",
+          "applicationCategory": "BusinessApplication"
+        }
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "item": {
+          "@type": "SoftwareApplication",
+          "name": "Billify v1.1.0",
+          "softwareVersion": "1.1.0",
+          "datePublished": "2023-04-15",
+          "applicationCategory": "BusinessApplication"
+        }
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "item": {
+          "@type": "SoftwareApplication",
+          "name": "Billify v1.0.5",
+          "softwareVersion": "1.0.5",
+          "datePublished": "2023-04-01",
+          "applicationCategory": "BusinessApplication"
+        }
+      },
+      {
+        "@type": "ListItem",
+        "position": 5,
+        "item": {
+          "@type": "SoftwareApplication",
+          "name": "Billify v1.0.0",
+          "softwareVersion": "1.0.0",
+          "datePublished": "2023-03-15",
+          "applicationCategory": "BusinessApplication"
+        }
+      }
+    ]
+  }
+}
+</script>
 {% endblock %}
 
 {% block extra_js %}

@@ -455,3 +455,8 @@ def custom_logout(request):
     logout(request)
     messages.success(request, 'Вы успешно вышли из системы.')
     return redirect('core:home')
+
+def yandex_turbo_feed(request):
+    from django.shortcuts import render
+    # Здесь можно добавить логику для формирования данных
+    return render(request, 'yandex_turbo_feed.html', {}, content_type='application/xml')

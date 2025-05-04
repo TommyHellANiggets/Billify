@@ -1,7 +1,27 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}{{ title }}{% endblock %}
+{% block title %}Профиль компании{% endblock %}
+
+{% block meta_description %}Управление профилем вашей компании в системе Billify. Редактируйте контактные данные, логотип, банковские реквизиты и другую информацию о вашей организации.{% endblock %}
+
+{% block meta_keywords %}профиль компании, данные организации, настройки компании, реквизиты, управление профилем{% endblock %}
+
+{% block og_title %}Управление профилем компании | Billify{% endblock %}
+{% block og_description %}Управление профилем вашей компании в системе Billify. Редактируйте контактные данные, логотип, банковские реквизиты и другую информацию о вашей организации.{% endblock %}
+{% block og_image %}{% static 'images/og/profile-og.jpg' %}{% endblock %}
+{% block og_type %}website{% endblock %}
+
+{% block meta_extra %}
+<meta property="vk:image" content="{% static 'images/og/profile-og.jpg' %}" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Управление профилем компании | Billify" />
+<meta name="twitter:description" content="Управление профилем вашей компании в системе Billify. Редактируйте контактные данные, логотип, банковские реквизиты и другую информацию." />
+<meta name="twitter:image" content="{% static 'images/og/profile-og.jpg' %}" />
+<meta name="robots" content="index, follow" />
+<meta name="yandex-verification" content="verification_token" />
+<link rel="canonical" href="{{ request.build_absolute_uri }}" />
+{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/global.css' %}">
@@ -123,38 +143,40 @@
             <div class="profile-email">{{ request.user.email }}</div>
         </div>
         
-        <ul class="profile-nav">
-            <li class="profile-nav-item">
-                <a href="#company-info" class="profile-nav-link active" data-tab="company-info">
-                    <span class="profile-nav-icon"><i class="fas fa-building"></i></span>
-                    Информация о компании
-                </a>
-            </li>
-            <li class="profile-nav-item">
-                <a href="#email-verification" class="profile-nav-link" data-tab="email-verification">
-                    <span class="profile-nav-icon"><i class="fas fa-envelope"></i></span>
-                    Подтверждение почты
-                </a>
-            </li>
-            <li class="profile-nav-item">
-                <a href="#change-password" class="profile-nav-link" data-tab="change-password">
-                    <span class="profile-nav-icon"><i class="fas fa-lock"></i></span>
-                    Смена пароля
-                </a>
-            </li>
-            <li class="profile-nav-item">
-                <a href="#language-currency" class="profile-nav-link" data-tab="language-currency">
-                    <span class="profile-nav-icon"><i class="fas fa-globe"></i></span>
-                    Язык и валюта
-                </a>
-            </li>
-            <li class="profile-nav-item">
-                <a href="#upload-files" class="profile-nav-link" data-tab="upload-files">
-                    <span class="profile-nav-icon"><i class="fas fa-file-upload"></i></span>
-                    Загрузка файлов
-                </a>
-            </li>
-        </ul>
+        <div class="profile-tabs">
+            <ul class="profile-nav">
+                <li class="profile-nav-item">
+                    <a href="#company-info" class="profile-nav-link active" data-tab="company-info" id="company-info-tab">
+                        <span class="profile-nav-icon"><i class="fas fa-building"></i></span>
+                        Информация о компании
+                    </a>
+                </li>
+                <li class="profile-nav-item">
+                    <a href="#email-verification" class="profile-nav-link" data-tab="email-verification" id="email-verification-tab">
+                        <span class="profile-nav-icon"><i class="fas fa-envelope"></i></span>
+                        Подтверждение почты
+                    </a>
+                </li>
+                <li class="profile-nav-item">
+                    <a href="#change-password" class="profile-nav-link" data-tab="change-password" id="change-password-tab">
+                        <span class="profile-nav-icon"><i class="fas fa-lock"></i></span>
+                        Смена пароля
+                    </a>
+                </li>
+                <li class="profile-nav-item">
+                    <a href="#language-currency" class="profile-nav-link" data-tab="language-currency" id="language-currency-tab">
+                        <span class="profile-nav-icon"><i class="fas fa-globe"></i></span>
+                        Язык и валюта
+                    </a>
+                </li>
+                <li class="profile-nav-item">
+                    <a href="#upload-files" class="profile-nav-link" data-tab="upload-files" id="upload-files-tab">
+                        <span class="profile-nav-icon"><i class="fas fa-file-upload"></i></span>
+                        Загрузка файлов
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
     
     <!-- Содержимое вкладок -->
@@ -495,7 +517,7 @@
                             </div>
                             {% endif %}
                             <div class="file-upload-container">
-                                <input type="file" id="id_logo" name="logo" accept="image/*" class="file-input">
+                                <input type="file" id="id_logo" name="logo" accept="image/*" class="file-input" aria-label="Выбрать файл логотипа">
                                 <label for="id_logo" class="file-upload-button">Выбрать логотип</label>
                                 <span class="file-name" id="logo_filename"></span>
                             </div>
@@ -513,7 +535,7 @@
                             </div>
                             {% endif %}
                             <div class="file-upload-container">
-                                <input type="file" id="id_stamp" name="stamp" accept="image/*" class="file-input">
+                                <input type="file" id="id_stamp" name="stamp" accept="image/*" class="file-input" aria-label="Выбрать файл печати">
                                 <label for="id_stamp" class="file-upload-button">Выбрать печать</label>
                                 <span class="file-name" id="stamp_filename"></span>
                             </div>
@@ -531,7 +553,7 @@
                             </div>
                             {% endif %}
                             <div class="file-upload-container">
-                                <input type="file" id="id_signature" name="signature" accept="image/*" class="file-input">
+                                <input type="file" id="id_signature" name="signature" accept="image/*" class="file-input" aria-label="Выбрать файл подписи">
                                 <label for="id_signature" class="file-upload-button">Выбрать подпись</label>
                                 <span class="file-name" id="signature_filename"></span>
                             </div>
@@ -549,6 +571,43 @@
         </div>
     </div>
 </div>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Профиль компании | Billify",
+  "description": "Управление профилем вашей компании в системе Billify. Редактируйте контактные данные, логотип, банковские реквизиты и другую информацию о вашей организации.",
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Главная",
+        "item": "/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Профиль компании",
+        "item": "/profile/"
+      }
+    ]
+  },
+  "mainEntity": {
+    "@type": "Organization",
+    "name": "{{ form.instance.company_name|default:'Ваша компания' }}",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "{{ form.instance.legal_address|default:'' }}"
+    },
+    "telephone": "{{ form.instance.phone|default:'' }}",
+    "email": "{{ form.instance.email|default:request.user.email }}",
+    "url": "{{ form.instance.website|default:'' }}"
+  }
+}
+</script>
 {% endblock %}
 
 {% block extra_js %}
@@ -563,7 +622,9 @@
                 e.preventDefault();
                 
                 // Убираем активный класс со всех ссылок и вкладок
-                tabLinks.forEach(l => l.classList.remove('active'));
+                tabLinks.forEach(l => {
+                    l.classList.remove('active');
+                });
                 tabs.forEach(t => t.classList.remove('active'));
                 
                 // Добавляем активный класс текущей ссылке и вкладке
@@ -585,7 +646,9 @@
             
             if (tabLink) {
                 // Активируем вкладку без прокрутки
-                tabLinks.forEach(l => l.classList.remove('active'));
+                tabLinks.forEach(l => {
+                    l.classList.remove('active');
+                });
                 tabs.forEach(t => t.classList.remove('active'));
                 
                 tabLink.classList.add('active');
