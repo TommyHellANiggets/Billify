@@ -1,0 +1,5 @@
+Django>=3.2,<6.0
+reportlab>=3.6
+pillow>=9.0
+weasyprint>=53.0
+num2words>=0.5.10 
