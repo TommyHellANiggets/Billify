@@ -1,0 +1,35 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /login/
+Disallow: /register/
+Disallow: /password-reset/
+Allow: /
+
+# Пути к JSON-данным и другим сервисным запросам
+Disallow: /api/
+
+# Когда сайт будет опубликован, укажите путь к карте сайта
+Sitemap: https://flowfy.ru/sitemap.xml
+
+# Специфичные правила для Яндекс-бота
+User-agent: Yandex
+Disallow: /admin/
+Disallow: /login/
+Disallow: /register/
+Disallow: /password-reset/
+Allow: /
+
+# Специальные указания для Яндекса
+Clean-param: from /search
+Clean-param: utm_source&utm_medium&utm_campaign /
+
+# Указание на турбо-страницы для Яндекса
+Sitemap: https://flowfy.ru/yandex_turbo_rss.xml
+
+# Правила для Mail.ru
+User-agent: Mail.Ru
+Disallow: /admin/
+Disallow: /login/
+Disallow: /register/
+Disallow: /password-reset/
+Allow: / 
