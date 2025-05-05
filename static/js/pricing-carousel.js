@@ -1,109 +1,110 @@
 /**
- * Pricing Carousel - управление каруселью тарифных планов
+ * Pricing Cards Animation - анимации для статичных карточек тарифов
  */
 document.addEventListener('DOMContentLoaded', function() {
-    // Инициализация карусели тарифных планов
-    const initPricingCarousel = () => {
-        const carousel = document.querySelector('.pricing-carousel');
-        if (!carousel) return;
+    // Инициализация анимаций для карточек тарифов
+    const initPricingCards = () => {
+        const cards = document.querySelectorAll('.pricing-card');
+        if (!cards.length) return;
         
-        const grid = document.querySelector('.pricing-grid');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const indicators = document.querySelectorAll('.page-indicator');
-        const groups = document.querySelectorAll('.pricing-group');
-        
-        if (!grid || !prevBtn || !nextBtn || groups.length === 0) return;
-        
-        let currentPage = 0;
-        const totalPages = groups.length;
-        
-        // Настройка стилей для правильного отображения
-        grid.style.width = `${totalPages * 100}%`;
-        groups.forEach(group => {
-            group.style.flex = `0 0 ${100 / totalPages}%`;
+        // Анимация появления карточек
+        cards.forEach((card, index) => {
+            // Анимация появления с задержкой
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            
+            setTimeout(() => {
+                card.style.transition = 'all 0.6s cubic-bezier(0.215, 0.610, 0.355, 1.000)';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 100 * index);
         });
         
-        // Функция для обновления отображения карусели
-        function updateCarousel() {
-            grid.style.transform = `translateX(-${currentPage * (100 / totalPages)}%)`;
-            
-            // Обновление состояния индикаторов
-            indicators.forEach((indicator, index) => {
-                if (index === currentPage) {
-                    indicator.classList.add('active');
+        // Обработка кнопок "Показать больше/меньше"
+        const toggleButtons = document.querySelectorAll('.pricing-toggle-btn');
+        toggleButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const card = this.closest('.pricing-card');
+                card.classList.toggle('expanded');
+                
+                // Изменение текста кнопки
+                if (card.classList.contains('expanded')) {
+                    this.innerHTML = `Показать меньше <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
                 } else {
-                    indicator.classList.remove('active');
+                    this.innerHTML = `Показать больше <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
                 }
             });
-            
-            // Обновление состояния кнопок
-            prevBtn.disabled = currentPage === 0;
-            prevBtn.classList.toggle('disabled', currentPage === 0);
-            nextBtn.disabled = currentPage === totalPages - 1;
-            nextBtn.classList.toggle('disabled', currentPage === totalPages - 1);
-        }
-        
-        // Обработчики событий для кнопок навигации
-        prevBtn.addEventListener('click', () => {
-            if (currentPage > 0) {
-                currentPage--;
-                updateCarousel();
-            }
         });
         
-        nextBtn.addEventListener('click', () => {
-            if (currentPage < totalPages - 1) {
-                currentPage++;
-                updateCarousel();
-            }
-        });
-        
-        // Обработчики событий для индикаторов
-        indicators.forEach((indicator, index) => {
-            indicator.addEventListener('click', () => {
-                currentPage = index;
-                updateCarousel();
+        // Добавление эффекта при клике на кнопки
+        const buttons = document.querySelectorAll('.pricing-footer .btn');
+        buttons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                const rect = button.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const ripple = document.createElement('span');
+                ripple.classList.add('ripple-effect');
+                ripple.style.left = `${x}px`;
+                ripple.style.top = `${y}px`;
+                
+                button.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
             });
         });
         
-        // Добавим свайп на мобильных устройствах
-        let touchStartX = 0;
-        let touchEndX = 0;
-        
-        carousel.addEventListener('touchstart', (e) => {
-            touchStartX = e.changedTouches[0].screenX;
-        }, false);
-        
-        carousel.addEventListener('touchend', (e) => {
-            touchEndX = e.changedTouches[0].screenX;
-            handleSwipe();
-        }, false);
-        
-        function handleSwipe() {
-            const minSwipeDistance = 50;
-            const distance = touchEndX - touchStartX;
+        // Анимация при скролле до блока тарифов
+        const pricingSection = document.querySelector('.pricing-section');
+        if (pricingSection) {
+            const animateOnScroll = () => {
+                const scrollPosition = window.scrollY + window.innerHeight;
+                const sectionPosition = pricingSection.offsetTop + 100;
+                
+                if (scrollPosition > sectionPosition) {
+                    cards.forEach((card, index) => {
+                        setTimeout(() => {
+                            card.classList.add('animate');
+                        }, 150 * index);
+                    });
+                    
+                    // Отключаем обработчик после срабатывания
+                    window.removeEventListener('scroll', animateOnScroll);
+                }
+            };
             
-            if (distance > minSwipeDistance && currentPage > 0) {
-                // Свайп вправо - предыдущий слайд
-                currentPage--;
-                updateCarousel();
-            } else if (distance < -minSwipeDistance && currentPage < totalPages - 1) {
-                // Свайп влево - следующий слайд
-                currentPage++;
-                updateCarousel();
-            }
+            // Проверяем положение при загрузке
+            animateOnScroll();
+            
+            // Добавляем обработчик скролла
+            window.addEventListener('scroll', animateOnScroll);
         }
-        
-        // Инициализация карусели
-        updateCarousel();
-        
-        // Обновление при изменении размера окна
-        window.addEventListener('resize', () => {
-            updateCarousel();
-        });
     };
     
     // Запуск инициализации
-    initPricingCarousel();
+    initPricingCards();
+    
+    // Автоматическое обновление при изменении размера окна
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+            // Обновление состояния карточек при изменении размера окна
+            const cards = document.querySelectorAll('.pricing-card');
+            const isMobile = window.innerWidth <= 576;
+            
+            cards.forEach(card => {
+                if (!isMobile && card.classList.contains('expanded')) {
+                    card.classList.remove('expanded');
+                    const toggleBtn = card.querySelector('.pricing-toggle-btn');
+                    if (toggleBtn) {
+                        toggleBtn.innerHTML = `Показать больше <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
+                    }
+                }
+            });
+        }, 250);
+    });
 }); 

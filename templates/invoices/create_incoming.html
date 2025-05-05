@@ -5,6 +5,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/invoices/create.css' %}">
+<link rel="stylesheet" href="{% static 'css/invoices/scanner.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -24,71 +25,71 @@
     <div class="form-container">
         <div class="row">
             <div class="col-md-9">
-                <form method="post" action="{% if is_edit %}{% url 'invoices:edit' invoice.id %}{% else %}{% url 'invoices:create_incoming' %}{% endif %}" class="invoice-form" {% if is_edit %}data-is-edit="true"{% endif %}>
-                    {% csrf_token %}
-                    
-                    <div class="form-section">
-                        <h3 class="section-title">Основная информация</h3>
-                        
+        <form method="post" action="{% if is_edit %}{% url 'invoices:edit' invoice.id %}{% else %}{% url 'invoices:create_incoming' %}{% endif %}" class="invoice-form" {% if is_edit %}data-is-edit="true"{% endif %}>
+            {% csrf_token %}
+            
+            <div class="form-section">
+                <h3 class="section-title">Основная информация</h3>
+                
                         <div class="form-grid">
-                            <div class="form-group">
-                                <label for="invoice_number">Номер счета</label>
-                                <input type="text" id="invoice_number" name="invoice_number" value="{% if is_edit %}{{ invoice.number }}{% else %}{{ next_invoice_number }}{% endif %}" required>
+                    <div class="form-group">
+                        <label for="invoice_number">Номер счета</label>
+                        <input type="text" id="invoice_number" name="invoice_number" value="{% if is_edit %}{{ invoice.number }}{% else %}{{ next_invoice_number }}{% endif %}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="invoice_date">Дата счета</label>
+                        <input type="date" id="invoice_date" name="invoice_date" value="{% if is_edit %}{{ invoice.issue_date|date:'Y-m-d' }}{% endif %}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="due_date">Срок оплаты</label>
+                        <input type="date" id="due_date" name="due_date" value="{% if is_edit %}{{ invoice.due_date|date:'Y-m-d' }}{% endif %}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="status">Статус</label>
+                        <select id="status" name="status" required>
+                            <option value="new" {% if is_edit and invoice.status == 'new' %}selected{% endif %}>Новый</option>
+                            <option value="pending" {% if is_edit and invoice.status == 'pending' %}selected{% endif %}>Ожидает оплаты</option>
+                            <option value="paid" {% if is_edit and invoice.status == 'paid' %}selected{% endif %}>Оплачен</option>
+                            <option value="cancelled" {% if is_edit and invoice.status == 'cancelled' %}selected{% endif %}>Отменен</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3 class="section-title">Информация о поставщике</h3>
+                
+                        <div class="form-grid-row">
+                    <div class="form-group">
+                        <label for="supplier">Поставщик</label>
+                        <div class="select-wrapper">
+                            <input type="hidden" id="supplier_id" name="supplier" value="{% if is_edit %}{{ invoice.supplier.id }}{% endif %}" required>
+                            <div class="entity-select" id="supplier-select" tabindex="0">
+                                        <span>{% if is_edit %}{{ invoice.supplier.name }}{% else %}Выберите поставщика{% endif %}</span>
                             </div>
-                            <div class="form-group">
-                                <label for="invoice_date">Дата счета</label>
-                                <input type="date" id="invoice_date" name="invoice_date" value="{% if is_edit %}{{ invoice.issue_date|date:'Y-m-d' }}{% endif %}" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="due_date">Срок оплаты</label>
-                                <input type="date" id="due_date" name="due_date" value="{% if is_edit %}{{ invoice.due_date|date:'Y-m-d' }}{% endif %}" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="status">Статус</label>
-                                <select id="status" name="status" required>
-                                    <option value="new" {% if is_edit and invoice.status == 'new' %}selected{% endif %}>Новый</option>
-                                    <option value="pending" {% if is_edit and invoice.status == 'pending' %}selected{% endif %}>Ожидает оплаты</option>
-                                    <option value="paid" {% if is_edit and invoice.status == 'paid' %}selected{% endif %}>Оплачен</option>
-                                    <option value="cancelled" {% if is_edit and invoice.status == 'cancelled' %}selected{% endif %}>Отменен</option>
-                                </select>
+                            <div class="entity-dropdown" id="supplier-dropdown">
+                                <input type="text" class="select-search" id="supplier-search" placeholder="Поиск поставщика...">
+                                <div class="supplier-list" id="supplier-list">
+                                    <!-- Создаём контейнер для поставщиков через JavaScript -->
+                                    <div id="dynamic-suppliers-list">
+                                        <!-- Здесь будут динамически добавленные поставщики -->
+                                    </div>
+                                </div>
+                                <div class="add-new-item" id="add-supplier">
+                                    <i class="fas fa-plus"></i> Добавить нового поставщика
+                                </div>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="form-section">
-                        <h3 class="section-title">Информация о поставщике</h3>
-                        
-                        <div class="form-grid-row">
-                            <div class="form-group">
-                                <label for="supplier">Поставщик</label>
-                                <div class="select-wrapper">
-                                    <input type="hidden" id="supplier_id" name="supplier" value="{% if is_edit %}{{ invoice.supplier.id }}{% endif %}" required>
-                                    <div class="entity-select" id="supplier-select" tabindex="0">
-                                        <span>{% if is_edit %}{{ invoice.supplier.name }}{% else %}Выберите поставщика{% endif %}</span>
-                                    </div>
-                                    <div class="entity-dropdown" id="supplier-dropdown">
-                                        <input type="text" class="select-search" id="supplier-search" placeholder="Поиск поставщика...">
-                                        <div class="supplier-list" id="supplier-list">
-                                            <!-- Создаём контейнер для поставщиков через JavaScript -->
-                                            <div id="dynamic-suppliers-list">
-                                                <!-- Здесь будут динамически добавленные поставщики -->
-                                            </div>
-                                        </div>
-                                        <div class="add-new-item" id="add-supplier">
-                                            <i class="fas fa-plus"></i> Добавить нового поставщика
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="contact_name">Контактное лицо</label>
-                                <input type="text" id="contact_name" name="contact_name" value="{% if is_edit %}{{ invoice.contact_person }}{% endif %}">
-                            </div>
-                            <div class="form-group">
-                                <label for="contact_email">Email</label>
-                                <input type="email" id="contact_email" name="contact_email" value="{% if is_edit %}{{ invoice.contact_email }}{% endif %}">
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <label for="contact_name">Контактное лицо</label>
+                        <input type="text" id="contact_name" name="contact_name" value="{% if is_edit %}{{ invoice.contact_person }}{% endif %}">
+                    </div>
+                    <div class="form-group">
+                        <label for="contact_email">Email</label>
+                        <input type="email" id="contact_email" name="contact_email" value="{% if is_edit %}{{ invoice.contact_email }}{% endif %}">
+                    </div>
+                </div>
                         
                         <!-- Банковские реквизиты поставщика -->
                         <div id="supplier_bank_details" class="bank-details-container">
@@ -119,106 +120,114 @@
                                 </div>
                             </div>
                             <input type="hidden" id="payment_details" name="payment_details" value="{% if is_edit %}{{ invoice.payment_info }}{% endif %}">
-                        </div>
-                    </div>
-                    
-                    <div class="form-section">
-                        <h3 class="section-title">Позиции счета</h3>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3 class="section-title">Позиции счета</h3>
                         
-                        <table class="invoice-items-table">
-                            <thead>
-                                <tr>
-                                    <th>Наименование</th>
-                                    <th>Количество</th>
-                                    <th>Цена, ₽</th>
-                                    <th>Сумма, ₽</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody id="invoice-items">
-                                {% if is_edit and invoice_items %}
-                                    {% for item in invoice_items %}
-                                        <tr class="invoice-item">
-                                            <td>
-                                                <input type="text" name="item_name[]" title="Наименование товара/услуги" value="{{ item.description }}" required>
-                                            </td>
-                                            <td>
+                        <!-- Кнопка сканирования PDF -->
+                        <div class="scan-btn-container">
+                            <button type="button" id="scan-invoice-btn" class="scan-btn">
+                                <i class="fas fa-file-pdf scan-btn-icon"></i> Сканировать PDF
+                            </button>
+                            <span class="scan-btn-help">Загрузите PDF-файл счета для автоматического заполнения позиций</span>
+                        </div>
+                
+                <table class="invoice-items-table">
+                    <thead>
+                        <tr>
+                            <th>Наименование</th>
+                            <th>Количество</th>
+                            <th>Цена, ₽</th>
+                            <th>Сумма, ₽</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="invoice-items">
+                        {% if is_edit and invoice_items %}
+                            {% for item in invoice_items %}
+                                <tr class="invoice-item">
+                                    <td>
+                                        <input type="text" name="item_name[]" title="Наименование товара/услуги" value="{{ item.description }}" required>
+                                    </td>
+                                    <td>
                                                 <input type="text" name="item_quantity[]" title="Количество" value="{{ item.quantity }}" required>
-                                            </td>
-                                            <td>
+                                    </td>
+                                    <td>
                                                 <input type="text" name="item_price[]" title="Цена за единицу" value="{{ item.price }}" required>
-                                            </td>
-                                            <td class="item-total">{{ item.amount }}</td>
-                                            <td>
-                                                <button type="button" class="btn-icon remove-item" title="Удалить позицию">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                {% else %}
-                                    <tr class="invoice-item">
-                                        <td>
-                                            <input type="text" name="item_name[]" title="Наименование товара/услуги" required>
-                                        </td>
-                                        <td>
+                                    </td>
+                                    <td class="item-total">{{ item.amount }}</td>
+                                    <td>
+                                        <button type="button" class="btn-icon remove-item" title="Удалить позицию">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr class="invoice-item">
+                                <td>
+                                    <input type="text" name="item_name[]" title="Наименование товара/услуги" required>
+                                </td>
+                                <td>
                                             <input type="text" name="item_quantity[]" title="Количество" value="1" required>
-                                        </td>
-                                        <td>
+                                </td>
+                                <td>
                                             <input type="text" name="item_price[]" title="Цена за единицу" value="0,00" required>
-                                        </td>
+                                </td>
                                         <td class="item-total">0,00</td>
-                                        <td>
-                                            <button type="button" class="btn-icon remove-item" title="Удалить позицию">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                {% endif %}
-                            </tbody>
-                        </table>
-                        
-                        <button type="button" id="add-item" class="btn btn-outline">
-                            <i class="fas fa-plus"></i> Добавить позицию
-                        </button>
-                        
-                        <div class="invoice-totals">
-                            <div class="totals-row">
-                                <span class="total-label">Подытог:</span>
-                                <span class="total-value" id="subtotal">{% if is_edit %}{{ invoice.subtotal }} ₽{% else %}0.00 ₽{% endif %}</span>
-                            </div>
-                            <div class="totals-row">
-                                <span class="total-label">НДС (20%):</span>
-                                <span class="total-value" id="tax">{% if is_edit %}{{ invoice.tax_amount }} ₽{% else %}0.00 ₽{% endif %}</span>
-                            </div>
-                            <div class="totals-row total-final">
-                                <span class="total-label">Итого:</span>
-                                <span class="total-value" id="total">{% if is_edit %}{{ invoice.total }} ₽{% else %}0.00 ₽{% endif %}</span>
-                            </div>
-                        </div>
+                                <td>
+                                    <button type="button" class="btn-icon remove-item" title="Удалить позицию">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+                
+                <button type="button" id="add-item" class="btn btn-outline">
+                    <i class="fas fa-plus"></i> Добавить позицию
+                </button>
+                
+                <div class="invoice-totals">
+                    <div class="totals-row">
+                        <span class="total-label">Подытог:</span>
+                        <span class="total-value" id="subtotal">{% if is_edit %}{{ invoice.subtotal }} ₽{% else %}0.00 ₽{% endif %}</span>
                     </div>
-                    
-                    <div class="form-section">
-                        <h3 class="section-title">Дополнительная информация</h3>
-                        
-                        <div class="form-group full-width">
-                            <label for="notes">Примечания</label>
-                            <textarea id="notes" name="notes" rows="3">{% if is_edit %}{{ invoice.notes }}{% endif %}</textarea>
-                        </div>
+                    <div class="totals-row">
+                        <span class="total-label">НДС (20%):</span>
+                        <span class="total-value" id="tax">{% if is_edit %}{{ invoice.tax_amount }} ₽{% else %}0.00 ₽{% endif %}</span>
                     </div>
-                    
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i> {% if is_edit %}Обновить{% else %}Сохранить{% endif %} счет
-                        </button>
+                    <div class="totals-row total-final">
+                        <span class="total-label">Итого:</span>
+                        <span class="total-value" id="total">{% if is_edit %}{{ invoice.total }} ₽{% else %}0.00 ₽{% endif %}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3 class="section-title">Дополнительная информация</h3>
+                
+                <div class="form-group full-width">
+                    <label for="notes">Примечания</label>
+                    <textarea id="notes" name="notes" rows="3">{% if is_edit %}{{ invoice.notes }}{% endif %}</textarea>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> {% if is_edit %}Обновить{% else %}Сохранить{% endif %} счет
+                </button>
                         <button type="button" class="btn btn-secondary" id="preview-invoice">
-                            <i class="fas fa-eye"></i> Предпросмотр
-                        </button>
-                        <button type="reset" class="btn btn-outline">
-                            <i class="fas fa-undo"></i> Сбросить
-                        </button>
-                    </div>
-                </form>
+                    <i class="fas fa-eye"></i> Предпросмотр
+                </button>
+                <button type="reset" class="btn btn-outline">
+                    <i class="fas fa-undo"></i> Сбросить
+                </button>
+            </div>
+        </form>
             </div>
             
             <div class="col-md-3">
@@ -247,11 +256,71 @@
             </div>
         </div>
     </div>
+    
+    <!-- Модальное окно сканирования PDF -->
+    <div id="scan-modal-overlay" class="scan-modal-overlay">
+        <div id="scan-modal" class="scan-modal">
+            <div class="scan-modal-header">
+                <h3 class="scan-modal-title">Сканирование PDF-счета</h3>
+                <button type="button" id="scan-modal-close" class="scan-modal-close">&times;</button>
+            </div>
+            <div class="scan-modal-body">
+                <form id="scan-form" enctype="multipart/form-data">
+                    <!-- Область для перетаскивания файла -->
+                    <div id="scan-dropzone" class="scan-dropzone">
+                        <i class="fas fa-file-pdf scan-dropzone-icon"></i>
+                        <h4 class="scan-dropzone-title">Перетащите PDF-файл сюда</h4>
+                        <p class="scan-dropzone-text">или</p>
+                        <span id="scan-browse-btn" class="scan-dropzone-browse">Выберите файл</span>
+                        <input type="file" id="scan-file-input" class="scan-dropzone-input" accept="application/pdf" title="Выберите PDF файл для сканирования">
+                    </div>
+                    
+                    <!-- Предпросмотр файла -->
+                    <div id="scan-file-preview" class="scan-file-preview" style="display: none;">
+                        <i class="fas fa-file-pdf scan-file-icon"></i>
+                        <div class="scan-file-details">
+                            <div id="scan-file-name" class="scan-file-name"></div>
+                            <div id="scan-file-size" class="scan-file-size"></div>
+                        </div>
+                        <button type="button" id="scan-file-remove" class="scan-file-remove">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Загрузка -->
+                    <div id="scan-loading" class="scan-loading">
+                        <div class="scan-loading-spinner"></div>
+                        <div class="scan-loading-text">Сканирование документа...</div>
+                    </div>
+                    
+                    <!-- Ошибка -->
+                    <div id="scan-error" class="scan-error">
+                        <div id="scan-error-title" class="scan-error-title">Ошибка сканирования</div>
+                        <div id="scan-error-message" class="scan-error-message"></div>
+                    </div>
+                    
+                    <!-- Результаты сканирования -->
+                    <div id="scan-results" class="scan-results">
+                        <div class="scan-results-title">Найденные позиции</div>
+                        <div id="scan-results-items" class="scan-results-items">
+                            <!-- Здесь будут отображаться найденные позиции -->
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="scan-modal-footer">
+                <button type="button" id="scan-cancel-button" class="btn btn-outline">Отмена</button>
+                <button type="button" id="scan-button" class="btn btn-secondary" disabled>Сканировать</button>
+                <button type="button" id="scan-apply-button" class="btn btn-primary" disabled>Применить</button>
+            </div>
+        </div>
+    </div>
 </section>
 {% endblock %}
 
 {% block extra_js %}
 <script src="{% static 'js/invoices/create.js' %}"></script>
+<script src="{% static 'js/invoices/scanner.js' %}"></script>
 {% if is_edit %}
 <script id="invoice-data" type="application/json">
 {
@@ -263,7 +332,7 @@
     "supplier": {
         "id": {{ invoice.supplier.id }},
         "name": "{{ invoice.supplier_name|escapejs }}",
-        "contact_person": "{{ invoice.contact_person|escapejs }}",
+    "contact_person": "{{ invoice.contact_person|escapejs }}",
         "email": "{{ invoice.contact_email|escapejs }}"
     },
     "items": [

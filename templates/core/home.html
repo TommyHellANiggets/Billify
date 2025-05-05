@@ -26,6 +26,7 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/core/home.css' %}">
 <link rel="stylesheet" href="{% static 'css/core/features-scroll.css' %}">
+<link rel="stylesheet" href="{% static 'css/core/pricing-fixes.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -73,17 +74,22 @@
 </script>
 
 <section class="hero">
-    <div class="hero-content">
-        <h1>Billify - Ваш финансовый учет стал проще</h1>
-        <p class="hero-subtitle">Автоматизация финансового учета и документооборота для малого бизнеса и индивидуальных предпринимателей</p>
-        <div class="hero-buttons">
-            <a href="{% url 'clients:list' %}" class="btn btn-primary btn-lg">Управление клиентами</a>
-            <a href="{% url 'invoices:list' %}" class="btn btn-secondary btn-lg">Создать счет</a>
+    <div class="hero-content-wrapper">
+        <div class="hero-content">
+            <h1 class="hero-title">Billify - Ваш финансовый учет стал проще</h1>
+            <p class="hero-subtitle">Автоматизация финансового учета и документооборота для малого бизнеса и индивидуальных предпринимателей</p>
+            <div class="hero-buttons">
+                <a href="{% url 'clients:list' %}" class="btn btn-primary btn-lg hero-btn">Управление клиентами</a>
+                <a href="{% url 'invoices:list' %}" class="btn btn-secondary btn-lg hero-btn">Создать счет</a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="{% static '/images/hero.png' %}" alt="Billify Dashboard - система автоматизации финансового учета" class="dashboard-preview">
         </div>
     </div>
-    <div class="hero-image">
-        <img src="{% static '/images/hero.png' %}" alt="Billify Dashboard - система автоматизации финансового учета" class="dashboard-preview">
-    </div>
+    <div class="hero-shape hero-shape-1"></div>
+    <div class="hero-shape hero-shape-2"></div>
+    <div class="hero-shape hero-shape-3"></div>
     <div class="hero-scroll-indicator">
         <span>Узнать больше</span>
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 13l5 5 5-5M7 6l5 5 5-5"/></svg>
@@ -92,11 +98,11 @@
 
 <section class="stats-section">
     <div class="section-header">
-        <h2>Надежное решение для бизнеса</h2>
+        <h2 class="section-title">Надежное решение для бизнеса</h2>
         <p class="section-subtitle">Billify в цифрах - от начинающих предпринимателей до крупных компаний</p>
     </div>
     <div class="stats-container">
-        <div class="stat-item">
+        <div class="stat-card">
             <div class="stat-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
@@ -105,10 +111,13 @@
                     <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                 </svg>
             </div>
-            <div class="stat-number">{{ total_users|default:"10,000+" }}</div>
-            <div class="stat-label">Активных пользователей</div>
+            <div class="stat-content">
+                <div class="stat-number" data-count="{{ total_users|default:'2' }}">2</div>
+                <div class="stat-label">Активных пользователей</div>
+            </div>
+            <div class="stat-bg"></div>
         </div>
-        <div class="stat-item">
+        <div class="stat-card">
             <div class="stat-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -118,110 +127,161 @@
                     <polyline points="10 9 9 9 8 9"></polyline>
                 </svg>
             </div>
-            <div class="stat-number">{{ total_invoices|default:"1M+" }}</div>
-            <div class="stat-label">Документов создано</div>
+            <div class="stat-content">
+                <div class="stat-number" data-count="{{ total_invoices|default:'10' }}">10</div>
+                <div class="stat-label">Документов создано</div>
+            </div>
+            <div class="stat-bg"></div>
         </div>
-        <div class="stat-item">
+        <div class="stat-card">
             <div class="stat-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="12" cy="12" r="10"></circle>
                     <polyline points="12 6 12 12 16 14"></polyline>
                 </svg>
             </div>
-            <div class="stat-number">{{ system_stats.invoices.monthly_growth|floatformat:"1"|default:"12.5" }}%</div>
-            <div class="stat-label">Рост эффективности</div>
+            <div class="stat-content">
+                <div class="stat-number" data-count="{{ system_stats.invoices.monthly_growth|floatformat:'1'|default:'12.5' }}">12,5%</div>
+                <div class="stat-label">Рост эффективности</div>
+            </div>
+            <div class="stat-bg"></div>
         </div>
-        <div class="stat-item">
+        <div class="stat-card">
             <div class="stat-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                     <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                 </svg>
             </div>
-            <div class="stat-number">{{ system_stats.security.uptime_percentage|default:"99.9" }}%</div>
-            <div class="stat-label">Защита данных</div>
+            <div class="stat-content">
+                <div class="stat-number" data-count="{{ system_stats.security.uptime_percentage|default:'99.9' }}">99,9%</div>
+                <div class="stat-label">Защита данных</div>
+            </div>
+            <div class="stat-bg"></div>
         </div>
     </div>
 </section>
 
 <section class="about-section">
     <div class="section-header">
-        <h2>О системе Billify</h2>
+        <h2 class="section-title">О системе Billify</h2>
         <p class="section-subtitle">Мы делаем финансовый учет простым и понятным для малого бизнеса</p>
     </div>
     
-    <div class="about-grid">
-        <div class="about-content">
-            <h3>Наша миссия</h3>
-            <p>Billify разработан с целью помочь малому бизнесу и индивидуальным предпринимателям эффективно управлять своими финансами без необходимости в специальных бухгалтерских знаниях.</p>
-            <p>Мы стремимся сделать процесс учета и документооборота максимально простым, автоматизированным и интуитивно понятным.</p>
-            <div class="about-features-list">
-                <div class="about-feature">
-                    <div class="about-feature-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <div class="about-container">
+        <div class="about-card about-mission">
+            <div class="about-content">
+                <h3 class="about-title">Наша миссия</h3>
+                <p class="about-text">Billify разработан с целью помочь малому бизнесу и индивидуальным предпринимателям эффективно управлять своими финансами без необходимости в специальных бухгалтерских знаниях.</p>
+                <p class="about-text">Мы стремимся сделать процесс учета и документооборота максимально простым, автоматизированным и интуитивно понятным.</p>
+                <div class="about-features">
+                    <div class="about-feature">
+                        <div class="about-feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        </div>
+                        <div class="about-feature-text">Простота интеграции</div>
                     </div>
-                    <div class="about-feature-text">Простота интеграции</div>
-                </div>
-                <div class="about-feature">
-                    <div class="about-feature-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <div class="about-feature">
+                        <div class="about-feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        </div>
+                        <div class="about-feature-text">Экономия времени</div>
                     </div>
-                    <div class="about-feature-text">Экономия времени</div>
-                </div>
-                <div class="about-feature">
-                    <div class="about-feature-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                    <div class="about-feature">
+                        <div class="about-feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                        </div>
+                        <div class="about-feature-text">Уведомления и напоминания</div>
                     </div>
-                    <div class="about-feature-text">Уведомления и напоминания</div>
                 </div>
             </div>
+            <div class="about-image">
+                <img src="{% static '/images/mission.png' %}" alt="Наша миссия" class="about-img">
+                <div class="about-image-shape"></div>
+            </div>
         </div>
-        <div class="about-image">
-            <img src="{% static '/images/mission.png' %}" alt="Наша миссия" class="about-img">
-        </div>
-    </div>
-    
-    <div class="about-grid reverse">
-        <div class="about-content">
-            <h3>Для кого это решение?</h3>
-            <ul class="feature-list">
-                <li>Малый бизнес, который хочет упростить финансовый учет</li>
-                <li>Фрилансеры, которым нужно управлять счетами и клиентами</li>
-                <li>Индивидуальные предприниматели, стремящиеся автоматизировать рутинные задачи</li>
-                <li>Стартапы, которым нужно эффективное решение без больших затрат</li>
-            </ul>
-            <a href="#" class="btn btn-outline">Узнать больше</a>
-        </div>
-        <div class="about-image">
-            <img src="{% static '/images/idea.png' %}" alt="Для кого это решение" class="about-img">
+        
+        <div class="about-card about-solution">
+            <div class="about-image">
+                <img src="{% static '/images/idea.png' %}" alt="Для кого это решение" class="about-img">
+                <div class="about-image-shape"></div>
+            </div>
+            <div class="about-content">
+                <h3 class="about-title">Для кого это решение?</h3>
+                <div class="about-solution-items">
+                    <div class="solution-item">
+                        <div class="solution-item-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        </div>
+                        <div class="solution-item-text">
+                            <h4>Малый бизнес</h4>
+                            <p>Компании, которые хотят упростить финансовый учет и сократить расходы</p>
+                        </div>
+                    </div>
+                    <div class="solution-item">
+                        <div class="solution-item-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+                        </div>
+                        <div class="solution-item-text">
+                            <h4>Фрилансеры</h4>
+                            <p>Самозанятые, которым нужно управлять счетами и клиентами</p>
+                        </div>
+                    </div>
+                    <div class="solution-item">
+                        <div class="solution-item-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                        </div>
+                        <div class="solution-item-text">
+                            <h4>Индивидуальные предприниматели</h4>
+                            <p>ИП, стремящиеся автоматизировать рутинные задачи</p>
+                        </div>
+                    </div>
+                    <div class="solution-item">
+                        <div class="solution-item-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                        </div>
+                        <div class="solution-item-text">
+                            <h4>Стартапы</h4>
+                            <p>Молодые компании, которым нужно эффективное решение без больших затрат</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-cta">
+                    <a href="#" class="btn btn-outline about-btn">Узнать больше</a>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
 <section class="features-section">
-    <div class="section-header">
-        <h2>Возможности системы</h2>
-        <p class="section-subtitle">Комплексное решение для ваших финансовых задач</p>
-    </div>
-    
-    <div class="features-tabs">
-        <div class="features-tab-headers">
-            <button class="tab-header active" data-tab="invoices">Счета и платежи</button>
-            <button class="tab-header" data-tab="clients">Управление клиентами</button>
-            <button class="tab-header" data-tab="analytics">Аналитика</button>
-            <button class="tab-header" data-tab="security">Безопасность</button>
+    <div class="section-header-container">
+        <div class="section-header">
+            <h2>Возможности системы</h2>
         </div>
         
-        <div class="features-tab-content">
-            <div class="tab-content active" id="invoices-tab">
-                <div class="tab-grid">
-                    <div class="tab-image">
-                        <img src="{% static '/images/financial.png' %}" alt="Счета и платежи" class="feature-img">
+        <div class="features-progress">
+            <div class="progress-step active" data-target="feature-invoices">Счета</div>
+            <div class="progress-step" data-target="feature-clients">Клиенты</div>
+            <div class="progress-step" data-target="feature-analytics">Аналитика</div>
+            <div class="progress-step" data-target="feature-security">Безопасность</div>
+            <div class="progress-line"></div>
+        </div>
+    </div>
+    
+    <div class="features-sticky-container">
+        <div class="features-sticky-wrapper">
+            <div class="feature-card-container">
+                <div class="feature-card" id="feature-invoices">
+                    <div class="feature-visual">
+                        <div class="feature-image-wrapper">
+                            <img src="{% static '/images/financial.png' %}" alt="Счета и платежи" class="feature-img">
+                        </div>
                     </div>
-                    <div class="tab-details">
+                    <div class="feature-content">
                         <h3>Управление счетами и платежами</h3>
                         <p>Создавайте профессиональные счета и предложения по настраиваемым шаблонам. Автоматическая генерация PDF документов и отправка клиентам.</p>
-                        <ul class="tab-features-list">
+                        <ul class="feature-list">
                             <li>Создание и отправка счетов в несколько кликов</li>
                             <li>Настраиваемые шаблоны с вашим брендом</li>
                             <li>Автоматические напоминания об оплате</li>
@@ -233,15 +293,17 @@
                 </div>
             </div>
             
-            <div class="tab-content" id="clients-tab">
-                <div class="tab-grid">
-                    <div class="tab-image">
-                        <img src="{% static '/images/client_manage.png' %}" alt="Управление клиентами" class="feature-img">
+            <div class="feature-card-container">
+                <div class="feature-card" id="feature-clients">
+                    <div class="feature-visual">
+                        <div class="feature-image-wrapper">
+                            <img src="{% static '/images/client_manage.png' %}" alt="Управление клиентами" class="feature-img">
+                        </div>
                     </div>
-                    <div class="tab-details">
+                    <div class="feature-content">
                         <h3>Управление клиентами</h3>
                         <p>Удобное хранение и управление контактной информацией и реквизитами ваших клиентов в едином интерфейсе.</p>
-                        <ul class="tab-features-list">
+                        <ul class="feature-list">
                             <li>Полная история взаимодействия с клиентами</li>
                             <li>Категоризация и группировка клиентов</li>
                             <li>Централизованное хранение всех реквизитов</li>
@@ -253,15 +315,17 @@
                 </div>
             </div>
             
-            <div class="tab-content" id="analytics-tab">
-                <div class="tab-grid">
-                    <div class="tab-image">
-                        <img src="{% static '/images/analytics.png' %}" alt="Аналитика" class="feature-img">
+            <div class="feature-card-container">
+                <div class="feature-card" id="feature-analytics">
+                    <div class="feature-visual">
+                        <div class="feature-image-wrapper">
+                            <img src="{% static '/images/analytics.png' %}" alt="Аналитика" class="feature-img">
+                        </div>
                     </div>
-                    <div class="tab-details">
+                    <div class="feature-content">
                         <h3>Продвинутая аналитика</h3>
                         <p>Интерактивные графики и диаграммы для анализа ваших финансовых показателей в режиме реального времени.</p>
-                        <ul class="tab-features-list">
+                        <ul class="feature-list">
                             <li>Наглядные отчеты о движении денежных средств</li>
                             <li>Анализ доходов и расходов по категориям</li>
                             <li>Прогнозирование финансовых показателей <span class="stats-badge">Рост {{ system_stats.invoices.monthly_growth|floatformat:"1"|default:"12.5" }}%/мес</span></li>
@@ -273,15 +337,17 @@
                 </div>
             </div>
             
-            <div class="tab-content" id="security-tab">
-                <div class="tab-grid">
-                    <div class="tab-image">
-                        <img src="{% static '/images/safety.png' %}" alt="Безопасность" class="feature-img">
+            <div class="feature-card-container">
+                <div class="feature-card" id="feature-security">
+                    <div class="feature-visual">
+                        <div class="feature-image-wrapper">
+                            <img src="{% static '/images/safety.png' %}" alt="Безопасность" class="feature-img">
+                        </div>
                     </div>
-                    <div class="tab-details">
+                    <div class="feature-content">
                         <h3>Высокий уровень безопасности</h3>
                         <p>Ваши данные надежно защищены с помощью современных технологий шифрования и многоуровневой системы безопасности.</p>
-                        <ul class="tab-features-list">
+                        <ul class="feature-list">
                             <li>Шифрование данных на всех этапах передачи</li>
                             <li>Двухфакторная аутентификация</li>
                             <li>Резервное копирование данных <span class="stats-badge">{{ system_stats.security.data_backup_count|default:"5000" }}+ копий</span></li>
@@ -293,77 +359,122 @@
                 </div>
             </div>
         </div>
-        
-        <div class="scroll-indicator">
-            <div>Используйте прокрутку для смены раздела</div>
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M7 13l5 5 5-5M7 6l5 5 5-5"/>
-            </svg>
-        </div>
     </div>
 </section>
 
 <section class="testimonials-section">
     <div class="section-header">
-        <h2>Отзывы наших клиентов</h2>
+        <h2 class="section-title">Отзывы наших клиентов</h2>
         <p class="section-subtitle">Присоединяйтесь к тысячам довольных пользователей</p>
     </div>
     
-    <div class="testimonials-container">
-        {% for testimonial in testimonials %}
-        <div class="testimonial-card">
-            <div class="testimonial-content">
-                <p>"{{ testimonial.text }}"</p>
-            </div>
-            <div class="testimonial-author">
-                <img src="{% static 'img/testimonial-'|add:forloop.counter|add:'.jpg' %}" alt="Фото клиента" class="testimonial-avatar">
-                <div class="testimonial-info">
-                    <div class="testimonial-name">{{ testimonial.name }}</div>
-                    <div class="testimonial-position">{{ testimonial.position }}, {{ testimonial.company }}</div>
+    <div class="testimonials-wrapper">
+        <div class="testimonials-container">
+            {% for testimonial in testimonials %}
+            <div class="testimonial-card">
+                <div class="testimonial-rating">
+                    <span class="star-icon">★</span>
+                    <span class="star-icon">★</span>
+                    <span class="star-icon">★</span>
+                    <span class="star-icon">★</span>
+                    <span class="star-icon">★</span>
                 </div>
-            </div>
-        </div>
-        {% empty %}
-        <!-- Запасные отзывы на случай ошибки -->
-        <div class="testimonial-card">
-            <div class="testimonial-content">
-                <p>"Billify существенно упростил процесс выставления счетов и отслеживания платежей. Теперь я трачу на финансовый учет в 5 раз меньше времени!"</p>
-            </div>
-            <div class="testimonial-author">
-                <img src="/static/img/testimonial-1.jpg" alt="Фото клиента" class="testimonial-avatar">
-                <div class="testimonial-info">
-                    <div class="testimonial-name">Елена Петрова</div>
-                    <div class="testimonial-position">Фрилансер, дизайнер</div>
+                <div class="testimonial-content">
+                    <p>"{{ testimonial.text }}"</p>
                 </div>
+                <div class="testimonial-author">
+                    <img src="{% static 'img/testimonial-'|add:forloop.counter|add:'.jpg' %}" alt="Фото клиента" class="testimonial-avatar">
+                    <div class="testimonial-info">
+                        <div class="testimonial-name">{{ testimonial.name }}</div>
+                        <div class="testimonial-position">{{ testimonial.position }}, {{ testimonial.company }}</div>
+                    </div>
+                </div>
+                <div class="testimonial-shape"></div>
             </div>
+            {% empty %}
+            <!-- Запасные отзывы на случай ошибки -->
+            <div class="testimonial-card">
+                <div class="testimonial-rating">
+                    <span class="star-icon">★</span>
+                    <span class="star-icon">★</span>
+                    <span class="star-icon">★</span>
+                    <span class="star-icon">★</span>
+                    <span class="star-icon">★</span>
+                </div>
+                <div class="testimonial-content">
+                    <p>"Billify существенно упростил процесс выставления счетов и отслеживания платежей. Теперь я трачу на финансовый учет в 5 раз меньше времени!"</p>
+                </div>
+                <div class="testimonial-author">
+                    <img src="/static/img/testimonial-1.jpg" alt="Фото клиента" class="testimonial-avatar">
+                    <div class="testimonial-info">
+                        <div class="testimonial-name">Елена Петрова</div>
+                        <div class="testimonial-position">Фрилансер, дизайнер</div>
+                    </div>
+                </div>
+                <div class="testimonial-shape"></div>
+            </div>
+            
+            <div class="testimonial-card">
+                <div class="testimonial-rating">
+                    <span class="star-icon">★</span>
+                    <span class="star-icon">★</span>
+                    <span class="star-icon">★</span>
+                    <span class="star-icon">★</span>
+                    <span class="star-icon">★</span>
+                </div>
+                <div class="testimonial-content">
+                    <p>"Нам нравится аналитика в Billify. Благодаря наглядным отчетам мы смогли оптимизировать наши расходы и увеличить прибыль на 20% за квартал."</p>
+                </div>
+                <div class="testimonial-author">
+                    <img src="/static/img/testimonial-2.jpg" alt="Фото клиента" class="testimonial-avatar">
+                    <div class="testimonial-info">
+                        <div class="testimonial-name">Алексей Иванов</div>
+                        <div class="testimonial-position">Директор, ООО "ТехСервис"</div>
+                    </div>
+                </div>
+                <div class="testimonial-shape"></div>
+            </div>
+            
+            <div class="testimonial-card">
+                <div class="testimonial-rating">
+                    <span class="star-icon">★</span>
+                    <span class="star-icon">★</span>
+                    <span class="star-icon">★</span>
+                    <span class="star-icon">★</span>
+                    <span class="star-icon">★</span>
+                </div>
+                <div class="testimonial-content">
+                    <p>"Я перепробовал множество систем для учета, но Billify оказался самым понятным и функциональным. Рекомендую всем предпринимателям!"</p>
+                </div>
+                <div class="testimonial-author">
+                    <img src="/static/img/testimonial-3.jpg" alt="Фото клиента" class="testimonial-avatar">
+                    <div class="testimonial-info">
+                        <div class="testimonial-name">Сергей Новиков</div>
+                        <div class="testimonial-position">ИП, консультант</div>
+                    </div>
+                </div>
+                <div class="testimonial-shape"></div>
+            </div>
+            {% endfor %}
         </div>
         
-        <div class="testimonial-card">
-            <div class="testimonial-content">
-                <p>"Нам нравится аналитика в Billify. Благодаря наглядным отчетам мы смогли оптимизировать наши расходы и увеличить прибыль на 20% за квартал."</p>
+        <div class="testimonial-nav">
+            <button class="testimonial-nav-btn testimonial-prev" aria-label="Предыдущий отзыв">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </button>
+            <div class="testimonial-indicators">
+                <span class="testimonial-indicator active"></span>
+                <span class="testimonial-indicator"></span>
+                <span class="testimonial-indicator"></span>
             </div>
-            <div class="testimonial-author">
-                <img src="/static/img/testimonial-2.jpg" alt="Фото клиента" class="testimonial-avatar">
-                <div class="testimonial-info">
-                    <div class="testimonial-name">Алексей Иванов</div>
-                    <div class="testimonial-position">Директор, ООО "ТехСервис"</div>
-                </div>
-            </div>
+            <button class="testimonial-nav-btn testimonial-next" aria-label="Следующий отзыв">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </button>
         </div>
-        
-        <div class="testimonial-card">
-            <div class="testimonial-content">
-                <p>"Я перепробовал множество систем для учета, но Billify оказался самым понятным и функциональным. Рекомендую всем предпринимателям!"</p>
-            </div>
-            <div class="testimonial-author">
-                <img src="/static/img/testimonial-3.jpg" alt="Фото клиента" class="testimonial-avatar">
-                <div class="testimonial-info">
-                    <div class="testimonial-name">Сергей Новиков</div>
-                    <div class="testimonial-position">ИП, консультант</div>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
     </div>
     
     <div class="brands-section">
@@ -379,182 +490,94 @@
 </section>
 
 <section id="pricing" class="pricing-section">
-    <div class="container">
+    <div class="container pricing-container">
         <div class="section-header text-center">
             <h2>Подходящий тариф для каждого</h2>
             <p>Выберите тарифный план, который лучше всего соответствует вашим потребностям</p>
         </div>
 
-        <div class="pricing-carousel-container">
-            <button class="pricing-nav-btn prev-btn" id="prevBtn" title="Предыдущие тарифы" aria-label="Показать предыдущие тарифы">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="15 18 9 12 15 6"></polyline>
-                </svg>
-            </button>
-            
-            <div class="pricing-carousel">
-                <div class="pricing-grid">
-                    <div class="pricing-group">
-                        <!-- Базовый план -->
-                        {% if pricing_plans.basic %}
-                        <div class="pricing-card">
-                            <div class="pricing-header">
-                                <h3>{{ pricing_plans.basic.name }}</h3>
-                                <div class="price">₽{{ pricing_plans.basic.price|floatformat:"0" }}<span>/{{ pricing_plans.basic.get_subscription_period_display|lower }}</span></div>
-                            </div>
-                            <ul class="pricing-features">
-                                <li>
-                                    {% if pricing_plans.basic.max_clients == 0 %}
-                                    Без ограничений на клиентов
-                                    {% else %}
-                                    До {{ pricing_plans.basic.max_clients }} клиентов/поставщиков
-                                    {% endif %}
-                                </li>
-                                <li>{{ pricing_plans.basic.max_disk_space }} МБ места на диске</li>
-                                <li>Неограниченное кол-во документов</li>
-                                <li>Генерация PDF/XML с водяным знаком</li>
-                                <li>Только базовая аналитика</li>
-                                <li class="disabled">Нет уведомлений</li>
-                                <li class="disabled">Нет сканирования документов (OCR)</li>
-                                <li class="disabled">Нет поддержки</li>
-                            </ul>
-                            <div class="pricing-footer">
-                                <a href="#" class="btn btn-outline">Выбрать тариф</a>
-                            </div>
-                        </div>
-                        {% endif %}
-
-                        <!-- Премиум план (месяц) -->
-                        {% if pricing_plans.premium %}
-                        <div class="pricing-card featured">
-                            <div class="pricing-badge">Популярный</div>
-                            <div class="pricing-header">
-                                <h3>{{ pricing_plans.premium.name }}</h3>
-                                <div class="price">₽{{ pricing_plans.premium.price|floatformat:"0" }}<span>/{{ pricing_plans.premium.get_subscription_period_display|lower }}</span></div>
-                            </div>
-                            <ul class="pricing-features">
-                                <li>Без ограничений на клиентов и поставщиков</li>
-                                <li>1 ГБ места на диске</li>
-                                <li>Неограниченное кол-во документов</li>
-                                <li>Экспорт PDF/XML без водяного знака</li>
-                                <li>Продвинутая аналитика</li>
-                                <li>Система уведомлений</li>
-                                <li>Сканирование документов (OCR)</li>
-                                <li>Техническая поддержка</li>
-                            </ul>
-                            <div class="pricing-footer">
-                                <a href="#" class="btn btn-primary">Выбрать тариф</a>
-                            </div>
-                        </div>
-                        {% endif %}
-
-                        <!-- Премиум план (неделя) -->
-                        {% if pricing_plans.premium_week %}
-                        <div class="pricing-card">
-                            <div class="pricing-header">
-                                <h3>{{ pricing_plans.premium_week.name }}</h3>
-                                <div class="price">₽{{ pricing_plans.premium_week.price|floatformat:"0" }}<span>/{{ pricing_plans.premium_week.get_subscription_period_display|lower }}</span></div>
-                            </div>
-                            <ul class="pricing-features">
-                                <li>Без ограничений на клиентов и поставщиков</li>
-                                <li>1 ГБ места на диске</li>
-                                <li>Неограниченное кол-во документов</li>
-                                <li>Экспорт PDF/XML без водяного знака</li>
-                                <li>Продвинутая аналитика</li>
-                                <li>Система уведомлений</li>
-                                <li>Сканирование документов (OCR)</li>
-                                <li>Техническая поддержка</li>
-                            </ul>
-                            <div class="pricing-footer">
-                                <a href="#" class="btn btn-primary">Выбрать тариф</a>
-                            </div>
-                        </div>
-                        {% endif %}
-                    </div>
-
-                    <div class="pricing-group">
-                        <!-- Премиум план (3 месяца) -->
-                        {% if pricing_plans.premium_quarter %}
-                        <div class="pricing-card">
-                            <div class="pricing-header">
-                                <h3>{{ pricing_plans.premium_quarter.name }}</h3>
-                                <div class="price">₽{{ pricing_plans.premium_quarter.price|floatformat:"0" }}<span>/{{ pricing_plans.premium_quarter.get_subscription_period_display|lower }}</span></div>
-                            </div>
-                            <ul class="pricing-features">
-                                <li>Без ограничений на клиентов и поставщиков</li>
-                                <li>1 ГБ места на диске</li>
-                                <li>Неограниченное кол-во документов</li>
-                                <li>Экспорт PDF/XML без водяного знака</li>
-                                <li>Продвинутая аналитика</li>
-                                <li>Система уведомлений</li>
-                                <li>Сканирование документов (OCR)</li>
-                                <li>Техническая поддержка</li>
-                            </ul>
-                            <div class="pricing-footer">
-                                <a href="#" class="btn btn-primary">Выбрать тариф</a>
-                            </div>
-                        </div>
-                        {% endif %}
-
-                        <!-- Премиум план (6 месяцев) -->
-                        {% if pricing_plans.premium_half_year %}
-                        <div class="pricing-card">
-                            <div class="pricing-header">
-                                <h3>{{ pricing_plans.premium_half_year.name }}</h3>
-                                <div class="price">₽{{ pricing_plans.premium_half_year.price|floatformat:"0" }}<span>/{{ pricing_plans.premium_half_year.get_subscription_period_display|lower }}</span></div>
-                            </div>
-                            <ul class="pricing-features">
-                                <li>Без ограничений на клиентов и поставщиков</li>
-                                <li>1 ГБ места на диске</li>
-                                <li>Неограниченное кол-во документов</li>
-                                <li>Экспорт PDF/XML без водяного знака</li>
-                                <li>Продвинутая аналитика</li>
-                                <li>Система уведомлений</li>
-                                <li>Сканирование документов (OCR)</li>
-                                <li>Техническая поддержка</li>
-                            </ul>
-                            <div class="pricing-footer">
-                                <a href="#" class="btn btn-primary">Выбрать тариф</a>
-                            </div>
-                        </div>
-                        {% endif %}
-
-                        <!-- Премиум план (год) -->
-                        {% if pricing_plans.premium_year %}
-                        <div class="pricing-card">
-                            <div class="pricing-header">
-                                <h3>{{ pricing_plans.premium_year.name }}</h3>
-                                <div class="price">₽{{ pricing_plans.premium_year.price|floatformat:"0" }}<span>/{{ pricing_plans.premium_year.get_subscription_period_display|lower }}</span></div>
-                            </div>
-                            <ul class="pricing-features">
-                                <li>Без ограничений на клиентов и поставщиков</li>
-                                <li>1 ГБ места на диске</li>
-                                <li>Неограниченное кол-во документов</li>
-                                <li>Экспорт PDF/XML без водяного знака</li>
-                                <li>Продвинутая аналитика</li>
-                                <li>Система уведомлений</li>
-                                <li>Сканирование документов (OCR)</li>
-                                <li>Техническая поддержка</li>
-                            </ul>
-                            <div class="pricing-footer">
-                                <a href="#" class="btn btn-primary">Выбрать тариф</a>
-                            </div>
-                        </div>
-                        {% endif %}
-                    </div>
+        <div class="pricing-grid">
+            <!-- Базовый тариф -->
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <h3>Базовый</h3>
+                    <div class="price">₽0<span>/месяц</span></div>
+                </div>
+                <ul class="pricing-features">
+                    <li>До 5 клиентов/поставщиков</li>
+                    <li>250 МБ места на диске</li>
+                    <li>Неограниченное кол-во документов</li>
+                    <li>Генерация PDF/XML с водяным знаком</li>
+                    <li>Только базовая аналитика</li>
+                    <li class="disabled">Нет уведомлений</li>
+                    <li class="disabled">Нет сканирования документов (OCR)</li>
+                    <li class="disabled">Нет поддержки</li>
+                </ul>
+                <button class="pricing-toggle-btn">
+                    Показать больше
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
+                <div class="pricing-footer">
+                    <a href="#" class="btn btn-outline">Выбрать тариф</a>
                 </div>
             </div>
-            
-            <button class="pricing-nav-btn next-btn" id="nextBtn" title="Следующие тарифы" aria-label="Показать следующие тарифы">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
-            </button>
-        </div>
 
-        <div class="pricing-pagination">
-            <span class="page-indicator active" data-page="0"></span>
-            <span class="page-indicator" data-page="1"></span>
+            <!-- Стандарт тариф -->
+            <div class="pricing-card featured">
+                <div class="pricing-badge">Популярный</div>
+                <div class="pricing-header">
+                    <h3>Стандарт</h3>
+                    <div class="price">₽900<span>/месяц</span></div>
+                </div>
+                <ul class="pricing-features">
+                    <li>Без ограничений на клиентов и поставщиков</li>
+                    <li>1 ГБ места на диске</li>
+                    <li>Неограниченное кол-во документов</li>
+                    <li>Экспорт PDF/XML без водяного знака</li>
+                    <li>Продвинутая аналитика</li>
+                    <li>Система уведомлений</li>
+                    <li>Сканирование документов (OCR)</li>
+                    <li>Техническая поддержка</li>
+                </ul>
+                <button class="pricing-toggle-btn">
+                    Показать больше
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
+                <div class="pricing-footer">
+                    <a href="#" class="btn btn-primary">Выбрать тариф</a>
+                </div>
+            </div>
+
+            <!-- Премиум тариф -->
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <h3>Премиум</h3>
+                    <div class="price">₽1900<span>/месяц</span></div>
+                </div>
+                <ul class="pricing-features">
+                    <li>Все функции тарифа Стандарт</li>
+                    <li>5 ГБ места на диске</li>
+                    <li>Интеграция с 1С и CRM</li>
+                    <li>Приоритетная техническая поддержка 24/7</li>
+                    <li>Расширенная аналитика и отчёты</li>
+                    <li>API для интеграции</li>
+                    <li>Групповой доступ (до 5 пользователей)</li>
+                    <li>Персональный менеджер</li>
+                </ul>
+                <button class="pricing-toggle-btn">
+                    Показать больше
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
+                <div class="pricing-footer">
+                    <a href="#" class="btn btn-primary">Выбрать тариф</a>
+                </div>
+            </div>
         </div>
 
         <div class="pricing-guarantee">
@@ -626,6 +649,8 @@
 </section>
 
 <section class="cta-section">
+    <div class="cta-bg-shape cta-bg-shape-1"></div>
+    <div class="cta-bg-shape cta-bg-shape-2"></div>
     <div class="cta-content">
         <h2>Готовы оптимизировать свой бизнес?</h2>
         <p>Присоединяйтесь к тысячам предпринимателей, которые уже оптимизировали свой финансовый учет с Billify</p>
@@ -638,47 +663,94 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/features-scroll.js' %}"></script>
 <script src="{% static 'js/pricing-carousel.js' %}"></script>
+<script src="{% static 'js/testimonials-carousel.js' %}"></script>
+<script src="{% static 'js/cta-effects.js' %}"></script>
+<script src="{% static 'js/core/home.js' %}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Активация FAQ аккордеона
-        const faqItems = document.querySelectorAll('.faq-item');
-        
-        faqItems.forEach(item => {
-            const question = item.querySelector('.faq-question');
-            const answer = item.querySelector('.faq-answer');
-            const toggle = item.querySelector('.faq-toggle');
+        // Анимация чисел в блоке статистики
+        function animateStats() {
+            const statNumbers = document.querySelectorAll('.stat-number[data-count]');
             
-            question.addEventListener('click', function() {
-                const isOpen = item.classList.contains('active');
+            statNumbers.forEach(number => {
+                const target = parseFloat(number.getAttribute('data-count'));
+                const duration = 1500; // Продолжительность анимации в мс
+                const startTime = Date.now();
+                const format = number.innerText.includes('%') ? 'percent' : 'number';
                 
-                // Закрыть все остальные элементы
-                faqItems.forEach(otherItem => {
-                    if (otherItem !== item) {
-                        otherItem.classList.remove('active');
-                        const otherAnswer = otherItem.querySelector('.faq-answer');
-                        if (otherAnswer) {
-                            otherAnswer.style.maxHeight = null;
-                        }
-                        const otherToggle = otherItem.querySelector('.faq-toggle');
-                        if (otherToggle) {
-                            otherToggle.textContent = '+';
-                        }
+                function updateNumber() {
+                    const currentTime = Date.now();
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    // Используем easeOutQuart для замедления анимации к концу
+                    const easing = 1 - Math.pow(1 - progress, 4);
+                    
+                    let currentValue = (target * easing).toFixed(1);
+                    
+                    if (format === 'percent') {
+                        number.textContent = currentValue + '%';
+                    } else {
+                        number.textContent = currentValue;
                     }
-                });
+                    
+                    if (progress < 1) {
+                        requestAnimationFrame(updateNumber);
+                    }
+                }
                 
-                // Переключение текущего элемента
-                if (isOpen) {
-                    item.classList.remove('active');
-                    answer.style.maxHeight = null;
-                    toggle.textContent = '+';
-                } else {
-                    item.classList.add('active');
-                    answer.style.maxHeight = answer.scrollHeight + 'px';
-                    toggle.textContent = '−';
+                updateNumber();
+            });
+        }
+        
+        // Инициализация анимации при прокрутке
+        function handleIntersection(entries, observer) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    if (entry.target.classList.contains('stats-section')) {
+                        animateStats();
+                    }
+                    // Добавляем класс для анимации появления
+                    entry.target.classList.add('animated');
+                    observer.unobserve(entry.target);
                 }
             });
+        }
+        
+        // Создаем наблюдатель для секций
+        const sections = document.querySelectorAll('.stats-section, .about-card, .about-mission, .about-solution');
+        if (sections.length) {
+            const observer = new IntersectionObserver(handleIntersection, {
+                threshold: 0.15
+            });
+            
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        }
+        
+        // Плавная прокрутка при клике на кнопку "узнать больше"
+        const scrollIndicator = document.querySelector('.hero-scroll-indicator');
+        if (scrollIndicator) {
+            scrollIndicator.addEventListener('click', function() {
+                const statsSection = document.querySelector('.stats-section');
+                if (statsSection) {
+                    statsSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        }
+        
+        // Добавляем эффект параллакса для героя
+        const hero = document.querySelector('.hero');
+        window.addEventListener('scroll', function() {
+            const scrollPosition = window.scrollY;
+            if (scrollPosition < 800) { // Ограничиваем область эффекта
+                const heroShapes = document.querySelectorAll('.hero-shape');
+                heroShapes.forEach((shape, index) => {
+                    const speed = (index + 1) * 0.05;
+                    shape.style.transform = `translateY(${scrollPosition * speed}px)`;
+                });
+            }
         });
     });
 </script>

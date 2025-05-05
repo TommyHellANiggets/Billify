@@ -277,11 +277,11 @@ def create_incoming(request):
                 name=user_company_profile.company_name,
                 defaults={
                     'is_active': True,
-                    'address': user_company_profile.address,
-                    'tax_id': user_company_profile.tax_id,
+                    'address': user_company_profile.legal_address,
+                    'tax_id': user_company_profile.inn,
                     'phone': user_company_profile.phone,
                     'email': user_company_profile.email,
-                    'contact_person': user_company_profile.contact_person
+                    'contact_person': ""  # У CompanyProfile нет contact_person
                 }
             )
             
@@ -457,11 +457,11 @@ def create_outgoing(request):
                 user=request.user,
                 client=client,
                 supplier_name=user_company_profile.company_name,
-                supplier_address=user_company_profile.address,
-                supplier_tax_id=user_company_profile.tax_id,
+                supplier_address=user_company_profile.legal_address,
+                supplier_tax_id=user_company_profile.inn,
                 supplier_phone=user_company_profile.phone,
                 supplier_email=user_company_profile.email,
-                supplier_contact_person=user_company_profile.contact_person,
+                supplier_contact_person="",  # У CompanyProfile нет contact_person
                 supplier_bank=user_company_profile.bank_name,
                 supplier_bank_bik=user_company_profile.bank_bik,
                 supplier_bank_account=user_company_profile.bank_account,

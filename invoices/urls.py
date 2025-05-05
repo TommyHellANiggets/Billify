@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from . import scan_views
 
 app_name = 'invoices'
 
@@ -15,4 +16,8 @@ urlpatterns = [
     path('<int:pk>/duplicate/', views.duplicate_invoice, name='duplicate'),
     path('<int:pk>/edit/', views.edit_invoice, name='edit'),
     path('sample-pdf/', views.sample_invoice_pdf, name='sample_pdf'),
+    
+    # Маршруты для сканирования PDF
+    path('scan/pdf/', scan_views.scan_invoice_pdf, name='scan_pdf'),
+    path('scan/items/', scan_views.scan_invoice_items, name='scan_items'),
 ]

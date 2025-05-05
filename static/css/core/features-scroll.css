@@ -1,95 +1,106 @@
-/* Стили для секции с табами */
+/* Стили для секции с sticky-прокруткой */
 .features-section {
-    padding: 5rem 0;
-    min-height: auto;
+    padding: 5rem 0 0 0;
+    min-height: 100vh;
     position: relative;
     z-index: 1;
-}
-
-/* Анимация переключения вкладок */
-.tab-content {
-    transition: opacity 0.4s ease, transform 0.4s ease;
-    opacity: 0;
-    transform: translateY(20px);
-    visibility: hidden;
-    height: 0;
-    overflow: hidden;
-}
-
-.tab-content.active {
-    opacity: 1;
-    transform: translateY(0);
-    visibility: visible;
-    height: auto;
     overflow: visible;
 }
 
-/* Стили для контейнера с табами */
+/* Стили для фиксированных карточек */
+.features-sticky-container {
+    --card-height: 80vh;
+    --card-translate-y: 20px;
+    position: relative;
+    width: 100%;
+}
+
+/* Заглушки для старых стилей табов, которые больше не используются */
+.tab-content {
+    display: none;
+}
+
 .features-tabs {
-    width: 100%;
-    position: relative;
+    display: none;
 }
 
-/* Стили для заголовков табов */
 .features-tab-headers {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 2rem;
-    position: relative;
-    z-index: 2;
+    display: none;
 }
 
-/* Анимация индикатора активной вкладки */
 .tab-header {
-    position: relative;
-    transition: color 0.3s ease, transform 0.2s ease;
-    cursor: pointer;
-    padding: 0.5rem 1rem;
-    margin: 0 0.5rem;
-    font-weight: 500;
+    display: none;
 }
 
-.tab-header:hover {
-    transform: translateY(-2px);
+/* Настройка стилей для sticky-прокрутки */
+.feature-card-container {
+    will-change: transform;
+    transform-style: preserve-3d;
 }
 
-.tab-header::after {
-    content: '';
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 0;
-    height: 3px;
-    background-color: var(--color-primary);
-    transition: width 0.3s ease;
+.feature-card {
+    backface-visibility: hidden;
 }
 
-.tab-header.active {
-    color: var(--color-primary);
+/* Анимация появления */
+@keyframes featCardIn {
+    from {
+        opacity: 0;
+        transform: translateY(var(--card-translate-y)) scale(0.85);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
-.tab-header.active::after {
-    width: 100%;
-}
-
+/* Индикатор прокрутки */
 .scroll-indicator {
     text-align: center;
-    margin-top: 2rem;
+    margin-top: 1rem;
     opacity: 0.7;
+}
+
+/* Дополнительные стили для прогресс-индикаторов */
+.features-progress {
+    pointer-events: all;
+}
+
+.progress-step::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: calc(100% + 0.5rem);
+    height: 1rem;
+    width: 2px;
+    background-color: rgba(var(--color-primary-rgb), 0.3);
+    transition: all 0.3s ease;
+}
+
+.progress-step:last-child::after {
+    display: none;
+}
+
+/* Добавим стили для активной вкладки */
+.progress-step.active {
+    color: white !important;
+    background-color: var(--color-primary);
+    box-shadow: 0 4px 10px rgba(var(--color-primary-rgb), 0.3);
+    transform: translateY(-2px);
 }
 
 /* Стили для мобильных устройств */
 @media (max-width: 768px) {
     .features-section {
-        padding: 3rem 0;
+        padding: 3rem 0 0 0;
     }
     
-    .features-tab-headers {
-        flex-direction: column;
-        align-items: center;
+    .feature-card-container {
+        padding: 1rem;
     }
     
-    .tab-header {
-        margin-bottom: 1rem;
+    .feature-card {
+        min-height: auto;
+        padding: 1.5rem;
     }
 } 
