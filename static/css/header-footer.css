@@ -282,4 +282,113 @@
     .footer-grid {
         grid-template-columns: 1fr;
     }
+}
+
+/* Горизонтальная градиентная пунктирная линия для навбара */
+.nav-separator {
+    height: 1px;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    background-image: linear-gradient(to right,
+        transparent 0%,
+        transparent 1%,
+        var(--color-primary) 1%,
+        var(--color-primary) 3%,
+        transparent 3%,
+        transparent 6%,
+        var(--color-primary) 6%,
+        var(--color-primary) 8%,
+        transparent 8%,
+        transparent 11%,
+        var(--color-primary) 11%,
+        var(--color-primary) 13%,
+        transparent 13%,
+        transparent 16%,
+        var(--color-primary) 16%,
+        var(--color-primary) 18%,
+        transparent 18%,
+        transparent 21%,
+        var(--color-primary) 21%,
+        var(--color-primary) 23%,
+        transparent 23%,
+        transparent 26%,
+        var(--color-primary) 26%,
+        var(--color-primary) 28%,
+        transparent 28%,
+        transparent 31%,
+        var(--color-primary) 31%,
+        var(--color-primary) 33%,
+        transparent 33%,
+        transparent 36%,
+        var(--color-primary) 36%,
+        var(--color-primary) 38%,
+        transparent 38%,
+        transparent 41%,
+        var(--color-primary) 41%,
+        var(--color-primary) 43%,
+        transparent 43%,
+        transparent 46%,
+        var(--color-primary) 46%,
+        var(--color-primary) 48%,
+        transparent 48%,
+        transparent 51%,
+        var(--color-primary) 51%,
+        var(--color-primary) 53%,
+        transparent 53%,
+        transparent 56%,
+        var(--color-primary) 56%,
+        var(--color-primary) 58%,
+        transparent 58%,
+        transparent 61%,
+        var(--color-primary) 61%,
+        var(--color-primary) 63%,
+        transparent 63%,
+        transparent 66%,
+        var(--color-primary) 66%,
+        var(--color-primary) 68%,
+        transparent 68%,
+        transparent 71%,
+        var(--color-primary) 71%,
+        var(--color-primary) 73%,
+        transparent 73%,
+        transparent 76%,
+        var(--color-primary) 76%,
+        var(--color-primary) 78%,
+        transparent 78%,
+        transparent 81%,
+        var(--color-primary) 81%,
+        var(--color-primary) 83%,
+        transparent 83%,
+        transparent 86%,
+        var(--color-primary) 86%,
+        var(--color-primary) 92%,
+        transparent 92%,
+        transparent 95%,
+        var(--color-primary) 95%,
+        var(--color-primary) 100%);
+    opacity: 0.7;
+    position: relative;
+}
+
+/* Добавляем треугольник-стрелку в конец пунктирной линии */
+.nav-separator::after {
+    content: '';
+    display: block;
+    position: absolute;
+    right: -5px;
+    top: -4px;
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 8px solid var(--color-primary);
+    opacity: 0.8;
+}
+
+/* Адаптивность для разделителя */
+@media (max-width: 768px) {
+    .nav-separator {
+        display: none;
+    }
 } 

@@ -35,11 +35,16 @@
     <!-- Шрифты и стили -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/global.css' %}">
     <link rel="stylesheet" href="{% static 'css/header-footer.css' %}">
     <style>
+        /* Базовый шрифт для всего сайта */
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        
         /* Стили для сообщений в правом верхнем углу */
         .notifications-container {
             position: fixed;
@@ -149,6 +154,8 @@
                         <li class="nav-item"><a href="{% url 'analytics:dashboard' %}" {% if '/analytics/' in request.path %}class="active"{% endif %}>Аналитика</a></li>
                     </ul>
                 </nav>
+                {% else %}
+                <div class="nav-separator"></div>
                 {% endif %}
                 <div class="user-menu">
                     {% if user.is_authenticated %}

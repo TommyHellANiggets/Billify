@@ -1,6 +1,41 @@
 document.addEventListener('DOMContentLoaded', function() {
     const featureCards = document.querySelectorAll('.feature-card');
     
+    // Проверяем, находимся ли мы на главной странице или странице ченджлога
+    const isHomePage = document.querySelector('.hero') !== null;
+    const isChangelogPage = document.querySelector('.changelog-header') !== null;
+    
+    // Добавляем кнопку прокрутки вверх только на нужных страницах
+    if (isHomePage || isChangelogPage) {
+        // Добавление кнопки прокрутки вверх
+        const scrollTopBtn = document.createElement('button');
+        scrollTopBtn.className = 'scroll-to-top';
+        scrollTopBtn.setAttribute('aria-label', 'Прокрутить вверх');
+        scrollTopBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>';
+        document.body.appendChild(scrollTopBtn);
+        
+        // Функция для отображения/скрытия кнопки прокрутки
+        function toggleScrollTopButton() {
+            if (window.pageYOffset > 300) {
+                scrollTopBtn.classList.add('visible');
+            } else {
+                scrollTopBtn.classList.remove('visible');
+            }
+        }
+        
+        // Прокрутка вверх при клике на кнопку
+        scrollTopBtn.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // Проверка положения скролла при прокрутке и загрузке страницы
+        window.addEventListener('scroll', toggleScrollTopButton);
+        toggleScrollTopButton(); // Вызов при загрузке страницы
+    }
+    
     // Добавление эффекта появления для карточек функций
     featureCards.forEach((card, index) => {
         setTimeout(() => {
@@ -508,4 +543,26 @@ document.addEventListener('DOMContentLoaded', function() {
             this.style.transform = 'perspective(1000px) rotateY(0) rotateX(0) scale3d(1, 1, 1)';
         });
     });
+
+    // Добавим обработку изменения размеров экрана
+    function handleResize() {
+        const isMobile = window.innerWidth <= 576;
+        const progressSteps = document.querySelectorAll('.progress-step');
+        
+        progressSteps.forEach(step => {
+            // Обновляем отображение в зависимости от размера экрана
+            if (isMobile) {
+                step.setAttribute('title', step.querySelector('span').textContent);
+            } else {
+                step.removeAttribute('title');
+            }
+        });
+        
+        // Обновляем активные элементы
+        updateActiveFeature();
+    }
+
+    // Вызываем функцию при загрузке и при изменении размера окна
+    window.addEventListener('resize', handleResize);
+    setTimeout(handleResize, 100); // Вызываем после загрузки страницы
 }); 

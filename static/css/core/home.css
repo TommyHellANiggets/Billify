@@ -86,24 +86,20 @@
 }
 
 .hero-title {
-    font-size: 3.5rem;
+    font-size: 3rem;
+    line-height: 1.2;
     margin-bottom: 1.5rem;
-    color: var(--color-text);
-    line-height: 1.1;
-    font-weight: 800;
-    animation: fadeInUp 0.8s ease-out;
-    background: linear-gradient(135deg, #333, #444);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    font-weight: 700;
+    color: var(--color-text-dark);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .hero-subtitle {
     font-size: 1.25rem;
+    line-height: 1.6;
     margin-bottom: 2.5rem;
     color: var(--color-text-light);
-    line-height: 1.6;
-    animation: fadeInUp 0.8s ease-out 0.2s backwards;
+    max-width: 600px;
 }
 
 .hero-buttons {
@@ -237,24 +233,24 @@
 }
 
 .section-title {
-    font-size: 2.5rem;
+    font-family: 'Poppins', sans-serif;
+    font-size: 2.25rem;
     font-weight: 700;
+    color: var(--color-text-dark);
     text-align: center;
     margin-bottom: 1rem;
-    color: var(--color-text);
-    line-height: 1.2;
-    animation: fadeInUp 0.8s ease-out;
+    letter-spacing: -0.02em;
 }
 
 .section-subtitle {
-    font-size: 1.15rem;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.125rem;
+    color: var(--color-text-light);
     text-align: center;
     margin-bottom: 3rem;
-    color: var(--color-text-light);
-    max-width: 800px;
+    max-width: 700px;
     margin-left: auto;
     margin-right: auto;
-    animation: fadeInUp 0.8s ease-out 0.2s backwards;
 }
 
 .stats-container {
@@ -840,16 +836,42 @@ html {
 @media (max-width: 768px) {
     .features-progress {
         gap: 0.75rem;
-        padding: 0.5rem 0.75rem 0.7rem;
+        padding: 0.5rem 1rem;
     }
     
     .progress-step {
-        padding: 0.3rem 0.6rem;
-        font-size: 0.85rem;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        padding: 0;
+        background-color: rgba(var(--color-primary-rgb), 0.2);
+        border: 2px solid transparent;
     }
     
+    .progress-step.active {
+        background-color: var(--color-primary);
+        transform: scale(1.1);
+    }
+    
+    /* Скрываем текст в кнопках */
+    .progress-step span {
+        display: none;
+    }
+    
+    /* Добавляем текст внутри кнопок (можно убрать) */
+    .progress-step::before {
+        display: none;
+    }
+    
+    /* Изменяем стиль карточек для мобильных устройств */
     .feature-card {
-        padding: 1.5rem;
+        flex-direction: column;
+        padding: 1.25rem;
+    }
+    
+    .feature-visual, .feature-content {
+        max-width: 100%;
+        width: 100%;
     }
     
     .feature-content {
@@ -857,15 +879,16 @@ html {
     }
     
     .feature-content h3 {
-        font-size: 1.75rem;
+        font-size: 1.5rem;
     }
     
     .feature-content p {
-        font-size: 1rem;
+        font-size: 0.95rem;
     }
     
     .feature-list li {
-        font-size: 0.95rem;
+        font-size: 0.9rem;
+        padding: 0.3rem 0 0.3rem 1.75rem;
     }
 }
 
@@ -3049,4 +3072,152 @@ html {
 .features-section + section {
     position: relative;
     z-index: 1;
+}
+
+/* Адаптивная версия для секции "Возможности системы" */
+@media (max-width: 768px) {
+    /* Заголовок в одну строку с меньшим шрифтом */
+    .features-section .section-header h2 {
+        font-size: 1.5rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Контейнер для заголовка */
+    .features-section .section-header-container {
+        padding-bottom: 0.5rem;
+    }
+}
+
+/* Отдельный медиа-запрос для кнопок миниплашки */
+@media (max-width: 576px) {
+    /* Маленькие кружки вместо текстовых кнопок */
+    .features-progress {
+        gap: 0.75rem;
+        padding: 0.5rem 1rem;
+    }
+    
+    .progress-step {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        padding: 0;
+        background-color: rgba(var(--color-primary-rgb), 0.2);
+        border: 2px solid transparent;
+        font-size: 0;
+    }
+    
+    .progress-step.active {
+        background-color: var(--color-primary);
+        transform: scale(1.1);
+    }
+}
+
+/* Кастомный скроллбар */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(var(--color-primary-rgb), 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(var(--color-primary-rgb), 0.3);
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(var(--color-primary-rgb), 0.5);
+}
+
+/* Кнопка прокрутки вверх */
+.scroll-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background-color: var(--color-primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(var(--color-primary-rgb), 0.3);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
+    z-index: 999;
+    border: none;
+}
+
+.scroll-to-top:hover {
+    background-color: #2e6cd9;
+    transform: translateY(0) scale(1.05);
+}
+
+.scroll-to-top:active {
+    transform: translateY(0) scale(0.95);
+}
+
+.scroll-to-top.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.scroll-to-top svg {
+    width: 24px;
+    height: 24px;
+    stroke: white;
+    stroke-width: 2px;
+}
+
+@media (max-width: 768px) {
+    .scroll-to-top {
+        bottom: 20px;
+        right: 20px;
+        width: 45px;
+        height: 45px;
+    }
+}
+
+@media (max-width: 576px) {
+    .scroll-to-top {
+        bottom: 15px;
+        right: 15px;
+        width: 40px;
+        height: 40px;
+    }
+    
+    .scroll-to-top svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+/* Стили для шрифта Poppins */
+.poppins-font {
+    font-family: 'Poppins', sans-serif;
+    letter-spacing: -0.01em;
+}
+
+.hero-subtitle {
+    font-size: 1.25rem;
+    line-height: 1.6;
+    margin-bottom: 2.5rem;
+    color: var(--color-text-light);
+    max-width: 600px;
+}
+
+/* Обновляем стили описаний в секции возможностей */
+.feature-description {
+    color: var(--color-text-light);
+    line-height: 1.6;
+    margin-top: 0.75rem;
+    font-family: 'Poppins', sans-serif;
 }
