@@ -5,19 +5,6 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/invoices/create.css' %}">
-<style>
-    .form-grid-row {
-        display: grid;
-        grid-template-columns: 50% 25% 25%;
-        gap: 15px;
-        padding-right: 15px;
-    }
-    .supplier-select-custom {
-        height: 44px;
-        display: flex;
-        align-items: center;
-    }
-</style>
 {% endblock %}
 
 {% block content %}
@@ -29,212 +16,236 @@
         </div>
         <div class="header-actions">
             <a href="{% url 'invoices:list' %}?type=incoming" class="btn btn-outline">
-                <i class="fas fa-arrow-left"></i> Вернуться к списку
+                <i class="fas fa-arrow-left"></i> К списку счетов
             </a>
         </div>
     </div>
 
     <div class="form-container">
-        <form method="post" action="{% if is_edit %}{% url 'invoices:edit' invoice.id %}{% else %}{% url 'invoices:create_incoming' %}{% endif %}" class="invoice-form" {% if is_edit %}data-is-edit="true"{% endif %}>
-            {% csrf_token %}
-            
-            <div class="form-section">
-                <h3 class="section-title">Основная информация</h3>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="invoice_number">Номер счета</label>
-                        <input type="text" id="invoice_number" name="invoice_number" value="{% if is_edit %}{{ invoice.number }}{% else %}{{ next_invoice_number }}{% endif %}" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="invoice_date">Дата счета</label>
-                        <input type="date" id="invoice_date" name="invoice_date" value="{% if is_edit %}{{ invoice.issue_date|date:'Y-m-d' }}{% endif %}" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="due_date">Срок оплаты</label>
-                        <input type="date" id="due_date" name="due_date" value="{% if is_edit %}{{ invoice.due_date|date:'Y-m-d' }}{% endif %}" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="status">Статус</label>
-                        <select id="status" name="status" required>
-                            <option value="new" {% if is_edit and invoice.status == 'new' %}selected{% endif %}>Новый</option>
-                            <option value="pending" {% if is_edit and invoice.status == 'pending' %}selected{% endif %}>Ожидает оплаты</option>
-                            <option value="paid" {% if is_edit and invoice.status == 'paid' %}selected{% endif %}>Оплачен</option>
-                            <option value="cancelled" {% if is_edit and invoice.status == 'cancelled' %}selected{% endif %}>Отменен</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="form-section">
-                <h3 class="section-title">Информация о поставщике</h3>
-                
-                <div class="form-row form-grid-row">
-                    <div class="form-group">
-                        <label for="supplier">Поставщик</label>
-                        <div class="select-wrapper">
-                            <input type="hidden" id="supplier_id" name="supplier" value="{% if is_edit %}{{ invoice.supplier.id }}{% endif %}" required>
-                            <div class="entity-select" id="supplier-select" tabindex="0">
-                                <span>{% if is_edit %}{{ invoice.supplier_name }}{% else %}Выберите поставщика{% endif %}</span>
+        <div class="row">
+            <div class="col-md-9">
+                <form method="post" action="{% if is_edit %}{% url 'invoices:edit' invoice.id %}{% else %}{% url 'invoices:create_incoming' %}{% endif %}" class="invoice-form" {% if is_edit %}data-is-edit="true"{% endif %}>
+                    {% csrf_token %}
+                    
+                    <div class="form-section">
+                        <h3 class="section-title">Основная информация</h3>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="invoice_number">Номер счета</label>
+                                <input type="text" id="invoice_number" name="invoice_number" value="{% if is_edit %}{{ invoice.number }}{% else %}{{ next_invoice_number }}{% endif %}" required>
                             </div>
-                            <div class="entity-dropdown" id="supplier-dropdown">
-                                <input type="text" class="select-search" id="supplier-search" placeholder="Поиск поставщика...">
-                                <div class="supplier-list" id="supplier-list">
-                                    <!-- Создаём контейнер для поставщиков через JavaScript -->
-                                    <div id="dynamic-suppliers-list">
-                                        <!-- Здесь будут динамически добавленные поставщики -->
-                                    </div>
-                                </div>
-                                <div class="add-new-item" id="add-supplier">
-                                    <i class="fas fa-plus"></i> Добавить нового поставщика
-                                </div>
+                            <div class="form-group">
+                                <label for="invoice_date">Дата счета</label>
+                                <input type="date" id="invoice_date" name="invoice_date" value="{% if is_edit %}{{ invoice.issue_date|date:'Y-m-d' }}{% endif %}" required>
                             </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="contact_name">Контактное лицо</label>
-                        <input type="text" id="contact_name" name="contact_name" value="{% if is_edit %}{{ invoice.contact_person }}{% endif %}">
-                    </div>
-                    <div class="form-group">
-                        <label for="contact_email">Email</label>
-                        <input type="email" id="contact_email" name="contact_email" value="{% if is_edit %}{{ invoice.contact_email }}{% endif %}">
-                    </div>
-                </div>
-            </div>
-            
-            <div class="form-section">
-                <h3 class="section-title">Позиции счета</h3>
-                
-                <table class="invoice-items-table">
-                    <thead>
-                        <tr>
-                            <th>Наименование</th>
-                            <th>Количество</th>
-                            <th>Цена, ₽</th>
-                            <th>Сумма, ₽</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody id="invoice-items">
-                        {% if is_edit and invoice_items %}
-                            {% for item in invoice_items %}
-                                <tr class="invoice-item">
-                                    <td>
-                                        <input type="text" name="item_name[]" title="Наименование товара/услуги" value="{{ item.description }}" required>
-                                    </td>
-                                    <td>
-                                        <input type="number" name="item_quantity[]" title="Количество" min="1" value="{{ item.quantity }}" required>
-                                    </td>
-                                    <td>
-                                        <input type="number" name="item_price[]" title="Цена за единицу" min="0" step="0.01" value="{{ item.price }}" required>
-                                    </td>
-                                    <td class="item-total">{{ item.amount }}</td>
-                                    <td>
-                                        <button type="button" class="btn-icon remove-item" title="Удалить позицию">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        {% else %}
-                            <tr class="invoice-item">
-                                <td>
-                                    <input type="text" name="item_name[]" title="Наименование товара/услуги" required>
-                                </td>
-                                <td>
-                                    <input type="number" name="item_quantity[]" title="Количество" min="1" value="1" required>
-                                </td>
-                                <td>
-                                    <input type="number" name="item_price[]" title="Цена за единицу" min="0" step="0.01" required>
-                                </td>
-                                <td class="item-total">0.00</td>
-                                <td>
-                                    <button type="button" class="btn-icon remove-item" title="Удалить позицию">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        {% endif %}
-                    </tbody>
-                </table>
-                
-                <button type="button" id="add-item" class="btn btn-outline">
-                    <i class="fas fa-plus"></i> Добавить позицию
-                </button>
-                
-                <div class="invoice-totals">
-                    <div class="totals-row">
-                        <span class="total-label">Подытог:</span>
-                        <span class="total-value" id="subtotal">{% if is_edit %}{{ invoice.subtotal }} ₽{% else %}0.00 ₽{% endif %}</span>
-                    </div>
-                    <div class="totals-row">
-                        <span class="total-label">НДС (20%):</span>
-                        <span class="total-value" id="tax">{% if is_edit %}{{ invoice.tax_amount }} ₽{% else %}0.00 ₽{% endif %}</span>
-                    </div>
-                    <div class="totals-row total-final">
-                        <span class="total-label">Итого:</span>
-                        <span class="total-value" id="total">{% if is_edit %}{{ invoice.total }} ₽{% else %}0.00 ₽{% endif %}</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="form-section">
-                <h3 class="section-title">Дополнительная информация</h3>
-                
-                <div class="form-group full-width">
-                    <label for="notes">Примечания</label>
-                    <textarea id="notes" name="notes" rows="3">{% if is_edit %}{{ invoice.notes }}{% endif %}</textarea>
-                </div>
-                
-                <div class="form-section-divider"></div>
-                
-                <h4 class="subsection-title">Банковские реквизиты поставщика</h4>
-                <div class="bank-details-container">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="supplier_name_display">Название организации</label>
-                            <input type="text" id="supplier_name_display" value="{% if is_edit %}{{ invoice.supplier_name }}{% endif %}" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="supplier_inn_display">ИНН</label>
-                            <input type="text" id="supplier_inn_display" value="{% if is_edit %}{{ invoice.supplier_inn }}{% endif %}" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="supplier_bank_display">Банк</label>
-                            <input type="text" id="supplier_bank_display" value="{% if is_edit %}{{ invoice.supplier_bank }}{% endif %}" readonly>
+                            <div class="form-group">
+                                <label for="due_date">Срок оплаты</label>
+                                <input type="date" id="due_date" name="due_date" value="{% if is_edit %}{{ invoice.due_date|date:'Y-m-d' }}{% endif %}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="status">Статус</label>
+                                <select id="status" name="status" required>
+                                    <option value="new" {% if is_edit and invoice.status == 'new' %}selected{% endif %}>Новый</option>
+                                    <option value="pending" {% if is_edit and invoice.status == 'pending' %}selected{% endif %}>Ожидает оплаты</option>
+                                    <option value="paid" {% if is_edit and invoice.status == 'paid' %}selected{% endif %}>Оплачен</option>
+                                    <option value="cancelled" {% if is_edit and invoice.status == 'cancelled' %}selected{% endif %}>Отменен</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="supplier_bik_display">БИК</label>
-                            <input type="text" id="supplier_bik_display" value="{% if is_edit %}{{ invoice.supplier_bank_bik }}{% endif %}" readonly>
+                    <div class="form-section">
+                        <h3 class="section-title">Информация о поставщике</h3>
+                        
+                        <div class="form-grid-row">
+                            <div class="form-group">
+                                <label for="supplier">Поставщик</label>
+                                <div class="select-wrapper">
+                                    <input type="hidden" id="supplier_id" name="supplier" value="{% if is_edit %}{{ invoice.supplier.id }}{% endif %}" required>
+                                    <div class="entity-select" id="supplier-select" tabindex="0">
+                                        <span>{% if is_edit %}{{ invoice.supplier.name }}{% else %}Выберите поставщика{% endif %}</span>
+                                    </div>
+                                    <div class="entity-dropdown" id="supplier-dropdown">
+                                        <input type="text" class="select-search" id="supplier-search" placeholder="Поиск поставщика...">
+                                        <div class="supplier-list" id="supplier-list">
+                                            <!-- Создаём контейнер для поставщиков через JavaScript -->
+                                            <div id="dynamic-suppliers-list">
+                                                <!-- Здесь будут динамически добавленные поставщики -->
+                                            </div>
+                                        </div>
+                                        <div class="add-new-item" id="add-supplier">
+                                            <i class="fas fa-plus"></i> Добавить нового поставщика
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact_name">Контактное лицо</label>
+                                <input type="text" id="contact_name" name="contact_name" value="{% if is_edit %}{{ invoice.contact_person }}{% endif %}">
+                            </div>
+                            <div class="form-group">
+                                <label for="contact_email">Email</label>
+                                <input type="email" id="contact_email" name="contact_email" value="{% if is_edit %}{{ invoice.contact_email }}{% endif %}">
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="supplier_account_display">Расчетный счет</label>
-                            <input type="text" id="supplier_account_display" value="{% if is_edit %}{{ invoice.supplier_bank_account }}{% endif %}" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="supplier_corr_account_display">Корр. счет</label>
-                            <input type="text" id="supplier_corr_account_display" value="{% if is_edit %}{{ invoice.supplier_bank_corr_account }}{% endif %}" readonly>
+                        
+                        <!-- Банковские реквизиты поставщика -->
+                        <div id="supplier_bank_details" class="bank-details-container">
+                            <h4 class="subsection-title">Банковские реквизиты поставщика</h4>
+                            <div class="form-grid-2">
+                                <div class="form-group">
+                                    <label for="supplier_name_display">Название организации</label>
+                                    <input type="text" id="supplier_name_display" value="{% if is_edit %}{{ invoice.supplier_name }}{% endif %}" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="supplier_inn_display">ИНН</label>
+                                    <input type="text" id="supplier_inn_display" value="{% if is_edit %}{{ invoice.supplier_tax_id }}{% endif %}" readonly>
+                                </div>
+                            </div>
+                            
+                            <div class="form-grid-3">
+                                <div class="form-group">
+                                    <label for="supplier_bank_display">Банк</label>
+                                    <input type="text" id="supplier_bank_display" value="{% if is_edit %}{{ invoice.supplier_bank }}{% endif %}" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="supplier_bik_display">БИК</label>
+                                    <input type="text" id="supplier_bik_display" value="{% if is_edit %}{{ invoice.supplier_bank_bik }}{% endif %}" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="supplier_account_display">Расчетный счет</label>
+                                    <input type="text" id="supplier_account_display" value="{% if is_edit %}{{ invoice.supplier_bank_account }}{% endif %}" readonly>
+                                </div>
+                            </div>
+                            <input type="hidden" id="payment_details" name="payment_details" value="{% if is_edit %}{{ invoice.payment_info }}{% endif %}">
                         </div>
                     </div>
-                    <input type="hidden" id="payment_details" name="payment_details" value="{% if is_edit %}{{ invoice.payment_info }}{% endif %}">
-                </div>
+                    
+                    <div class="form-section">
+                        <h3 class="section-title">Позиции счета</h3>
+                        
+                        <table class="invoice-items-table">
+                            <thead>
+                                <tr>
+                                    <th>Наименование</th>
+                                    <th>Количество</th>
+                                    <th>Цена, ₽</th>
+                                    <th>Сумма, ₽</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="invoice-items">
+                                {% if is_edit and invoice_items %}
+                                    {% for item in invoice_items %}
+                                        <tr class="invoice-item">
+                                            <td>
+                                                <input type="text" name="item_name[]" title="Наименование товара/услуги" value="{{ item.description }}" required>
+                                            </td>
+                                            <td>
+                                                <input type="text" name="item_quantity[]" title="Количество" value="{{ item.quantity }}" required>
+                                            </td>
+                                            <td>
+                                                <input type="text" name="item_price[]" title="Цена за единицу" value="{{ item.price }}" required>
+                                            </td>
+                                            <td class="item-total">{{ item.amount }}</td>
+                                            <td>
+                                                <button type="button" class="btn-icon remove-item" title="Удалить позицию">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr class="invoice-item">
+                                        <td>
+                                            <input type="text" name="item_name[]" title="Наименование товара/услуги" required>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="item_quantity[]" title="Количество" value="1" required>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="item_price[]" title="Цена за единицу" value="0,00" required>
+                                        </td>
+                                        <td class="item-total">0,00</td>
+                                        <td>
+                                            <button type="button" class="btn-icon remove-item" title="Удалить позицию">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                        
+                        <button type="button" id="add-item" class="btn btn-outline">
+                            <i class="fas fa-plus"></i> Добавить позицию
+                        </button>
+                        
+                        <div class="invoice-totals">
+                            <div class="totals-row">
+                                <span class="total-label">Подытог:</span>
+                                <span class="total-value" id="subtotal">{% if is_edit %}{{ invoice.subtotal }} ₽{% else %}0.00 ₽{% endif %}</span>
+                            </div>
+                            <div class="totals-row">
+                                <span class="total-label">НДС (20%):</span>
+                                <span class="total-value" id="tax">{% if is_edit %}{{ invoice.tax_amount }} ₽{% else %}0.00 ₽{% endif %}</span>
+                            </div>
+                            <div class="totals-row total-final">
+                                <span class="total-label">Итого:</span>
+                                <span class="total-value" id="total">{% if is_edit %}{{ invoice.total }} ₽{% else %}0.00 ₽{% endif %}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3 class="section-title">Дополнительная информация</h3>
+                        
+                        <div class="form-group full-width">
+                            <label for="notes">Примечания</label>
+                            <textarea id="notes" name="notes" rows="3">{% if is_edit %}{{ invoice.notes }}{% endif %}</textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> {% if is_edit %}Обновить{% else %}Сохранить{% endif %} счет
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="preview-invoice">
+                            <i class="fas fa-eye"></i> Предпросмотр
+                        </button>
+                        <button type="reset" class="btn btn-outline">
+                            <i class="fas fa-undo"></i> Сбросить
+                        </button>
+                    </div>
+                </form>
             </div>
             
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save"></i> {% if is_edit %}Обновить{% else %}Сохранить{% endif %} счет
-                </button>
-                <button type="button" class="btn btn-secondary">
-                    <i class="fas fa-eye"></i> Предпросмотр
-                </button>
-                <button type="reset" class="btn btn-outline">
-                    <i class="fas fa-undo"></i> Сбросить
-                </button>
+            <div class="col-md-3">
+                <div class="form-info-card">
+                    <div class="form-info-header">
+                        <i class="fas fa-info-circle"></i>
+                        <h3>Информация</h3>
+                    </div>
+                    <div class="form-info-content">
+                        <p>Входящий счет - это счет, полученный от поставщика за приобретенные товары или услуги.</p>
+                        
+                        <ul class="info-list">
+                            <li><i class="fas fa-check-circle"></i> Заполните основную информацию о счете</li>
+                            <li><i class="fas fa-check-circle"></i> Выберите поставщика из списка или создайте нового</li>
+                            <li><i class="fas fa-check-circle"></i> Добавьте товары или услуги, указанные в счете</li>
+                            <li><i class="fas fa-check-circle"></i> Проверьте итоговую сумму</li>
+                            <li><i class="fas fa-check-circle"></i> Укажите дополнительные примечания при необходимости</li>
+                        </ul>
+                        
+                        <p>Отслеживайте статус оплаты входящих счетов, чтобы контролировать ваши расходы.</p>
+                    </div>
+                    <div class="form-info-image">
+                        <img src="{% static 'images/invoice-incoming-illustration.svg' %}" alt="Иллюстрация входящего счета" class="info-image" onerror="this.style.display='none'">
+                    </div>
+                </div>
             </div>
-        </form>
+        </div>
     </div>
 </section>
 {% endblock %}
@@ -249,402 +260,62 @@
     "issue_date": "{{ invoice.issue_date|date:'Y-m-d' }}",
     "due_date": "{{ invoice.due_date|date:'Y-m-d' }}",
     "status": "{{ invoice.status }}",
-    "supplier_id": "{{ invoice.supplier.id }}",
-    "supplier_name": "{{ invoice.supplier_name|escapejs }}",
-    "supplier_inn": "{{ invoice.supplier_inn|escapejs }}",
-    "supplier_bank": "{{ invoice.supplier_bank|escapejs }}",
-    "supplier_bank_bik": "{{ invoice.supplier_bank_bik|escapejs }}",
-    "supplier_bank_account": "{{ invoice.supplier_bank_account|escapejs }}",
-    "supplier_bank_corr_account": "{{ invoice.supplier_bank_corr_account|escapejs }}",
-    "contact_person": "{{ invoice.contact_person|escapejs }}",
-    "contact_email": "{{ invoice.contact_email|escapejs }}",
-    "notes": "{{ invoice.notes|escapejs }}",
-    "payment_info": "{{ invoice.payment_info|escapejs }}",
+    "supplier": {
+        "id": {{ invoice.supplier.id }},
+        "name": "{{ invoice.supplier_name|escapejs }}",
+        "contact_person": "{{ invoice.contact_person|escapejs }}",
+        "email": "{{ invoice.contact_email|escapejs }}"
+    },
     "items": [
         {% for item in invoice_items %}
         {
-            "id": {{ item.id }},
             "description": "{{ item.description|escapejs }}",
-            "quantity": {{ item.quantity|stringformat:".2f"|cut:"," }},
-            "unit": "{{ item.unit|escapejs }}",
-            "price": {{ item.price|stringformat:".2f"|cut:"," }},
-            "amount": {{ item.amount|stringformat:".2f"|cut:"," }}
+            "quantity": {{ item.quantity }},
+            "price": {{ item.price }},
+            "amount": {{ item.amount }}
         }{% if not forloop.last %},{% endif %}
         {% endfor %}
-    ]
+    ],
+    "subtotal": {{ invoice.subtotal }},
+    "tax_amount": {{ invoice.tax_amount }},
+    "total": {{ invoice.total }},
+    "notes": "{{ invoice.notes|escapejs }}",
+    "payment_details": "{{ invoice.payment_info|escapejs }}"
 }
 </script>
 {% endif %}
+
+{% if suppliers %}
+<script id="suppliers-data" type="application/json">
+[
+    {% for supplier in suppliers %}
+    {
+        "id": {{ supplier.id }},
+        "name": "{{ supplier.name|escapejs }}",
+        "tax_id": "{{ supplier.tax_id|default:'' }}",
+        "address": "{{ supplier.address|default:''|escapejs }}",
+        "phone": "{{ supplier.phone|default:'' }}",
+        "email": "{{ supplier.email|default:'' }}",
+        "contact_person": "{{ supplier.contact_person|default:''|escapejs }}",
+        "bank_name": "{{ supplier.bank_name|default:'' }}",
+        "bank_bik": "{{ supplier.bank_bik|default:'' }}",
+        "bank_account": "{{ supplier.bank_account|default:'' }}",
+        "bank_corr_account": "{{ supplier.bank_corr_account|default:'' }}"
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+]
+</script>
+{% endif %}
+
+{% if supplier_id %}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Инициализация элементов DOM
-        const supplierSelect = document.getElementById('supplier-select');
-        const supplierDropdown = document.getElementById('supplier-dropdown');
-        const supplierSearch = document.getElementById('supplier-search');
-        const supplierIdInput = document.getElementById('supplier_id');
-        const contactNameInput = document.getElementById('contact_name');
-        const contactEmailInput = document.getElementById('contact_email');
-        const addSupplierButton = document.getElementById('add-supplier');
-        const suppliersList = document.getElementById('dynamic-suppliers-list');
-        
-        // Функция для открытия/закрытия выпадающего списка
-        function toggleSupplierDropdown() {
-            supplierSelect.classList.toggle('active');
-            supplierDropdown.classList.toggle('show');
-            
-            if (supplierDropdown.classList.contains('show')) {
-                supplierSearch.focus();
-            }
+        // Устанавливаем выбранного поставщика при загрузке страницы
+        const supplierId = '{{ supplier_id }}';
+        if (supplierId) {
+            document.getElementById('supplier_id').value = supplierId;
         }
-        
-        // Обработчик клика на селект - открывает/закрывает выпадающий список
-        supplierSelect.addEventListener('click', function(e) {
-            e.stopPropagation();
-            toggleSupplierDropdown();
-        });
-        
-        // Закрытие выпадающего списка при клике на документ
-        document.addEventListener('click', function(e) {
-            if (!supplierSelect.contains(e.target) && !supplierDropdown.contains(e.target)) {
-                supplierSelect.classList.remove('active');
-                supplierDropdown.classList.remove('show');
-            }
-        });
-        
-        const realSuppliers = [
-            {% for supplier in suppliers %}
-                { 
-                    id: "{{ supplier.id }}", 
-                    name: "{{ supplier.name|escapejs }}", 
-                    tax_id: "{{ supplier.inn|default:'' }}", 
-                    phone: "{{ supplier.phone|default:'' }}",
-                    contact_person: "{{ supplier.contact_person|default:''|escapejs }}",
-                    contact_email: "{{ supplier.contact_email|default:''|escapejs }}"
-                }{% if not forloop.last %},{% endif %}
-            {% endfor %}
-        ];
-        
-        // Использовать тестовые данные, если список пуст
-        if (realSuppliers.length === 0) {
-            console.log('Добавлены тестовые поставщики для разработки');
-            // Добавляем тестовые данные для разработки (без логирования в консоль)
-            realSuppliers.push(
-                { 
-                    id: "dev1", 
-                    name: "ООО Тестовый поставщик", 
-                    tax_id: "1234567890", 
-                    phone: "+7 (999) 123-45-67",
-                    contact_person: "Иванов Иван",
-                    contact_email: "test@example.com"
-                },
-                { 
-                    id: "dev2", 
-                    name: "ИП Сидоров А.В.", 
-                    tax_id: "987654321012", 
-                    phone: "+7 (999) 765-43-21",
-                    contact_person: "Сидоров Алексей",
-                    contact_email: "sidorov@example.com"
-                }
-            );
-        }
-        
-        // Добавляем поставщиков в список
-        if (suppliersList) {
-            // Если список поставщиков пуст, заполняем его реальными данными из базы
-            if (realSuppliers.length > 0) {
-                realSuppliers.forEach(supplier => {
-                    const supplierElement = document.createElement('div');
-                    supplierElement.className = 'entity-item';
-                    supplierElement.setAttribute('data-id', supplier.id);
-                    
-                    supplierElement.innerHTML = `
-                        <div class="entity-item-name">${supplier.name}</div>
-                        <div class="entity-item-info">
-                            <span class="entity-item-inn">ИНН: ${supplier.tax_id}</span>
-                            ${supplier.phone ? `<span class="entity-item-phone">Тел: ${supplier.phone}</span>` : ''}
-                        </div>
-                    `;
-                    
-                    // Привязываем обработчик клика - будет вызываться при выборе поставщика
-                    supplierElement.addEventListener('click', function() {
-                        selectSupplier(this);
-                    });
-                    
-                    suppliersList.appendChild(supplierElement);
-                });
-            } else {
-                // Если список пуст, показываем сообщение
-                const noResults = document.createElement('div');
-                noResults.className = 'no-results';
-                noResults.textContent = 'Список поставщиков пуст';
-                suppliersList.appendChild(noResults);
-            }
-        }
-        
-        // Функция выбора поставщика
-        function selectSupplier(supplierItem) {
-            const id = supplierItem.getAttribute('data-id');
-            const name = supplierItem.querySelector('.entity-item-name').textContent;
-            
-            // Обновляем выбранное значение в селекте
-            supplierSelect.querySelector('span').textContent = name;
-            supplierIdInput.value = id;
-            
-            // Логирование для отладки
-            console.log(`Запрашиваем данные поставщика ID: ${id}`);
-            
-            // Функция для заполнения полей реквизитов
-            function fillBankDetails(data) {
-                const nameDisplay = document.getElementById('supplier_name_display');
-                const innDisplay = document.getElementById('supplier_inn_display');
-                const bankDisplay = document.getElementById('supplier_bank_display');
-                const bikDisplay = document.getElementById('supplier_bik_display');
-                const accountDisplay = document.getElementById('supplier_account_display');
-                const corrAccountDisplay = document.getElementById('supplier_corr_account_display');
-                const paymentDetails = document.getElementById('payment_details');
-                
-                // Заполняем банковские реквизиты
-                if (nameDisplay) nameDisplay.value = data.name || '';
-                if (innDisplay) innDisplay.value = data.inn || '';
-                if (bankDisplay) bankDisplay.value = data.bank_name || '';
-                if (bikDisplay) bikDisplay.value = data.bank_bik || '';
-                if (accountDisplay) accountDisplay.value = data.bank_account || '';
-                if (corrAccountDisplay) corrAccountDisplay.value = data.bank_corr_account || '';
-                
-                // Заполняем контактные данные из API
-                contactNameInput.value = data.contact_person || '';
-                contactEmailInput.value = data.contact_email || '';
-                
-                // Сохраняем полные реквизиты в скрытом поле
-                if (paymentDetails) {
-                    const fullDetails = [
-                        `Название организации: ${data.name || '-'}`,
-                        `ИНН: ${data.inn || '-'}`,
-                        `Банк: ${data.bank_name || '-'}`,
-                        `БИК: ${data.bank_bik || '-'}`,
-                        `Р/с: ${data.bank_account || '-'}`,
-                        `К/с: ${data.bank_corr_account || '-'}`
-                    ].join('\n');
-                    
-                    paymentDetails.value = fullDetails;
-                }
-            }
-            
-            // Загружаем данные поставщика через API модуля suppliers
-            fetch(`/suppliers/api/get/${id}/`, { 
-                headers: { 'X-Requested-With': 'XMLHttpRequest' },
-                credentials: 'same-origin'
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        console.log(`Ошибка API: ${response.status}. Для поставщика ID=${id}`);
-                        throw new Error(`api_error_${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    // Проверяем наличие данных
-                    if (!data || typeof data !== 'object') {
-                        console.log('Получены некорректные данные');
-                        throw new Error('invalid_data');
-                    }
-                    
-                    // Успешно получили данные
-                    console.log('Получены данные поставщика:', data);
-                    
-                    // Заполняем поля банковских реквизитов
-                    fillBankDetails(data);
-                })
-                .catch(error => {
-                    console.error('Ошибка при получении данных поставщика:', error);
-                    
-                    // Если API не сработал - делаем повторную попытку
-                    fetch(`/suppliers/api/get/${id}/?t=${Date.now()}`, { 
-                        headers: { 'X-Requested-With': 'XMLHttpRequest', 'Cache-Control': 'no-cache' },
-                        credentials: 'same-origin'
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('fetch_error');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log('Вторая попытка получения данных:', data);
-                        fillBankDetails(data);
-                    })
-                    .catch(secondError => {
-                        console.error('Все попытки получения данных не удались:', error, secondError);
-                        
-                        // Оставляем только имя
-                        alert('Не удалось получить данные поставщика. Пожалуйста, попробуйте выбрать поставщика снова или обратитесь в техподдержку.');
-                    });
-                });
-            
-            // Скрываем выпадающий список
-            supplierSelect.classList.remove('active');
-            supplierDropdown.classList.remove('show');
-        }
-        
-        // Обработчик для поиска поставщиков
-        supplierSearch.addEventListener('input', function() {
-            const searchValue = this.value.toLowerCase();
-            const supplierItems = document.querySelectorAll('.entity-item');
-            let hasResults = false;
-            
-            supplierItems.forEach(item => {
-                const name = item.querySelector('.entity-item-name').textContent.toLowerCase();
-                const info = item.querySelector('.entity-item-info').textContent.toLowerCase();
-                
-                if (name.includes(searchValue) || info.includes(searchValue)) {
-                    item.style.display = 'block';
-                    hasResults = true;
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-            
-            // Показать/скрыть сообщение об отсутствии результатов
-            let noResults = suppliersList.querySelector('.no-results');
-            if (!hasResults) {
-                if (!noResults) {
-                    noResults = document.createElement('div');
-                    noResults.className = 'no-results';
-                    noResults.textContent = 'Нет результатов для "' + searchValue + '"';
-                    suppliersList.appendChild(noResults);
-                } else {
-                    noResults.textContent = 'Нет результатов для "' + searchValue + '"';
-                    noResults.style.display = 'block';
-                }
-            } else if (noResults) {
-                noResults.style.display = 'none';
-            }
-        });
-        
-        // Обработчик для клавиатурной навигации по выпадающему списку
-        supplierSelect.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                this.click();
-            }
-        });
-        
-        // Обработчик для добавления нового поставщика
-        addSupplierButton.addEventListener('click', function() {
-            window.location.href = '/suppliers/create/';
-        });
-        
-        // Функция для выбора поставщика по ID
-        function selectSupplierById(supplierId) {
-            if (!supplierId) {
-                return;
-            }
-            
-            console.log(`Выбор поставщика по ID: ${supplierId}`);
-            
-            // Сразу обращаемся к API для получения данных поставщика
-            fetch(`/suppliers/api/get/${supplierId}/`, { 
-                headers: { 'X-Requested-With': 'XMLHttpRequest' },
-                credentials: 'same-origin'
-            })
-            .then(response => {
-                if (!response.ok) {
-                    console.error(`Ошибка API при выборе поставщика: ${response.status}. ID=${supplierId}`);
-                    throw new Error(`api_error_${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                // Проверяем наличие данных
-                if (!data || typeof data !== 'object') {
-                    console.error('Получены некорректные данные о поставщике');
-                    throw new Error('invalid_data');
-                }
-                
-                console.log('Получены данные поставщика по ID:', data);
-                
-                // Обновляем выбранное значение в селекте
-                supplierSelect.querySelector('span').textContent = data.name;
-                supplierIdInput.value = data.id;
-                
-                // Заполняем реквизиты поставщика
-                const nameDisplay = document.getElementById('supplier_name_display');
-                const innDisplay = document.getElementById('supplier_inn_display');
-                const bankDisplay = document.getElementById('supplier_bank_display');
-                const bikDisplay = document.getElementById('supplier_bik_display');
-                const accountDisplay = document.getElementById('supplier_account_display');
-                const corrAccountDisplay = document.getElementById('supplier_corr_account_display');
-                const paymentDetails = document.getElementById('payment_details');
-                
-                // Заполняем банковские реквизиты
-                if (nameDisplay) nameDisplay.value = data.name || '';
-                if (innDisplay) innDisplay.value = data.inn || '';
-                if (bankDisplay) bankDisplay.value = data.bank_name || '';
-                if (bikDisplay) bikDisplay.value = data.bank_bik || '';
-                if (accountDisplay) accountDisplay.value = data.bank_account || '';
-                if (corrAccountDisplay) corrAccountDisplay.value = data.bank_corr_account || '';
-                
-                // Заполняем контактные данные из API
-                contactNameInput.value = data.contact_person || '';
-                contactEmailInput.value = data.contact_email || '';
-                
-                // Сохраняем полные реквизиты в скрытом поле
-                if (paymentDetails) {
-                    const fullDetails = [
-                        `Название организации: ${data.name || '-'}`,
-                        `ИНН: ${data.inn || '-'}`,
-                        `Банк: ${data.bank_name || '-'}`,
-                        `БИК: ${data.bank_bik || '-'}`,
-                        `Р/с: ${data.bank_account || '-'}`,
-                        `К/с: ${data.bank_corr_account || '-'}`
-                    ].join('\n');
-                    
-                    paymentDetails.value = fullDetails;
-                }
-            })
-            .catch(error => {
-                console.error('Ошибка при получении данных поставщика по ID:', error);
-                
-                // Пробуем найти элемент поставщика в списке как запасной вариант
-                const supplierItems = document.querySelectorAll('.entity-item');
-                
-                // Преобразуем supplierId в строку для корректного сравнения
-                const supplierIdStr = String(supplierId);
-                
-                // Ищем точное совпадение по ID
-                let found = false;
-                for (let i = 0; i < supplierItems.length; i++) {
-                    const itemId = supplierItems[i].getAttribute('data-id');
-                    
-                    if (itemId === supplierIdStr) {
-                        // Если нашли элемент в списке - обновляем хотя бы имя и ID
-                        supplierSelect.querySelector('span').textContent = supplierItems[i].querySelector('.entity-item-name').textContent;
-                        supplierIdInput.value = supplierId;
-                        found = true;
-                        
-                        // Используем selectSupplier для получения всех данных
-                        selectSupplier(supplierItems[i]);
-                        break;
-                    }
-                }
-                
-                if (!found) {
-                    console.error(`Поставщик с ID ${supplierId} не найден в списке!`);
-                }
-            });
-        }
-        
-        // Проверяем наличие указанного поставщика (из контекста Django или из URL)
-        const urlSupplierId = new URLSearchParams(window.location.search).get('supplier_id');
-        const djangoSupplierId = "{{ supplier_id|default:'' }}";
-        
-        {% if selected_supplier %}
-            selectSupplierById("{{ selected_supplier.id }}");
-        {% elif supplier_id %}
-            selectSupplierById("{{ supplier_id }}");
-        {% elif urlSupplierId %}
-            selectSupplierById(urlSupplierId);
-        {% endif %}
     });
 </script>
+{% endif %}
 {% endblock %} 

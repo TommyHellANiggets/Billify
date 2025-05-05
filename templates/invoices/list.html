@@ -10,7 +10,7 @@
 {% block og_title %}Управление счетами и платежами | Billify - автоматизация финансового учета{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/invoices/list.css' %}">
+<link rel="stylesheet" href="/static/css/clients/list.css">
 {% endblock %}
 
 {% block content %}
@@ -41,115 +41,56 @@
 }
 </script>
 
-<section class="invoices-page">
-    <div class="page-header">
+<div class="clients-page">
+    <div class="page-header d-flex justify-content-between align-items-center mb-3">
         <h1>Управление счетами</h1>
-        <p class="page-subtitle">Создавайте и отслеживайте ваши счета в одном месте</p>
-    </div>
-
-    <div class="invoice-categories">
-        <div class="category-tile incoming {% if current_type == 'incoming' %}active{% endif %}">
-            <div class="tile-background"></div>
-            <div class="tile-content">
-                <div class="tile-header">
-                    <div class="tile-icon">
-                        <i class="fas fa-arrow-down" aria-hidden="true"></i>
-                    </div>
-                    <h2>Входящие счета</h2>
-                </div>
-                <p class="tile-description">Счета от поставщиков</p>
-                <div class="tile-counter">{{ incoming_count|default:"0" }}</div>
-                <div class="invoice-actions">
-                    <a href="{% url 'invoices:create_incoming' %}" class="tile-button" title="Создать входящий счет">
-                        <span class="button-icon"><i class="fas fa-plus" aria-hidden="true"></i></span>
-                        <span class="button-text">Создать счет</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="category-tile outgoing {% if current_type == 'outgoing' %}active{% endif %}">
-            <div class="tile-background"></div>
-            <div class="tile-content">
-                <div class="tile-header">
-                    <div class="tile-icon">
-                        <i class="fas fa-arrow-up" aria-hidden="true"></i>
-                    </div>
-                    <h2>Исходящие счета</h2>
-                </div>
-                <p class="tile-description">Счета для клиентов</p>
-                <div class="tile-counter">{{ outgoing_count|default:"0" }}</div>
-                <div class="invoice-actions">
-                    <a href="{% url 'invoices:create_outgoing' %}" class="tile-button" title="Создать исходящий счет">
-                        <span class="button-icon"><i class="fas fa-plus" aria-hidden="true"></i></span>
-                        <span class="button-text">Создать счет</span>
-                    </a>
-                </div>
-            </div>
+        <div>
+            <a href="{% url 'invoices:create_incoming' %}" class="btn-add mr-2">Входящий счет</a>
+            <a href="{% url 'invoices:create_outgoing' %}" class="btn-add">Исходящий счет</a>
         </div>
     </div>
-
-    <div class="invoice-statistics">
-        <div class="section-header">
-            <h2>Статистика</h2>
-        </div>
-        <div class="stats-container">
-            <div class="stat-item">
-                <div class="stat-icon">
-                    <i class="fas fa-file-invoice" aria-hidden="true"></i>
-                </div>
-                <div class="stat-number">{{ total_count|default:"0" }}</div>
-                <div class="stat-label">Всего счетов</div>
+    
+    <div class="filters card mb-3">
+        <form method="get" action="{% url 'invoices:list' %}" class="d-flex">
+            <div class="search-box">
+                <input type="text" name="search" value="{{ search_query }}" placeholder="Поиск по номеру или контрагенту...">
+                <span class="search-icon">🔍</span>
             </div>
-            <div class="stat-item">
-                <div class="stat-icon">
-                    <i class="fas fa-clock" aria-hidden="true"></i>
-                </div>
-                <div class="stat-number">{{ pending_count|default:"0" }}</div>
-                <div class="stat-label">Ожидают оплаты</div>
+            
+            <div class="type-filter">
+                <select name="type" aria-label="Фильтр по типу счета">
+                    <option value="">Все типы</option>
+                    <option value="incoming" {% if current_type == 'incoming' %}selected{% endif %}>Входящие</option>
+                    <option value="outgoing" {% if current_type == 'outgoing' %}selected{% endif %}>Исходящие</option>
+                </select>
             </div>
-            <div class="stat-item">
-                <div class="stat-icon">
-                    <i class="fas fa-exclamation-circle" aria-hidden="true"></i>
-                </div>
-                <div class="stat-number">{{ overdue_count|default:"0" }}</div>
-                <div class="stat-label">Просрочены</div>
+            
+            <div class="entity-filter">
+                <select name="status" aria-label="Фильтр по статусу">
+                    <option value="">Все статусы</option>
+                    <option value="new" {% if status == 'new' %}selected{% endif %}>Новый</option>
+                    <option value="sent" {% if status == 'sent' %}selected{% endif %}>Отправлен</option>
+                    <option value="pending" {% if status == 'pending' %}selected{% endif %}>Ожидает оплаты</option>
+                    <option value="paid" {% if status == 'paid' %}selected{% endif %}>Оплачен</option>
+                    <option value="overdue" {% if status == 'overdue' %}selected{% endif %}>Просрочен</option>
+                    <option value="cancelled" {% if status == 'cancelled' %}selected{% endif %}>Отменен</option>
+                </select>
             </div>
-            <div class="stat-item">
-                <div class="stat-icon">
-                    <i class="fas fa-check-circle" aria-hidden="true"></i>
-                </div>
-                <div class="stat-number">{{ paid_count|default:"0" }}</div>
-                <div class="stat-label">Оплачены</div>
+            
+            <div class="filter-buttons">
+                <button type="submit" class="btn-apply">Применить</button>
+                <a href="{% url 'invoices:list' %}" class="btn-reset">Сбросить</a>
             </div>
-        </div>
+        </form>
     </div>
-
-    <div class="recent-invoices">
-        <div class="section-header">
-            <h2>
-                {% if current_type == 'incoming' %}
-                    Входящие счета
-                {% elif current_type == 'outgoing' %}
-                    Исходящие счета
-                {% else %}
-                    Все счета
-                {% endif %}
-            </h2>
-            <div class="filter-container">
-                <label for="invoice-filter" class="visually-hidden">Поиск счетов</label>
-                <input type="text" id="invoice-filter" placeholder="Поиск счетов..." class="filter-input">
-                <i class="fas fa-search search-icon" aria-hidden="true"></i>
-            </div>
-        </div>
-
-        <div class="invoice-table-container">
-            <table class="invoice-table">
-                <caption class="visually-hidden">Список счетов</caption>
+    
+    {% if invoices %}
+        <div class="clients-list">
+            <table>
                 <thead>
                     <tr>
-                        <th scope="col">№ счета</th>
-                        <th scope="col">
+                        <th>№ счета</th>
+                        <th>
                             {% if current_type == 'incoming' %}
                                 Поставщик
                             {% elif current_type == 'outgoing' %}
@@ -158,22 +99,19 @@
                                 Контрагент
                             {% endif %}
                         </th>
-                        <th scope="col">Дата</th>
-                        <th scope="col">Сумма</th>
-                        <th scope="col">Статус</th>
-                        <th scope="col">Действия</th>
+                        <th>Дата</th>
+                        <th>Сумма</th>
+                        <th>Статус</th>
+                        <th>Действия</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% if invoices %}
-                        {% for invoice in invoices %}
+                    {% for invoice in invoices %}
                         <tr>
                             <td>
-                                {% if invoice.type == 'incoming' or invoice.supplier_name != user.company_profile.company_name %}
-                                    <span class="invoice-number incoming-invoice">{{ invoice.number }}</span>
-                                {% else %}
-                                    <span class="invoice-number outgoing-invoice">{{ invoice.number }}</span>
-                                {% endif %}
+                                <a href="{% url 'invoices:detail' invoice.id %}" class="client-name">
+                                    {{ invoice.number }}
+                                </a>
                             </td>
                             <td>
                                 {% if current_type == 'incoming' %}
@@ -191,7 +129,7 @@
                             <td>{{ invoice.issue_date|date:"d.m.Y" }}</td>
                             <td>{{ invoice.total }} ₽</td>
                             <td>
-                                <span class="status-badge status-{{ invoice.status }}">
+                                <span class="entity-badge {% if invoice.status == 'paid' %}client-badge{% elif invoice.status == 'overdue' %}supplier-badge{% else %}type-badge individual-badge{% endif %}">
                                     {% if invoice.status == 'new' %}
                                         Новый
                                     {% elif invoice.status == 'sent' %}
@@ -209,69 +147,68 @@
                                     {% endif %}
                                 </span>
                             </td>
-                            <td class="actions-cell">
-                                <a href="{% url 'invoices:detail' invoice.id %}" class="btn-icon" data-tooltip="Просмотр" title="Просмотреть счет {{ invoice.number }}">
-                                    <i class="fas fa-eye" aria-hidden="true"></i>
-                                    <span class="visually-hidden">Просмотреть счет {{ invoice.number }}</span>
+                            <td class="actions">
+                                <a href="{% url 'invoices:detail' invoice.id %}" class="btn-action btn-view" title="Просмотр">
+                                    <span class="btn-icon">👁️</span>
                                 </a>
-                                <a href="{% url 'invoices:edit' invoice.id %}" class="btn-icon" data-tooltip="Редактировать" title="Редактировать счет {{ invoice.number }}">
-                                    <i class="fas fa-edit" aria-hidden="true"></i>
-                                    <span class="visually-hidden">Редактировать счет {{ invoice.number }}</span>
+                                <a href="{% url 'invoices:edit' invoice.id %}" class="btn-action btn-edit" title="Редактировать">
+                                    <span class="btn-icon">✏️</span>
                                 </a>
-                                <a href="{% url 'invoices:pdf' invoice.id %}" class="btn-icon" data-tooltip="Печать" title="Скачать PDF счета {{ invoice.number }}">
-                                    <i class="fas fa-print" aria-hidden="true"></i>
-                                    <span class="visually-hidden">Скачать PDF счета {{ invoice.number }}</span>
+                                <a href="{% url 'invoices:pdf' invoice.id %}" class="btn-action btn-view" title="PDF">
+                                    <span class="btn-icon">📄</span>
                                 </a>
-                                <a href="{% url 'invoices:delete' invoice.id %}" class="btn-icon btn-icon-danger" data-tooltip="Удалить" title="Удалить счет {{ invoice.number }}" onclick="return confirm('Вы уверены, что хотите удалить этот счет?');">
-                                    <i class="fas fa-trash-alt" aria-hidden="true"></i>
-                                    <span class="visually-hidden">Удалить счет {{ invoice.number }}</span>
+                                <a href="{% url 'invoices:delete' invoice.id %}" class="btn-action btn-delete" title="Удалить" onclick="return confirm('Вы уверены, что хотите удалить этот счет?');">
+                                    <span class="btn-icon">🗑️</span>
                                 </a>
                             </td>
                         </tr>
-                        {% endfor %}
-                    {% else %}
-                        <tr>
-                            <td colspan="6" class="empty-table">
-                                <div class="empty-state">
-                                    <i class="fas fa-file-invoice fa-3x" aria-hidden="true"></i>
-                                    <p>
-                                        {% if current_type == 'incoming' %}
-                                            У вас пока нет входящих счетов
-                                        {% elif current_type == 'outgoing' %}
-                                            У вас пока нет исходящих счетов
-                                        {% else %}
-                                            У вас пока нет счетов
-                                        {% endif %}
-                                    </p>
-                                    <div class="empty-state-actions">
-                                        {% if current_type == 'incoming' %}
-                                            <a href="{% url 'invoices:create_incoming' %}" class="btn btn-primary" title="Создать входящий счет">
-                                                Создать входящий счет
-                                            </a>
-                                        {% elif current_type == 'outgoing' %}
-                                            <a href="{% url 'invoices:create_outgoing' %}" class="btn btn-primary" title="Создать исходящий счет">
-                                                Создать исходящий счет
-                                            </a>
-                                        {% else %}
-                                            <a href="{% url 'invoices:create_incoming' %}" class="btn btn-primary" title="Создать входящий счет">
-                                                Создать входящий счет
-                                            </a>
-                                            <a href="{% url 'invoices:create_outgoing' %}" class="btn btn-primary" title="Создать исходящий счет">
-                                                Создать исходящий счет
-                                            </a>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    {% endif %}
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
-    </div>
-</section>
+        
+        {% if invoices.has_other_pages %}
+            <div class="pagination">
+                <ul class="pagination-list">
+                    {% if invoices.has_previous %}
+                        <li><a href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if current_type %}&type={{ current_type }}{% endif %}{% if status %}&status={{ status }}{% endif %}">&laquo; Первая</a></li>
+                        <li><a href="?page={{ invoices.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if current_type %}&type={{ current_type }}{% endif %}{% if status %}&status={{ status }}{% endif %}">Предыдущая</a></li>
+                    {% endif %}
+                    
+                    {% for num in invoices.paginator.page_range %}
+                        {% if invoices.number == num %}
+                            <li class="active"><span>{{ num }}</span></li>
+                        {% elif num > invoices.number|add:'-3' and num < invoices.number|add:'3' %}
+                            <li><a href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if current_type %}&type={{ current_type }}{% endif %}{% if status %}&status={{ status }}{% endif %}">{{ num }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if invoices.has_next %}
+                        <li><a href="?page={{ invoices.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if current_type %}&type={{ current_type }}{% endif %}{% if status %}&status={{ status }}{% endif %}">Следующая</a></li>
+                        <li><a href="?page={{ invoices.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if current_type %}&type={{ current_type }}{% endif %}{% if status %}&status={{ status }}{% endif %}">Последняя &raquo;</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="empty-state card">
+            <div class="empty-state-content">
+                <div class="empty-icon">📑</div>
+                <h2>Нет счетов</h2>
+                <p>В системе пока нет счетов{% if search_query or current_type or status %}, соответствующих заданным критериям{% endif %}.</p>
+                <div class="empty-actions">
+                    <a href="{% url 'invoices:create_incoming' %}" class="btn-add">Создать входящий</a>
+                    <a href="{% url 'invoices:create_outgoing' %}" class="btn-add">Создать исходящий</a>
+                    {% if search_query or current_type or status %}
+                        <a href="{% url 'invoices:list' %}" class="btn-reset">Сбросить фильтры</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/invoices/list.js' %}"></script>
+<script src="/static/js/invoices/list.js"></script>
 {% endblock %} 

@@ -264,12 +264,26 @@ def create_incoming(request):
             supplier = Supplier.objects.get(id=supplier_id)
             
             # Получаем данные о клиенте (текущая компания пользователя)
-            client = Client.objects.filter(user=request.user, is_active=True, entity_type='client').first()
+            user_company_profile = request.user.company_profile
             
-            if not client:
+            if not user_company_profile:
                 # Если у пользователя нет своей компании, создаем ошибку
-                messages.error(request, 'Необходимо создать свою компанию перед созданием счетов')
-                return redirect('clients:create')
+                messages.error(request, 'Необходимо заполнить данные вашей компании перед созданием счетов')
+                return redirect('core:profile')
+            
+            # Создаем или получаем клиента, который представляет компанию пользователя
+            client, created = Client.objects.get_or_create(
+                user=request.user,
+                name=user_company_profile.company_name,
+                defaults={
+                    'is_active': True,
+                    'address': user_company_profile.address,
+                    'tax_id': user_company_profile.tax_id,
+                    'phone': user_company_profile.phone,
+                    'email': user_company_profile.email,
+                    'contact_person': user_company_profile.contact_person
+                }
+            )
             
             # Получаем данные о товарах
             item_names = request.POST.getlist('item_name[]')
@@ -364,8 +378,7 @@ def create_outgoing(request):
     # Получаем список только активных клиентов текущего пользователя
     clients = Client.objects.filter(
         user=request.user,
-        is_active=True, 
-        entity_type='client'
+        is_active=True
     ).order_by('name')
     print(f"DEBUG - найдено клиентов пользователя: {clients.count()}")
     
@@ -383,8 +396,7 @@ def create_outgoing(request):
             # Ищем клиента по ID, принадлежащего текущему пользователю
             selected_client = Client.objects.get(
                 id=client_id,
-                user=request.user, 
-                entity_type='client', 
+                user=request.user,
                 is_active=True
             )
             print(f"DEBUG - найден выбранный клиент: {selected_client.id} - {selected_client.name}")
@@ -408,16 +420,17 @@ def create_outgoing(request):
         
         try:
             # Получаем объект клиента
-            client = Client.objects.get(id=client_id, user=request.user, entity_type='client')
+            client = Client.objects.get(id=client_id, user=request.user)
             print(f"DEBUG - клиент для счета: {client.id} - {client.name}")
             
             # Получаем данные о поставщике (текущая компания пользователя)
-            supplier = Client.objects.filter(user=request.user, is_active=True, entity_type='supplier').first()
+            user_company_profile = request.user.company_profile
+            supplier = None
             
-            if not supplier:
-                # Если у пользователя нет своей компании, создаем ошибку
-                messages.error(request, 'Необходимо создать свою компанию перед созданием счетов')
-                return redirect('clients:create')
+            # Если у пользователя нет профиля компании, перенаправляем на создание
+            if not user_company_profile:
+                messages.error(request, 'Необходимо заполнить данные вашей компании перед созданием счетов')
+                return redirect('core:profile')
             
             # Получаем данные о товарах
             item_names = request.POST.getlist('item_name[]')
@@ -443,17 +456,16 @@ def create_outgoing(request):
                 discount=discount_value,
                 user=request.user,
                 client=client,
-                supplier=supplier,
-                supplier_name=supplier.name,
-                supplier_address=supplier.address,
-                supplier_tax_id=supplier.tax_id,
-                supplier_phone=supplier.phone,
-                supplier_email=supplier.email,
-                supplier_contact_person=supplier.contact_person,
-                supplier_bank=supplier.bank_name,
-                supplier_bank_bik=supplier.bank_bik,
-                supplier_bank_account=supplier.bank_account,
-                supplier_bank_corr_account=supplier.bank_corr_account,
+                supplier_name=user_company_profile.company_name,
+                supplier_address=user_company_profile.address,
+                supplier_tax_id=user_company_profile.tax_id,
+                supplier_phone=user_company_profile.phone,
+                supplier_email=user_company_profile.email,
+                supplier_contact_person=user_company_profile.contact_person,
+                supplier_bank=user_company_profile.bank_name,
+                supplier_bank_bik=user_company_profile.bank_bik,
+                supplier_bank_account=user_company_profile.bank_account,
+                supplier_bank_corr_account=user_company_profile.bank_corr_account,
                 client_name=client.name,
                 client_address=client.address,
                 client_tax_id=client.tax_id,
@@ -713,9 +725,10 @@ def edit_invoice(request, pk):
                     contact_email = request.POST.get('contact_email', '')
                     
                     if supplier_id:
-                        supplier = Client.objects.get(pk=supplier_id, entity_type='supplier')
+                        # Используем модель Supplier вместо Client с entity_type
+                        supplier = Supplier.objects.get(pk=supplier_id)
                         invoice.supplier_name = supplier.name
-                        invoice.supplier_inn = supplier.tax_id
+                        invoice.supplier_tax_id = supplier.tax_id
                         invoice.supplier_kpp = supplier.kpp
                         invoice.supplier_address = supplier.address
                         invoice.supplier_bank = supplier.bank_name
@@ -783,7 +796,8 @@ def edit_invoice(request, pk):
                 'is_edit': True
             }
         else:
-            suppliers = Client.objects.filter(is_active=True, entity_type='supplier').order_by('name')
+            # Используем модель Supplier вместо Client с entity_type
+            suppliers = Supplier.objects.filter(is_active=True).order_by('name')
             template_name = 'invoices/create_incoming.html'
             context = {
                 'title': f'Редактирование счета {invoice.number}',

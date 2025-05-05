@@ -5,47 +5,6 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/invoices/create.css' %}">
-<style>
-    .form-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 15px;
-    }
-    .form-grid-3 {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 15px;
-    }
-    .form-grid-2 {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 15px;
-    }
-    .form-span-4 {
-        grid-column: span 4;
-    }
-    .form-span-3 {
-        grid-column: span 3;
-    }
-    .form-span-2 {
-        grid-column: span 2;
-    }
-    .form-group {
-        margin-bottom: 15px;
-    }
-    /* Стили для выравнивания с входящими счетами */
-    .form-grid-row {
-        display: grid;
-        grid-template-columns: 50% 25% 25%;
-        gap: 15px;
-        padding-right: 15px;
-    }
-    .client-select-custom {
-        height: 44px;
-        display: flex;
-        align-items: center;
-    }
-</style>
 {% endblock %}
 
 {% block content %}
@@ -57,274 +16,253 @@
         </div>
         <div class="header-actions">
             <a href="{% url 'invoices:list' %}?type=outgoing" class="btn btn-outline">
-                <i class="fas fa-arrow-left"></i> Вернуться к списку
+                <i class="fas fa-arrow-left"></i> К списку счетов
             </a>
         </div>
     </div>
 
     <div class="form-container">
-        <form method="post" action="{% if is_edit %}{% url 'invoices:edit' invoice.id %}{% else %}{% url 'invoices:create_outgoing' %}{% endif %}" class="invoice-form" {% if is_edit %}data-is-edit="true"{% endif %}>
-            {% csrf_token %}
-            
-            <!-- Данные профиля компании для JavaScript -->
-            {{ company_profile|json_script:"company-profile-data" }}
-            
-            <div class="form-section">
-                <h3 class="section-title">Основная информация</h3>
-                
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="invoice_number">Номер счета</label>
-                        <input type="text" id="invoice_number" name="invoice_number" value="{% if is_edit %}{{ invoice.number }}{% else %}{{ next_invoice_number }}{% endif %}" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="invoice_date">Дата счета</label>
-                        <input type="date" id="invoice_date" name="invoice_date" value="{% if is_edit %}{{ invoice.issue_date|date:'Y-m-d' }}{% endif %}" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="due_date">Срок оплаты</label>
-                        <input type="date" id="due_date" name="due_date" value="{% if is_edit %}{{ invoice.due_date|date:'Y-m-d' }}{% endif %}" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="status">Статус</label>
-                        <select id="status" name="status" required>
-                            <option value="new" {% if is_edit and invoice.status == 'new' %}selected{% endif %}>Новый</option>
-                            <option value="sent" {% if is_edit and invoice.status == 'sent' %}selected{% endif %}>Отправлен</option>
-                            <option value="pending" {% if is_edit and invoice.status == 'pending' %}selected{% endif %}>Ожидает оплаты</option>
-                            <option value="paid" {% if is_edit and invoice.status == 'paid' %}selected{% endif %}>Оплачен</option>
-                            <option value="overdue" {% if is_edit and invoice.status == 'overdue' %}selected{% endif %}>Просрочен</option>
-                            <option value="cancelled" {% if is_edit and invoice.status == 'cancelled' %}selected{% endif %}>Отменен</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="form-section">
-                <h3 class="section-title">Информация о клиенте</h3>
-                
-                <div class="form-row form-grid-row">
-                    <div class="form-group">
-                        <label for="client">Клиент</label>
-                        <div class="select-wrapper">
-                            <input type="hidden" id="client_id" name="client" value="{% if is_edit %}{{ invoice.client.id }}{% endif %}" required>
-                            <div class="entity-select" id="client-select" tabindex="0">
-                                <span>{% if is_edit %}{{ invoice.client.name }}{% else %}Выберите клиента{% endif %}</span>
+        <div class="row">
+            <div class="col-md-9">
+                <form method="post" action="{% if is_edit %}{% url 'invoices:edit' invoice.id %}{% else %}{% url 'invoices:create_outgoing' %}{% endif %}" class="invoice-form" {% if is_edit %}data-is-edit="true"{% endif %}>
+                    {% csrf_token %}
+                    
+                    <!-- Данные профиля компании для JavaScript -->
+                    {{ company_profile|json_script:"company-profile-data" }}
+                    
+                    <div class="form-section">
+                        <h3 class="section-title">Основная информация</h3>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="invoice_number">Номер счета</label>
+                                <input type="text" id="invoice_number" name="invoice_number" value="{% if is_edit %}{{ invoice.number }}{% else %}{{ next_invoice_number }}{% endif %}" required>
                             </div>
-                            <div class="entity-dropdown" id="client-dropdown">
-                                <input type="text" class="select-search" id="client-search" placeholder="Поиск клиента...">
-                                <div class="client-list" id="client-list">
-                                    <!-- Создаём контейнер для клиентов через JavaScript -->
-                                    <div id="dynamic-clients-list">
-                                        <!-- Здесь будут динамически добавленные клиенты -->
+                            <div class="form-group">
+                                <label for="invoice_date">Дата счета</label>
+                                <input type="date" id="invoice_date" name="invoice_date" value="{% if is_edit %}{{ invoice.issue_date|date:'Y-m-d' }}{% endif %}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="due_date">Срок оплаты</label>
+                                <input type="date" id="due_date" name="due_date" value="{% if is_edit %}{{ invoice.due_date|date:'Y-m-d' }}{% endif %}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="status">Статус</label>
+                                <select id="status" name="status" required>
+                                    <option value="new" {% if is_edit and invoice.status == 'new' %}selected{% endif %}>Новый</option>
+                                    <option value="sent" {% if is_edit and invoice.status == 'sent' %}selected{% endif %}>Отправлен</option>
+                                    <option value="pending" {% if is_edit and invoice.status == 'pending' %}selected{% endif %}>Ожидает оплаты</option>
+                                    <option value="paid" {% if is_edit and invoice.status == 'paid' %}selected{% endif %}>Оплачен</option>
+                                    <option value="overdue" {% if is_edit and invoice.status == 'overdue' %}selected{% endif %}>Просрочен</option>
+                                    <option value="cancelled" {% if is_edit and invoice.status == 'cancelled' %}selected{% endif %}>Отменен</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3 class="section-title">Информация о клиенте</h3>
+                        
+                        <div class="form-grid-row">
+                            <div class="form-group">
+                                <label for="client">Клиент</label>
+                                <div class="select-wrapper">
+                                    <input type="hidden" id="client_id" name="client" value="{% if is_edit %}{{ invoice.client.id }}{% endif %}" required>
+                                    <div class="entity-select" id="client-select" tabindex="0">
+                                        <span>{% if is_edit %}{{ invoice.client.name }}{% else %}Выберите клиента{% endif %}</span>
+                                    </div>
+                                    <div class="entity-dropdown" id="client-dropdown">
+                                        <input type="text" class="select-search" id="client-search" placeholder="Поиск клиента...">
+                                        <div class="client-list" id="client-list">
+                                            <!-- Создаём контейнер для клиентов через JavaScript -->
+                                            <div id="dynamic-clients-list">
+                                                <!-- Здесь будут динамически добавленные клиенты -->
+                                            </div>
+                                        </div>
+                                        <div class="add-new-item" id="add-client">
+                                            <i class="fas fa-plus"></i> Добавить нового клиента
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="add-new-item" id="add-client">
-                                    <i class="fas fa-plus"></i> Добавить нового клиента
+                            </div>
+                            <div class="form-group">
+                                <label for="contact_name">Контактное лицо</label>
+                                <input type="text" id="contact_name" name="contact_name" value="{% if is_edit %}{{ invoice.client_contact_person }}{% endif %}">
+                            </div>
+                            <div class="form-group">
+                                <label for="contact_email">Email</label>
+                                <input type="email" id="contact_email" name="contact_email" value="{% if is_edit %}{{ invoice.client_email }}{% endif %}">
+                            </div>
+                        </div>
+                        
+                        <!-- Банковские реквизиты клиента -->
+                        <div id="client_bank_details" class="bank-details-container" style="display: none;">
+                            <h4 class="subsection-title">Банковские реквизиты клиента</h4>
+                            <div class="form-grid-2">
+                                <div class="form-group">
+                                    <label for="client_name_display">Название организации</label>
+                                    <input type="text" id="client_name_display" readonly>
                                 </div>
+                                <div class="form-group">
+                                    <label for="client_inn_display">ИНН</label>
+                                    <input type="text" id="client_inn_display" readonly>
+                                </div>
+                            </div>
+                            
+                            <div class="form-grid-2">
+                                <div class="form-group">
+                                    <label for="client_bank_display">Банк</label>
+                                    <input type="text" id="client_bank_display" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="client_bik_display">БИК</label>
+                                    <input type="text" id="client_bik_display" readonly>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="client_account_display">Расчетный счет</label>
+                                <input type="text" id="client_account_display" readonly>
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="contact_name">Контактное лицо</label>
-                        <input type="text" id="contact_name" name="contact_name" value="{% if is_edit %}{{ invoice.client_contact_person }}{% endif %}">
-                    </div>
-                    <div class="form-group">
-                        <label for="contact_email">Email</label>
-                        <input type="email" id="contact_email" name="contact_email" value="{% if is_edit %}{{ invoice.client_email }}{% endif %}">
-                    </div>
-                </div>
-                
-                <!-- Банковские реквизиты клиента -->
-                <div id="client_bank_details" class="bank-details-container" style="display: none;">
-                    <h4 class="subsection-title">Банковские реквизиты клиента</h4>
-                    <div class="form-grid-2">
-                        <div class="form-group">
-                            <label for="client_name_display">Название организации</label>
-                            <input type="text" id="client_name_display" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="client_inn_display">ИНН</label>
-                            <input type="text" id="client_inn_display" readonly>
-                        </div>
-                    </div>
                     
-                    <div class="form-grid-2">
-                        <div class="form-group">
-                            <label for="client_bank_display">Банк</label>
-                            <input type="text" id="client_bank_display" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="client_bik_display">БИК</label>
-                            <input type="text" id="client_bik_display" readonly>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="client_account_display">Расчетный счет</label>
-                        <input type="text" id="client_account_display" readonly>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="form-section">
-                <h3 class="section-title">Позиции счета</h3>
-                
-                <table class="invoice-items-table">
-                    <thead>
-                        <tr>
-                            <th>Наименование</th>
-                            <th>Количество</th>
-                            <th>Цена, ₽</th>
-                            <th>Сумма, ₽</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody id="invoice-items">
-                        {% if is_edit and invoice_items %}
-                            {% for item in invoice_items %}
-                                <tr class="invoice-item">
-                                    <td>
-                                        <input type="text" name="item_name[]" title="Наименование товара/услуги" value="{{ item.description }}" required>
-                                    </td>
-                                    <td>
-                                        <input type="text" name="item_quantity[]" title="Количество" value="{{ item.quantity }}" required>
-                                    </td>
-                                    <td>
-                                        <input type="text" name="item_price[]" title="Цена за единицу" value="{{ item.price }}" required>
-                                    </td>
-                                    <td class="item-total">{{ item.amount }}</td>
-                                    <td>
-                                        <button type="button" class="btn-icon remove-item" title="Удалить позицию">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </td>
+                    <div class="form-section">
+                        <h3 class="section-title">Позиции счета</h3>
+                        
+                        <table class="invoice-items-table">
+                            <thead>
+                                <tr>
+                                    <th>Наименование</th>
+                                    <th>Количество</th>
+                                    <th>Цена, ₽</th>
+                                    <th>Сумма, ₽</th>
+                                    <th></th>
                                 </tr>
-                            {% endfor %}
-                        {% else %}
-                            <tr class="invoice-item">
-                                <td>
-                                    <input type="text" name="item_name[]" title="Наименование товара/услуги" required>
-                                </td>
-                                <td>
-                                    <input type="text" name="item_quantity[]" title="Количество" value="1" required>
-                                </td>
-                                <td>
-                                    <input type="text" name="item_price[]" title="Цена за единицу" value="0,00" required>
-                                </td>
-                                <td class="item-total">0,00</td>
-                                <td>
-                                    <button type="button" class="btn-icon remove-item" title="Удалить позицию">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        {% endif %}
-                    </tbody>
-                </table>
-                
-                <button type="button" id="add-item" class="btn btn-outline">
-                    <i class="fas fa-plus"></i> Добавить позицию
-                </button>
-                
-                <div class="invoice-totals">
-                    <div class="totals-row">
-                        <span class="total-label">Подытог:</span>
-                        <span class="total-value" id="subtotal">{% if is_edit %}{{ invoice.subtotal }} ₽{% else %}0.00 ₽{% endif %}</span>
-                    </div>
-                    <div class="totals-row">
-                        <span class="total-label">НДС (20%):</span>
-                        <span class="total-value" id="tax">{% if is_edit %}{{ invoice.tax_amount }} ₽{% else %}0.00 ₽{% endif %}</span>
-                    </div>
-                    <div class="totals-row">
-                        <span class="total-label">Скидка:</span>
-                        <div class="discount-input-wrapper">
-                            <input type="text" id="discount" name="discount" value="{% if is_edit %}{{ invoice.discount }}{% else %}0,00{% endif %}" title="Скидка">
-                            <span class="currency-symbol">₽</span>
-                        </div>
-                    </div>
-                    <div class="totals-row total-final">
-                        <span class="total-label">Итого:</span>
-                        <span class="total-value" id="total">{% if is_edit %}{{ invoice.total }} ₽{% else %}0.00 ₽{% endif %}</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="form-section">
-                <h3 class="section-title">Дополнительная информация</h3>
-                
-                <div class="form-group">
-                    <label for="notes">Примечания</label>
-                    <textarea id="notes" name="notes" rows="3">{% if is_edit %}{{ invoice.notes }}{% endif %}</textarea>
-                </div>
-                
-                <div class="form-section-divider"></div>
-                
-                <h4 class="subsection-title">Реквизиты для оплаты</h4>
-                <div class="bank-details-container">
-                    <div class="form-grid-2">
-                        <div class="form-group">
-                            <label for="company_name">Название организации</label>
-                            <input type="text" id="company_name" name="company_name" value="{% if is_edit %}{{ invoice.supplier_name }}{% endif %}" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="company_inn">ИНН</label>
-                            <input type="text" id="company_inn" name="company_inn" value="{% if is_edit %}{{ invoice.supplier_inn }}{% endif %}" readonly>
-                        </div>
-                    </div>
-                    
-                    <div class="form-grid-2">
-                        <div class="form-group">
-                            <label for="company_bank">Банк</label>
-                            <input type="text" id="company_bank" name="company_bank" value="{% if is_edit %}{{ invoice.supplier_bank }}{% endif %}" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="company_bik">БИК</label>
-                            <input type="text" id="company_bik" name="company_bik" value="{% if is_edit %}{{ invoice.supplier_bank_bik }}{% endif %}" readonly>
+                            </thead>
+                            <tbody id="invoice-items">
+                                {% if is_edit and invoice_items %}
+                                    {% for item in invoice_items %}
+                                        <tr class="invoice-item">
+                                            <td>
+                                                <input type="text" name="item_name[]" title="Наименование товара/услуги" value="{{ item.description }}" required>
+                                            </td>
+                                            <td>
+                                                <input type="text" name="item_quantity[]" title="Количество" value="{{ item.quantity }}" required>
+                                            </td>
+                                            <td>
+                                                <input type="text" name="item_price[]" title="Цена за единицу" value="{{ item.price }}" required>
+                                            </td>
+                                            <td class="item-total">{{ item.amount }}</td>
+                                            <td>
+                                                <button type="button" class="btn-icon remove-item" title="Удалить позицию">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr class="invoice-item">
+                                        <td>
+                                            <input type="text" name="item_name[]" title="Наименование товара/услуги" required>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="item_quantity[]" title="Количество" value="1" required>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="item_price[]" title="Цена за единицу" value="0,00" required>
+                                        </td>
+                                        <td class="item-total">0,00</td>
+                                        <td>
+                                            <button type="button" class="btn-icon remove-item" title="Удалить позицию">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                        
+                        <button type="button" id="add-item" class="btn btn-outline">
+                            <i class="fas fa-plus"></i> Добавить позицию
+                        </button>
+                        
+                        <div class="invoice-totals">
+                            <div class="totals-row">
+                                <span class="total-label">Подытог:</span>
+                                <span class="total-value" id="subtotal">{% if is_edit %}{{ invoice.subtotal }} ₽{% else %}0.00 ₽{% endif %}</span>
+                            </div>
+                            <div class="totals-row">
+                                <span class="total-label">НДС (20%):</span>
+                                <span class="total-value" id="tax">{% if is_edit %}{{ invoice.tax_amount }} ₽{% else %}0.00 ₽{% endif %}</span>
+                            </div>
+                            <div class="totals-row">
+                                <span class="total-label">Скидка:</span>
+                                <div class="discount-input-wrapper">
+                                    <input type="text" id="discount" name="discount" value="{% if is_edit %}{{ invoice.discount }}{% else %}0,00{% endif %}" title="Скидка">
+                                    <span class="currency-symbol">₽</span>
+                                </div>
+                            </div>
+                            <div class="totals-row total-final">
+                                <span class="total-label">Итого:</span>
+                                <span class="total-value" id="total">{% if is_edit %}{{ invoice.total }} ₽{% else %}0.00 ₽{% endif %}</span>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="form-grid-2">
-                        <div class="form-group">
-                            <label for="company_account">Расчетный счет</label>
-                            <input type="text" id="company_account" name="company_account" value="{% if is_edit %}{{ invoice.supplier_bank_account }}{% endif %}" readonly>
+                    <div class="form-section">
+                        <h3 class="section-title">Дополнительная информация</h3>
+                        
+                        <div class="form-group full-width">
+                            <label for="notes">Примечания</label>
+                            <textarea id="notes" name="notes" rows="3">{% if is_edit %}{{ invoice.notes }}{% endif %}</textarea>
                         </div>
-                        <div class="form-group">
-                            <label for="company_corr_account">Корр. счет</label>
-                            <input type="text" id="company_corr_account" name="company_corr_account" value="{% if is_edit %}{{ invoice.supplier_bank_corr_account }}{% endif %}" readonly>
+                        
+                        <div class="form-group full-width">
+                            <label for="payment_details">Платежная информация</label>
+                            <textarea id="payment_details" name="payment_details" rows="3">{% if is_edit %}{{ invoice.payment_info }}{% endif %}</textarea>
                         </div>
                     </div>
                     
-                    <input type="hidden" id="payment_details" name="payment_details" value="{% if is_edit %}{{ invoice.payment_info }}{% endif %}">
-                </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> {% if is_edit %}Обновить{% else %}Сохранить{% endif %} счет
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="preview-invoice">
+                            <i class="fas fa-eye"></i> Предпросмотр
+                        </button>
+                        <button type="reset" class="btn btn-outline">
+                            <i class="fas fa-undo"></i> Сбросить
+                        </button>
+                    </div>
+                </form>
             </div>
             
-            <div class="form-section">
-                <h3 class="section-title">Подписи</h3>
-                
-                <div class="form-grid-2">
-                    <div class="form-group">
-                        <label for="director_name">ФИО руководителя</label>
-                        <input type="text" id="director_name" name="director_name" value="{% if is_edit %}{{ invoice.director_name }}{% else %}{{ company_profile.director_name }}{% endif %}">
+            <div class="col-md-3">
+                <div class="form-info-card">
+                    <div class="form-info-header">
+                        <i class="fas fa-info-circle"></i>
+                        <h3>Информация</h3>
                     </div>
-                    <div class="form-group">
-                        <label for="accountant_name">ФИО главного бухгалтера</label>
-                        <input type="text" id="accountant_name" name="accountant_name" value="{% if is_edit %}{{ invoice.accountant_name }}{% else %}{{ company_profile.accountant_name }}{% endif %}">
+                    <div class="form-info-content">
+                        <p>Исходящий счет - это счет, который ваша компания выставляет клиенту за предоставленные товары или услуги.</p>
+                        
+                        <ul class="info-list">
+                            <li><i class="fas fa-check-circle"></i> Заполните основную информацию о счете</li>
+                            <li><i class="fas fa-check-circle"></i> Выберите клиента из списка или создайте нового</li>
+                            <li><i class="fas fa-check-circle"></i> Добавьте товары или услуги</li>
+                            <li><i class="fas fa-check-circle"></i> Проверьте итоговую сумму и скидку</li>
+                            <li><i class="fas fa-check-circle"></i> Укажите платежную информацию и примечания</li>
+                        </ul>
+                        
+                        <p>Заполненный счет можно будет отправить клиенту по электронной почте или распечатать.</p>
+                    </div>
+                    <div class="form-info-image">
+                        <img src="{% static 'images/invoice-illustration.svg' %}" alt="Иллюстрация счета" class="info-image" onerror="this.style.display='none'">
                     </div>
                 </div>
             </div>
-            
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save"></i> {% if is_edit %}Обновить{% else %}Сохранить{% endif %} счет
-                </button>
-                <button type="button" class="btn btn-secondary">
-                    <i class="fas fa-eye"></i> Предпросмотр
-                </button>
-                <button type="reset" class="btn btn-outline">
-                    <i class="fas fa-undo"></i> Сбросить
-                </button>
-            </div>
-        </form>
+        </div>
     </div>
 </section>
 {% endblock %}
@@ -339,222 +277,63 @@
     "issue_date": "{{ invoice.issue_date|date:'Y-m-d' }}",
     "due_date": "{{ invoice.due_date|date:'Y-m-d' }}",
     "status": "{{ invoice.status }}",
-    "client_id": "{{ invoice.client.id }}",
-    "client_name": "{{ invoice.client.name|escapejs }}",
-    "client_contact_person": "{{ invoice.client_contact_person|escapejs }}",
-    "client_email": "{{ invoice.client_email|escapejs }}",
-    "supplier_name": "{{ invoice.supplier_name|escapejs }}",
-    "supplier_inn": "{{ invoice.supplier_inn|escapejs }}",
-    "supplier_bank": "{{ invoice.supplier_bank|escapejs }}",
-    "supplier_bank_bik": "{{ invoice.supplier_bank_bik|escapejs }}",
-    "supplier_bank_account": "{{ invoice.supplier_bank_account|escapejs }}",
-    "supplier_bank_corr_account": "{{ invoice.supplier_bank_corr_account|default:''|escapejs }}",
-    "discount": {{ invoice.discount|default:0|stringformat:".2f"|cut:"," }},
-    "notes": "{{ invoice.notes|escapejs }}",
-    "payment_info": "{{ invoice.payment_info|escapejs }}",
+    "client": {
+        "id": {{ invoice.client.id }},
+        "name": "{{ invoice.client.name|escapejs }}",
+        "contact_person": "{{ invoice.client_contact_person|escapejs }}",
+        "email": "{{ invoice.client_email|escapejs }}"
+    },
     "items": [
         {% for item in invoice_items %}
         {
-            "id": {{ item.id }},
             "description": "{{ item.description|escapejs }}",
-            "quantity": {{ item.quantity|stringformat:".2f"|cut:"," }},
-            "unit": "{{ item.unit|escapejs }}",
-            "price": {{ item.price|stringformat:".2f"|cut:"," }},
-            "amount": {{ item.amount|stringformat:".2f"|cut:"," }}
+            "quantity": {{ item.quantity }},
+            "price": {{ item.price }},
+            "amount": {{ item.amount }}
         }{% if not forloop.last %},{% endif %}
         {% endfor %}
-    ]
+    ],
+    "subtotal": {{ invoice.subtotal }},
+    "tax_amount": {{ invoice.tax_amount }},
+    "discount": {{ invoice.discount }},
+    "total": {{ invoice.total }},
+    "notes": "{{ invoice.notes|escapejs }}",
+    "payment_info": "{{ invoice.payment_info|escapejs }}"
 }
 </script>
 {% endif %}
+
+{% if clients %}
+<script id="clients-data" type="application/json">
+[
+    {% for client in clients %}
+    {
+        "id": {{ client.id }},
+        "name": "{{ client.name|escapejs }}",
+        "tax_id": "{{ client.tax_id|default:'' }}",
+        "address": "{{ client.address|default:''|escapejs }}",
+        "phone": "{{ client.phone|default:'' }}",
+        "email": "{{ client.email|default:'' }}",
+        "contact_person": "{{ client.contact_person|default:''|escapejs }}",
+        "bank_name": "{{ client.bank_name|default:'' }}",
+        "bank_bik": "{{ client.bank_bik|default:'' }}",
+        "bank_account": "{{ client.bank_account|default:'' }}",
+        "bank_corr_account": "{{ client.bank_corr_account|default:'' }}"
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+]
+</script>
+{% endif %}
+
+{% if client_id %}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Инициализация элементов DOM
-        const clientSelect = document.getElementById('client-select');
-        const clientDropdown = document.getElementById('client-dropdown');
-        const clientSearch = document.getElementById('client-search');
-        const clientIdInput = document.getElementById('client_id');
-        const contactNameInput = document.getElementById('contact_name');
-        const contactEmailInput = document.getElementById('contact_email');
-        const addClientButton = document.getElementById('add-client');
-        const clientsList = document.getElementById('dynamic-clients-list');
-        
-        // Функция для открытия/закрытия выпадающего списка
-        function toggleClientDropdown() {
-            clientSelect.classList.toggle('active');
-            clientDropdown.classList.toggle('show');
-            
-            if (clientDropdown.classList.contains('show')) {
-                clientSearch.focus();
-            }
+        // Устанавливаем выбранного клиента при загрузке страницы
+        const clientId = '{{ client_id }}';
+        if (clientId) {
+            document.getElementById('client_id').value = clientId;
         }
-        
-        // Обработчик клика на селект - открывает/закрывает выпадающий список
-        clientSelect.addEventListener('click', function(e) {
-            e.stopPropagation();
-            toggleClientDropdown();
-        });
-        
-        // Закрытие выпадающего списка при клике на документ
-        document.addEventListener('click', function(e) {
-            if (!clientSelect.contains(e.target) && !clientDropdown.contains(e.target)) {
-                clientSelect.classList.remove('active');
-                clientDropdown.classList.remove('show');
-            }
-        });
-        
-        // Используем реальные данные клиентов вместо жестко закодированных
-        const realClients = [
-            {% for client in clients %}
-                { 
-                    id: "{{ client.id }}", 
-                    name: "{{ client.name|escapejs }}", 
-                    tax_id: "{{ client.tax_id|default:'' }}", 
-                    phone: "{{ client.phone|default:'' }}",
-                    contact_person: "{{ client.contact_person|default:''|escapejs }}",
-                    contact_email: "{{ client.contact_email|default:''|escapejs }}"
-                }{% if not forloop.last %},{% endif %}
-            {% endfor %}
-        ];
-        
-        // Добавляем клиентов в список
-        if (clientsList) {
-            // Если список клиентов пуст, заполняем его реальными данными из базы
-            if (realClients.length > 0) {
-                realClients.forEach(client => {
-                    const clientElement = document.createElement('div');
-                    clientElement.className = 'entity-item';
-                    clientElement.setAttribute('data-id', client.id);
-                    clientElement.setAttribute('data-contact', client.contact_person || '');
-                    clientElement.setAttribute('data-email', client.contact_email || '');
-                    
-                    clientElement.innerHTML = `
-                        <div class="entity-item-name">${client.name}</div>
-                        <div class="entity-item-info">
-                            <span class="entity-item-inn">ИНН: ${client.tax_id}</span>
-                            ${client.phone ? `<span class="entity-item-phone">Тел: ${client.phone}</span>` : ''}
-                        </div>
-                    `;
-                    
-                    // Привязываем обработчик клика - будет вызываться при выборе клиента
-                    clientElement.addEventListener('click', function() {
-                        selectClient(this);
-                    });
-                    
-                    clientsList.appendChild(clientElement);
-                });
-            } else {
-                // Если список пуст, показываем сообщение
-                const noResults = document.createElement('div');
-                noResults.className = 'no-results';
-                noResults.textContent = 'Список клиентов пуст';
-                clientsList.appendChild(noResults);
-            }
-        }
-        
-        // Функция выбора клиента
-        function selectClient(clientItem) {
-            const id = clientItem.getAttribute('data-id');
-            const name = clientItem.querySelector('.entity-item-name').textContent;
-            const contact = clientItem.getAttribute('data-contact') || '';
-            const email = clientItem.getAttribute('data-email') || '';
-            
-            // Обновляем выбранное значение
-            clientSelect.querySelector('span').textContent = name;
-            clientIdInput.value = id;
-            
-            // Заполняем контактные данные
-            contactNameInput.value = contact;
-            contactEmailInput.value = email;
-            
-            // Скрываем выпадающий список
-            clientSelect.classList.remove('active');
-            clientDropdown.classList.remove('show');
-        }
-        
-        // Обработчик для поиска клиентов
-        clientSearch.addEventListener('input', function() {
-            const searchValue = this.value.toLowerCase();
-            const clientItems = document.querySelectorAll('.entity-item');
-            let hasResults = false;
-            
-            clientItems.forEach(item => {
-                const name = item.querySelector('.entity-item-name').textContent.toLowerCase();
-                const info = item.querySelector('.entity-item-info').textContent.toLowerCase();
-                
-                if (name.includes(searchValue) || info.includes(searchValue)) {
-                    item.style.display = 'block';
-                    hasResults = true;
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-            
-            // Показать/скрыть сообщение об отсутствии результатов
-            let noResults = clientsList.querySelector('.no-results');
-            if (!hasResults) {
-                if (!noResults) {
-                    noResults = document.createElement('div');
-                    noResults.className = 'no-results';
-                    noResults.textContent = 'Нет результатов для "' + searchValue + '"';
-                    clientsList.appendChild(noResults);
-                } else {
-                    noResults.textContent = 'Нет результатов для "' + searchValue + '"';
-                    noResults.style.display = 'block';
-                }
-            } else if (noResults) {
-                noResults.style.display = 'none';
-            }
-        });
-        
-        // Обработчик для клавиатурной навигации по выпадающему списку
-        clientSelect.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                this.click();
-            }
-        });
-        
-        // Обработчик для добавления нового клиента
-        addClientButton.addEventListener('click', function() {
-            window.location.href = '/clients/create/?type=client';
-        });
-        
-        // Функция для выбора клиента по ID
-        function selectClientById(clientId) {
-            if (!clientId) {
-                return;
-            }
-            
-            const clientItems = document.querySelectorAll('.entity-item');
-            
-            // Преобразуем clientId в строку для корректного сравнения
-            const clientIdStr = String(clientId);
-            
-            // Ищем точное совпадение
-            let found = false;
-            for (let i = 0; i < clientItems.length; i++) {
-                const itemId = clientItems[i].getAttribute('data-id');
-                
-                if (itemId === clientIdStr) {
-                    selectClient(clientItems[i]);
-                    found = true;
-                    break;
-                }
-            }
-        }
-        
-        // Проверяем наличие указанного клиента (из контекста Django или из URL)
-        const urlClientId = new URLSearchParams(window.location.search).get('client_id');
-        const djangoClientId = "{{ client_id|default:'' }}";
-        
-        {% if selected_client %}
-            selectClientById("{{ selected_client.id }}");
-        {% elif client_id %}
-            selectClientById("{{ client_id }}");
-        {% elif urlClientId %}
-            selectClientById(urlClientId);
-        {% endif %}
     });
 </script>
+{% endif %}
 {% endblock %} 
