@@ -5,6 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
+    <!-- Favicon -->
+    <link rel="icon" href="{% static 'images/favicon/favicon.ico' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon/favicon_16x16.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon/favicon_32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="48x48" href="{% static 'images/favicon/favicon_48x48.png' %}">
+    <link rel="icon" type="image/png" sizes="64x64" href="{% static 'images/favicon/favicon_64x64.png' %}">
+    <link rel="icon" type="image/png" sizes="128x128" href="{% static 'images/favicon/favicon_128x128.png' %}">
+    <link rel="icon" type="image/png" sizes="256x256" href="{% static 'images/favicon/favicon_256x256.png' %}">
+    
     <!-- SEO Meta Tags -->
     <title>{% block title %}{{ title }}{% endblock %} | Flowfy</title>
     <meta name="description" content="{% block meta_description %}Flowfy - удобная система для автоматизации финансового учета и документооборота, идеальна для малого бизнеса и индивидуальных предпринимателей{% endblock %}">
@@ -40,6 +49,11 @@
     <link rel="stylesheet" href="{% static 'css/global.css' %}">
     <link rel="stylesheet" href="{% static 'css/header-footer.css' %}">
     <style>
+        /* Обязательное применение шрифта Poppins ко всем элементам */
+        html, body, * {
+            font-family: 'Poppins', sans-serif;
+        }
+        
         /* Базовый шрифт для всего сайта */
         body {
             font-family: 'Poppins', sans-serif;
@@ -133,10 +147,15 @@
                 opacity: 0;
             }
         }
+        
+        /* Utility класс для принудительного применения шрифта Poppins */
+        .poppins-font {
+            font-family: 'Poppins', sans-serif !important;
+        }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
-<body>
+<body class="poppins-font">
     <header class="header">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center">

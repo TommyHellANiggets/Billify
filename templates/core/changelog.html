@@ -3,11 +3,11 @@
 
 {% block title %}Журнал изменений и обновлений{% endblock %}
 
-{% block meta_description %}Актуальная информация о всех обновлениях и улучшениях системы Billify. Следите за развитием нашего сервиса для автоматизации финансового учета и документооборота.{% endblock %}
+{% block meta_description %}Актуальная информация о всех обновлениях и улучшениях системы Flowfy. Следите за развитием нашего сервиса для автоматизации финансового учета и документооборота.{% endblock %}
 
-{% block meta_keywords %}журнал изменений, обновления Billify, история версий, новые функции Billify, улучшения системы учета{% endblock %}
+{% block meta_keywords %}журнал изменений, обновления Flowfy, история версий, новые функции Flowfy, улучшения системы учета{% endblock %}
 
-{% block og_title %}Журнал изменений и обновлений системы Billify{% endblock %}
+{% block og_title %}Журнал изменений и обновлений системы Flowfy{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="/static/css/core/changelog.css">
@@ -17,205 +17,196 @@
 <section class="changelog-section">
     <header class="changelog-header">
         <h1 class="changelog-title poppins-font">Журнал изменений</h1>
-        <p class="changelog-description poppins-font">Здесь вы найдете информацию о всех обновлениях и улучшениях системы Billify</p>
+        <p class="changelog-description poppins-font">Здесь вы найдете информацию о всех обновлениях и улучшениях системы Flowfy</p>
     </header>
 
-    <div class="changelog-timeline">
-        <div class="changelog-entry">
-            <div class="changelog-entry-date">
-                <div class="date-badge poppins-font">Май 2025</div>
-                <div class="version-badge poppins-font">v1.3.0</div>
+    <div class="changelog-content">
+        <div class="timeline">
+            <div class="timeline-line"></div>
+            
+            <div class="timeline-item">
+                <div class="timeline-date">
+                    <span class="date">Май 2025</span>
+                    <span class="version">v1.2.0</span>
+                </div>
+                <div class="timeline-point"></div>
+                <div class="timeline-card">
+                    <h2>Интеграция с банками и улучшенные отчеты</h2>
+                    <div class="timeline-content">
+                        <p>Мы добавили долгожданную функцию интеграции с банками, улучшили наши отчеты и внесли множество других изменений:</p>
+                        <h3>Новые возможности:</h3>
+                        <ul>
+                            <li>Интеграция со Сбербанком, Тинькофф и Альфа-банком</li>
+                            <li>Автоматический импорт банковских выписок</li>
+                            <li>Улучшенные аналитические отчеты с графиками и диаграммами</li>
+                            <li>Возможность группировки клиентов по категориям</li>
+                        </ul>
+                        <h3>Исправления:</h3>
+                        <ul>
+                            <li>Улучшена производительность при работе с большими базами данных</li>
+                            <li>Исправлены проблемы с отображением в Internet Explorer 11</li>
+                            <li>Исправлены мелкие опечатки в интерфейсе</li>
+                        </ul>
+                    </div>
+                    <div class="changelog-screenshot">
+                        <img src="/static/images/changelog/v1.2.0.png" alt="Обновление Flowfy 1.2.0">
+                    </div>
+                </div>
             </div>
-            <div class="changelog-entry-content">
-                <h2 class="changelog-entry-title poppins-font">Новые функции аналитики</h2>
-                <ul class="changelog-list">
-                    <li>Добавлена возможность формирования отчетов по финансовым показателям за любой период</li>
-                    <li>Интерактивные графики для визуализации динамики продаж</li>
-                    <li>Система прогнозирования финансовых результатов на основе исторических данных</li>
-                    <li>Расширенные фильтры для углубленного анализа данных</li>
-                    <li>Улучшена производительность при формировании аналитических отчетов</li>
-                </ul>
+            
+            <div class="timeline-item">
+                <div class="timeline-date">
+                    <span class="date">Февраль 2025</span>
+                    <span class="version">v1.1.5</span>
+                </div>
+                <div class="timeline-point"></div>
+                <div class="timeline-card">
+                    <h2>Улучшения мобильной версии</h2>
+                    <div class="timeline-content">
+                        <p>В этом обновлении мы значительно улучшили работу на мобильных устройствах:</p>
+                        <ul>
+                            <li>Полностью переработан мобильный интерфейс</li>
+                            <li>Добавлена возможность создавать счета прямо со смартфона</li>
+                            <li>Улучшена скорость загрузки на медленных соединениях</li>
+                            <li>Добавлены push-уведомления об оплате счетов</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-        </div>
-
-        <div class="changelog-entry">
-            <div class="changelog-entry-date">
-                <div class="date-badge poppins-font">Апрель 2025</div>
-                <div class="version-badge poppins-font">v1.2.5</div>
+            
+            <div class="timeline-item">
+                <div class="timeline-date">
+                    <span class="date">Ноябрь 2024</span>
+                    <span class="version">v1.1.0</span>
+                </div>
+                <div class="timeline-point"></div>
+                <div class="timeline-card">
+                    <h2>Интеграция с платежными системами</h2>
+                    <div class="timeline-content">
+                        <p>Теперь вы можете принимать оплаты прямо через наш сервис:</p>
+                        <ul>
+                            <li>Интеграция с ЮKassa, PayPal и Stripe</li>
+                            <li>Автоматическое обновление статуса счетов при оплате</li>
+                            <li>Возможность настройки нескольких способов оплаты для клиентов</li>
+                            <li>Уведомления о статусе платежей</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-            <div class="changelog-entry-content">
-                <h2 class="changelog-entry-title poppins-font">Интеграция с платежными системами</h2>
-                <ul class="changelog-list">
-                    <li>Добавлена интеграция с популярными платежными системами: Сбербанк, Тинькофф, ЮKassa</li>
-                    <li>Автоматическая проверка статуса оплаты счетов</li>
-                    <li>Отправка уведомлений о новых платежах</li>
-                    <li>Возможность автоматического формирования актов выполненных работ после подтверждения оплаты</li>
-                </ul>
+            
+            <div class="timeline-item">
+                <div class="timeline-date">
+                    <span class="date">Август 2024</span>
+                    <span class="version">v1.0.5</span>
+                </div>
+                <div class="timeline-point"></div>
+                <div class="timeline-card">
+                    <h2>Улучшения производительности</h2>
+                    <div class="timeline-content">
+                        <p>Мы значительно улучшили скорость работы системы:</p>
+                        <ul>
+                            <li>Ускорена загрузка списка клиентов на 40%</li>
+                            <li>Оптимизирована работа с большими объемами данных</li>
+                            <li>Улучшен пользовательский интерфейс</li>
+                            <li>Добавлена возможность массового импорта клиентов из Excel</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-        </div>
-
-        <div class="changelog-entry">
-            <div class="changelog-entry-date">
-                <div class="date-badge poppins-font">Март 2025</div>
-                <div class="version-badge poppins-font">v1.2.0</div>
-            </div>
-            <div class="changelog-entry-content">
-                <h2 class="changelog-entry-title poppins-font">Улучшения в работе с клиентами</h2>
-                <ul class="changelog-list">
-                    <li>Новая система управления контактами с клиентами</li>
-                    <li>Добавлены шаблоны для быстрого создания типовых счетов</li>
-                    <li>Расширены возможности импорта и экспорта данных о клиентах</li>
-                    <li>Улучшена система уведомлений о важных событиях</li>
-                    <li>Исправлены ошибки и улучшена стабильность работы системы</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="changelog-entry">
-            <div class="changelog-entry-date">
-                <div class="date-badge poppins-font">Февраль 2025</div>
-                <div class="version-badge poppins-font">v1.1.5</div>
-            </div>
-            <div class="changelog-entry-content">
-                <h2 class="changelog-entry-title poppins-font">Система напоминаний и уведомлений</h2>
-                <ul class="changelog-list">
-                    <li>Добавлена система напоминаний о предстоящих платежах</li>
-                    <li>Настраиваемые уведомления по email и в системе</li>
-                    <li>Календарь важных финансовых событий</li>
-                    <li>Автоматические напоминания о просроченных платежах</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="changelog-entry">
-            <div class="changelog-entry-date">
-                <div class="date-badge poppins-font">Январь 2025</div>
-                <div class="version-badge poppins-font">v1.1.0</div>
-            </div>
-            <div class="changelog-entry-content">
-                <h2 class="changelog-entry-title poppins-font">Запуск мобильного приложения</h2>
-                <ul class="changelog-list">
-                    <li>Выпущено мобильное приложение для iOS и Android</li>
-                    <li>Синхронизация данных между мобильным приложением и веб-версией</li>
-                    <li>Быстрый доступ к ключевым функциям системы с мобильных устройств</li>
-                    <li>Возможность работы в автономном режиме с последующей синхронизацией</li>
-                    <li>Уведомления о важных событиях на мобильном устройстве</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="changelog-entry">
-            <div class="changelog-entry-date">
-                <div class="date-badge poppins-font">Декабрь 2024</div>
-                <div class="version-badge poppins-font">v1.0.0</div>
-            </div>
-            <div class="changelog-entry-content">
-                <h2 class="changelog-entry-title poppins-font">Первый релиз системы</h2>
-                <ul class="changelog-list">
-                    <li>Запуск в открытое бета-тестирование</li>
-                    <li>Базовый функционал для управления счетами и клиентами</li>
-                    <li>Система генерации финансовых документов</li>
-                    <li>Простая аналитика по финансовым показателям</li>
-                    <li>Базовая интеграция с бухгалтерскими системами</li>
-                </ul>
+            
+            <div class="timeline-item">
+                <div class="timeline-date">
+                    <span class="date">Май 2024</span>
+                    <span class="version">v1.0.0</span>
+                </div>
+                <div class="timeline-point"></div>
+                <div class="timeline-card">
+                    <h2>Запуск системы</h2>
+                    <div class="timeline-content">
+                        <p>Мы рады представить вам нашу систему автоматизации финансового учета и документооборота!</p>
+                        <p>Основные возможности первой версии:</p>
+                        <ul>
+                            <li>Создание и управление счетами</li>
+                            <li>База данных клиентов</li>
+                            <li>Автоматическая генерация PDF-документов</li>
+                            <li>Базовые отчеты и аналитика</li>
+                            <li>Напоминания о неоплаченных счетах</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</section>
-
-<section class="subscribe-section">
-    <div class="container">
+    
+    <div class="subscribe-section">
         <div class="subscribe-card">
-            <h2>Будьте в курсе всех обновлений</h2>
-            <p>Подпишитесь на нашу рассылку, чтобы первыми узнавать о новых функциях и улучшениях Billify</p>
+            <h2>Не пропустите обновления</h2>
+            <p>Подпишитесь на нашу рассылку, чтобы первыми узнавать о новых функциях и улучшениях Flowfy</p>
             <form class="subscribe-form">
-                <input type="email" placeholder="Ваш email" required aria-label="Ваш email для подписки">
+                <input type="email" placeholder="Ваш email" required>
                 <button type="submit" class="btn btn-primary">Подписаться</button>
             </form>
         </div>
     </div>
 </section>
 
+<!-- Микроразметка JSON-LD для страницы ченджлога -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "WebPage",
-  "name": "Журнал изменений и обновлений системы Billify",
-  "description": "Актуальная информация о всех обновлениях и улучшениях системы Billify для автоматизации финансового учета и документооборота.",
+  "@type": "Article",
+  "headline": "Журнал изменений и обновлений системы Flowfy",
+  "description": "Актуальная информация о всех обновлениях и улучшениях системы Flowfy для автоматизации финансового учета и документооборота.",
   "publisher": {
     "@type": "Organization",
-    "name": "Billify",
+    "name": "Flowfy",
     "logo": {
       "@type": "ImageObject",
-      "url": "{% static 'images/billify-logo.png' %}"
+      "url": "{% static 'images/flowfy-logo.png' %}"
     },
     "sameAs": [
-      "https://vk.com/billify",
-      "https://zen.yandex.ru/billify",
-      "https://www.youtube.com/channel/billify",
-      "https://t.me/billify"
+      "https://vk.com/flowfy",
+      "https://zen.yandex.ru/flowfy",
+      "https://www.youtube.com/channel/flowfy",
+      "https://t.me/flowfy"
     ]
   },
-  "mainEntity": {
-    "@type": "ItemList",
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "item": {
-          "@type": "SoftwareApplication",
-          "name": "Billify v1.2.0",
-          "softwareVersion": "1.2.0",
-          "datePublished": "2023-05-15",
-          "applicationCategory": "BusinessApplication"
-        }
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "item": {
-          "@type": "SoftwareApplication",
-          "name": "Billify v1.1.5",
-          "softwareVersion": "1.1.5",
-          "datePublished": "2023-05-02",
-          "applicationCategory": "BusinessApplication"
-        }
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "item": {
-          "@type": "SoftwareApplication",
-          "name": "Billify v1.1.0",
-          "softwareVersion": "1.1.0",
-          "datePublished": "2023-04-15",
-          "applicationCategory": "BusinessApplication"
-        }
-      },
-      {
-        "@type": "ListItem",
-        "position": 4,
-        "item": {
-          "@type": "SoftwareApplication",
-          "name": "Billify v1.0.5",
-          "softwareVersion": "1.0.5",
-          "datePublished": "2023-04-01",
-          "applicationCategory": "BusinessApplication"
-        }
-      },
-      {
-        "@type": "ListItem",
-        "position": 5,
-        "item": {
-          "@type": "SoftwareApplication",
-          "name": "Billify v1.0.0",
-          "softwareVersion": "1.0.0",
-          "datePublished": "2023-03-15",
-          "applicationCategory": "BusinessApplication"
-        }
-      }
-    ]
-  }
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ request.build_absolute_uri }}"
+  },
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Flowfy v1.2.0",
+      "description": "Интеграция с банками и улучшенные отчеты"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Flowfy v1.1.5",
+      "description": "Улучшения мобильной версии"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Flowfy v1.1.0",
+      "description": "Интеграция с платежными системами"
+    },
+    {
+      "@type": "ListItem",
+      "position": 4,
+      "name": "Flowfy v1.0.5",
+      "description": "Улучшения производительности"
+    },
+    {
+      "@type": "ListItem",
+      "position": 5,
+      "name": "Flowfy v1.0.0",
+      "description": "Запуск системы"
+    }
+  ]
 }
 </script>
 {% endblock %}
