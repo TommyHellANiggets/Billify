@@ -1,16 +1,18 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
-{% block title %}Управление счетами и платежами{% endblock %}
+{% block title %}{% trans "Управление счетами и платежами" %}{% endblock %}
 
-{% block meta_description %}Система управления счетами Billify - создавайте и отслеживайте счета в едином интерфейсе. Автоматизация выставления, мониторинга и оплаты счетов для малого бизнеса.{% endblock %}
+{% block meta_description %}{% trans "Система управления счетами Billify - создавайте и отслеживайте счета в едином интерфейсе. Автоматизация выставления, мониторинга и оплаты счетов для малого бизнеса." %}{% endblock %}
 
-{% block meta_keywords %}управление счетами, выставление счетов, оплата счетов, финансовый учет, автоматизация бизнеса, учет для ИП, документооборот, входящие счета, исходящие счета{% endblock %}
+{% block meta_keywords %}{% trans "управление счетами, выставление счетов, оплата счетов, финансовый учет, автоматизация бизнеса, учет для ИП, документооборот, входящие счета, исходящие счета" %}{% endblock %}
 
-{% block og_title %}Управление счетами и платежами | Billify - автоматизация финансового учета{% endblock %}
+{% block og_title %}{% trans "Управление счетами и платежами | Billify - автоматизация финансового учета" %}{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="/static/css/clients/list.css">
+<link rel="stylesheet" href="/static/css/invoices/list.css">
 {% endblock %}
 
 {% block content %}
@@ -19,23 +21,23 @@
 {
   "@context": "https://schema.org",
   "@type": "ItemList",
-  "name": "Управление счетами и платежами в Billify",
-  "description": "Система для создания и отслеживания счетов в бизнесе",
+  "name": "{% trans "Управление счетами и платежами в Billify" %}",
+  "description": "{% trans "Система для создания и отслеживания счетов в бизнесе" %}",
   "numberOfItems": "{{ total_count|default:'0' }}",
   "itemListElement": [
     {
       "@type": "ListItem",
       "position": 1,
-      "name": "Входящие счета",
+      "name": "{% trans "Входящие счета" %}",
       "url": "{{ request.build_absolute_uri }}?type=incoming",
-      "description": "Счета от поставщиков услуг или товаров"
+      "description": "{% trans "Счета от поставщиков услуг или товаров" %}"
     },
     {
       "@type": "ListItem",
       "position": 2,
-      "name": "Исходящие счета",
+      "name": "{% trans "Исходящие счета" %}",
       "url": "{{ request.build_absolute_uri }}?type=outgoing",
-      "description": "Счета для ваших клиентов"
+      "description": "{% trans "Счета для ваших клиентов" %}"
     }
   ]
 }
@@ -43,43 +45,61 @@
 
 <div class="clients-page">
     <div class="page-header d-flex justify-content-between align-items-center mb-3">
-        <h1>Управление счетами</h1>
+        <h1>{% trans "Управление счетами" %}</h1>
         <div>
-            <a href="{% url 'invoices:create_incoming' %}" class="btn-add mr-2">Входящий счет</a>
-            <a href="{% url 'invoices:create_outgoing' %}" class="btn-add">Исходящий счет</a>
+            <a href="{% url 'invoices:create_incoming' %}" class="btn-add mr-2">{% trans "Входящий счет" %}</a>
+            <a href="{% url 'invoices:create_outgoing' %}" class="btn-add">{% trans "Исходящий счет" %}</a>
         </div>
+    </div>
+    
+    <!-- Мобильный фильтр-аккордеон -->
+    <div class="mobile-filter-toggle">
+        <button class="filter-toggle-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="filter-icon">
+                <path d="M22 3H2L10 12.46V19L14 21V12.46L22 3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            {% trans "Фильтры" %}
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="chevron-icon">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
     </div>
     
     <div class="filters card mb-3">
         <form method="get" action="{% url 'invoices:list' %}" class="d-flex">
             <div class="search-box">
-                <input type="text" name="search" value="{{ search_query }}" placeholder="Поиск по номеру или контрагенту...">
-                <span class="search-icon">🔍</span>
+                <input type="text" name="search" value="{{ search_query }}" placeholder="{% trans "Поиск по номеру или контрагенту..." %}">
+                <span class="search-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </span>
             </div>
             
             <div class="type-filter">
-                <select name="type" aria-label="Фильтр по типу счета">
-                    <option value="">Все типы</option>
-                    <option value="incoming" {% if current_type == 'incoming' %}selected{% endif %}>Входящие</option>
-                    <option value="outgoing" {% if current_type == 'outgoing' %}selected{% endif %}>Исходящие</option>
+                <select name="type" aria-label="{% trans "Фильтр по типу счета" %}">
+                    <option value="">{% trans "Все типы" %}</option>
+                    <option value="incoming" {% if current_type == 'incoming' %}selected{% endif %}>{% trans "Входящие" %}</option>
+                    <option value="outgoing" {% if current_type == 'outgoing' %}selected{% endif %}>{% trans "Исходящие" %}</option>
                 </select>
             </div>
             
             <div class="entity-filter">
-                <select name="status" aria-label="Фильтр по статусу">
-                    <option value="">Все статусы</option>
-                    <option value="new" {% if status == 'new' %}selected{% endif %}>Новый</option>
-                    <option value="sent" {% if status == 'sent' %}selected{% endif %}>Отправлен</option>
-                    <option value="pending" {% if status == 'pending' %}selected{% endif %}>Ожидает оплаты</option>
-                    <option value="paid" {% if status == 'paid' %}selected{% endif %}>Оплачен</option>
-                    <option value="overdue" {% if status == 'overdue' %}selected{% endif %}>Просрочен</option>
-                    <option value="cancelled" {% if status == 'cancelled' %}selected{% endif %}>Отменен</option>
+                <select name="status" aria-label="{% trans "Фильтр по статусу" %}">
+                    <option value="">{% trans "Все статусы" %}</option>
+                    <option value="new" {% if status == 'new' %}selected{% endif %}>{% trans "Новый" %}</option>
+                    <option value="sent" {% if status == 'sent' %}selected{% endif %}>{% trans "Отправлен" %}</option>
+                    <option value="pending" {% if status == 'pending' %}selected{% endif %}>{% trans "Ожидает оплаты" %}</option>
+                    <option value="paid" {% if status == 'paid' %}selected{% endif %}>{% trans "Оплачен" %}</option>
+                    <option value="overdue" {% if status == 'overdue' %}selected{% endif %}>{% trans "Просрочен" %}</option>
+                    <option value="cancelled" {% if status == 'cancelled' %}selected{% endif %}>{% trans "Отменен" %}</option>
                 </select>
             </div>
             
             <div class="filter-buttons">
-                <button type="submit" class="btn-apply">Применить</button>
-                <a href="{% url 'invoices:list' %}" class="btn-reset">Сбросить</a>
+                <button type="submit" class="btn-apply">{% trans "Применить" %}</button>
+                <a href="{% url 'invoices:list' %}" class="btn-reset">{% trans "Сбросить" %}</a>
             </div>
         </form>
     </div>
@@ -89,20 +109,20 @@
             <table>
                 <thead>
                     <tr>
-                        <th>№ счета</th>
+                        <th>{% trans "№ счета" %}</th>
                         <th>
                             {% if current_type == 'incoming' %}
-                                Поставщик
+                                {% trans "Поставщик" %}
                             {% elif current_type == 'outgoing' %}
-                                Клиент
+                                {% trans "Клиент" %}
                             {% else %}
-                                Контрагент
+                                {% trans "Контрагент" %}
                             {% endif %}
                         </th>
-                        <th>Дата</th>
-                        <th>Сумма</th>
-                        <th>Статус</th>
-                        <th>Действия</th>
+                        <th>{% trans "Дата" %}</th>
+                        <th>{% trans "Сумма" %}</th>
+                        <th>{% trans "Статус" %}</th>
+                        <th>{% trans "Действия" %}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -131,34 +151,57 @@
                             <td>
                                 <span class="entity-badge {% if invoice.status == 'paid' %}client-badge{% elif invoice.status == 'overdue' %}supplier-badge{% else %}type-badge individual-badge{% endif %}">
                                     {% if invoice.status == 'new' %}
-                                        Новый
+                                        {% trans "Новый" %}
                                     {% elif invoice.status == 'sent' %}
-                                        Отправлен
+                                        {% trans "Отправлен" %}
                                     {% elif invoice.status == 'pending' %}
-                                        Ожидает оплаты
+                                        {% trans "Ожидает оплаты" %}
                                     {% elif invoice.status == 'paid' %}
-                                        Оплачен
+                                        {% trans "Оплачен" %}
                                     {% elif invoice.status == 'overdue' %}
-                                        Просрочен
+                                        {% trans "Просрочен" %}
                                     {% elif invoice.status == 'cancelled' %}
-                                        Отменен
+                                        {% trans "Отменен" %}
                                     {% else %}
                                         {{ invoice.status }}
                                     {% endif %}
                                 </span>
                             </td>
                             <td class="actions">
-                                <a href="{% url 'invoices:detail' invoice.id %}" class="btn-action btn-view" title="Просмотр">
-                                    <span class="btn-icon">👁️</span>
+                                <a href="{% url 'invoices:detail' invoice.id %}" class="btn-action btn-view" title="{% trans "Просмотр" %}">
+                                    <span class="btn-icon">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12C23 12 19 20 12 20C5 20 1 12 1 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </span>
                                 </a>
-                                <a href="{% url 'invoices:edit' invoice.id %}" class="btn-action btn-edit" title="Редактировать">
-                                    <span class="btn-icon">✏️</span>
+                                <a href="{% url 'invoices:edit' invoice.id %}" class="btn-action btn-edit" title="{% trans "Редактировать" %}">
+                                    <span class="btn-icon">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M18.5 2.49998C18.8978 2.10216 19.4374 1.87866 20 1.87866C20.5626 1.87866 21.1022 2.10216 21.5 2.49998C21.8978 2.89781 22.1213 3.43737 22.1213 3.99998C22.1213 4.56259 21.8978 5.10216 21.5 5.49998L12 15L8 16L9 12L18.5 2.49998Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </span>
                                 </a>
                                 <a href="{% url 'invoices:pdf' invoice.id %}" class="btn-action btn-view" title="PDF">
-                                    <span class="btn-icon">📄</span>
+                                    <span class="btn-icon">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M14 2V8H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M16 13H8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M16 17H8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M10 9H9H8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </span>
                                 </a>
-                                <a href="{% url 'invoices:delete' invoice.id %}" class="btn-action btn-delete" title="Удалить" onclick="return confirm('Вы уверены, что хотите удалить этот счет?');">
-                                    <span class="btn-icon">🗑️</span>
+                                <a href="{% url 'invoices:delete' invoice.id %}" class="btn-action btn-delete" title="{% trans "Удалить" %}" onclick="return confirm('{% trans "Вы уверены, что хотите удалить этот счет?" %}');">
+                                    <span class="btn-icon">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M3 6H5H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6H19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </span>
                                 </a>
                             </td>
                         </tr>
@@ -171,8 +214,8 @@
             <div class="pagination">
                 <ul class="pagination-list">
                     {% if invoices.has_previous %}
-                        <li><a href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if current_type %}&type={{ current_type }}{% endif %}{% if status %}&status={{ status }}{% endif %}">&laquo; Первая</a></li>
-                        <li><a href="?page={{ invoices.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if current_type %}&type={{ current_type }}{% endif %}{% if status %}&status={{ status }}{% endif %}">Предыдущая</a></li>
+                        <li><a href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if current_type %}&type={{ current_type }}{% endif %}{% if status %}&status={{ status }}{% endif %}">{% trans "Первая" %} &laquo;</a></li>
+                        <li><a href="?page={{ invoices.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if current_type %}&type={{ current_type }}{% endif %}{% if status %}&status={{ status }}{% endif %}">{% trans "Предыдущая" %}</a></li>
                     {% endif %}
                     
                     {% for num in invoices.paginator.page_range %}
@@ -184,8 +227,8 @@
                     {% endfor %}
                     
                     {% if invoices.has_next %}
-                        <li><a href="?page={{ invoices.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if current_type %}&type={{ current_type }}{% endif %}{% if status %}&status={{ status }}{% endif %}">Следующая</a></li>
-                        <li><a href="?page={{ invoices.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if current_type %}&type={{ current_type }}{% endif %}{% if status %}&status={{ status }}{% endif %}">Последняя &raquo;</a></li>
+                        <li><a href="?page={{ invoices.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if current_type %}&type={{ current_type }}{% endif %}{% if status %}&status={{ status }}{% endif %}">{% trans "Следующая" %}</a></li>
+                        <li><a href="?page={{ invoices.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if current_type %}&type={{ current_type }}{% endif %}{% if status %}&status={{ status }}{% endif %}">{% trans "Последняя" %} &raquo;</a></li>
                     {% endif %}
                 </ul>
             </div>
@@ -193,22 +236,45 @@
     {% else %}
         <div class="empty-state card">
             <div class="empty-state-content">
-                <div class="empty-icon">📑</div>
-                <h2>Нет счетов</h2>
-                <p>В системе пока нет счетов{% if search_query or current_type or status %}, соответствующих заданным критериям{% endif %}.</p>
+                <div class="empty-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M14 2V8H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M16 13H8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M16 17H8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M10 9H9H8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <h2>{% trans "Нет счетов" %}</h2>
+                <p>{% trans "В системе пока нет счетов" %}{% if search_query or current_type or status %}{% trans ", соответствующих заданным критериям" %}{% endif %}.</p>
                 <div class="empty-actions">
-                    <a href="{% url 'invoices:create_incoming' %}" class="btn-add">Создать входящий</a>
-                    <a href="{% url 'invoices:create_outgoing' %}" class="btn-add">Создать исходящий</a>
+                    <a href="{% url 'invoices:create_incoming' %}" class="btn-add">{% trans "Создать входящий" %}</a>
+                    <a href="{% url 'invoices:create_outgoing' %}" class="btn-add">{% trans "Создать исходящий" %}</a>
                     {% if search_query or current_type or status %}
-                        <a href="{% url 'invoices:list' %}" class="btn-reset">Сбросить фильтры</a>
+                        <a href="{% url 'invoices:list' %}" class="btn-reset">{% trans "Сбросить фильтры" %}</a>
                     {% endif %}
                 </div>
             </div>
         </div>
     {% endif %}
 </div>
+
 {% endblock %}
 
 {% block extra_js %}
 <script src="/static/js/invoices/list.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Переключение видимости фильтров на мобильных устройствах
+        const filterToggle = document.querySelector('.filter-toggle-btn');
+        const filtersBlock = document.querySelector('.filters');
+        
+        if (filterToggle && filtersBlock) {
+            filterToggle.addEventListener('click', function() {
+                filtersBlock.classList.toggle('filters-visible');
+                this.classList.toggle('active');
+            });
+        }
+    });
+</script>
 {% endblock %} 

@@ -1,5 +1,6 @@
 .header {
     background-color: rgba(255, 255, 255, 0.8);
+    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.03);
     padding: 1.25rem 0;
@@ -35,6 +36,12 @@
 
 .logo a:hover {
     opacity: 0.9;
+}
+
+.logo a img, 
+.logo a svg {
+    max-height: 40px;
+    width: auto;
 }
 
 .logo-accent {
@@ -146,9 +153,14 @@
 
 .footer-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 2rem;
     margin-bottom: 3rem;
+}
+
+.footer-col {
+    display: flex;
+    flex-direction: column;
 }
 
 .footer-logo {
@@ -165,6 +177,7 @@
 .footer-description {
     color: var(--color-text-light);
     margin-bottom: 1.5rem;
+    line-height: 1.6;
 }
 
 .footer-heading {
@@ -176,6 +189,8 @@
 
 .footer-links {
     list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
 .footer-link {
@@ -185,7 +200,7 @@
 .footer-link a {
     color: var(--color-text-light);
     text-decoration: none;
-    transition: color 0.15s ease;
+    transition: color 0.15s ease, transform 0.2s ease;
     padding: 0.25rem 0;
     display: inline-block;
 }
@@ -198,6 +213,7 @@
 .social-links {
     display: flex;
     gap: 1rem;
+    flex-wrap: wrap;
 }
 
 .social-link {
@@ -240,7 +256,8 @@
 
 @media (max-width: 1024px) {
     .footer-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: 1fr 1fr;
+        row-gap: 3rem;
     }
 }
 
@@ -272,7 +289,162 @@
         visibility: visible;
     }
     
+    .footer {
+        padding: 3rem 0 1.5rem;
+    }
+    
     .footer-grid {
         grid-template-columns: 1fr;
+        gap: 2.5rem;
     }
+    
+    .footer-col {
+        padding-bottom: 1rem;
+    }
+    
+    .footer-col:not(:last-child) {
+        border-bottom: 1px solid var(--color-light-gray);
+    }
+    
+    .social-links {
+        margin-bottom: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer {
+        padding: 2rem 0 1rem;
+    }
+    
+    .footer-grid {
+        gap: 2rem;
+    }
+    
+    .footer-heading {
+        margin-bottom: 1rem;
+    }
+    
+    .social-link {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .social-link svg {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+/* Горизонтальная градиентная пунктирная линия для навбара */
+.nav-separator {
+    height: 1px;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    background-image: linear-gradient(to right,
+        transparent 0%,
+        transparent 1%,
+        var(--color-primary) 1%,
+        var(--color-primary) 3%,
+        transparent 3%,
+        transparent 6%,
+        var(--color-primary) 6%,
+        var(--color-primary) 8%,
+        transparent 8%,
+        transparent 11%,
+        var(--color-primary) 11%,
+        var(--color-primary) 13%,
+        transparent 13%,
+        transparent 16%,
+        var(--color-primary) 16%,
+        var(--color-primary) 18%,
+        transparent 18%,
+        transparent 21%,
+        var(--color-primary) 21%,
+        var(--color-primary) 23%,
+        transparent 23%,
+        transparent 26%,
+        var(--color-primary) 26%,
+        var(--color-primary) 28%,
+        transparent 28%,
+        transparent 31%,
+        var(--color-primary) 31%,
+        var(--color-primary) 33%,
+        transparent 33%,
+        transparent 36%,
+        var(--color-primary) 36%,
+        var(--color-primary) 38%,
+        transparent 38%,
+        transparent 41%,
+        var(--color-primary) 41%,
+        var(--color-primary) 43%,
+        transparent 43%,
+        transparent 46%,
+        var(--color-primary) 46%,
+        var(--color-primary) 48%,
+        transparent 48%,
+        transparent 51%,
+        var(--color-primary) 51%,
+        var(--color-primary) 53%,
+        transparent 53%,
+        transparent 56%,
+        var(--color-primary) 56%,
+        var(--color-primary) 58%,
+        transparent 58%,
+        transparent 61%,
+        var(--color-primary) 61%,
+        var(--color-primary) 63%,
+        transparent 63%,
+        transparent 66%,
+        var(--color-primary) 66%,
+        var(--color-primary) 68%,
+        transparent 68%,
+        transparent 71%,
+        var(--color-primary) 71%,
+        var(--color-primary) 73%,
+        transparent 73%,
+        transparent 76%,
+        var(--color-primary) 76%,
+        var(--color-primary) 78%,
+        transparent 78%,
+        transparent 81%,
+        var(--color-primary) 81%,
+        var(--color-primary) 83%,
+        transparent 83%,
+        transparent 86%,
+        var(--color-primary) 86%,
+        var(--color-primary) 92%,
+        transparent 92%,
+        transparent 95%,
+        var(--color-primary) 95%,
+        var(--color-primary) 100%);
+    opacity: 0.7;
+    position: relative;
+}
+
+/* Добавляем треугольник-стрелку в конец пунктирной линии */
+.nav-separator::after {
+    content: '';
+    display: block;
+    position: absolute;
+    right: -5px;
+    top: -4px;
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 8px solid var(--color-primary);
+    opacity: 0.8;
+}
+
+/* Адаптивность для разделителя */
+@media (max-width: 768px) {
+    .nav-separator {
+        display: none;
+    }
+}
+
+/* Применение шрифта Poppins ко всем элементам в хедере и футере */
+.header, .header *, .footer, .footer * {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
 } 

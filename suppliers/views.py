@@ -6,6 +6,7 @@ from django.views.decorators.http import require_GET
 from .models import Supplier
 import logging
 
+@login_required
 def supplier_list(request):
     suppliers = Supplier.objects.filter(is_active=True)
     return render(request, 'suppliers/list.html', {
@@ -13,6 +14,7 @@ def supplier_list(request):
         'active_tab': 'suppliers'
     })
 
+@login_required
 def supplier_detail(request, supplier_id):
     supplier = get_object_or_404(Supplier, id=supplier_id)
     return render(request, 'suppliers/detail.html', {
@@ -70,6 +72,7 @@ def supplier_create(request):
     
     return render(request, 'suppliers/form.html', context)
 
+@login_required
 def supplier_edit(request, supplier_id):
     supplier = get_object_or_404(Supplier, id=supplier_id)
     # Здесь будет реализация редактирования поставщика
@@ -79,6 +82,7 @@ def supplier_edit(request, supplier_id):
         'active_tab': 'suppliers'
     })
 
+@login_required
 def supplier_delete(request, supplier_id):
     supplier = get_object_or_404(Supplier, id=supplier_id)
     if request.method == 'POST':

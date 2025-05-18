@@ -25,6 +25,7 @@ import logging
 import hashlib
 import uuid
 from datetime import datetime, timedelta
+from urllib.parse import urlparse, urlunparse
 
 # Create your views here.
 
@@ -512,7 +513,6 @@ def verify_email(request, user_id, token):
     response['Location'] += '#email-verification'
     return response
 
-@login_required
 @require_POST
 @csrf_exempt
 def change_language_ajax(request):
@@ -522,23 +522,88 @@ def change_language_ajax(request):
         data = json.loads(request.body)
         language = data.get('language', 'ru')
         
-        # Обновляем профиль компании пользователя
-        if hasattr(request.user, 'company_profile'):
-            profile = request.user.company_profile
-            profile.preferred_language = language
-            profile.save()
-        else:
-            # Если профиль не существует, создаем его
-            from core.models import CompanyProfile
-            profile = CompanyProfile.objects.create(
-                user=request.user,
-                preferred_language=language
-            )
+        # Проверяем, что язык один из поддерживаемых
+        from django.conf import settings
+        supported_languages = [code for code, name in settings.LANGUAGES]
+        default_language = settings.LANGUAGE_CODE.split('-')[0]  # 'ru' по умолчанию
+        if language not in supported_languages:
+            language = default_language
         
-        return JsonResponse({
+        # Обновляем профиль компании только для аутентифицированных пользователей
+        if request.user.is_authenticated:
+            if hasattr(request.user, 'company_profile'):
+                profile = request.user.company_profile
+                profile.preferred_language = language
+                profile.save()
+            else:
+                # Если профиль не существует, создаем его
+                from core.models import CompanyProfile
+                profile = CompanyProfile.objects.create(
+                    user=request.user,
+                    preferred_language=language
+                )
+        
+        # Устанавливаем язык в сессии Django
+        from django.utils.translation import activate
+        activate(language)
+        request.session['_language'] = language
+        
+        # Генерируем новый URL с префиксом языка
+        current_path = request.META.get('HTTP_REFERER', '/')
+        
+        # Парсим текущий URL
+        parsed_url = urlparse(current_path)
+        path = parsed_url.path.lstrip('/')
+        path_parts = path.split('/')
+        
+        # Проверяем наличие языкового префикса в текущем URL
+        has_lang_prefix = path_parts and path_parts[0] in supported_languages
+        
+        # Формируем новый путь с правильным языковым префиксом
+        if has_lang_prefix:
+            # Удаляем текущий языковой префикс
+            path_parts = path_parts[1:]
+            
+        # Добавляем новый префикс, если язык не является языком по умолчанию
+        if language != default_language:
+            path_parts.insert(0, language)
+            
+        # Собираем новый URL
+        new_path = '/' + '/'.join(path_parts)
+        if new_path == '/': 
+            new_path = '/'
+        
+        # Формируем полный URL
+        redirect_url = urlunparse((
+            parsed_url.scheme,
+            parsed_url.netloc,
+            new_path,
+            parsed_url.params,
+            parsed_url.query,
+            parsed_url.fragment
+        ))
+        
+        # Устанавливаем куку для языка
+        response = JsonResponse({
             'success': True,
-            'message': f'Язык интерфейса изменен на {language}'
+            'message': f'Язык интерфейса изменен на {language}',
+            'redirect': True,  # Флаг для JS, что нужно перезагрузить страницу
+            'redirect_url': redirect_url  # URL для перенаправления
         })
+        
+        # Устанавливаем cookie с языком
+        response.set_cookie(
+            settings.LANGUAGE_COOKIE_NAME,
+            language,
+            max_age=settings.LANGUAGE_COOKIE_AGE,
+            path=settings.LANGUAGE_COOKIE_PATH,
+            domain=settings.LANGUAGE_COOKIE_DOMAIN,
+            secure=settings.LANGUAGE_COOKIE_SECURE,
+            httponly=settings.LANGUAGE_COOKIE_HTTPONLY,
+            samesite=settings.LANGUAGE_COOKIE_SAMESITE,
+        )
+        
+        return response
     except Exception as e:
         return JsonResponse({
             'success': False,
@@ -621,3 +686,11 @@ def send_verification_email_ajax(request):
             'success': False,
             'message': 'Произошла ошибка при отправке письма'
         }, status=500)
+
+def privacy(request):
+    """Страница политики конфиденциальности"""
+    return render(request, 'core/privacy.html', {'title': 'Политика конфиденциальности - Billify'})
+
+def legal(request):
+    """Страница правовой информации"""
+    return render(request, 'core/legal.html', {'title': 'Правовая информация - Billify'})

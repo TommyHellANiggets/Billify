@@ -1,38 +1,696 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
-{% block title %}{% if request.path == "/login/" %}Вход{% else %}Регистрация{% endif %} - Billify{% endblock %}
+{% block title %}{% if request.path == "/login/" %}{% trans "Вход" %}{% else %}{% trans "Регистрация" %}{% endif %} - Billify{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/accounts/auth.css' %}">
+<style>
+    .main-content {
+        min-height: auto !important;
+    }
+
+    .auth-card {
+        max-width: 1200px;
+        margin: 3rem auto;
+        border-radius: 30px;
+        box-shadow: 0 15px 35px rgba(77, 139, 248, 0.1);
+        position: relative;
+        z-index: 5;
+        border: none;
+        overflow: hidden;
+        transition: height 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+    }
+    
+    .auth-shape {
+        position: absolute;
+        border-radius: 50%;
+        z-index: 1;
+        filter: blur(40px);
+        pointer-events: none;
+    }
+    
+    .auth-shape-1 {
+        width: 40%; 
+        height: 40%;
+        max-width: 400px;
+        max-height: 400px;
+        background: rgba(77, 139, 248, 0.06);
+        top: -15%;
+        right: -10%;
+        animation: float 8s ease-in-out infinite;
+    }
+    
+    .auth-shape-2 {
+        width: 30%;
+        height: 30%;
+        max-width: 300px;
+        max-height: 300px;
+        background: rgba(90, 103, 216, 0.05);
+        bottom: -10%;
+        left: -5%;
+        animation: float 10s ease-in-out infinite reverse;
+    }
+    
+    .auth-shape-3 {
+        width: 20%;
+        height: 20%;
+        max-width: 200px;
+        max-height: 200px;
+        background: rgba(108, 117, 125, 0.04);
+        top: 60%;
+        right: 10%;
+        animation: float 12s ease-in-out infinite 1s;
+    }
+    
+    @keyframes float {
+        0% {
+            transform: translateY(0) translateX(0);
+        }
+        50% {
+            transform: translateY(20px) translateX(10px);
+        }
+        100% {
+            transform: translateY(0) translateX(0);
+        }
+    }
+    
+    /* Новые стили для анимированного переключения */
+    .auth-wrapper {
+        position: relative;
+        width: 100%;
+        box-shadow: 0 10px 30px rgba(77, 139, 248, 0.08);
+        overflow: visible;
+        transition: height 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+    }
+    
+    /* Фиксируем пропорции для каждой стороны */
+    .auth-sides-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        position: relative;
+        width: 100%;
+        transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+    }
+    
+    .forms-wrapper {
+        width: 100%;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    
+    .auth-sides-container.front {
+        transform: translateX(0);
+        grid-template-rows: auto;
+    }
+    
+    .auth-sides-container.back {
+        transform: translateX(100%);
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        pointer-events: none;
+    }
+    
+    .auth-wrapper.flipped .auth-sides-container.front {
+        transform: translateX(-100%);
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        pointer-events: none;
+    }
+    
+    .auth-wrapper.flipped .auth-sides-container.back {
+        transform: translateX(0);
+        opacity: 1;
+        position: relative;
+        pointer-events: all;
+    }
+    
+    /* Добавляем эффект отражения и тени при движении */
+    .auth-side {
+        transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1), box-shadow 0.8s ease;
+    }
+    
+    .auth-wrapper.flipped .front .auth-side {
+        transform: scale(0.95);
+    }
+    
+    .auth-wrapper:not(.flipped) .back .auth-side {
+        transform: scale(0.95);
+    }
+    
+    .auth-wrapper.flipped .front .auth-forms {
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.05);
+    }
+    
+    .auth-wrapper:not(.flipped) .back .auth-forms {
+        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.05);
+    }
+    
+    /* Панель переключения */
+    .mode-toggle {
+        position: absolute;
+        top: 39px;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 20;
+        background-color: white;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 30px;
+        padding: 6px;
+        box-shadow: 0 8px 24px rgba(149, 157, 165, 0.2);
+        width: auto;
+        display: flex;
+        justify-content: center;
+    }
+    
+    .mode-toggle button {
+        background: none;
+        border: none;
+        padding: 12px 24px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: rgba(0, 0, 0, 0.6);
+        cursor: pointer;
+        border-radius: 24px;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .mode-toggle button svg {
+        width: 16px;
+        height: 16px;
+    }
+    
+    .mode-toggle button.active {
+        background-color: var(--color-primary);
+        color: white;
+        box-shadow: 0 4px 12px rgba(77, 139, 248, 0.3);
+    }
+    
+    .mode-toggle button.active svg path {
+        fill: white;
+    }
+    
+    /* Стили для инпутов с SVG иконками */
+    .input-with-icon {
+        position: relative;
+    }
+    
+    .input-with-icon input {
+        padding: 1rem 1rem 1rem 3rem;
+        border-radius: 16px;
+        font-size: 1.05rem;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+        transition: all 0.3s ease;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    .input-with-icon svg {
+        position: absolute;
+        left: 1.2rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 20px;
+        height: 20px;
+        color: var(--color-primary);
+    }
+    
+    .input-with-icon svg path {
+        fill: var(--color-primary);
+    }
+    
+    .input-with-icon input:focus {
+        box-shadow: 0 0 0 4px rgba(77, 139, 248, 0.15);
+        transform: translateY(-2px);
+        border-color: var(--color-primary);
+    }
+    
+    .forgot-password {
+        color: var(--color-primary);
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .forgot-password:hover {
+        text-decoration: underline;
+    }
+    
+    .auth-side {
+        padding: 4rem;
+        padding-top: 5rem;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .auth-illustration {
+        background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+        border-radius: 0;
+        height: 100%;
+    }
+    
+    .auth-forms {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    
+    .illustration-content {
+        text-align: center;
+        color: white;
+        max-width: 80%;
+        margin: 0 auto;
+    }
+    
+    .illustration-content h2 {
+        font-weight: 700;
+        font-size: 2rem;
+        margin: 1.5rem 0 1rem;
+    }
+    
+    .illustration-content p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+    }
+    
+    .auth-image {
+        max-width: 80%;
+        height: auto;
+        margin-bottom: 1rem;
+    }
+    
+    .auth-tabs {
+        display: none; /* Скрываем старые табы */
+    }
+    
+    .auth-form-container h3 {
+        font-size: 2rem;
+        margin-bottom: 0.8rem;
+        color: var(--color-text-dark);
+        font-weight: 700;
+    }
+    
+    .form-subtitle {
+        font-size: 1.1rem;
+        margin-bottom: 2.5rem;
+    }
+    
+    .form-group label {
+        font-size: 1.05rem;
+        margin-bottom: 0.8rem;
+    }
+    
+    .btn-auth {
+        padding: 1.1rem;
+        border-radius: 16px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        background-color: var(--color-primary);
+        color: white;
+        border: none;
+        box-shadow: 0 8px 15px rgba(77, 139, 248, 0.2);
+        transition: all 0.3s ease;
+        width: 100%;
+        cursor: pointer;
+    }
+    
+    .btn-auth:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 20px rgba(77, 139, 248, 0.3);
+    }
+    
+    .form-options {
+        margin-bottom: 2rem;
+    }
+    
+    .remember-me input, .terms-agree input {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgba(0, 0, 0, 0.2);
+        border-radius: 4px;
+        outline: none;
+        transition: all 0.3s;
+        position: relative;
+        margin-right: 8px;
+        vertical-align: middle;
+        cursor: pointer;
+    }
+    
+    .remember-me input:checked, 
+    .terms-agree input:checked {
+        background-color: var(--color-primary);
+        border-color: var(--color-primary);
+    }
+    
+    .remember-me input:checked::before, 
+    .terms-agree input:checked::before {
+        content: '';
+        position: absolute;
+        left: 6px;
+        top: 2px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+    }
+    
+    .remember-me label, .terms-agree label {
+        font-size: 0.95rem;
+        color: rgba(0, 0, 0, 0.7);
+        vertical-align: middle;
+        cursor: pointer;
+    }
+    
+    .form-footer {
+        margin-top: 2rem;
+        font-size: 1.05rem;
+        text-align: center;
+    }
+    
+    .form-footer a {
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        color: var(--color-primary);
+    }
+    
+    .form-footer a:hover {
+        text-decoration: underline;
+    }
+    
+    /* Анимация для форм */
+    .auth-form-container {
+        display: block;
+        opacity: 1;
+        transform: translateY(0);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    
+    /* Плавные переходы для контейнеров */
+    .auth-sides-container, 
+    .auth-side, 
+    .auth-forms, 
+    .auth-illustration, 
+    .forms-wrapper,
+    .auth-form-container {
+        transition: all 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+    }
+    
+    /* Улучшаем анимацию для внутренних элементов */
+    .illustration-content h2,
+    .illustration-content p,
+    .auth-form-container h3,
+    .form-subtitle,
+    .form-group,
+    .btn-auth,
+    .form-footer {
+        transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+        transition-delay: calc(var(--delay, 0) * 0.05s);
+    }
+    
+    /* Обновляем стили для мобильной версии */
+    @media (max-width: 992px) {
+        .auth-sides-container {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            width: 100%;
+            transition: all 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+        
+        .auth-side {
+            padding: 3rem;
+        }
+        
+        .auth-card {
+            padding-top: 2rem;
+        }
+        
+        .mode-toggle {
+            transform: translate(-50%, -50%) scale(0.9);
+        }
+        
+        .auth-illustration {
+            border-radius: 30px 30px 0 0;
+            padding: 2rem;
+        }
+        
+        /* Для мобильных устройств используем другую анимацию */
+        .auth-wrapper {
+            overflow: visible;
+        }
+        
+        .auth-sides-container.front {
+            transform: translateY(0);
+            opacity: 1;
+            z-index: 2;
+            position: relative;
+        }
+        
+        .auth-sides-container.back {
+            transform: translateY(20px);
+            opacity: 0;
+            z-index: 1;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            right: 0;
+        }
+        
+        .auth-wrapper.flipped .auth-sides-container.front {
+            transform: translateY(-20px);
+            opacity: 0;
+            z-index: 1;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+        }
+        
+        .auth-wrapper.flipped .auth-sides-container.back {
+            transform: translateY(0);
+            opacity: 1; 
+            z-index: 2;
+            position: relative;
+        }
+        
+        /* Отключаем анимации трансформации для внутренних элементов на мобильных */
+        .auth-wrapper.flipped .front .illustration-content h2,
+        .auth-wrapper.flipped .front .auth-form-container h3,
+        .auth-wrapper.flipped .front .illustration-content p,
+        .auth-wrapper.flipped .front .form-subtitle,
+        .auth-wrapper.flipped .front .form-group,
+        .auth-wrapper.flipped .front .btn-auth,
+        .auth-wrapper.flipped .front .form-footer,
+        .auth-wrapper:not(.flipped) .back .illustration-content h2,
+        .auth-wrapper:not(.flipped) .back .auth-form-container h3,
+        .auth-wrapper:not(.flipped) .back .illustration-content p,
+        .auth-wrapper:not(.flipped) .back .form-subtitle,
+        .auth-wrapper:not(.flipped) .back .form-group,
+        .auth-wrapper:not(.flipped) .back .btn-auth,
+        .auth-wrapper:not(.flipped) .back .form-footer {
+            transform: none;
+            opacity: 1;
+        }
+        
+        .auth-forms {
+            padding-bottom: 3rem;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .auth-card {
+            margin: 2rem auto;
+        }
+        
+        .auth-side {
+            padding: 2.5rem 2rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .auth-side {
+            padding: 1.5rem;
+        }
+        
+        .auth-card {
+            margin: 2rem auto;
+            padding-top: 1.5rem;
+        }
+        
+        .mode-toggle {
+            transform: translate(-50%, -50%) scale(0.8);
+        }
+        
+        .mode-toggle button {
+            padding: 10px 16px;
+            font-size: 0.85rem;
+        }
+        
+        .mode-toggle button svg {
+            width: 14px;
+            height: 14px;
+        }
+        
+        .illustration-content h2 {
+            font-size: 1.5rem;
+        }
+        
+        .illustration-content p {
+            font-size: 0.95rem;
+        }
+        
+        .auth-illustration {
+            padding: 2rem 1.5rem;
+        }
+        
+        .auth-form-container h3 {
+            font-size: 1.8rem;
+        }
+        
+        .form-subtitle {
+            font-size: 1rem;
+        }
+        
+        .btn-auth {
+            padding: 1rem;
+        }
+    }
+
+    /* Анимации для элементов при переключении вправо (вход -> регистрация) */
+    .auth-wrapper:not(.flipped) .front .illustration-content h2,
+    .auth-wrapper:not(.flipped) .front .illustration-content p,
+    .auth-wrapper:not(.flipped) .front .form-group,
+    .auth-wrapper:not(.flipped) .front .btn-auth,
+    .auth-wrapper:not(.flipped) .front .form-footer {
+        --delay: 0;
+    }
+
+    .auth-wrapper.flipped .front .illustration-content h2,
+    .auth-wrapper.flipped .front .auth-form-container h3 {
+        transform: translateX(-30px);
+        opacity: 0;
+        --delay: 0;
+    }
+
+    .auth-wrapper.flipped .front .illustration-content p,
+    .auth-wrapper.flipped .front .form-subtitle {
+        transform: translateX(-30px);
+        opacity: 0;
+        --delay: 1;
+    }
+
+    .auth-wrapper.flipped .front .form-group {
+        transform: translateX(-30px);
+        opacity: 0;
+        --delay: 2;
+    }
+
+    .auth-wrapper.flipped .front .btn-auth,
+    .auth-wrapper.flipped .front .form-footer {
+        transform: translateX(-30px);
+        opacity: 0;
+        --delay: 3;
+    }
+
+    /* Анимации при переключении влево (регистрация -> вход) */
+    .auth-wrapper:not(.flipped) .back .illustration-content h2,
+    .auth-wrapper:not(.flipped) .back .auth-form-container h3 {
+        transform: translateX(30px);
+        opacity: 0;
+        --delay: 0;
+    }
+
+    .auth-wrapper:not(.flipped) .back .illustration-content p,
+    .auth-wrapper:not(.flipped) .back .form-subtitle {
+        transform: translateX(30px);
+        opacity: 0;
+        --delay: 1;
+    }
+
+    .auth-wrapper:not(.flipped) .back .form-group {
+        transform: translateX(30px);
+        opacity: 0;
+        --delay: 2;
+    }
+
+    .auth-wrapper:not(.flipped) .back .btn-auth,
+    .auth-wrapper:not(.flipped) .back .form-footer {
+        transform: translateX(30px);
+        opacity: 0;
+        --delay: 3;
+    }
+
+    /* Возвращаем нормальное состояние для активных форм */
+    .auth-wrapper.flipped .back .illustration-content h2,
+    .auth-wrapper.flipped .back .illustration-content p,
+    .auth-wrapper.flipped .back .auth-form-container h3,
+    .auth-wrapper.flipped .back .form-subtitle,
+    .auth-wrapper.flipped .back .form-group,
+    .auth-wrapper.flipped .back .btn-auth,
+    .auth-wrapper.flipped .back .form-footer {
+        transform: translateX(0);
+        opacity: 1;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
-<div class="auth-container">
     <div class="auth-card">
-        <div class="auth-sides-container">
-            <!-- Левая сторона (иллюстрация) -->
+        <div class="auth-wrapper {% if request.path == "/register/" %}flipped{% endif %}">
+            <!-- Панель переключения между формами -->
+            <div class="mode-toggle">
+                <button id="register-toggle" class="{% if request.path == "/register/" %}active{% endif %}">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15,4A4,4 0 0,0 11,8A4,4 0 0,0 15,12A4,4 0 0,0 19,8A4,4 0 0,0 15,4M15,14C12.33,14 7,15.34 7,18V20H23V18C23,15.34 17.67,14 15,14M7,8A4,4 0 0,1 3,12A4,4 0 0,1 7,16A4,4 0 0,1 11,12A4,4 0 0,1 7,8M7,18C5.67,18 5.33,18 4,18.67V20H10V18.67C8.67,18 8.33,18 7,18Z"/>
+                    </svg>
+                    {% trans "Регистрация" %}
+                </button>
+                <button id="login-toggle" class="{% if request.path == "/login/" %}active{% endif %}">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12,4C9.79,4 8,5.79 8,8C8,10.21 9.79,12 12,12C14.21,12 16,10.21 16,8C16,5.79 14.21,4 12,4M12,14C14.67,14 20,15.34 20,18V20H4V18C4,15.34 9.33,14 12,14Z"/>
+                    </svg>
+                    {% trans "Вход" %}
+                </button>
+            </div>
+            <!-- Передняя сторона (Вход) -->
+            <div class="auth-sides-container front">
+                <!-- Левая сторона (иллюстрация для входа) -->
             <div class="auth-side auth-illustration">
                 <div class="illustration-content">
-                    <img src="{% static 'images/auth-illustration.svg' %}" alt="Иллюстрация" class="auth-image">
-                    <h2>Billify - Ваш финансовый учет</h2>
-                    <p>Автоматизация финансового учета и документооборота для вашего бизнеса</p>
+                    <img src="{% static 'images/key-concept-illustration.png' %}" alt="{% trans "Иллюстрация" %}" class="auth-image">
                 </div>
             </div>
             
-            <!-- Правая сторона (формы) -->
+                <!-- Правая сторона (форма входа) -->
             <div class="auth-side auth-forms">
                 <div class="forms-wrapper">
-                    <!-- Табы для переключения между формами -->
-                    <div class="auth-tabs">
-                        <button class="tab-btn {% if request.path == "/login/" %}active{% endif %}" data-tab="login">Вход</button>
-                        <button class="tab-btn {% if request.path == "/register/" %}active{% endif %}" data-tab="register">Регистрация</button>
-                        <div class="tab-indicator"></div>
-                    </div>
-                    
                     <!-- Сообщения об ошибках/успехе -->
                     {% if messages %}
-                        <div class="auth-messages">
+                            <div class="auth-messages login-messages">
                             {% for message in messages %}
                                 <div class="auth-message {% if message.tags %}{{ message.tags }}{% endif %}">
                                     {{ message }}
@@ -42,7 +700,7 @@
                     {% endif %}
                     
                     {% if form.non_field_errors %}
-                        <div class="auth-errors">
+                            <div class="auth-errors login-errors">
                             {% for error in form.non_field_errors %}
                                 <div class="auth-error">{{ error }}</div>
                             {% endfor %}
@@ -50,17 +708,19 @@
                     {% endif %}
                     
                     <!-- Форма входа -->
-                    <div class="auth-form-container {% if request.path == "/login/" %}active{% endif %}" id="login-form">
-                        <h3>Добро пожаловать</h3>
-                        <p class="form-subtitle">Войдите в свою учетную запись</p>
+                        <div class="auth-form-container" id="login-form">
+                        <h3>{% trans "Добро пожаловать" %}</h3>
+                        <p class="form-subtitle">{% trans "Войдите в свою учетную запись" %}</p>
                         
-                        <form method="post" action="{% url 'login' %}" class="auth-form">
+                            <form method="post" action="{% url 'login' %}" class="auth-form login-form">
                             {% csrf_token %}
                             <div class="form-group">
-                                <label for="id_username">Имя пользователя</label>
+                                <label for="id_username">{% trans "Имя пользователя" %}</label>
                                 <div class="input-with-icon">
-                                    <i class="fas fa-user"></i>
-                                    <input type="text" name="username" id="id_username" placeholder="Введите имя пользователя" required>
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/>
+                                        </svg>
+                                    <input type="text" name="username" id="id_username" placeholder="{% trans "Введите имя пользователя" %}" required>
                                 </div>
                                 {% if form.username.errors %}
                                     <div class="field-error">{{ form.username.errors }}</div>
@@ -68,10 +728,12 @@
                             </div>
                             
                             <div class="form-group">
-                                <label for="id_password">Пароль</label>
+                                <label for="id_password">{% trans "Пароль" %}</label>
                                 <div class="input-with-icon">
-                                    <i class="fas fa-lock"></i>
-                                    <input type="password" name="password" id="id_password" placeholder="Введите пароль" required>
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12,17A2,2 0 0,0 14,15C14,13.89 13.1,13 12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10C4,8.89 4.9,8 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z"/>
+                                        </svg>
+                                    <input type="password" name="password" id="id_password" placeholder="{% trans "Введите пароль" %}" required>
                                 </div>
                                 {% if form.password.errors %}
                                     <div class="field-error">{{ form.password.errors }}</div>
@@ -81,33 +743,62 @@
                             <div class="form-options">
                                 <div class="remember-me">
                                     <input type="checkbox" name="remember" id="remember">
-                                    <label for="remember">Запомнить меня</label>
+                                    <label for="remember">{% trans "Запомнить меня" %}</label>
                                 </div>
-                                <a href="{% url 'password_reset' %}" class="forgot-password">Забыли пароль?</a>
+                                <a href="{% url 'password_reset' %}" class="forgot-password">{% trans "Забыли пароль?" %}</a>
                             </div>
                             
-                            <button type="submit" class="btn-auth">Войти</button>
+                            <button type="submit" class="btn-auth">{% trans "Войти" %}</button>
                             
                             <input type="hidden" name="next" value="{{ next }}">
                         </form>
                         
                         <div class="form-footer">
-                            <p>Нет учетной записи? <a href="{% url 'register' %}" class="switch-form" data-form="register">Зарегистрироваться</a></p>
+                                <p>{% trans "Нет учетной записи?" %} <a id="flip-to-register" class="switch-form" data-form="register">{% trans "Зарегистрироваться" %}</a></p>
+                            </div>
                         </div>
                     </div>
+                </div>
+            </div>
+            
+            <!-- Обратная сторона (Регистрация) -->
+            <div class="auth-sides-container back">
+                <!-- Левая сторона (форма регистрации) -->
+                <div class="auth-side auth-forms">
+                    <div class="forms-wrapper">
+                        <!-- Сообщения об ошибках/успехе для регистрации -->
+                        {% if messages %}
+                            <div class="auth-messages register-messages">
+                                {% for message in messages %}
+                                    <div class="auth-message {% if message.tags %}{{ message.tags }}{% endif %}">
+                                        {{ message }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        
+                        {% if form.non_field_errors %}
+                            <div class="auth-errors register-errors">
+                                {% for error in form.non_field_errors %}
+                                    <div class="auth-error">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     
                     <!-- Форма регистрации -->
-                    <div class="auth-form-container {% if request.path == "/register/" %}active{% endif %}" id="register-form">
-                        <h3>Создайте учетную запись</h3>
-                        <p class="form-subtitle">Заполните данные для регистрации</p>
+                        <div class="auth-form-container" id="register-form">
+                        <h3>{% trans "Создайте учетную запись" %}</h3>
+                        <p class="form-subtitle">{% trans "Заполните данные для регистрации" %}</p>
                         
-                        <form method="post" action="{% url 'register' %}" class="auth-form">
+                            <form method="post" action="{% url 'register' %}" class="auth-form register-form">
                             {% csrf_token %}
                             <div class="form-group">
-                                <label for="id_username_reg">Имя пользователя</label>
+                                <label for="id_username_reg">{% trans "Имя пользователя" %}</label>
                                 <div class="input-with-icon">
-                                    <i class="fas fa-user"></i>
-                                    <input type="text" name="username" id="id_username_reg" placeholder="Придумайте имя пользователя" required>
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/>
+                                        </svg>
+                                    <input type="text" name="username" id="id_username_reg" placeholder="{% trans "Придумайте имя пользователя" %}" required>
                                 </div>
                                 {% if form.username.errors %}
                                     <div class="field-error">{{ form.username.errors }}</div>
@@ -117,8 +808,10 @@
                             <div class="form-group">
                                 <label for="id_email">Email</label>
                                 <div class="input-with-icon">
-                                    <i class="fas fa-envelope"></i>
-                                    <input type="email" name="email" id="id_email" placeholder="Введите ваш email" required>
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M20,8L12,13L4,8V6L12,11L20,6M20,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6C22,4.89 21.1,4 20,4Z"/>
+                                        </svg>
+                                    <input type="email" name="email" id="id_email" placeholder="{% trans "Введите ваш email" %}" required>
                                 </div>
                                 {% if form.email.errors %}
                                     <div class="field-error">{{ form.email.errors }}</div>
@@ -126,10 +819,12 @@
                             </div>
                             
                             <div class="form-group">
-                                <label for="id_password1">Пароль</label>
+                                <label for="id_password1">{% trans "Пароль" %}</label>
                                 <div class="input-with-icon">
-                                    <i class="fas fa-lock"></i>
-                                    <input type="password" name="password1" id="id_password1" placeholder="Придумайте надежный пароль" required>
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12,17A2,2 0 0,0 14,15C14,13.89 13.1,13 12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10C4,8.89 4.9,8 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z"/>
+                                        </svg>
+                                    <input type="password" name="password1" id="id_password1" placeholder="{% trans "Придумайте надежный пароль" %}" required>
                                 </div>
                                 {% if form.password1.errors %}
                                     <div class="field-error">{{ form.password1.errors }}</div>
@@ -137,10 +832,12 @@
                             </div>
                             
                             <div class="form-group">
-                                <label for="id_password2">Подтверждение пароля</label>
+                                <label for="id_password2">{% trans "Подтверждение пароля" %}</label>
                                 <div class="input-with-icon">
-                                    <i class="fas fa-lock"></i>
-                                    <input type="password" name="password2" id="id_password2" placeholder="Повторите пароль" required>
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12,17A2,2 0 0,0 14,15C14,13.89 13.1,13 12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10C4,8.89 4.9,8 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z"/>
+                                        </svg>
+                                    <input type="password" name="password2" id="id_password2" placeholder="{% trans "Повторите пароль" %}" required>
                                 </div>
                                 {% if form.password2.errors %}
                                     <div class="field-error">{{ form.password2.errors }}</div>
@@ -150,17 +847,26 @@
                             <div class="form-options">
                                 <div class="terms-agree">
                                     <input type="checkbox" name="terms" id="terms" required>
-                                    <label for="terms">Я согласен с <a href="{% url 'terms' %}">условиями использования</a></label>
+                                    <label for="terms">{% trans "Я согласен с" %} <a href="{% url 'terms' %}">{% trans "условиями использования" %}</a></label>
                                 </div>
                             </div>
                             
-                            <button type="submit" class="btn-auth">Зарегистрироваться</button>
+                            <button type="submit" class="btn-auth">{% trans "Зарегистрироваться" %}</button>
                         </form>
                         
                         <div class="form-footer">
-                            <p>Уже есть учетная запись? <a href="{% url 'login' %}" class="switch-form" data-form="login">Войти</a></p>
+                                <p>{% trans "Уже есть учетная запись?" %} <a id="flip-to-login" class="switch-form" data-form="login">{% trans "Войти" %}</a></p>
+                            </div>
                         </div>
                     </div>
+                </div>
+                
+                <!-- Правая сторона (иллюстрация для регистрации) -->
+                <div class="auth-side auth-illustration">
+                    <div class="illustration-content">
+                        <img src="{% static 'images/auth-illustration.svg' %}" alt="{% trans "Иллюстрация" %}" class="auth-image">
+                        <h2>{% trans "Присоединяйтесь к нам!" %}</h2>
+                        <p>{% trans "Создайте аккаунт и начните пользоваться возможностями Billify" %}</p>
                 </div>
             </div>
         </div>
@@ -169,5 +875,190 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/accounts/auth.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Переключатели режимов
+    const loginToggle = document.getElementById('login-toggle');
+    const registerToggle = document.getElementById('register-toggle');
+    const flipToRegister = document.getElementById('flip-to-register');
+    const flipToLogin = document.getElementById('flip-to-login');
+    const authWrapper = document.querySelector('.auth-wrapper');
+    const authCard = document.querySelector('.auth-card');
+    
+    // Коллекции контейнеров и их высот
+    const frontContainer = document.querySelector('.auth-sides-container.front');
+    const backContainer = document.querySelector('.auth-sides-container.back');
+    
+    // Функция для установки высоты контейнера
+    function setWrapperHeight(container) {
+        // Сначала делаем контейнер видимым для корректного расчета высоты,
+        // но прозрачным, чтобы пользователь не видел мигания
+        container.style.opacity = '0';
+        container.style.position = 'relative';
+        container.style.transform = 'translateX(0)';
+        container.style.zIndex = '-1';
+        
+        // Расчет высоты с небольшим отступом
+        setTimeout(() => {
+            const containerHeight = container.offsetHeight;
+            authWrapper.style.height = `${containerHeight}px`;
+            
+            // Восстанавливаем оригинальные свойства
+            container.style.removeProperty('opacity');
+            container.style.removeProperty('position');
+            container.style.removeProperty('transform');
+            container.style.removeProperty('z-index');
+        }, 10);
+    }
+    
+    // Обработчики событий для переключения
+    loginToggle.addEventListener('click', switchToLogin);
+    registerToggle.addEventListener('click', switchToRegister);
+    flipToRegister.addEventListener('click', switchToRegister);
+    flipToLogin.addEventListener('click', switchToLogin);
+    
+    // Функция переключения на вход
+    function switchToLogin() {
+        loginToggle.classList.add('active');
+        registerToggle.classList.remove('active');
+        
+        // Устанавливаем высоту на основе передней панели перед переключением
+        setWrapperHeight(frontContainer);
+        
+        // Анимируем переключение через небольшой таймаут
+        setTimeout(() => {
+            authWrapper.classList.remove('flipped');
+            
+            // Обновление URL без перезагрузки страницы
+            window.history.pushState({}, '', '/login/');
+        }, 50);
+    }
+    
+    // Функция переключения на регистрацию
+    function switchToRegister() {
+        registerToggle.classList.add('active');
+        loginToggle.classList.remove('active');
+        
+        // Устанавливаем высоту на основе задней панели перед переключением
+        setWrapperHeight(backContainer);
+        
+        // Анимируем переключение через небольшой таймаут
+        setTimeout(() => {
+            authWrapper.classList.add('flipped');
+            
+            // Обновление URL без перезагрузки страницы
+            window.history.pushState({}, '', '/register/');
+        }, 50);
+    }
+    
+    // Инициализация в зависимости от URL
+    const path = window.location.pathname;
+    if (path === '/register/') {
+        // Запускаем с небольшой задержкой, чтобы DOM успел полностью загрузиться
+        setTimeout(() => {
+            setWrapperHeight(backContainer);
+            authWrapper.classList.add('flipped');
+        }, 200);
+    } else {
+        setTimeout(() => {
+            setWrapperHeight(frontContainer);
+        }, 200);
+    }
+    
+    // При изменении размера окна пересчитываем высоту
+    window.addEventListener('resize', function() {
+        if (authWrapper.classList.contains('flipped')) {
+            setWrapperHeight(backContainer);
+        } else {
+            setWrapperHeight(frontContainer);
+        }
+    });
+    
+    // Валидация формы входа
+    const loginForm = document.querySelector('.login-form');
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            const username = this.querySelector('#id_username').value.trim();
+            const password = this.querySelector('#id_password').value.trim();
+            
+            if (!username || !password) {
+                e.preventDefault();
+                showError('login', 'Заполните все поля формы');
+            }
+        });
+    }
+    
+    // Валидация формы регистрации
+    const registerForm = document.querySelector('.register-form');
+    if (registerForm) {
+        registerForm.addEventListener('submit', function(e) {
+            const username = this.querySelector('#id_username_reg').value.trim();
+            const password1 = this.querySelector('#id_password1').value.trim();
+            const password2 = this.querySelector('#id_password2').value.trim();
+            const terms = this.querySelector('#terms');
+            
+            if (!username || !password1 || !password2) {
+                e.preventDefault();
+                showError('register', 'Заполните все поля формы');
+                return;
+            }
+            
+            if (password1 !== password2) {
+                e.preventDefault();
+                showError('register', 'Пароли не совпадают');
+                return;
+            }
+            
+            if (password1.length < 8) {
+                e.preventDefault();
+                showError('register', 'Пароль должен содержать не менее 8 символов');
+                return;
+            }
+            
+            if (!terms.checked) {
+                e.preventDefault();
+                showError('register', 'Необходимо согласиться с условиями использования');
+                return;
+            }
+        });
+    }
+    
+    // Функция для отображения ошибок
+    function showError(form, message) {
+        // Определяем контейнер для ошибок
+        const formType = form === 'login' ? 'login' : 'register';
+        let errorsContainer = document.querySelector(`.${formType}-errors`);
+        
+        if (!errorsContainer) {
+            // Создаем контейнер для ошибок
+            errorsContainer = document.createElement('div');
+            errorsContainer.className = `auth-errors ${formType}-errors`;
+            
+            // Вставляем контейнер для ошибок в нужную форму
+            const formWrapper = document.querySelector(`#${formType}-form`);
+            formWrapper.insertBefore(errorsContainer, formWrapper.querySelector('h3').nextSibling);
+        }
+        
+        // Очищаем контейнер
+        errorsContainer.innerHTML = '';
+        
+        // Создаем и добавляем сообщение об ошибке
+        const errorElement = document.createElement('div');
+        errorElement.className = 'auth-error';
+        errorElement.textContent = message;
+        
+        errorsContainer.appendChild(errorElement);
+        
+        // Анимация появления сообщения
+        errorElement.style.opacity = '0';
+        errorElement.style.transform = 'translateY(-10px)';
+        
+        setTimeout(() => {
+            errorElement.style.opacity = '1';
+            errorElement.style.transform = 'translateY(0)';
+            errorElement.style.transition = 'opacity 0.3s, transform 0.3s';
+        }, 10);
+    }
+});
+</script>
 {% endblock %} 

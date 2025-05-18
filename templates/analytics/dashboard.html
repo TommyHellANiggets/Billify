@@ -1,10 +1,20 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load humanize %}
+{% load i18n %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.css">
 <link rel="stylesheet" href="{% static 'css/analytics/dashboard.css' %}">
+<style>
+  .icon {
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    fill: currentColor;
+    vertical-align: -0.125em;
+  }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -12,31 +22,31 @@
   <!-- Верхняя сводка -->
   <div class="analytics-summary">
     <div class="summary-card">
-      <h2 class="summary-title">Общая сумма счетов</h2>
+      <h2 class="summary-title">{% trans "Общая сумма счетов" %}</h2>
       <div class="summary-data">
         <div class="summary-value">{{ total_amount|floatformat:0|intcomma }}₽</div>
         <div class="summary-icon">
-          <i class="fas fa-file-invoice-dollar"></i>
+          <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
         </div>
       </div>
     </div>
     
     <div class="summary-card">
-      <h2 class="summary-title">Оплаченные счета</h2>
+      <h2 class="summary-title">{% trans "Оплаченные счета" %}</h2>
       <div class="summary-data">
         <div class="summary-value">{{ paid_amount|floatformat:0|intcomma }}₽</div>
         <div class="summary-icon">
-          <i class="fas fa-check-circle"></i>
+          <svg class="icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
         </div>
       </div>
     </div>
     
     <div class="summary-card">
-      <h2 class="summary-title">Просроченные платежи</h2>
+      <h2 class="summary-title">{% trans "Просроченные платежи" %}</h2>
       <div class="summary-data">
         <div class="summary-value">{{ overdue_amount|floatformat:0|intcomma }}₽</div>
         <div class="summary-icon">
-          <i class="fas fa-exclamation-circle"></i>
+          <svg class="icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
         </div>
       </div>
     </div>
@@ -46,57 +56,81 @@
   <div class="data-grid">
     <div class="status-card status-draft">
       <div class="status-header">
-        <h3 class="status-title">Черновики</h3>
+        <h3 class="status-title">{% trans "Черновики" %}</h3>
         <div class="status-icon">
-          <i class="fas fa-edit"></i>
+          <svg class="icon" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
         </div>
       </div>
       <div class="status-value">{{ status_counts.draft }}</div>
       <div class="status-trend {% if status_trends.draft.is_up %}trend-up{% else %}trend-down{% endif %}">
-        <i class="fas fa-arrow-{% if status_trends.draft.is_up %}up{% else %}down{% endif %}"></i> 
-        {{ status_trends.draft.value }}% с прошлого месяца
+        <svg class="icon" viewBox="0 0 24 24">
+          {% if status_trends.draft.is_up %}
+          <path d="M7 14l5-5 5 5z"/>
+          {% else %}
+          <path d="M7 10l5 5 5-5z"/>
+          {% endif %}
+        </svg>
+        {{ status_trends.draft.value }}% {% trans "с прошлого месяца" %}
       </div>
     </div>
     
     <div class="status-card status-sent">
       <div class="status-header">
-        <h3 class="status-title">Отправленные</h3>
+        <h3 class="status-title">{% trans "Отправленные" %}</h3>
         <div class="status-icon">
-          <i class="fas fa-paper-plane"></i>
+          <svg class="icon" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
         </div>
       </div>
       <div class="status-value">{{ status_counts.sent }}</div>
       <div class="status-trend {% if status_trends.sent.is_up %}trend-up{% else %}trend-down{% endif %}">
-        <i class="fas fa-arrow-{% if status_trends.sent.is_up %}up{% else %}down{% endif %}"></i>
-        {{ status_trends.sent.value }}% с прошлого месяца
+        <svg class="icon" viewBox="0 0 24 24">
+          {% if status_trends.sent.is_up %}
+          <path d="M7 14l5-5 5 5z"/>
+          {% else %}
+          <path d="M7 10l5 5 5-5z"/>
+          {% endif %}
+        </svg>
+        {{ status_trends.sent.value }}% {% trans "с прошлого месяца" %}
       </div>
     </div>
     
     <div class="status-card status-paid">
       <div class="status-header">
-        <h3 class="status-title">Оплаченные</h3>
+        <h3 class="status-title">{% trans "Оплаченные" %}</h3>
         <div class="status-icon">
-          <i class="fas fa-money-bill-wave"></i>
+          <svg class="icon" viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
         </div>
       </div>
       <div class="status-value">{{ status_counts.paid }}</div>
       <div class="status-trend {% if status_trends.paid.is_up %}trend-up{% else %}trend-down{% endif %}">
-        <i class="fas fa-arrow-{% if status_trends.paid.is_up %}up{% else %}down{% endif %}"></i>
-        {{ status_trends.paid.value }}% с прошлого месяца
+        <svg class="icon" viewBox="0 0 24 24">
+          {% if status_trends.paid.is_up %}
+          <path d="M7 14l5-5 5 5z"/>
+          {% else %}
+          <path d="M7 10l5 5 5-5z"/>
+          {% endif %}
+        </svg>
+        {{ status_trends.paid.value }}% {% trans "с прошлого месяца" %}
       </div>
     </div>
     
     <div class="status-card status-overdue">
       <div class="status-header">
-        <h3 class="status-title">Просроченные</h3>
+        <h3 class="status-title">{% trans "Просроченные" %}</h3>
         <div class="status-icon">
-          <i class="fas fa-clock"></i>
+          <svg class="icon" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
         </div>
       </div>
       <div class="status-value">{{ status_counts.overdue }}</div>
       <div class="status-trend {% if status_trends.overdue.is_up %}trend-up{% else %}trend-down{% endif %}">
-        <i class="fas fa-arrow-{% if status_trends.overdue.is_up %}up{% else %}down{% endif %}"></i>
-        {{ status_trends.overdue.value }}% с прошлого месяца
+        <svg class="icon" viewBox="0 0 24 24">
+          {% if status_trends.overdue.is_up %}
+          <path d="M7 14l5-5 5 5z"/>
+          {% else %}
+          <path d="M7 10l5 5 5-5z"/>
+          {% endif %}
+        </svg>
+        {{ status_trends.overdue.value }}% {% trans "с прошлого месяца" %}
       </div>
     </div>
   </div>
@@ -107,12 +141,13 @@
     <div class="chart-card revenue-chart-card">
       <div class="chart-header">
         <h3 class="chart-title">
-          <i class="fas fa-chart-line"></i> Динамика доходов
+          <svg class="icon" viewBox="0 0 24 24"><path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99l1.5 1.5z"/></svg>
+          {% trans "Динамика доходов" %}
         </h3>
         <div class="chart-options">
-          <div class="chart-option active" data-period="month">30 дней</div>
-          <div class="chart-option" data-period="halfyear">6 месяцев</div>
-          <div class="chart-option" data-period="year">Год</div>
+          <div class="chart-option active" data-period="month">{% trans "30 дней" %}</div>
+          <div class="chart-option" data-period="halfyear">{% trans "6 месяцев" %}</div>
+          <div class="chart-option" data-period="year">{% trans "Год" %}</div>
         </div>
       </div>
       <div class="chart-body">
@@ -126,19 +161,22 @@
     <div class="chart-card transactions-card">
       <div class="chart-header">
         <h3 class="chart-title">
-          <i class="fas fa-exchange-alt"></i> Последние транзакции
+          <svg class="icon" viewBox="0 0 24 24"><path d="M6.99 11L3 15l3.99 4v-3H14v-2H6.99v-3zM21 9l-3.99-4v3H10v2h7.01v3L21 9z"/></svg>
+          {% trans "Последние транзакции" %}
         </h3>
-        <a href="{% url 'invoices:list' %}" class="see-all">Все счета <i class="fas fa-chevron-right"></i></a>
+        <a href="{% url 'invoices:list' %}" class="see-all">{% trans "Все счета" %} 
+          <svg class="icon" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6-6-6z"/></svg>
+        </a>
       </div>
       <div class="chart-body" style="padding: 0;">
         <table class="transactions-table">
           <thead>
             <tr>
-              <th>№ счета</th>
-              <th>Клиент</th>
-              <th>Дата</th>
-              <th>Сумма</th>
-              <th>Статус</th>
+              <th>{% trans "№ счета" %}</th>
+              <th>{% trans "Клиент" %}</th>
+              <th>{% trans "Дата" %}</th>
+              <th>{% trans "Сумма" %}</th>
+              <th>{% trans "Статус" %}</th>
             </tr>
           </thead>
           <tbody>
@@ -156,7 +194,7 @@
             </tr>
             {% empty %}
             <tr>
-              <td colspan="5" class="text-center">Нет данных</td>
+              <td colspan="5" class="text-center">{% trans "Нет данных" %}</td>
             </tr>
             {% endfor %}
           </tbody>

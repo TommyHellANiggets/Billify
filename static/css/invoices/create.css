@@ -768,4 +768,68 @@
     height: 1px;
     background-color: #e9ecef;
     margin: 20px 0;
+}
+
+/* Стили для переработанной таблицы позиций */
+.item-name-cell {
+    width: 50%; /* Увеличиваем ширину ячейки с наименованием */
+}
+
+.item-quantity-cell {
+    width: 20%; /* Уменьшаем ширину ячейки с количеством */
+}
+
+.quantity-unit-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.quantity-unit-wrapper input {
+    flex: 0 0 60%; /* Задаем фиксированную ширину для количества */
+    min-width: 50px;
+}
+
+.quantity-unit-wrapper .item-unit {
+    flex: 0 0 20%; /* Остальное пространство для единиц измерения */
+    min-width: 80px;
+}
+
+/* Обновляем стили выпадающего списка единиц измерения */
+.invoice-items-table select.item-unit {
+    padding: 0.7rem 0.5rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    font-size: 14px;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23adb5bd' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    background-size: 0.8rem;
+    cursor: pointer;
+}
+
+.invoice-items-table select.item-unit:focus {
+    border-color: #5e72e4;
+    box-shadow: 0 0 0 3px rgba(94, 114, 228, 0.12);
+    outline: none;
+}
+
+/* Адаптивные стили для мобильных устройств */
+@media (max-width: 768px) {
+    .quantity-unit-wrapper {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .quantity-unit-wrapper input,
+    .quantity-unit-wrapper .item-unit {
+        width: 100%;
+        flex: 0 0 100%;
+    }
+    
+    .item-name-cell,
+    .item-quantity-cell {
+        width: auto;
+    }
 } 

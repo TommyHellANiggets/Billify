@@ -1,19 +1,64 @@
 document.addEventListener('DOMContentLoaded', function() {
     const featureCards = document.querySelectorAll('.feature-card');
     
-    // Добавление эффекта появления для карточек функций
-    featureCards.forEach((card, index) => {
-        setTimeout(() => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            
+    // Проверяем, находимся ли мы на главной странице или странице ченджлога
+    const isHomePage = document.querySelector('.hero') !== null;
+    const isChangelogPage = document.querySelector('.changelog-header') !== null;
+    
+    // Добавляем кнопку прокрутки вверх только на нужных страницах
+    if (isHomePage || isChangelogPage) {
+        // Добавление кнопки прокрутки вверх
+        const scrollTopBtn = document.createElement('button');
+        scrollTopBtn.className = 'scroll-to-top';
+        scrollTopBtn.setAttribute('aria-label', 'Прокрутить вверх');
+        scrollTopBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>';
+        document.body.appendChild(scrollTopBtn);
+        
+        // Функция для отображения/скрытия кнопки прокрутки
+        function toggleScrollTopButton() {
+            if (window.pageYOffset > 300) {
+                scrollTopBtn.classList.add('visible');
+            } else {
+                scrollTopBtn.classList.remove('visible');
+            }
+        }
+        
+        // Прокрутка вверх при клике на кнопку
+        scrollTopBtn.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // Проверка положения скролла при прокрутке и загрузке страницы
+        window.addEventListener('scroll', toggleScrollTopButton);
+        toggleScrollTopButton(); // Вызов при загрузке страницы
+    }
+    
+    // Проверка на наличие features-scroll.js
+    const newFeaturesSystem = document.querySelector('script[src*="features-scroll.js"]');
+    
+    // Если новой системы нет, используем старую анимацию карточек
+    if (!newFeaturesSystem) {
+        console.log('Используется устаревшая система анимации карточек');
+        
+        // Добавление эффекта появления для карточек функций (старая версия)
+        featureCards.forEach((card, index) => {
             setTimeout(() => {
-                card.style.opacity = '1';
-                card.style.transform = 'translateY(0)';
-            }, 50);
-        }, index * 150);
-    });
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 50);
+            }, index * 150);
+        });
+    } else {
+        console.log('Обнаружена новая система анимации карточек (features-scroll.js)');
+    }
 
     // Анимация для героя
     const heroContent = document.querySelector('.hero-content');
@@ -39,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Табы в разделе возможностей
+    // Табы в разделе возможностей (старая версия)
     const tabHeaders = document.querySelectorAll('.tab-header');
     if (tabHeaders.length > 0) {
         tabHeaders.forEach(header => {
@@ -211,4 +256,42 @@ document.addEventListener('DOMContentLoaded', function() {
         monthlyPrices.forEach(el => el.style.display = 'block');
         yearlyPrices.forEach(el => el.style.display = 'none');
     }
+    
+    // Добавление эффектов при наведении на изображения в секции возможностей
+    const featureImages = document.querySelectorAll('.feature-img');
+    featureImages.forEach(image => {
+        image.addEventListener('mousemove', function(e) {
+            const boundingRect = this.getBoundingClientRect();
+            const x = e.clientX - boundingRect.left;
+            const y = e.clientY - boundingRect.top;
+            
+            const xPercent = (x / boundingRect.width - 0.5) * 10;
+            const yPercent = (y / boundingRect.height - 0.5) * 10;
+            
+            this.style.transform = `perspective(1000px) rotateY(${xPercent}deg) rotateX(${-yPercent}deg) scale3d(1.05, 1.05, 1.05)`;
+        });
+        
+        image.addEventListener('mouseleave', function() {
+            this.style.transform = 'perspective(1000px) rotateY(0) rotateX(0) scale3d(1, 1, 1)';
+        });
+    });
+
+    // Добавим обработку изменения размеров экрана
+    function handleResize() {
+        const isMobile = window.innerWidth <= 576;
+        const progressSteps = document.querySelectorAll('.progress-step');
+        
+        progressSteps.forEach(step => {
+            // Обновляем отображение в зависимости от размера экрана
+            if (isMobile) {
+                step.setAttribute('title', step.querySelector('span') ? step.querySelector('span').textContent : '');
+            } else {
+                step.removeAttribute('title');
+            }
+        });
+    }
+
+    // Вызываем функцию при загрузке и при изменении размера окна
+    window.addEventListener('resize', handleResize);
+    setTimeout(handleResize, 100); // Вызываем после загрузки страницы
 }); 

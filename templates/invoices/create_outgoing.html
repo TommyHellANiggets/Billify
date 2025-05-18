@@ -1,23 +1,29 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
-{% block title %}{% if is_edit %}Редактирование счета{% else %}Новый исходящий счет{% endif %}{% endblock %}
+{% block title %}{% if is_edit %}{% trans "Редактирование счета" %}{% else %}{% trans "Новый исходящий счет" %}{% endif %}{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/invoices/create.css' %}">
 <link rel="stylesheet" href="{% static 'css/invoices/scanner.css' %}">
+<link rel="stylesheet" href="{% static 'css/invoices/svg-icons.css' %}">
+<link rel="stylesheet" href="{% static 'css/invoices/create-responsive.css' %}">
 {% endblock %}
 
 {% block content %}
 <section class="create-invoice-page">
     <div class="page-header">
         <div class="header-content">
-            <h1>{% if is_edit %}Редактирование счета {{ invoice.number }}{% else %}Создание исходящего счета{% endif %}</h1>
-            <p class="page-subtitle">{% if is_edit %}Измените данные счета{% else %}Заполните данные для создания нового исходящего счета{% endif %}</p>
+            <h1>{% if is_edit %}{% trans "Редактирование счета" %} {{ invoice.number }}{% else %}{% trans "Создание исходящего счета" %}{% endif %}</h1>
+            <p class="page-subtitle">{% if is_edit %}{% trans "Измените данные счета" %}{% else %}{% trans "Заполните данные для создания нового исходящего счета" %}{% endif %}</p>
         </div>
         <div class="header-actions">
             <a href="{% url 'invoices:list' %}?type=outgoing" class="btn btn-outline">
-                <i class="fas fa-arrow-left"></i> К списку счетов
+                <span class="svg-icon icon-md">
+                    <svg><use xlink:href="#icon-arrow-left"></use></svg>
+                </span> 
+                {% trans "К списку счетов" %}
             </a>
         </div>
     </div>
@@ -32,48 +38,48 @@
                     {{ company_profile|json_script:"company-profile-data" }}
                     
                     <div class="form-section">
-                        <h3 class="section-title">Основная информация</h3>
+                        <h3 class="section-title">{% trans "Основная информация" %}</h3>
                         
                         <div class="form-grid">
                             <div class="form-group">
-                                <label for="invoice_number">Номер счета</label>
+                                <label for="invoice_number">{% trans "Номер счета" %}</label>
                                 <input type="text" id="invoice_number" name="invoice_number" value="{% if is_edit %}{{ invoice.number }}{% else %}{{ next_invoice_number }}{% endif %}" required>
                             </div>
                             <div class="form-group">
-                                <label for="invoice_date">Дата счета</label>
+                                <label for="invoice_date">{% trans "Дата счета" %}</label>
                                 <input type="date" id="invoice_date" name="invoice_date" value="{% if is_edit %}{{ invoice.issue_date|date:'Y-m-d' }}{% endif %}" required>
                             </div>
                             <div class="form-group">
-                                <label for="due_date">Срок оплаты</label>
+                                <label for="due_date">{% trans "Срок оплаты" %}</label>
                                 <input type="date" id="due_date" name="due_date" value="{% if is_edit %}{{ invoice.due_date|date:'Y-m-d' }}{% endif %}" required>
                             </div>
                             <div class="form-group">
-                                <label for="status">Статус</label>
+                                <label for="status">{% trans "Статус" %}</label>
                                 <select id="status" name="status" required>
-                                    <option value="new" {% if is_edit and invoice.status == 'new' %}selected{% endif %}>Новый</option>
-                                    <option value="sent" {% if is_edit and invoice.status == 'sent' %}selected{% endif %}>Отправлен</option>
-                                    <option value="pending" {% if is_edit and invoice.status == 'pending' %}selected{% endif %}>Ожидает оплаты</option>
-                                    <option value="paid" {% if is_edit and invoice.status == 'paid' %}selected{% endif %}>Оплачен</option>
-                                    <option value="overdue" {% if is_edit and invoice.status == 'overdue' %}selected{% endif %}>Просрочен</option>
-                                    <option value="cancelled" {% if is_edit and invoice.status == 'cancelled' %}selected{% endif %}>Отменен</option>
+                                    <option value="new" {% if is_edit and invoice.status == 'new' %}selected{% endif %}>{% trans "Новый" %}</option>
+                                    <option value="sent" {% if is_edit and invoice.status == 'sent' %}selected{% endif %}>{% trans "Отправлен" %}</option>
+                                    <option value="pending" {% if is_edit and invoice.status == 'pending' %}selected{% endif %}>{% trans "Ожидает оплаты" %}</option>
+                                    <option value="paid" {% if is_edit and invoice.status == 'paid' %}selected{% endif %}>{% trans "Оплачен" %}</option>
+                                    <option value="overdue" {% if is_edit and invoice.status == 'overdue' %}selected{% endif %}>{% trans "Просрочен" %}</option>
+                                    <option value="cancelled" {% if is_edit and invoice.status == 'cancelled' %}selected{% endif %}>{% trans "Отменен" %}</option>
                                 </select>
                             </div>
                         </div>
                     </div>
                     
                     <div class="form-section">
-                        <h3 class="section-title">Информация о клиенте</h3>
+                        <h3 class="section-title">{% trans "Информация о клиенте" %}</h3>
                         
                         <div class="form-grid-row">
                             <div class="form-group">
-                                <label for="client">Клиент</label>
+                                <label for="client">{% trans "Клиент" %}</label>
                                 <div class="select-wrapper">
                                     <input type="hidden" id="client_id" name="client" value="{% if is_edit %}{{ invoice.client.id }}{% endif %}" required>
                                     <div class="entity-select" id="client-select" tabindex="0">
-                                        <span>{% if is_edit %}{{ invoice.client.name }}{% else %}Выберите клиента{% endif %}</span>
+                                        <span>{% if is_edit %}{{ invoice.client.name }}{% else %}{% trans "Выберите клиента" %}{% endif %}</span>
                                     </div>
                                     <div class="entity-dropdown" id="client-dropdown">
-                                        <input type="text" class="select-search" id="client-search" placeholder="Поиск клиента...">
+                                        <input type="text" class="select-search" id="client-search" placeholder="{% trans "Поиск клиента..." %}">
                                         <div class="client-list" id="client-list">
                                             <!-- Создаём контейнер для клиентов через JavaScript -->
                                             <div id="dynamic-clients-list">
@@ -81,71 +87,74 @@
                                             </div>
                                         </div>
                                         <div class="add-new-item" id="add-client">
-                                            <i class="fas fa-plus"></i> Добавить нового клиента
+                                            <i class="fas fa-plus"></i> {% trans "Добавить нового клиента" %}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="contact_name">Контактное лицо</label>
+                                <label for="contact_name">{% trans "Контактное лицо" %}</label>
                                 <input type="text" id="contact_name" name="contact_name" value="{% if is_edit %}{{ invoice.client_contact_person }}{% endif %}">
                             </div>
                             <div class="form-group">
-                                <label for="contact_email">Email</label>
+                                <label for="contact_email">{% trans "Email" %}</label>
                                 <input type="email" id="contact_email" name="contact_email" value="{% if is_edit %}{{ invoice.client_email }}{% endif %}">
                             </div>
                         </div>
                         
                         <!-- Банковские реквизиты клиента -->
                         <div id="client_bank_details" class="bank-details-container" style="display: none;">
-                            <h4 class="subsection-title">Банковские реквизиты клиента</h4>
+                            <h4 class="subsection-title">{% trans "Банковские реквизиты клиента" %}</h4>
                             <div class="form-grid-2">
                                 <div class="form-group">
-                                    <label for="client_name_display">Название организации</label>
+                                    <label for="client_name_display">{% trans "Название организации" %}</label>
                                     <input type="text" id="client_name_display" readonly>
                                 </div>
                                 <div class="form-group">
-                                    <label for="client_inn_display">ИНН</label>
+                                    <label for="client_inn_display">{% trans "ИНН" %}</label>
                                     <input type="text" id="client_inn_display" readonly>
                                 </div>
                             </div>
                             
                             <div class="form-grid-2">
                                 <div class="form-group">
-                                    <label for="client_bank_display">Банк</label>
+                                    <label for="client_bank_display">{% trans "Банк" %}</label>
                                     <input type="text" id="client_bank_display" readonly>
                                 </div>
                                 <div class="form-group">
-                                    <label for="client_bik_display">БИК</label>
+                                    <label for="client_bik_display">{% trans "БИК" %}</label>
                                     <input type="text" id="client_bik_display" readonly>
                                 </div>
                             </div>
                             
                             <div class="form-group">
-                                <label for="client_account_display">Расчетный счет</label>
+                                <label for="client_account_display">{% trans "Расчетный счет" %}</label>
                                 <input type="text" id="client_account_display" readonly>
                             </div>
                         </div>
                     </div>
                     
                     <div class="form-section">
-                        <h3 class="section-title">Позиции счета</h3>
+                        <h3 class="section-title">{% trans "Позиции счета" %}</h3>
                         
                         <!-- Кнопка сканирования PDF -->
                         <div class="scan-btn-container">
                             <button type="button" id="scan-invoice-btn" class="scan-btn">
-                                <i class="fas fa-file-pdf scan-btn-icon"></i> Сканировать PDF
+                                <span class="svg-icon">
+                                    <svg><use xlink:href="#icon-file"></use></svg>
+                                </span>
+                                {% trans "Сканировать PDF" %}
                             </button>
-                            <span class="scan-btn-help">Загрузите PDF-файл счета для автоматического заполнения позиций</span>
+                            <span class="scan-btn-help">{% trans "Загрузите PDF-файл счета для автоматического заполнения позиций" %}</span>
                         </div>
                         
                         <table class="invoice-items-table">
                             <thead>
                                 <tr>
-                                    <th>Наименование</th>
-                                    <th>Количество</th>
-                                    <th>Цена, ₽</th>
-                                    <th>Сумма, ₽</th>
+                                    <th>{% trans "Наименование" %}</th>
+                                    <th>{% trans "Количество" %}</th>
+                                    <th>{% trans "Цена, ₽" %}</th>
+                                    <th>{% trans "Сумма, ₽" %}</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -153,38 +162,62 @@
                                 {% if is_edit and invoice_items %}
                                     {% for item in invoice_items %}
                                         <tr class="invoice-item">
-                                            <td>
-                                                <input type="text" name="item_name[]" title="Наименование товара/услуги" value="{{ item.description }}" required>
+                                            <td class="item-name-cell">
+                                                <input type="text" name="item_name[]" title="{% trans "Наименование товара/услуги" %}" value="{{ item.description }}" required>
+                                            </td>
+                                            <td class="item-quantity-cell">
+                                                <div class="quantity-unit-wrapper">
+                                                    <input type="text" name="item_quantity[]" title="{% trans "Количество" %}" value="{{ item.quantity }}" required>
+                                                    <select name="item_unit[]" title="{% trans "Единица измерения" %}" class="item-unit">
+                                                        <option value="шт." {% if item.unit == "шт." or not item.unit %}selected{% endif %}>шт.</option>
+                                                        <option value="час." {% if item.unit == "час." %}selected{% endif %}>час.</option>
+                                                        <option value="услуга" {% if item.unit == "услуга" %}selected{% endif %}>услуга</option>
+                                                        <option value="м²" {% if item.unit == "м²" %}selected{% endif %}>м²</option>
+                                                        <option value="компл." {% if item.unit == "компл." %}selected{% endif %}>компл.</option>
+                                                        <option value="мес." {% if item.unit == "мес." %}selected{% endif %}>мес.</option>
+                                                    </select>
+                                                </div>
                                             </td>
                                             <td>
-                                                <input type="text" name="item_quantity[]" title="Количество" value="{{ item.quantity }}" required>
-                                            </td>
-                                            <td>
-                                                <input type="text" name="item_price[]" title="Цена за единицу" value="{{ item.price }}" required>
+                                                <input type="text" name="item_price[]" title="{% trans "Цена за единицу" %}" value="{{ item.price }}" required>
                                             </td>
                                             <td class="item-total">{{ item.amount }}</td>
                                             <td>
-                                                <button type="button" class="btn-icon remove-item" title="Удалить позицию">
-                                                    <i class="fas fa-trash"></i>
+                                                <button type="button" class="btn-icon remove-item" title="{% trans "Удалить позицию" %}">
+                                                    <span class="svg-icon">
+                                                        <svg><use xlink:href="#icon-trash"></use></svg>
+                                                    </span>
                                                 </button>
                                             </td>
                                         </tr>
                                     {% endfor %}
                                 {% else %}
                                     <tr class="invoice-item">
-                                        <td>
-                                            <input type="text" name="item_name[]" title="Наименование товара/услуги" required>
+                                        <td class="item-name-cell">
+                                            <input type="text" name="item_name[]" title="{% trans "Наименование товара/услуги" %}" required>
+                                        </td>
+                                        <td class="item-quantity-cell">
+                                            <div class="quantity-unit-wrapper">
+                                                <input type="text" name="item_quantity[]" title="{% trans "Количество" %}" required>
+                                                <select name="item_unit[]" title="{% trans "Единица измерения" %}" class="item-unit">
+                                                    <option value="шт.">шт.</option>
+                                                    <option value="час.">час.</option>
+                                                    <option value="услуга">услуга</option>
+                                                    <option value="м²">м²</option>
+                                                    <option value="компл.">компл.</option>
+                                                    <option value="мес.">мес.</option>
+                                                </select>
+                                            </div>
                                         </td>
                                         <td>
-                                            <input type="text" name="item_quantity[]" title="Количество" value="1" required>
-                                        </td>
-                                        <td>
-                                            <input type="text" name="item_price[]" title="Цена за единицу" value="0,00" required>
+                                            <input type="text" name="item_price[]" title="{% trans "Цена за единицу" %}" required>
                                         </td>
                                         <td class="item-total">0,00</td>
                                         <td>
-                                            <button type="button" class="btn-icon remove-item" title="Удалить позицию">
-                                                <i class="fas fa-trash"></i>
+                                            <button type="button" class="btn-icon remove-item" title="{% trans "Удалить позицию" %}">
+                                                <span class="svg-icon">
+                                                    <svg><use xlink:href="#icon-trash"></use></svg>
+                                                </span>
                                             </button>
                                         </td>
                                     </tr>
@@ -193,55 +226,67 @@
                         </table>
                         
                         <button type="button" id="add-item" class="btn btn-outline">
-                            <i class="fas fa-plus"></i> Добавить позицию
+                            <span class="svg-icon icon-md">
+                                <svg><use xlink:href="#icon-plus"></use></svg>
+                            </span>
+                            {% trans "Добавить позицию" %}
                         </button>
                         
                         <div class="invoice-totals">
                             <div class="totals-row">
-                                <span class="total-label">Подытог:</span>
+                                <span class="total-label">{% trans "Подытог:" %}</span>
                                 <span class="total-value" id="subtotal">{% if is_edit %}{{ invoice.subtotal }} ₽{% else %}0.00 ₽{% endif %}</span>
                             </div>
                             <div class="totals-row">
-                                <span class="total-label">НДС (20%):</span>
+                                <span class="total-label">{% trans "НДС (20%):" %}</span>
                                 <span class="total-value" id="tax">{% if is_edit %}{{ invoice.tax_amount }} ₽{% else %}0.00 ₽{% endif %}</span>
                             </div>
                             <div class="totals-row">
-                                <span class="total-label">Скидка:</span>
+                                <span class="total-label">{% trans "Скидка:" %}</span>
                                 <div class="discount-input-wrapper">
-                                    <input type="text" id="discount" name="discount" value="{% if is_edit %}{{ invoice.discount }}{% else %}0,00{% endif %}" title="Скидка">
+                                    <input type="text" id="discount" name="discount" value="{% if is_edit %}{{ invoice.discount }}{% else %}0,00{% endif %}" title="{% trans "Скидка" %}">
                                     <span class="currency-symbol">₽</span>
                                 </div>
                             </div>
                             <div class="totals-row total-final">
-                                <span class="total-label">Итого:</span>
+                                <span class="total-label">{% trans "Итого:" %}</span>
                                 <span class="total-value" id="total">{% if is_edit %}{{ invoice.total }} ₽{% else %}0.00 ₽{% endif %}</span>
                             </div>
                         </div>
                     </div>
                     
                     <div class="form-section">
-                        <h3 class="section-title">Дополнительная информация</h3>
+                        <h3 class="section-title">{% trans "Дополнительная информация" %}</h3>
                         
                         <div class="form-group full-width">
-                            <label for="notes">Примечания</label>
+                            <label for="notes">{% trans "Примечания" %}</label>
                             <textarea id="notes" name="notes" rows="3">{% if is_edit %}{{ invoice.notes }}{% endif %}</textarea>
                         </div>
                         
                         <div class="form-group full-width">
-                            <label for="payment_details">Платежная информация</label>
+                            <label for="payment_details">{% trans "Информация об оплате" %}</label>
                             <textarea id="payment_details" name="payment_details" rows="3">{% if is_edit %}{{ invoice.payment_info }}{% endif %}</textarea>
                         </div>
                     </div>
                     
                     <div class="form-actions">
                         <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i> {% if is_edit %}Обновить{% else %}Сохранить{% endif %} счет
+                            <span class="svg-icon">
+                                <svg><use xlink:href="#icon-check"></use></svg>
+                            </span>
+                            {% if is_edit %}{% trans "Обновить" %}{% else %}{% trans "Сохранить" %}{% endif %} {% trans "счет" %}
                         </button>
                         <button type="button" class="btn btn-secondary" id="preview-invoice">
-                            <i class="fas fa-eye"></i> Предпросмотр
+                            <span class="svg-icon">
+                                <svg><use xlink:href="#icon-file"></use></svg>
+                            </span>
+                            {% trans "Предпросмотр" %}
                         </button>
                         <button type="reset" class="btn btn-outline">
-                            <i class="fas fa-undo"></i> Сбросить
+                            <span class="svg-icon">
+                                <svg><use xlink:href="#icon-arrow-left"></use></svg>
+                            </span>
+                            {% trans "Сбросить" %}
                         </button>
                     </div>
                 </form>
@@ -250,24 +295,51 @@
             <div class="col-md-3">
                 <div class="form-info-card">
                     <div class="form-info-header">
-                        <i class="fas fa-info-circle"></i>
-                        <h3>Информация</h3>
+                        <span class="svg-icon icon-lg">
+                            <svg><use xlink:href="#icon-info-circle"></use></svg>
+                        </span>
+                        <h3>{% trans "Информация" %}</h3>
                     </div>
                     <div class="form-info-content">
-                        <p>Исходящий счет - это счет, который ваша компания выставляет клиенту за предоставленные товары или услуги.</p>
+                        <p>{% trans "Исходящий счет - это счет, выставляемый вами клиентам за оказанные услуги или проданные товары." %}</p>
                         
                         <ul class="info-list">
-                            <li><i class="fas fa-check-circle"></i> Заполните основную информацию о счете</li>
-                            <li><i class="fas fa-check-circle"></i> Выберите клиента из списка или создайте нового</li>
-                            <li><i class="fas fa-check-circle"></i> Добавьте товары или услуги</li>
-                            <li><i class="fas fa-check-circle"></i> Проверьте итоговую сумму и скидку</li>
-                            <li><i class="fas fa-check-circle"></i> Укажите платежную информацию и примечания</li>
+                            <li>
+                                <span class="svg-icon">
+                                    <svg><use xlink:href="#icon-check"></use></svg>
+                                </span>
+                                {% trans "Заполните основную информацию о счете" %}
+                            </li>
+                            <li>
+                                <span class="svg-icon">
+                                    <svg><use xlink:href="#icon-check"></use></svg>
+                                </span>
+                                {% trans "Выберите клиента из списка или создайте нового" %}
+                            </li>
+                            <li>
+                                <span class="svg-icon">
+                                    <svg><use xlink:href="#icon-check"></use></svg>
+                                </span>
+                                {% trans "Добавьте товары или услуги" %}
+                            </li>
+                            <li>
+                                <span class="svg-icon">
+                                    <svg><use xlink:href="#icon-check"></use></svg>
+                                </span>
+                                {% trans "Проверьте итоговую сумму" %}
+                            </li>
+                            <li>
+                                <span class="svg-icon">
+                                    <svg><use xlink:href="#icon-check"></use></svg>
+                                </span>
+                                {% trans "Укажите реквизиты для оплаты" %}
+                            </li>
                         </ul>
                         
-                        <p>Заполненный счет можно будет отправить клиенту по электронной почте или распечатать.</p>
+                        <p>{% trans "После создания счет можно отправить по email клиенту или скачать в формате PDF для печати." %}</p>
                     </div>
                     <div class="form-info-image">
-                        <img src="{% static 'images/invoice-illustration.svg' %}" alt="Иллюстрация счета" class="info-image" onerror="this.style.display='none'">
+                        <img src="{% static 'images/invoice-outgoing-illustration.svg' %}" alt="Иллюстрация исходящего счета" class="info-image" onerror="this.style.display='none'">
                     </div>
                 </div>
             </div>
@@ -278,7 +350,7 @@
     <div id="scan-modal-overlay" class="scan-modal-overlay">
         <div id="scan-modal" class="scan-modal">
             <div class="scan-modal-header">
-                <h3 class="scan-modal-title">Сканирование PDF-счета</h3>
+                <h3 class="scan-modal-title">{% trans "Сканирование PDF-счета" %}</h3>
                 <button type="button" id="scan-modal-close" class="scan-modal-close">&times;</button>
             </div>
             <div class="scan-modal-body">
@@ -286,10 +358,10 @@
                     <!-- Область для перетаскивания файла -->
                     <div id="scan-dropzone" class="scan-dropzone">
                         <i class="fas fa-file-pdf scan-dropzone-icon"></i>
-                        <h4 class="scan-dropzone-title">Перетащите PDF-файл сюда</h4>
-                        <p class="scan-dropzone-text">или</p>
-                        <span id="scan-browse-btn" class="scan-dropzone-browse">Выберите файл</span>
-                        <input type="file" id="scan-file-input" class="scan-dropzone-input" accept="application/pdf" title="Выберите PDF файл для сканирования">
+                        <h4 class="scan-dropzone-title">{% trans "Перетащите PDF-файл сюда" %}</h4>
+                        <p class="scan-dropzone-text">{% trans "или" %}</p>
+                        <span id="scan-browse-btn" class="scan-dropzone-browse">{% trans "Выберите файл" %}</span>
+                        <input type="file" id="scan-file-input" class="scan-dropzone-input" accept="application/pdf" title="{% trans "Выберите PDF файл для сканирования" %}">
                     </div>
                     
                     <!-- Предпросмотр файла -->
@@ -307,18 +379,18 @@
                     <!-- Загрузка -->
                     <div id="scan-loading" class="scan-loading">
                         <div class="scan-loading-spinner"></div>
-                        <div class="scan-loading-text">Сканирование документа...</div>
+                        <div class="scan-loading-text">{% trans "Сканирование документа..." %}</div>
                     </div>
                     
                     <!-- Ошибка -->
                     <div id="scan-error" class="scan-error">
-                        <div id="scan-error-title" class="scan-error-title">Ошибка сканирования</div>
+                        <div id="scan-error-title" class="scan-error-title">{% trans "Ошибка сканирования" %}</div>
                         <div id="scan-error-message" class="scan-error-message"></div>
                     </div>
                     
                     <!-- Результаты сканирования -->
                     <div id="scan-results" class="scan-results">
-                        <div class="scan-results-title">Найденные позиции</div>
+                        <div class="scan-results-title">{% trans "Найденные позиции" %}</div>
                         <div id="scan-results-items" class="scan-results-items">
                             <!-- Здесь будут отображаться найденные позиции -->
                         </div>
@@ -326,9 +398,9 @@
                 </form>
             </div>
             <div class="scan-modal-footer">
-                <button type="button" id="scan-cancel-button" class="btn btn-outline">Отмена</button>
-                <button type="button" id="scan-button" class="btn btn-secondary" disabled>Сканировать</button>
-                <button type="button" id="scan-apply-button" class="btn btn-primary" disabled>Применить</button>
+                <button type="button" id="scan-cancel-button" class="btn btn-outline">{% trans "Отмена" %}</button>
+                <button type="button" id="scan-button" class="btn btn-secondary" disabled>{% trans "Сканировать" %}</button>
+                <button type="button" id="scan-apply-button" class="btn btn-primary" disabled>{% trans "Применить" %}</button>
             </div>
         </div>
     </div>
@@ -336,6 +408,7 @@
 {% endblock %}
 
 {% block extra_js %}
+<script src="{% static 'js/invoices/create-svg.js' %}"></script>
 <script src="{% static 'js/invoices/create.js' %}"></script>
 <script src="{% static 'js/invoices/scanner.js' %}"></script>
 {% if is_edit %}

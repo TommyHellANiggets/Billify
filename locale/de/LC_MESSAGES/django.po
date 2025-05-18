@@ -1,0 +1,3447 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-05-18 16:56+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\templates\accounts\auth.html:5 .\templates\accounts\auth.html:29
+#: .\templates\base.html:306 .\templates\base.html:345
+msgid "Вход"
+msgstr "Anmelden"
+
+#: .\templates\accounts\auth.html:5 .\templates\accounts\auth.html:30
+msgid "Регистрация"
+msgstr "Registrierung"
+
+#: .\templates\accounts\auth.html:18
+#: .\templates\accounts\password_reset.html:96
+msgid "Иллюстрация"
+msgstr "Illustration"
+
+#: .\templates\accounts\auth.html:19
+msgid "Billify - Ваш финансовый учет"
+msgstr "Billify - Ihre Finanzbuchhaltung"
+
+#: .\templates\accounts\auth.html:20
+msgid "Автоматизация финансового учета и документооборота для вашего бизнеса"
+msgstr ""
+"Automatisierung der Finanzbuchhaltung und Dokumentenverwaltung für Ihr "
+"Unternehmen"
+
+#: .\templates\accounts\auth.html:55
+msgid "Добро пожаловать"
+msgstr "Willkommen"
+
+#: .\templates\accounts\auth.html:56
+msgid "Войдите в свою учетную запись"
+msgstr "Melden Sie sich in Ihrem Konto an"
+
+#: .\templates\accounts\auth.html:61 .\templates\accounts\auth.html:108
+msgid "Имя пользователя"
+msgstr "Benutzername"
+
+#: .\templates\accounts\auth.html:64
+msgid "Введите имя пользователя"
+msgstr "Geben Sie Ihren Benutzernamen ein"
+
+#: .\templates\accounts\auth.html:72 .\templates\accounts\auth.html:130
+msgid "Пароль"
+msgstr "Passwort"
+
+#: .\templates\accounts\auth.html:75
+msgid "Введите пароль"
+msgstr "Geben Sie Ihr Passwort ein"
+
+#: .\templates\accounts\auth.html:85
+msgid "Запомнить меня"
+msgstr "Angemeldet bleiben"
+
+#: .\templates\accounts\auth.html:87
+msgid "Забыли пароль?"
+msgstr "Passwort vergessen?"
+
+#: .\templates\accounts\auth.html:90 .\templates\accounts\auth.html:162
+#: .\templates\accounts\password_reset.html:155
+#: .\templates\accounts\terms.html:220 .\templates\core\legal.html:177
+#: .\templates\core\privacy.html:190
+msgid "Войти"
+msgstr "Anmelden"
+
+#: .\templates\accounts\auth.html:96
+msgid "Нет учетной записи?"
+msgstr "Kein Konto?"
+
+#: .\templates\accounts\auth.html:96 .\templates\accounts\auth.html:158
+msgid "Зарегистрироваться"
+msgstr "Registrieren"
+
+#: .\templates\accounts\auth.html:102
+msgid "Создайте учетную запись"
+msgstr "Konto erstellen"
+
+#: .\templates\accounts\auth.html:103
+msgid "Заполните данные для регистрации"
+msgstr "Füllen Sie die Registrierungsdaten aus"
+
+#: .\templates\accounts\auth.html:111
+msgid "Придумайте имя пользователя"
+msgstr "Wählen Sie einen Benutzernamen"
+
+#: .\templates\accounts\auth.html:122
+#: .\templates\accounts\password_reset.html:140
+msgid "Введите ваш email"
+msgstr "Geben Sie Ihre E-Mail-Adresse ein"
+
+#: .\templates\accounts\auth.html:133
+msgid "Придумайте надежный пароль"
+msgstr "Wählen Sie ein sicheres Passwort"
+
+#: .\templates\accounts\auth.html:141
+msgid "Подтверждение пароля"
+msgstr "Passwort bestätigen"
+
+#: .\templates\accounts\auth.html:144
+msgid "Повторите пароль"
+msgstr "Passwort wiederholen"
+
+#: .\templates\accounts\auth.html:154
+msgid "Я согласен с"
+msgstr "Ich stimme den"
+
+#: .\templates\accounts\auth.html:154
+msgid "условиями использования"
+msgstr "Nutzungsbedingungen zu"
+
+#: .\templates\accounts\auth.html:162
+msgid "Уже есть учетная запись?"
+msgstr "Haben Sie bereits ein Konto?"
+
+#: .\templates\accounts\password_reset.html:5
+#: .\templates\accounts\password_reset.html:105
+msgid "Восстановление пароля"
+msgstr "Passwort wiederherstellen"
+
+#: .\templates\accounts\password_reset.html:97
+msgid "Восстановление доступа"
+msgstr "Zugang wiederherstellen"
+
+#: .\templates\accounts\password_reset.html:98
+msgid "Мы поможем вам восстановить доступ к вашему аккаунту Billify"
+msgstr "Wir helfen Ihnen, den Zugang zu Ihrem Billify-Konto wiederherzustellen"
+
+#: .\templates\accounts\password_reset.html:106
+msgid "Укажите email, указанный при регистрации"
+msgstr "Geben Sie die bei der Registrierung verwendete E-Mail-Adresse ein"
+
+#: .\templates\accounts\password_reset.html:115
+msgid "Код"
+msgstr "Code"
+
+#: .\templates\accounts\password_reset.html:119
+#: .\templates\core\profile.html:818
+msgid "Новый пароль"
+msgstr "Neues Passwort"
+
+#: .\templates\accounts\password_reset.html:147
+msgid "Отправить инструкции"
+msgstr "Anweisungen senden"
+
+#: .\templates\accounts\password_reset.html:151
+msgid ""
+"На указанный email будет отправлено письмо с инструкциями по восстановлению "
+"пароля. Если вы не получили письмо, проверьте папку \\"
+msgstr ""
+"Eine E-Mail mit Anweisungen zur Passwortwiederherstellung wird an die "
+"angegebene E-Mail-Adresse gesendet. Wenn Sie keine E-Mail erhalten, "
+"überprüfen Sie den Ordner \\"
+
+#: .\templates\accounts\password_reset.html:155
+msgid "Вспомнили пароль?"
+msgstr "Passwort wieder eingefallen?"
+
+#: .\templates\accounts\terms.html:5 .\templates\accounts\terms.html:93
+#: .\templates\base.html:545
+msgid "Условия использования"
+msgstr "Nutzungsbedingungen zu"
+
+#: .\templates\accounts\terms.html:94
+msgid ""
+"Пожалуйста, внимательно ознакомьтесь с настоящими условиями использования "
+"сервиса Billify"
+msgstr ""
+
+#: .\templates\accounts\terms.html:99 .\templates\core\privacy.html:99
+msgid "1. Общие положения"
+msgstr ""
+
+#: .\templates\accounts\terms.html:100
+msgid ""
+"1.1. Настоящие Условия использования (далее — «Условия») регулируют "
+"отношения между ООО «Биллифай» (далее — «Оператор»), являющимся владельцем "
+"сервиса Billify (далее — «Сервис»), и физическими или юридическими лицами "
+"(далее — «Пользователь»), использующими функциональные возможности Сервиса."
+msgstr ""
+
+#: .\templates\accounts\terms.html:101
+msgid ""
+"1.2. Сервис представляет собой программное обеспечение, предназначенное для "
+"автоматизации финансового учета и документооборота, доступное через веб-"
+"интерфейс по адресу: https://billify.ru/."
+msgstr ""
+
+#: .\templates\accounts\terms.html:102
+msgid ""
+"1.3. Начиная использовать Сервис или его отдельные функции, Пользователь "
+"считается принявшим настоящие Условия в полном объеме без каких-либо "
+"оговорок и исключений."
+msgstr ""
+
+#: .\templates\accounts\terms.html:103
+msgid ""
+"1.4. В случае несогласия с какими-либо положениями Условий, Пользователь "
+"обязан прекратить использование Сервиса."
+msgstr ""
+
+#: .\templates\accounts\terms.html:104
+msgid ""
+"1.5. Оператор оставляет за собой право в любое время в одностороннем порядке "
+"изменять условия настоящего Соглашения. Такие изменения вступают в силу по "
+"истечении 3 (трех) дней с момента размещения новой версии Условий на сайте "
+"Сервиса. При несогласии Пользователя с внесенными изменениями он обязан "
+"отказаться от доступа к Сервису и прекратить его использование."
+msgstr ""
+
+#: .\templates\accounts\terms.html:108
+#, fuzzy
+#| msgid "Уже есть учетная запись?"
+msgid "2. Регистрация и учетная запись"
+msgstr "Haben Sie bereits ein Konto?"
+
+#: .\templates\accounts\terms.html:109
+msgid ""
+"2.1. Для использования определенных функций Сервиса Пользователю необходимо "
+"создать учетную запись (аккаунт) путем регистрации на сайте Сервиса."
+msgstr ""
+
+#: .\templates\accounts\terms.html:110
+msgid ""
+"2.2. При регистрации Пользователь обязуется предоставить достоверную и "
+"полную информацию о себе и поддерживать эту информацию в актуальном "
+"состоянии."
+msgstr ""
+
+#: .\templates\accounts\terms.html:111
+msgid ""
+"2.3. Пользователь несет личную ответственность за сохранность своих учетных "
+"данных (логина и пароля) для доступа к Сервису и обязуется не передавать их "
+"третьим лицам."
+msgstr ""
+
+#: .\templates\accounts\terms.html:112
+msgid ""
+"2.4. Оператор оставляет за собой право по своему усмотрению приостановить "
+"или заблокировать доступ Пользователя к учетной записи в случае нарушения "
+"Пользователем настоящих Условий или законодательства РФ."
+msgstr ""
+
+#: .\templates\accounts\terms.html:113
+msgid ""
+"2.5. Пользователь вправе в любой момент удалить свою учетную запись, однако "
+"это не прекращает обязательств Пользователя, возникших до момента удаления "
+"учетной записи."
+msgstr ""
+
+#: .\templates\accounts\terms.html:117
+#, fuzzy
+#| msgid "Срок оплаты"
+msgid "3. Тарифы и оплата"
+msgstr "Zahlungsfrist"
+
+#: .\templates\accounts\terms.html:118
+msgid ""
+"3.1. Сервис предоставляется на условиях различных тарифных планов, включая "
+"бесплатный ограниченный доступ и платные тарифы с расширенными функциями."
+msgstr ""
+
+#: .\templates\accounts\terms.html:119
+msgid ""
+"3.2. Детальное описание тарифных планов, их стоимость и доступные функции "
+"размещены на сайте Сервиса."
+msgstr ""
+
+#: .\templates\accounts\terms.html:120
+msgid ""
+"3.3. Оператор оставляет за собой право в одностороннем порядке изменять "
+"тарифы, вводить новые или отменять существующие тарифные планы, уведомив "
+"Пользователя не менее чем за 30 (тридцать) календарных дней до даты "
+"вступления таких изменений в силу."
+msgstr ""
+
+#: .\templates\accounts\terms.html:121
+msgid ""
+"3.4. Оплата за использование Сервиса производится путем списания денежных "
+"средств с банковской карты Пользователя или иным доступным способом, "
+"указанным на сайте Сервиса."
+msgstr ""
+
+#: .\templates\accounts\terms.html:122
+msgid ""
+"3.5. Все платежи осуществляются в российских рублях. В случае оплаты в иной "
+"валюте, конвертация производится по курсу платежной системы на день оплаты."
+msgstr ""
+
+#: .\templates\accounts\terms.html:123
+msgid ""
+"3.6. Проблемы, связанные с проведением платежей, Пользователь обязуется "
+"решать самостоятельно с платежной системой. При этом Оператор обязуется "
+"предоставить необходимую информацию о транзакции в случае запроса "
+"Пользователя."
+msgstr ""
+
+#: .\templates\accounts\terms.html:127
+msgid "4. Права и обязанности сторон"
+msgstr ""
+
+#: .\templates\accounts\terms.html:128
+#, fuzzy
+#| msgid "Имя пользователя"
+msgid "4.1. Пользователь вправе:"
+msgstr "Benutzername"
+
+#: .\templates\accounts\terms.html:130
+msgid "Использовать Сервис в соответствии с настоящими Условиями;"
+msgstr ""
+
+#: .\templates\accounts\terms.html:131
+msgid ""
+"Получать техническую поддержку в соответствии с выбранным тарифным планом;"
+msgstr ""
+
+#: .\templates\accounts\terms.html:132
+msgid ""
+"Прекратить использование Сервиса в любой момент, удалив свою учетную запись."
+msgstr ""
+
+#: .\templates\accounts\terms.html:135
+#, fuzzy
+#| msgid "Имя пользователя"
+msgid "4.2. Пользователь обязуется:"
+msgstr "Benutzername"
+
+#: .\templates\accounts\terms.html:137
+msgid ""
+"Соблюдать настоящие Условия и требования законодательства РФ при "
+"использовании Сервиса;"
+msgstr ""
+
+#: .\templates\accounts\terms.html:138
+msgid ""
+"Не осуществлять действий, направленных на нарушение нормальной работы "
+"Сервиса;"
+msgstr ""
+
+#: .\templates\accounts\terms.html:139
+msgid "Не использовать Сервис для совершения противоправных действий;"
+msgstr ""
+
+#: .\templates\accounts\terms.html:140
+msgid ""
+"Своевременно оплачивать услуги Сервиса в соответствии с выбранным тарифным "
+"планом;"
+msgstr ""
+
+#: .\templates\accounts\terms.html:141
+msgid "Не передавать свои учетные данные третьим лицам;"
+msgstr ""
+
+#: .\templates\accounts\terms.html:142
+msgid ""
+"Не копировать, не модифицировать и не распространять материалы и объекты "
+"интеллектуальной собственности, размещенные на Сервисе."
+msgstr ""
+
+#: .\templates\accounts\terms.html:145
+msgid "4.3. Оператор вправе:"
+msgstr ""
+
+#: .\templates\accounts\terms.html:147
+msgid "Изменять настоящие Условия в одностороннем порядке;"
+msgstr ""
+
+#: .\templates\accounts\terms.html:148
+msgid ""
+"Изменять функциональность Сервиса, добавлять или удалять отдельные "
+"компоненты Сервиса;"
+msgstr ""
+
+#: .\templates\accounts\terms.html:149
+msgid ""
+"Временно приостанавливать работу Сервиса для проведения технических работ;"
+msgstr ""
+
+#: .\templates\accounts\terms.html:150
+msgid ""
+"Блокировать доступ Пользователя к Сервису в случае нарушения Пользователем "
+"настоящих Условий или законодательства РФ;"
+msgstr ""
+
+#: .\templates\accounts\terms.html:151
+msgid ""
+"Собирать анонимную статистику использования Сервиса для улучшения его работы."
+msgstr ""
+
+#: .\templates\accounts\terms.html:154
+msgid "4.4. Оператор обязуется:"
+msgstr ""
+
+#: .\templates\accounts\terms.html:156
+msgid ""
+"Обеспечивать стабильную работу Сервиса в соответствии с настоящими Условиями;"
+msgstr ""
+
+#: .\templates\accounts\terms.html:157
+msgid ""
+"Предоставлять техническую поддержку Пользователям в соответствии с выбранным "
+"тарифным планом;"
+msgstr ""
+
+#: .\templates\accounts\terms.html:158
+msgid ""
+"Принимать необходимые меры для обеспечения безопасности данных Пользователя;"
+msgstr ""
+
+#: .\templates\accounts\terms.html:159
+msgid ""
+"Уведомлять Пользователя о предстоящих изменениях в работе Сервиса, которые "
+"могут повлиять на доступность Сервиса."
+msgstr ""
+
+#: .\templates\accounts\terms.html:164
+msgid "5. Конфиденциальность и обработка персональных данных"
+msgstr ""
+
+#: .\templates\accounts\terms.html:165
+msgid ""
+"5.1. Оператор осуществляет обработку персональных данных Пользователя в "
+"соответствии с Политикой конфиденциальности, расположенной по адресу:"
+msgstr ""
+
+#: .\templates\accounts\terms.html:166
+msgid ""
+"5.2. Принимая настоящие Условия, Пользователь выражает свое согласие на "
+"обработку персональных данных Оператором в целях исполнения настоящих "
+"Условий."
+msgstr ""
+
+#: .\templates\accounts\terms.html:167
+msgid ""
+"5.3. Оператор принимает необходимые организационные и технические меры для "
+"защиты персональных данных Пользователя от неправомерного или случайного "
+"доступа, уничтожения, изменения, блокирования, копирования, распространения, "
+"а также от иных неправомерных действий третьих лиц."
+msgstr ""
+
+#: .\templates\accounts\terms.html:168
+msgid ""
+"5.4. Пользователь самостоятельно несет ответственность за разглашение своих "
+"учетных данных, а также за все действия, произведенные в Сервисе под его "
+"учетной записью."
+msgstr ""
+
+#: .\templates\accounts\terms.html:169
+msgid ""
+"5.5. Информация, вводимая Пользователем в Сервис, является конфиденциальной "
+"и не подлежит разглашению Оператором, за исключением случаев, "
+"предусмотренных законодательством РФ."
+msgstr ""
+
+#: .\templates\accounts\terms.html:173
+msgid "6. Интеллектуальная собственность"
+msgstr ""
+
+#: .\templates\accounts\terms.html:174
+msgid ""
+"6.1. Все объекты интеллектуальной собственности, доступные на Сервисе, "
+"включая элементы дизайна, текст, графические изображения, программный код и "
+"другие объекты, являются собственностью Оператора или его партнеров."
+msgstr ""
+
+#: .\templates\accounts\terms.html:175
+msgid ""
+"6.2. Пользователь не вправе копировать, модифицировать, декомпилировать, "
+"продавать, сдавать в аренду или иным образом использовать объекты "
+"интеллектуальной собственности, доступные на Сервисе, без письменного "
+"согласия Оператора."
+msgstr ""
+
+#: .\templates\accounts\terms.html:176
+msgid ""
+"6.3. Оператор предоставляет Пользователю неисключительную лицензию на "
+"использование Сервиса исключительно для целей, предусмотренных настоящими "
+"Условиями."
+msgstr ""
+
+#: .\templates\accounts\terms.html:180
+msgid "7. Ограничение ответственности"
+msgstr ""
+
+#: .\templates\accounts\terms.html:181
+msgid ""
+"7.1. Сервис предоставляется «как есть», без каких-либо гарантий, явных или "
+"подразумеваемых. Оператор не гарантирует, что Сервис будет соответствовать "
+"требованиям Пользователя или что его работа будет бесперебойной и "
+"безошибочной."
+msgstr ""
+
+#: .\templates\accounts\terms.html:182
+msgid ""
+"7.2. Оператор не несет ответственности за какие-либо прямые или косвенные "
+"убытки, возникшие в результате использования или невозможности использования "
+"Сервиса."
+msgstr ""
+
+#: .\templates\accounts\terms.html:183
+msgid ""
+"7.3. Оператор не несет ответственности за содержание информации, размещаемой "
+"Пользователем с использованием Сервиса."
+msgstr ""
+
+#: .\templates\accounts\terms.html:184
+msgid ""
+"7.4. Пользователь самостоятельно несет ответственность за соблюдение "
+"требований законодательства РФ при использовании Сервиса."
+msgstr ""
+
+#: .\templates\accounts\terms.html:185
+msgid ""
+"7.5. Оператор не несет ответственности за возможную потерю данных "
+"Пользователя. Пользователь самостоятельно обеспечивает сохранность важных "
+"данных путем создания резервных копий."
+msgstr ""
+
+#: .\templates\accounts\terms.html:189
+#, fuzzy
+#| msgid "Изменение пароля"
+msgid "8. Разрешение споров"
+msgstr "Passwort ändern"
+
+#: .\templates\accounts\terms.html:190
+msgid ""
+"8.1. Все споры или разногласия, возникающие между Оператором и Пользователем "
+"в связи с исполнением настоящих Условий, разрешаются путем переговоров."
+msgstr ""
+
+#: .\templates\accounts\terms.html:191
+msgid ""
+"8.2. В случае невозможности разрешения споров путем переговоров, они "
+"подлежат разрешению в судебном порядке в соответствии с законодательством "
+"Российской Федерации по месту нахождения Оператора."
+msgstr ""
+
+#: .\templates\accounts\terms.html:192
+msgid ""
+"8.3. Применимым правом к настоящим Условиям является право Российской "
+"Федерации."
+msgstr ""
+
+#: .\templates\accounts\terms.html:196
+msgid "9. Срок действия и расторжение"
+msgstr ""
+
+#: .\templates\accounts\terms.html:197
+msgid ""
+"9.1. Настоящие Условия вступают в силу с момента начала использования "
+"Пользователем Сервиса и действуют бессрочно."
+msgstr ""
+
+#: .\templates\accounts\terms.html:198
+msgid ""
+"9.2. Пользователь вправе в любой момент отказаться от использования Сервиса "
+"и расторгнуть настоящие Условия путем удаления своей учетной записи."
+msgstr ""
+
+#: .\templates\accounts\terms.html:199
+msgid ""
+"9.3. Оператор вправе в одностороннем порядке расторгнуть настоящие Условия с "
+"Пользователем в случае нарушения Пользователем настоящих Условий или "
+"законодательства РФ."
+msgstr ""
+
+#: .\templates\accounts\terms.html:200
+msgid ""
+"9.4. При расторжении настоящих Условий по любой причине Пользователь не "
+"имеет права на возврат оплаченных денежных средств за неиспользованный "
+"период подписки, если иное не предусмотрено законодательством РФ."
+msgstr ""
+
+#: .\templates\accounts\terms.html:204
+#, fuzzy
+#| msgid "Завершите подтверждение"
+msgid "10. Заключительные положения"
+msgstr "Schließen Sie die Bestätigung ab"
+
+#: .\templates\accounts\terms.html:205
+msgid ""
+"10.1. Признание судом какого-либо положения настоящих Условий "
+"недействительным не влечет недействительности всех Условий."
+msgstr ""
+
+#: .\templates\accounts\terms.html:206
+msgid ""
+"10.2. Бездействие со стороны Оператора в случае нарушения Пользователем "
+"настоящих Условий не лишает Оператора права предпринять соответствующие "
+"действия в защиту своих интересов позднее."
+msgstr ""
+
+#: .\templates\accounts\terms.html:207
+msgid ""
+"10.3. Настоящие Условия составлены на русском языке. В случае предоставления "
+"Условий на нескольких языках, русская версия имеет преимущественную силу."
+msgstr ""
+
+#: .\templates\accounts\terms.html:208
+msgid ""
+"10.4. Все уведомления в рамках настоящих Условий могут направляться по "
+"электронной почте, указанной при регистрации учетной записи."
+msgstr ""
+
+#: .\templates\accounts\terms.html:212 .\templates\core\legal.html:169
+#: .\templates\core\privacy.html:182
+#, fuzzy
+#| msgid "Последние транзакции"
+msgid "Последнее обновление:"
+msgstr "Letzte Transaktionen"
+
+#: .\templates\accounts\terms.html:212 .\templates\core\legal.html:169
+#: .\templates\core\privacy.html:182
+msgid "июня"
+msgstr ""
+
+#: .\templates\accounts\terms.html:212 .\templates\core\legal.html:169
+#: .\templates\core\privacy.html:182
+msgid "г."
+msgstr ""
+
+#: .\templates\accounts\terms.html:217
+msgid "Если у вас возникли вопросы по настоящим Условиям, пожалуйста,"
+msgstr ""
+
+#: .\templates\accounts\terms.html:217 .\templates\core\legal.html:174
+#: .\templates\core\privacy.html:187
+msgid "свяжитесь с нами"
+msgstr ""
+
+#: .\templates\accounts\terms.html:219 .\templates\core\legal.html:176
+#: .\templates\core\privacy.html:189
+#, fuzzy
+#| msgid "Главная"
+msgid "На главную"
+msgstr "Startseite"
+
+#: .\templates\analytics\dashboard.html:25
+msgid "Общая сумма счетов"
+msgstr "Gesamtsumme der Rechnungen"
+
+#: .\templates\analytics\dashboard.html:35
+msgid "Оплаченные счета"
+msgstr "Bezahlte Rechnungen"
+
+#: .\templates\analytics\dashboard.html:45
+msgid "Просроченные платежи"
+msgstr "Überfällige Zahlungen"
+
+#: .\templates\analytics\dashboard.html:59
+msgid "Черновики"
+msgstr "Entwürfe"
+
+#: .\templates\analytics\dashboard.html:73
+#: .\templates\analytics\dashboard.html:93
+#: .\templates\analytics\dashboard.html:113
+#: .\templates\analytics\dashboard.html:133
+msgid "с прошлого месяца"
+msgstr "seit letztem Monat"
+
+#: .\templates\analytics\dashboard.html:79
+msgid "Отправленные"
+msgstr "Gesendet"
+
+#: .\templates\analytics\dashboard.html:99
+msgid "Оплаченные"
+msgstr "Bezahlt"
+
+#: .\templates\analytics\dashboard.html:119
+msgid "Просроченные"
+msgstr "Überfällig"
+
+#: .\templates\analytics\dashboard.html:145
+msgid "Динамика доходов"
+msgstr "Einkommensdynamik"
+
+#: .\templates\analytics\dashboard.html:148
+msgid "30 дней"
+msgstr "30 Tage"
+
+#: .\templates\analytics\dashboard.html:149
+msgid "6 месяцев"
+msgstr "6 Monate"
+
+#: .\templates\analytics\dashboard.html:150
+msgid "Год"
+msgstr "Jahr"
+
+#: .\templates\analytics\dashboard.html:165
+msgid "Последние транзакции"
+msgstr "Letzte Transaktionen"
+
+#: .\templates\analytics\dashboard.html:167
+msgid "Все счета"
+msgstr "Alle Rechnungen"
+
+#: .\templates\analytics\dashboard.html:175 .\templates\invoices\list.html:112
+msgid "№ счета"
+msgstr "Rechnungsnr."
+
+#: .\templates\analytics\dashboard.html:176 .\templates\clients\create.html:360
+#: .\templates\clients\edit.html:157 .\templates\clients\list.html:69
+#: .\templates\invoices\create_outgoing.html:70
+#: .\templates\invoices\list.html:117
+msgid "Клиент"
+msgstr "Kunde"
+
+#: .\templates\analytics\dashboard.html:177 .\templates\invoices\list.html:122
+msgid "Дата"
+msgstr "Datum"
+
+#: .\templates\analytics\dashboard.html:178 .\templates\invoices\list.html:123
+msgid "Сумма"
+msgstr "Betrag"
+
+#: .\templates\analytics\dashboard.html:179 .\templates\clients\create.html:357
+#: .\templates\clients\edit.html:152 .\templates\clients\list.html:52
+#: .\templates\invoices\create_incoming.html:49
+#: .\templates\invoices\create_outgoing.html:52
+#: .\templates\invoices\list.html:124
+msgid "Статус"
+msgstr "Status"
+
+#: .\templates\analytics\dashboard.html:197
+msgid "Нет данных"
+msgstr "Keine Daten"
+
+#: .\templates\base.html:23
+msgid ""
+"Flowfy - удобная система для автоматизации финансового учета и "
+"документооборота, идеальна для малого бизнеса и индивидуальных "
+"предпринимателей"
+msgstr ""
+"Flowfy - ein benutzerfreundliches System zur Automatisierung der "
+"Finanzbuchhaltung und Dokumentenverwaltung, ideal für Kleinunternehmen und "
+"Einzelunternehmer"
+
+#: .\templates\base.html:24
+msgid ""
+"автоматизация учета, финансовый учет, электронный документооборот, "
+"управление счетами, малый бизнес"
+msgstr ""
+"Buchhaltungsautomatisierung, Finanzbuchhaltung, elektronische "
+"Dokumentenverwaltung, Rechnungsverwaltung, Kleinunternehmen"
+
+#: .\templates\base.html:194 .\templates\base.html:338
+#: .\templates\base.html:346 .\templates\base.html:521
+#: .\templates\base.html:527
+msgid "Главная"
+msgstr "Startseite"
+
+#: .\templates\base.html:195 .\templates\base.html:339
+#: .\templates\clients\list.html:11
+msgid "Клиенты и поставщики"
+msgstr "Kunden und Lieferanten"
+
+#: .\templates\base.html:196 .\templates\base.html:340
+#: .\templates\base.html:523
+msgid "Счета"
+msgstr "Rechnungen"
+
+#: .\templates\base.html:197 .\templates\base.html:341
+#: .\templates\base.html:524 .\templates\core\home_inside.html:168
+msgid "Аналитика"
+msgstr "Analyse"
+
+#: .\templates\base.html:227 .\templates\base.html:354
+msgid "Язык"
+msgstr "Sprache"
+
+#: .\templates\base.html:234 .\templates\base.html:372
+#: .\templates\base.html:385
+msgid "Русский"
+msgstr "Russisch"
+
+#: .\templates\base.html:243 .\templates\base.html:368
+#: .\templates\base.html:394
+msgid "English"
+msgstr "Englisch"
+
+#: .\templates\base.html:252 .\templates\base.html:370
+#: .\templates\base.html:403
+msgid "Deutsch"
+msgstr "Deutsch"
+
+#: .\templates\base.html:258 .\templates\base.html:412
+msgid "Валюта"
+msgstr "Währung"
+
+#: .\templates\base.html:263 .\templates\base.html:416
+#: .\templates\base.html:422 .\templates\base.html:425
+msgid "Российский рубль"
+msgstr "Russischer Rubel"
+
+#: .\templates\base.html:271 .\templates\base.html:430
+#: .\templates\base.html:433
+msgid "Доллар США"
+msgstr "US-Dollar"
+
+#: .\templates\base.html:279 .\templates\base.html:438
+#: .\templates\base.html:441
+msgid "Евро"
+msgstr "Euro"
+
+#: .\templates\base.html:287 .\templates\base.html:446
+#: .\templates\base.html:449
+msgid "Фунт стерлингов"
+msgstr "Britisches Pfund"
+
+#: .\templates\base.html:301 .\templates\base.html:342
+#: .\templates\base.html:525 .\templates\core\home_inside.html:161
+#: .\templates\core\profile.html:5 .\templates\core\profile.html:466
+msgid "Профиль компании"
+msgstr "Unternehmensprofil"
+
+#: .\templates\base.html:302 .\templates\base.html:343
+#: .\templates\base.html:571
+msgid "Выйти"
+msgstr "Abmelden"
+
+#: .\templates\base.html:310
+msgid "Открыть меню"
+msgstr "Menü öffnen"
+
+#: .\templates\base.html:328
+msgid "Закрыть меню"
+msgstr "Menü schließen"
+
+#: .\templates\base.html:347 .\templates\base.html:530
+msgid "О системе"
+msgstr "Über das System"
+
+#: .\templates\base.html:500
+#| msgid ""
+#| "Flowfy - удобная система для автоматизации финансового учета и "
+#| "документооборота, идеальна для малого бизнеса и индивидуальных "
+#| "предпринимателей"
+msgid ""
+"Автоматизация финансового учета и документооборота для малого бизнеса и "
+"индивидуальных предпринимателей."
+msgstr ""
+"Flowfy - ein benutzerfreundliches System zur Automatisierung der "
+"Finanzbuchhaltung und Dokumentenverwaltung, ideal für Kleinunternehmen und "
+"Einzelunternehmer"
+
+#: .\templates\base.html:503
+#, fuzzy
+#| msgid "Контакты"
+msgid "ВКонтакте"
+msgstr "Kontakte"
+
+#: .\templates\base.html:506
+#, fuzzy
+#| msgid "Индекс"
+msgid "Яндекс Дзен"
+msgstr "Postleitzahl"
+
+#: .\templates\base.html:509
+msgid "YouTube"
+msgstr ""
+
+#: .\templates\base.html:512
+msgid "Telegram"
+msgstr ""
+
+#: .\templates\base.html:518
+#, fuzzy
+#| msgid "Регистрация"
+msgid "Навигация"
+msgstr "Registrierung"
+
+#: .\templates\base.html:522 .\templates\clients\edit.html:115
+#: .\templates\clients\list.html:34
+#, fuzzy
+#| msgid "Клиент"
+msgid "Клиенты"
+msgstr "Kunde"
+
+#: .\templates\base.html:528
+msgid "Ченджлог"
+msgstr ""
+
+#: .\templates\base.html:534
+msgid "Поддержка"
+msgstr ""
+
+#: .\templates\base.html:536
+msgid "Помощь"
+msgstr ""
+
+#: .\templates\base.html:537
+msgid "База знаний"
+msgstr ""
+
+#: .\templates\base.html:538
+msgid "Связаться с нами"
+msgstr ""
+
+#: .\templates\base.html:542
+#, fuzzy
+#| msgid "Все клиенты"
+msgid "Документы"
+msgstr "Alle Kunden"
+
+#: .\templates\base.html:544 .\templates\core\privacy.html:5
+#: .\templates\core\privacy.html:93
+msgid "Политика конфиденциальности"
+msgstr ""
+
+#: .\templates\base.html:546 .\templates\core\legal.html:5
+#: .\templates\core\legal.html:93
+#, fuzzy
+#| msgid "Основная информация"
+msgid "Правовая информация"
+msgstr "Grundinformationen"
+
+#: .\templates\base.html:552
+msgid "Все права защищены"
+msgstr "Alle Rechte vorbehalten"
+
+#: .\templates\base.html:563
+msgid "Подтверждение выхода"
+msgstr "Abmeldung bestätigen"
+
+#: .\templates\base.html:564
+msgid "Закрыть"
+msgstr "Schließen"
+
+#: .\templates\base.html:567
+msgid "Вы уверены, что хотите выйти из системы?"
+msgstr "Sind Sie sicher, dass Sie sich abmelden möchten?"
+
+#: .\templates\base.html:570 .\templates\clients\create.html:423
+#: .\templates\clients\edit.html:205
+#: .\templates\invoices\create_outgoing.html:330
+msgid "Отмена"
+msgstr "Abbrechen"
+
+#: .\templates\clients\create.html:4 .\templates\clients\create.html:311
+#: .\templates\clients\create.html:314 .\templates\clients\create.html:554
+#: .\templates\clients\create.html:556 .\templates\clients\create.html:909
+#: .\templates\clients\create.html:911
+#: .\templates\invoices\create_incoming.html:51
+#: .\templates\invoices\create_outgoing.html:54
+#: .\templates\invoices\list.html:91 .\templates\invoices\list.html:154
+msgid "Новый"
+msgstr "Neu"
+
+#: .\templates\clients\create.html:4
+msgid "поставщик,клиент"
+msgstr "Lieferant,Kunde"
+
+#: .\templates\clients\create.html:311
+msgid "Все клиенты"
+msgstr "Alle Kunden"
+
+#: .\templates\clients\create.html:311 .\templates\clients\create.html:314
+msgid "поставщик"
+msgstr "Lieferant"
+
+#: .\templates\clients\create.html:311 .\templates\clients\create.html:314
+msgid "клиент"
+msgstr "Kunde"
+
+#: .\templates\clients\create.html:330 .\templates\clients\edit.html:127
+#: .\templates\core\profile.html:560
+#: .\templates\invoices\create_incoming.html:33
+#: .\templates\invoices\create_outgoing.html:36
+msgid "Основная информация"
+msgstr "Grundinformationen"
+
+#: .\templates\clients\create.html:334
+msgid "Контактные данные"
+msgstr "Kontaktdaten"
+
+#: .\templates\clients\create.html:338 .\templates\clients\create.html:460
+#: .\templates\core\profile.html:484 .\templates\core\profile.html:673
+msgid "Банковские реквизиты"
+msgstr "Bankverbindung"
+
+#: .\templates\clients\create.html:342
+msgid "Дополнительно"
+msgstr "Zusätzlich"
+
+#: .\templates\clients\create.html:361 .\templates\clients\edit.html:158
+#: .\templates\clients\list.html:69
+#: .\templates\invoices\create_incoming.html:65
+#: .\templates\invoices\list.html:115
+msgid "Поставщик"
+msgstr "Lieferant"
+
+#: .\templates\clients\create.html:367 .\templates\clients\list.html:53
+msgid "Тип"
+msgstr "Typ"
+
+#: .\templates\clients\create.html:370 .\templates\clients\edit.html:169
+msgid "Физическое лицо"
+msgstr "Privatperson"
+
+#: .\templates\clients\create.html:371 .\templates\clients\edit.html:170
+#: .\templates\core\profile.html:569
+msgid "Юридическое лицо"
+msgstr "Juristische Person"
+
+#: .\templates\clients\create.html:381
+msgid "Название организации / ФИО ИП,Имя / Название организации"
+msgstr "Name / Firmenname"
+
+#: .\templates\clients\create.html:387 .\templates\clients\edit.html:131
+#: .\templates\clients\edit.html:213
+msgid "Адрес"
+msgstr "Adresse"
+
+#: .\templates\clients\create.html:390
+msgid "Область/Край"
+msgstr "Bundesland/Region"
+
+#: .\templates\clients\create.html:395
+msgid "Город/Населенный пункт"
+msgstr "Stadt/Ort"
+
+#: .\templates\clients\create.html:400
+msgid "Улица"
+msgstr "Straße"
+
+#: .\templates\clients\create.html:405
+msgid "Дом"
+msgstr "Hausnummer"
+
+#: .\templates\clients\create.html:410
+msgid "Квартира/Офис"
+msgstr "Wohnung/Büro"
+
+#: .\templates\clients\create.html:415
+msgid "Индекс"
+msgstr "Postleitzahl"
+
+#: .\templates\clients\create.html:424 .\templates\clients\create.html:453
+#: .\templates\clients\create.html:501 .\templates\clients\edit.html:206
+#: .\templates\clients\edit.html:219 .\templates\clients\edit.html:259
+msgid "Далее"
+msgstr "Weiter"
+
+#: .\templates\clients\create.html:431 .\templates\clients\edit.html:188
+#: .\templates\clients\list.html:55
+#: .\templates\invoices\create_incoming.html:90
+#: .\templates\invoices\create_outgoing.html:95
+msgid "Email"
+msgstr "E-Mail"
+
+#: .\templates\clients\create.html:436 .\templates\clients\edit.html:183
+#: .\templates\clients\list.html:54
+msgid "Телефон"
+msgstr "Telefon"
+
+#: .\templates\clients\create.html:441 .\templates\clients\edit.html:194
+#: .\templates\invoices\create_incoming.html:86
+#: .\templates\invoices\create_outgoing.html:91
+msgid "Контактное лицо"
+msgstr "Ansprechpartner"
+
+#: .\templates\clients\create.html:446 .\templates\clients\edit.html:199
+msgid "Email контактного лица"
+msgstr "E-Mail des Ansprechpartners"
+
+#: .\templates\clients\create.html:452 .\templates\clients\create.html:500
+#: .\templates\clients\create.html:516 .\templates\clients\edit.html:218
+#: .\templates\clients\edit.html:258 .\templates\clients\edit.html:278
+msgid "Назад"
+msgstr "Zurück"
+
+#: .\templates\clients\create.html:464 .\templates\clients\edit.html:227
+#: .\templates\invoices\create_incoming.html:104
+#: .\templates\invoices\create_outgoing.html:109
+msgid "ИНН"
+msgstr "Steuernummer"
+
+#: .\templates\clients\create.html:469 .\templates\clients\edit.html:232
+msgid "КПП"
+msgstr "Umsatzsteuer-ID"
+
+#: .\templates\clients\create.html:474 .\templates\clients\edit.html:237
+msgid "ОГРН / ОГРНИП"
+msgstr "Handelsregisternummer"
+
+#: .\templates\clients\create.html:479 .\templates\clients\edit.html:242
+msgid "Название банка"
+msgstr "Bankname"
+
+#: .\templates\clients\create.html:484
+#: .\templates\invoices\create_incoming.html:115
+#: .\templates\invoices\create_outgoing.html:120
+msgid "БИК"
+msgstr "Bankleitzahl"
+
+#: .\templates\clients\create.html:489
+#: .\templates\invoices\create_incoming.html:119
+#: .\templates\invoices\create_outgoing.html:126
+msgid "Расчетный счет"
+msgstr "Kontonummer"
+
+#: .\templates\clients\create.html:494
+msgid "Корреспондентский счет"
+msgstr "Korrespondenzkonto"
+
+#: .\templates\clients\create.html:509
+msgid "Комментарий"
+msgstr "Kommentar"
+
+#: .\templates\clients\create.html:510
+msgid "Введите дополнительную информацию"
+msgstr "Geben Sie zusätzliche Informationen ein"
+
+#: .\templates\clients\create.html:517
+#: .\templates\invoices\create_incoming.html:222
+#: .\templates\invoices\create_outgoing.html:239
+msgid "Сохранить"
+msgstr "Speichern"
+
+#: .\templates\clients\edit.html:117
+#, fuzzy
+#| msgid "Редактирование счета"
+msgid "Редактирование"
+msgstr "Rechnungsbearbeitung"
+
+#: .\templates\clients\edit.html:120
+#, fuzzy
+#| msgid "Редактирование счета"
+msgid "Редактирование клиента"
+msgstr "Rechnungsbearbeitung"
+
+#: .\templates\clients\edit.html:135 .\templates\core\profile.html:633
+msgid "Реквизиты"
+msgstr ""
+
+#: .\templates\clients\edit.html:139
+#, fuzzy
+#| msgid "Завершите подтверждение"
+msgid "Завершение"
+msgstr "Schließen Sie die Bestätigung ab"
+
+#: .\templates\clients\edit.html:164
+#, fuzzy
+#| msgid "Поиск клиента..."
+msgid "Тип клиента"
+msgstr "Kundensuche..."
+
+#: .\templates\clients\edit.html:178
+#, fuzzy
+#| msgid "Название организации"
+msgid "Имя / Название организации"
+msgstr "Firmenname"
+
+#: .\templates\clients\edit.html:195
+#, fuzzy
+#| msgid "Email контактного лица"
+msgid "ФИО контактного лица"
+msgstr "E-Mail des Ansprechpartners"
+
+#: .\templates\clients\edit.html:247
+#, fuzzy
+#| msgid "Рост"
+msgid "Р/с"
+msgstr "Wachstum"
+
+#: .\templates\clients\edit.html:279 .\templates\core\profile.html:711
+#, fuzzy
+#| msgid "Сохранить файлы"
+msgid "Сохранить изменения"
+msgstr "Dateien speichern"
+
+#: .\templates\clients\list.html:12 .\templates\clients\list.html:126
+#, fuzzy
+#| msgid "Обновить"
+msgid "Добавить"
+msgstr "Aktualisieren"
+
+#: .\templates\clients\list.html:18
+#, fuzzy
+#| msgid "Поиск клиента..."
+msgid "Поиск по имени..."
+msgstr "Kundensuche..."
+
+#: .\templates\clients\list.html:23
+#, fuzzy
+#| msgid "Фильтр по типу счета"
+msgid "Фильтр по типу клиента"
+msgstr "Filter nach Rechnungstyp"
+
+#: .\templates\clients\list.html:24 .\templates\invoices\list.html:82
+#, fuzzy
+#| msgid "Все клиенты"
+msgid "Все типы"
+msgstr "Alle Kunden"
+
+#: .\templates\clients\list.html:32 .\templates\invoices\list.html:89
+#, fuzzy
+#| msgid "Фильтр по типу счета"
+msgid "Фильтр по статусу"
+msgstr "Filter nach Rechnungstyp"
+
+#: .\templates\clients\list.html:33 .\templates\core\home_inside.html:178
+msgid "Все"
+msgstr ""
+
+#: .\templates\clients\list.html:35
+#, fuzzy
+#| msgid "Поставщик"
+msgid "Поставщики"
+msgstr "Lieferant"
+
+#: .\templates\clients\list.html:40
+#: .\templates\invoices\create_outgoing.html:332
+#: .\templates\invoices\list.html:101
+#, fuzzy
+#| msgid "Примечания"
+msgid "Применить"
+msgstr "Anmerkungen"
+
+#: .\templates\clients\list.html:41
+#: .\templates\invoices\create_incoming.html:228
+#: .\templates\invoices\create_outgoing.html:245
+#: .\templates\invoices\list.html:102
+msgid "Сбросить"
+msgstr ""
+
+#: .\templates\clients\list.html:51
+#, fuzzy
+#| msgid "Название организации"
+msgid "Имя / Организация"
+msgstr "Firmenname"
+
+#: .\templates\clients\list.html:56 .\templates\invoices\list.html:125
+#, fuzzy
+#| msgid "Быстрые действия"
+msgid "Действия"
+msgstr "Schnellzugriff"
+
+#: .\templates\clients\list.html:80 .\templates\invoices\list.html:171
+#, fuzzy
+#| msgid "Предпросмотр"
+msgid "Просмотр"
+msgstr "Vorschau"
+
+#: .\templates\clients\list.html:83 .\templates\invoices\list.html:179
+#, fuzzy
+#| msgid "Сканировать"
+msgid "Редактировать"
+msgstr "Scannen"
+
+#: .\templates\clients\list.html:86 .\templates\invoices\list.html:198
+#, fuzzy
+#| msgid "Удалить позицию"
+msgid "Удалить"
+msgstr "Position löschen"
+
+#: .\templates\clients\list.html:100
+#, fuzzy
+#| msgid "Первая"
+msgid "&laquo; Первая"
+msgstr "Erste"
+
+#: .\templates\clients\list.html:101 .\templates\invoices\list.html:218
+msgid "Предыдущая"
+msgstr ""
+
+#: .\templates\clients\list.html:113 .\templates\invoices\list.html:230
+msgid "Следующая"
+msgstr ""
+
+#: .\templates\clients\list.html:114
+#, fuzzy
+#| msgid "Последняя"
+msgid "Последняя &raquo;"
+msgstr "Letzte"
+
+#: .\templates\clients\list.html:123
+#, fuzzy
+#| msgid "Клиенты и поставщики"
+msgid "Нет клиентов и поставщиков"
+msgstr "Kunden und Lieferanten"
+
+#: .\templates\clients\list.html:124
+#, fuzzy
+#| msgid "В системе пока нет счетов"
+msgid "В системе пока нет клиентов и поставщиков"
+msgstr "Es gibt noch keine Rechnungen im System"
+
+#: .\templates\clients\list.html:124 .\templates\invoices\list.html:249
+msgid ", соответствующих заданным критериям"
+msgstr ""
+
+#: .\templates\clients\list.html:128 .\templates\invoices\list.html:254
+#, fuzzy
+#| msgid "Сохранить файлы"
+msgid "Сбросить фильтры"
+msgstr "Dateien speichern"
+
+#: .\templates\core\home.html:5 .\templates\core\home.html:11
+#: .\templates\core\home.html:19
+msgid "Flowfy - умная система автоматизации бухгалтерии и финансов для бизнеса"
+msgstr ""
+
+#: .\templates\core\home.html:7 .\templates\core\home.html:12
+msgid ""
+"Flowfy - современная российская онлайн-система для ведения бухгалтерии, "
+"учета финансов и автоматизации бизнес-процессов. Оптимизируйте работу вашего "
+"бизнеса с Flowfy."
+msgstr ""
+
+#: .\templates\core\home.html:9
+msgid ""
+"flowfy, флоуфай, автоматизация бухгалтерии, управление финансами, онлайн "
+"бухгалтерия, финансовый учёт, электронные счета, российская система учета"
+msgstr ""
+
+#: .\templates\core\home.html:20
+msgid ""
+"Flowfy - современная российская онлайн-система для ведения бухгалтерии, "
+"учета финансов и автоматизации бизнес-процессов."
+msgstr ""
+
+#: .\templates\core\home.html:62
+msgid ""
+"Flowfy - современная российская система автоматизации бухгалтерии и "
+"управления финансами для бизнеса."
+msgstr ""
+
+#: .\templates\core\home.html:80
+#, fuzzy
+#| msgid "Billify - Ваш финансовый учет"
+msgid "Flowfy - Ваш финансовый учет стал проще"
+msgstr "Billify - Ihre Finanzbuchhaltung"
+
+#: .\templates\core\home.html:81
+#, fuzzy
+#| msgid ""
+#| "Flowfy - удобная система для автоматизации финансового учета и "
+#| "документооборота, идеальна для малого бизнеса и индивидуальных "
+#| "предпринимателей"
+msgid ""
+"Автоматизация финансового учета и документооборота для малого бизнеса и "
+"индивидуальных предпринимателей"
+msgstr ""
+"Flowfy - ein benutzerfreundliches System zur Automatisierung der "
+"Finanzbuchhaltung und Dokumentenverwaltung, ideal für Kleinunternehmen und "
+"Einzelunternehmer"
+
+#: .\templates\core\home.html:83 .\templates\core\home.html:353
+#, fuzzy
+#| msgid "Управление счетами"
+msgid "Управление клиентами"
+msgstr "Rechnungsverwaltung"
+
+#: .\templates\core\home.html:84
+#, fuzzy
+#| msgid "Создать входящий счет"
+msgid "Создать счет"
+msgstr "Eingangsrechnung erstellen"
+
+#: .\templates\core\home.html:88
+#, fuzzy
+#| msgid ""
+#| "Управление счетами и платежами | Billify - автоматизация финансового учета"
+msgid "Flowfy Dashboard - система автоматизации финансового учета"
+msgstr ""
+"Rechnungs- und Zahlungsverwaltung | Billify - Automatisierung der "
+"Finanzbuchhaltung"
+
+#: .\templates\core\home.html:95 .\templates\core\home.html:251
+#, fuzzy
+#| msgid "Создать входящий"
+msgid "Узнать больше"
+msgstr "Eingehende erstellen"
+
+#: .\templates\core\home.html:102
+msgid "Надежное решение для бизнеса"
+msgstr ""
+
+#: .\templates\core\home.html:103
+msgid "Flowfy в цифрах - от начинающих предпринимателей до крупных компаний"
+msgstr ""
+
+#: .\templates\core\home.html:117
+#, fuzzy
+#| msgid "Имя пользователя"
+msgid "Активных пользователей"
+msgstr "Benutzername"
+
+#: .\templates\core\home.html:133
+msgid "Документов создано"
+msgstr ""
+
+#: .\templates\core\home.html:146
+#, fuzzy
+#| msgid "Недавняя активность"
+msgid "Рост эффективности"
+msgstr "Letzte Aktivitäten"
+
+#: .\templates\core\home.html:159
+#, fuzzy
+#| msgid "Нет данных"
+msgid "Защита данных"
+msgstr "Keine Daten"
+
+#: .\templates\core\home.html:168
+#, fuzzy
+#| msgid "О системе"
+msgid "О системе Flowfy"
+msgstr "Über das System"
+
+#: .\templates\core\home.html:169
+#, fuzzy
+#| msgid ""
+#| "Автоматизация финансового учета и документооборота для вашего бизнеса"
+msgid "Мы делаем финансовый учет простым и понятным для малого бизнеса"
+msgstr ""
+"Automatisierung der Finanzbuchhaltung und Dokumentenverwaltung für Ihr "
+"Unternehmen"
+
+#: .\templates\core\home.html:175 .\templates\core\home.html:200
+msgid "Наша миссия"
+msgstr ""
+
+#: .\templates\core\home.html:176
+msgid ""
+"Flowfy разработан с целью помочь малому бизнесу и индивидуальным "
+"предпринимателям эффективно управлять своими финансами без необходимости в "
+"специальных бухгалтерских знаниях."
+msgstr ""
+
+#: .\templates\core\home.html:177
+msgid ""
+"Мы стремимся сделать процесс учета и документооборота максимально простым, "
+"автоматизированным и интуитивно понятным."
+msgstr ""
+"Wir streben danach, den Buchhaltungs- und Dokumentationsprozess so einfach, "
+"automatisiert und intuitiv wie möglich zu gestalten."
+
+#: .\templates\core\home.html:183
+msgid "Простота интеграции"
+msgstr "Einfache Integration"
+
+#: .\templates\core\home.html:189
+msgid "Экономия времени"
+msgstr "Zeitersparnis"
+
+#: .\templates\core\home.html:195
+msgid "Уведомления и напоминания"
+msgstr "Benachrichtigungen und Erinnerungen"
+
+#: .\templates\core\home.html:207
+msgid "Для кого это решение"
+msgstr "Für wen ist diese Lösung"
+
+#: .\templates\core\home.html:211
+msgid "Для кого это решение?"
+msgstr "Für wen ist diese Lösung?"
+
+#: .\templates\core\home.html:218
+msgid "Малый бизнес"
+msgstr "Kleine Unternehmen"
+
+#: .\templates\core\home.html:219
+msgid "Компании, которые хотят упростить финансовый учет и сократить расходы"
+msgstr ""
+"Unternehmen, die ihre Finanzbuchhaltung vereinfachen und Kosten senken "
+"möchten"
+
+#: .\templates\core\home.html:227
+msgid "Фрилансеры"
+msgstr "Freiberufler"
+
+#: .\templates\core\home.html:228
+msgid "Самозанятые, которым нужно управлять счетами и клиентами"
+msgstr "Selbstständige, die Rechnungen und Kunden verwalten müssen"
+
+#: .\templates\core\home.html:236
+msgid "Индивидуальные предприниматели"
+msgstr "Einzelunternehmer"
+
+#: .\templates\core\home.html:237
+msgid "ИП, стремящиеся автоматизировать рутинные задачи"
+msgstr "Einzelunternehmer, die Routineaufgaben automatisieren möchten"
+
+#: .\templates\core\home.html:245
+msgid "Стартапы"
+msgstr "Startups"
+
+#: .\templates\core\home.html:246
+msgid "Молодые компании, которым нужно эффективное решение без больших затрат"
+msgstr ""
+"Junge Unternehmen, die eine effektive Lösung ohne große Kosten benötigen"
+
+#: .\templates\core\home.html:268
+msgid "Возможности системы"
+msgstr "Systemfunktionen"
+
+#: .\templates\core\home.html:269
+msgid "Мощные инструменты для управления вашими финансами и клиентами"
+msgstr "Leistungsstarke Tools zur Verwaltung Ihrer Finanzen und Kunden"
+
+#: .\templates\core\home.html:291
+msgid "PDF"
+msgstr "PDF"
+
+#: .\templates\core\home.html:292
+msgid "XML"
+msgstr "XML"
+
+#: .\templates\core\home.html:294 .\templates\invoices\list.html:5
+msgid "Управление счетами и платежами"
+msgstr "Verwaltung von Rechnungen und Zahlungen"
+
+#: .\templates\core\home.html:296
+msgid ""
+"Создавайте профессиональные счета и предложения по настраиваемым шаблонам"
+msgstr ""
+"Erstellen Sie professionelle Rechnungen und Angebote mit anpassbaren Vorlagen"
+
+#: .\templates\core\home.html:301
+msgid "Создание в несколько кликов"
+msgstr "Erstellung mit wenigen Klicks"
+
+#: .\templates\core\home.html:305
+msgid "Настраиваемые шаблоны"
+msgstr "Anpassbare Vorlagen"
+
+#: .\templates\core\home.html:309
+msgid "Автоматические напоминания"
+msgstr "Automatische Erinnerungen"
+
+#: .\templates\core\home.html:313
+msgid "оплачиваемость"
+msgstr "Zahlungsfähigkeit"
+
+#: .\templates\core\home.html:319 .\templates\core\home.html:378
+#: .\templates\core\home.html:437 .\templates\core\home.html:494
+msgid "Попробовать"
+msgstr "Ausprobieren"
+
+#: .\templates\core\home.html:350
+msgid "CRM"
+msgstr "CRM"
+
+#: .\templates\core\home.html:351
+msgid "Контакты"
+msgstr "Kontakte"
+
+#: .\templates\core\home.html:355
+msgid ""
+"Управление контактной информацией и реквизитами клиентов в едином интерфейсе"
+msgstr ""
+"Verwaltung von Kontaktinformationen und Bankverbindungen der Kunden in einer "
+"einheitlichen Oberfläche"
+
+#: .\templates\core\home.html:360
+msgid "История взаимодействия"
+msgstr "Interaktionshistorie"
+
+#: .\templates\core\home.html:364
+msgid "Группировка клиентов"
+msgstr "Kundengruppierung"
+
+#: .\templates\core\home.html:368
+msgid "Индивидуальные условия"
+msgstr "Individuelle Bedingungen"
+
+#: .\templates\core\home.html:372
+msgid "активных"
+msgstr "aktiv"
+
+#: .\templates\core\home.html:409
+msgid "Графики"
+msgstr "Grafiken"
+
+#: .\templates\core\home.html:410
+msgid "Отчеты"
+msgstr "Berichte"
+
+#: .\templates\core\home.html:412 .\templates\core\home.html:682
+msgid "Продвинутая аналитика"
+msgstr "Erweiterte Analytik"
+
+#: .\templates\core\home.html:414
+msgid "Интерактивные графики и диаграммы для анализа финансовых показателей"
+msgstr "Interaktive Grafiken und Diagramme zur Analyse von Finanzkennzahlen"
+
+#: .\templates\core\home.html:419
+msgid "Движение денежных средств"
+msgstr "Cashflow"
+
+#: .\templates\core\home.html:423
+msgid "Анализ по категориям"
+msgstr "Kategorieanalyse"
+
+#: .\templates\core\home.html:427
+msgid "Прогнозирование"
+msgstr "Prognose"
+
+#: .\templates\core\home.html:431
+msgid "рост/мес"
+msgstr "Wachstum/Monat"
+
+#: .\templates\core\home.html:466
+msgid "Шифрование"
+msgstr "Verschlüsselung"
+
+#: .\templates\core\home.html:467
+msgid "2FA"
+msgstr "2FA"
+
+#: .\templates\core\home.html:469
+msgid "Высокий уровень безопасности"
+msgstr "Hohes Sicherheitsniveau"
+
+#: .\templates\core\home.html:471
+msgid ""
+"Ваши данные надежно защищены с помощью современных технологий шифрования"
+msgstr ""
+"Ihre Daten sind durch moderne Verschlüsselungstechnologien sicher geschützt"
+
+#: .\templates\core\home.html:476
+msgid "Шифрование данных"
+msgstr "Datenverschlüsselung"
+
+#: .\templates\core\home.html:480
+msgid "Двухфакторная аутентификация"
+msgstr "Zwei-Faktor-Authentifizierung"
+
+#: .\templates\core\home.html:484
+msgid "Резервное копирование"
+msgstr "Datensicherung"
+
+#: .\templates\core\home.html:488
+msgid "копий"
+msgstr "Kopien"
+
+#: .\templates\core\home.html:510
+#, fuzzy
+#| msgid "Счета для ваших клиентов"
+msgid "Отзывы наших клиентов"
+msgstr "Rechnungen für Ihre Kunden"
+
+#: .\templates\core\home.html:511
+#, fuzzy
+#| msgid "Придумайте имя пользователя"
+msgid "Присоединяйтесь к тысячам довольных пользователей"
+msgstr "Wählen Sie einen Benutzernamen"
+
+#: .\templates\core\home.html:529 .\templates\core\home.html:551
+#: .\templates\core\home.html:572 .\templates\core\home.html:593
+#, fuzzy
+#| msgid "Поиск клиента..."
+msgid "Фото клиента"
+msgstr "Kundensuche..."
+
+#: .\templates\core\home.html:548 .\templates\core\home.html:569
+#: .\templates\core\home.html:590
+msgid "\\"
+msgstr ""
+
+#: .\templates\core\home.html:553
+#, fuzzy
+#| msgid "Смена пароля"
+msgid "Елена Петрова"
+msgstr "Passwort ändern"
+
+#: .\templates\core\home.html:554
+#, fuzzy
+#| msgid "Фрилансеры"
+msgid "Фрилансер, дизайнер"
+msgstr "Freiberufler"
+
+#: .\templates\core\home.html:574
+msgid "Алексей Иванов"
+msgstr ""
+
+#: .\templates\core\home.html:575
+msgid "Директор, ООО \\"
+msgstr ""
+
+#: .\templates\core\home.html:595
+#, fuzzy
+#| msgid "Черновики"
+msgid "Сергей Новиков"
+msgstr "Entwürfe"
+
+#: .\templates\core\home.html:596
+msgid "ИП, консультант"
+msgstr ""
+
+#: .\templates\core\home.html:605
+#, fuzzy
+#| msgid "Предпросмотр"
+msgid "Предыдущий отзыв"
+msgstr "Vorschau"
+
+#: .\templates\core\home.html:615
+#, fuzzy
+#| msgid "Текущий пароль"
+msgid "Следующий отзыв"
+msgstr "Aktuelles Passwort"
+
+#: .\templates\core\home.html:624
+msgid "Нам доверяют"
+msgstr ""
+
+#: .\templates\core\home.html:626 .\templates\core\home.html:627
+#: .\templates\core\home.html:628 .\templates\core\home.html:629
+#: .\templates\core\home.html:630
+#, fuzzy
+#| msgid "Профиль компании"
+msgid "Логотип компании"
+msgstr "Unternehmensprofil"
+
+#: .\templates\core\home.html:638
+msgid "Подходящий тариф для каждого"
+msgstr ""
+
+#: .\templates\core\home.html:639
+msgid ""
+"Выберите тарифный план, который лучше всего соответствует вашим потребностям"
+msgstr ""
+
+#: .\templates\core\home.html:646
+#, fuzzy
+#| msgid "Новый"
+msgid "Базовый"
+msgstr "Neu"
+
+#: .\templates\core\home.html:647 .\templates\core\home.html:675
+#: .\templates\core\home.html:702
+#, fuzzy
+#| msgid "6 месяцев"
+msgid "месяц"
+msgstr "6 Monate"
+
+#: .\templates\core\home.html:650
+#, fuzzy
+#| msgid "Клиенты и поставщики"
+msgid "До 5 клиентов/поставщиков"
+msgstr "Kunden und Lieferanten"
+
+#: .\templates\core\home.html:651
+msgid "МБ места на диске"
+msgstr ""
+
+#: .\templates\core\home.html:652 .\templates\core\home.html:680
+#, fuzzy
+#| msgid "Сканирование документа..."
+msgid "Неограниченное кол-во документов"
+msgstr "Dokument wird gescannt..."
+
+#: .\templates\core\home.html:653
+msgid "Генерация PDF/XML с водяным знаком"
+msgstr ""
+
+#: .\templates\core\home.html:654
+#, fuzzy
+#| msgid "Продвинутая аналитика"
+msgid "Только базовая аналитика"
+msgstr "Erweiterte Analytik"
+
+#: .\templates\core\home.html:655
+#, fuzzy
+#| msgid "Нет учетной записи?"
+msgid "Нет уведомлений"
+msgstr "Kein Konto?"
+
+#: .\templates\core\home.html:656
+#, fuzzy
+#| msgid "Сканирование документа..."
+msgid "Нет сканирования документов (OCR)"
+msgstr "Dokument wird gescannt..."
+
+#: .\templates\core\home.html:657
+#, fuzzy
+#| msgid "Завершите подтверждение"
+msgid "Нет поддержки"
+msgstr "Schließen Sie die Bestätigung ab"
+
+#: .\templates\core\home.html:660 .\templates\core\home.html:688
+#: .\templates\core\home.html:715
+#, fuzzy
+#| msgid "Создать входящий"
+msgid "Показать больше"
+msgstr "Eingehende erstellen"
+
+#: .\templates\core\home.html:666 .\templates\core\home.html:694
+#: .\templates\core\home.html:721
+#, fuzzy
+#| msgid "Выбрать печать"
+msgid "Выбрать тариф"
+msgstr "Stempel auswählen"
+
+#: .\templates\core\home.html:672
+msgid "Популярный"
+msgstr ""
+
+#: .\templates\core\home.html:674
+msgid "Стандарт"
+msgstr ""
+
+#: .\templates\core\home.html:678
+#, fuzzy
+#| msgid "Банковские реквизиты поставщика"
+msgid "Без ограничений на клиентов и поставщиков"
+msgstr "Bankverbindung des Lieferanten"
+
+#: .\templates\core\home.html:679 .\templates\core\home.html:706
+msgid "ГБ места на диске"
+msgstr ""
+
+#: .\templates\core\home.html:681
+msgid "Экспорт PDF/XML без водяного знака"
+msgstr ""
+
+#: .\templates\core\home.html:683
+msgid "Система уведомлений"
+msgstr ""
+
+#: .\templates\core\home.html:684
+#, fuzzy
+#| msgid "Сканирование документа..."
+msgid "Сканирование документов (OCR)"
+msgstr "Dokument wird gescannt..."
+
+#: .\templates\core\home.html:685
+msgid "Техническая поддержка"
+msgstr ""
+
+#: .\templates\core\home.html:701
+msgid "Премиум"
+msgstr ""
+
+#: .\templates\core\home.html:705
+msgid "Все функции тарифа Стандарт"
+msgstr ""
+
+#: .\templates\core\home.html:707
+msgid "Интеграция с 1С и CRM"
+msgstr ""
+
+#: .\templates\core\home.html:708
+msgid "Приоритетная техническая поддержка 24/7"
+msgstr ""
+
+#: .\templates\core\home.html:709
+#, fuzzy
+#| msgid "Продвинутая аналитика"
+msgid "Расширенная аналитика и отчёты"
+msgstr "Erweiterte Analytik"
+
+#: .\templates\core\home.html:710
+#, fuzzy
+#| msgid "Простота интеграции"
+msgid "API для интеграции"
+msgstr "Einfache Integration"
+
+#: .\templates\core\home.html:711
+#, fuzzy
+#| msgid "Придумайте имя пользователя"
+msgid "Групповой доступ (до 5 пользователей)"
+msgstr "Wählen Sie einen Benutzernamen"
+
+#: .\templates\core\home.html:712
+msgid "Персональный менеджер"
+msgstr ""
+
+#: .\templates\core\home.html:730
+msgid "30-дневная гарантия возврата денег без вопросов"
+msgstr ""
+
+#: .\templates\core\home.html:737
+#, fuzzy
+#| msgid "Настраиваемые шаблоны"
+msgid "Часто задаваемые вопросы"
+msgstr "Anpassbare Vorlagen"
+
+#: .\templates\core\home.html:738
+msgid "Ответы на популярные вопросы о Flowfy"
+msgstr ""
+
+#: .\templates\core\home.html:744
+msgid "Как начать пользоваться Flowfy?"
+msgstr ""
+
+#: .\templates\core\home.html:748
+msgid ""
+"Для начала работы с Flowfy просто зарегистрируйтесь на сайте, выберите "
+"подходящий тариф и начните создавать документы. У нас есть подробные "
+"руководства и видеоуроки, которые помогут вам быстро освоиться."
+msgstr ""
+
+#: .\templates\core\home.html:754
+msgid "Могу ли я перейти с бесплатного тарифа на платный позже?"
+msgstr ""
+
+#: .\templates\core\home.html:758
+msgid ""
+"Да, вы можете начать с бесплатного тарифа и в любой момент перейти на любой "
+"из платных тарифов. Все ваши данные и настройки сохранятся при переходе."
+msgstr ""
+
+#: .\templates\core\home.html:764
+#, fuzzy
+#| msgid "Прогнозирование финансовых показателей"
+msgid "Насколько безопасны мои финансовые данные в системе?"
+msgstr "Prognose von Finanzkennzahlen"
+
+#: .\templates\core\home.html:768
+msgid ""
+"Безопасность данных - наш приоритет. Мы используем шифрование данных, "
+"двухфакторную аутентификацию и регулярное резервное копирование. Наша "
+"система соответствует всем стандартам безопасности и защиты персональных "
+"данных."
+msgstr ""
+
+#: .\templates\core\home.html:774
+msgid "Можно ли интегрировать Flowfy с другими сервисами?"
+msgstr ""
+
+#: .\templates\core\home.html:778
+msgid ""
+"Да, Flowfy предлагает интеграцию с популярными сервисами для бизнеса, "
+"включая CRM-системы, банковские сервисы, облачные хранилища и платежные "
+"платформы. На тарифе \\"
+msgstr ""
+
+#: .\templates\core\home.html:784
+msgid "Каким образом я получаю техническую поддержку?"
+msgstr ""
+
+#: .\templates\core\home.html:788
+msgid ""
+"Мы предлагаем техническую поддержку через email для всех пользователей. "
+"Клиенты с тарифами \\"
+msgstr ""
+
+#: .\templates\core\home.html:798
+msgid "Готовы оптимизировать свой бизнес?"
+msgstr ""
+
+#: .\templates\core\home.html:799
+msgid ""
+"Присоединяйтесь к тысячам предпринимателей, которые уже оптимизировали свой "
+"финансовый учет с Flowfy"
+msgstr ""
+
+#: .\templates\core\home.html:801
+#, fuzzy
+#| msgid "Выбрать печать"
+msgid "Начать бесплатно"
+msgstr "Stempel auswählen"
+
+#: .\templates\core\home.html:802
+#, fuzzy
+#| msgid "Запомнить меня"
+msgid "Запросить демо"
+msgstr "Angemeldet bleiben"
+
+#: .\templates\core\home_inside.html:5
+#, fuzzy
+#| msgid "Панель управления вашего бизнеса | Flowfy"
+msgid "Панель управления"
+msgstr "Dashboard Ihres Unternehmens | Flowfy"
+
+#: .\templates\core\home_inside.html:7
+msgid ""
+"Удобная панель управления Flowfy для контроля финансов, счетов, клиентов и "
+"анализа показателей вашего бизнеса в одном месте."
+msgstr ""
+
+#: .\templates\core\home_inside.html:9
+msgid ""
+"панель управления, дашборд, управление финансами, контроль счетов, анализ "
+"бизнеса, учет клиентов"
+msgstr ""
+
+#: .\templates\core\home_inside.html:11
+msgid "Панель управления вашего бизнеса | Flowfy"
+msgstr "Dashboard Ihres Unternehmens | Flowfy"
+
+#: .\templates\core\home_inside.html:100
+msgid "Подтвердите вашу электронную почту"
+msgstr "Bestätigen Sie Ihre E-Mail-Adresse"
+
+#: .\templates\core\home_inside.html:101
+msgid ""
+"Для полного доступа к функциям системы подтвердите вашу электронную почту"
+msgstr ""
+"Bestätigen Sie Ihre E-Mail-Adresse für vollen Zugriff auf alle "
+"Systemfunktionen"
+
+#: .\templates\core\home_inside.html:109
+msgid "Подтвердить почту"
+msgstr "E-Mail bestätigen"
+
+#: .\templates\core\home_inside.html:121
+msgid "Заполните данные профиля"
+msgstr "Füllen Sie Ihr Profil aus"
+
+#: .\templates\core\home_inside.html:122
+msgid "Для корректной работы с документами заполните данные вашей компании"
+msgstr ""
+"Füllen Sie Ihre Unternehmensdaten aus, um mit Dokumenten arbeiten zu können"
+
+#: .\templates\core\home_inside.html:125
+msgid "Заполнить профиль"
+msgstr "Profil ausfüllen"
+
+#: .\templates\core\home_inside.html:133
+msgid "Быстрые действия"
+msgstr "Schnellzugriff"
+
+#: .\templates\core\home_inside.html:140
+msgid "Создать исходящий счет"
+msgstr "Ausgangsrechnung erstellen"
+
+#: .\templates\core\home_inside.html:147
+msgid "Создать входящий счет"
+msgstr "Eingangsrechnung erstellen"
+
+#: .\templates\core\home_inside.html:154
+msgid "Добавить клиента"
+msgstr "Kunden hinzufügen"
+
+#: .\templates\core\home_inside.html:177
+msgid "Недавняя активность"
+msgstr "Letzte Aktivitäten"
+
+#: .\templates\core\home_inside.html:212
+msgid "Здесь будет отображаться ваша активность"
+msgstr "Hier werden Ihre Aktivitäten angezeigt"
+
+#: .\templates\core\home_inside.html:306
+msgid "Произошла ошибка при отправке письма. Пожалуйста, попробуйте позже."
+msgstr ""
+"Beim Senden der E-Mail ist ein Fehler aufgetreten. Bitte versuchen Sie es "
+"später erneut."
+
+#: .\templates\core\legal.html:94
+msgid "Важная информация о юридических аспектах использования сервиса Billify"
+msgstr ""
+
+#: .\templates\core\legal.html:99
+#, fuzzy
+#| msgid "Информация о компании"
+msgid "1. Сведения о компании"
+msgstr "Unternehmensinformationen"
+
+#: .\templates\core\legal.html:100
+msgid "ООО «Биллифай»"
+msgstr ""
+
+#: .\templates\core\legal.html:101
+msgid "ИНН:"
+msgstr ""
+
+#: .\templates\core\legal.html:102
+msgid "ОГРН:"
+msgstr ""
+
+#: .\templates\core\legal.html:103
+#, fuzzy
+#| msgid "Введите юридический адрес"
+msgid "Юридический адрес:"
+msgstr "Geben Sie die Geschäftsadresse ein"
+
+#: .\templates\core\legal.html:103 .\templates\core\legal.html:104
+#: .\templates\core\legal.html:164
+msgid "Россия, г. Москва, ул. Примерная, д. 1, офис 123"
+msgstr ""
+
+#: .\templates\core\legal.html:104
+#, fuzzy
+#| msgid "Введите юридический адрес"
+msgid "Фактический адрес:"
+msgstr "Geben Sie die Geschäftsadresse ein"
+
+#: .\templates\core\legal.html:105
+#, fuzzy
+#| msgid "Электронная почта"
+msgid "Электронная почта:"
+msgstr "E-Mail"
+
+#: .\templates\core\legal.html:109
+#, fuzzy
+#| msgid "Ожидает оплаты"
+msgid "2. Реквизиты для оплаты"
+msgstr "Wartet auf Zahlung"
+
+#: .\templates\core\legal.html:110
+msgid "Получатель:"
+msgstr ""
+
+#: .\templates\core\legal.html:111
+msgid "ИНН/КПП:"
+msgstr ""
+
+#: .\templates\core\legal.html:112
+#, fuzzy
+#| msgid "Расчетный счет"
+msgid "Расчетный счет:"
+msgstr "Kontonummer"
+
+#: .\templates\core\legal.html:113
+#, fuzzy
+#| msgid "Банк"
+msgid "Банк:"
+msgstr "Bank"
+
+#: .\templates\core\legal.html:114
+msgid "БИК:"
+msgstr ""
+
+#: .\templates\core\legal.html:115
+#, fuzzy
+#| msgid "Номер счета"
+msgid "Корр. счет:"
+msgstr "Rechnungsnummer"
+
+#: .\templates\core\legal.html:119
+#, fuzzy
+#| msgid "Повторите пароль"
+msgid "3. Авторские права"
+msgstr "Passwort wiederholen"
+
+#: .\templates\core\legal.html:120
+msgid ""
+"3.1. Все материалы, представленные на сайте Billify, включая тексты, "
+"графические изображения, логотипы, значки, фотографии, аудио- и видеофайлы, "
+"являются объектами авторского права и защищены законом."
+msgstr ""
+
+#: .\templates\core\legal.html:121
+msgid ""
+"3.2. Любое воспроизведение, распространение, модификация или публичное "
+"использование материалов Billify без предварительного письменного разрешения "
+"правообладателя запрещено."
+msgstr ""
+
+#: .\templates\core\legal.html:122
+msgid ""
+"3.3. Названия продуктов, компаний или сервисов, упомянутые на сайте Billify, "
+"могут быть товарными знаками их соответствующих владельцев."
+msgstr ""
+
+#: .\templates\core\legal.html:126
+#, fuzzy
+#| msgid "условиями использования"
+msgid "4. Лицензия на использование сервиса"
+msgstr "Nutzungsbedingungen zu"
+
+#: .\templates\core\legal.html:127
+msgid ""
+"4.1. Billify предоставляет пользователям неисключительную, отзывную, "
+"непередаваемую лицензию на доступ и использование Сервиса в соответствии с "
+"условиями использования."
+msgstr ""
+
+#: .\templates\core\legal.html:128
+msgid ""
+"4.2. Лицензия действует в течение срока, на который оформлена подписка, и "
+"прекращается с момента его окончания или в случае нарушения пользователем "
+"условий использования Сервиса."
+msgstr ""
+
+#: .\templates\core\legal.html:129
+msgid ""
+"4.3. Пользователь не имеет права сублицензировать, продавать, сдавать в "
+"аренду, передавать или иным образом распространять доступ к Сервису третьим "
+"лицам без предварительного письменного согласия Billify."
+msgstr ""
+
+#: .\templates\core\legal.html:133
+msgid "5. Нормативно-правовая база"
+msgstr ""
+
+#: .\templates\core\legal.html:134
+msgid ""
+"5.1. Деятельность сервиса Billify регулируется следующими нормативно-"
+"правовыми актами Российской Федерации:"
+msgstr ""
+
+#: .\templates\core\legal.html:136
+msgid "Гражданский кодекс РФ;"
+msgstr ""
+
+#: .\templates\core\legal.html:137
+msgid "Федеральный закон «О защите прав потребителей» от 07.02.1992 N 2300-1;"
+msgstr ""
+
+#: .\templates\core\legal.html:138
+msgid "Федеральный закон «О персональных данных» от 27.07.2006 N 152-ФЗ;"
+msgstr ""
+
+#: .\templates\core\legal.html:139
+msgid ""
+"Федеральный закон «Об информации, информационных технологиях и о защите "
+"информации» от 27.07.2006 N 149-ФЗ;"
+msgstr ""
+
+#: .\templates\core\legal.html:140
+msgid "Закон РФ «О защите прав потребителей» от 07.02.1992 N 2300-1;"
+msgstr ""
+
+#: .\templates\core\legal.html:141
+msgid ""
+"Постановление Правительства РФ от 01.11.2012 N 1119 «Об утверждении "
+"требований к защите персональных данных при их обработке в информационных "
+"системах персональных данных»."
+msgstr ""
+
+#: .\templates\core\legal.html:146
+#, fuzzy
+#| msgid "Соответствие международным стандартам безопасности"
+msgid "6. Соответствие требованиям безопасности"
+msgstr "Einhaltung internationaler Sicherheitsstandards"
+
+#: .\templates\core\legal.html:147
+msgid ""
+"6.1. Сервис Billify соответствует требованиям законодательства Российской "
+"Федерации в области защиты информации и персональных данных."
+msgstr ""
+
+#: .\templates\core\legal.html:148
+msgid ""
+"6.2. Для обеспечения безопасности данных пользователей применяются следующие "
+"меры:"
+msgstr ""
+
+#: .\templates\core\legal.html:150
+msgid ""
+"Шифрование данных при передаче по сети Интернет (использование протокола "
+"HTTPS);"
+msgstr ""
+
+#: .\templates\core\legal.html:151
+#, fuzzy
+#| msgid "Резервное копирование"
+msgid "Регулярное резервное копирование данных;"
+msgstr "Datensicherung"
+
+#: .\templates\core\legal.html:152
+msgid "Применение антивирусной защиты и средств обнаружения вторжений;"
+msgstr ""
+
+#: .\templates\core\legal.html:153
+msgid ""
+"Регулярное обновление программного обеспечения и устранение уязвимостей;"
+msgstr ""
+
+#: .\templates\core\legal.html:154
+msgid "Контроль доступа к информационным системам и базам данных."
+msgstr ""
+
+#: .\templates\core\legal.html:159
+#, fuzzy
+#| msgid "Контактная информация"
+msgid "7. Контактная информация для юридических запросов"
+msgstr "Kontaktinformationen"
+
+#: .\templates\core\legal.html:160
+msgid ""
+"По всем юридическим вопросам, связанным с использованием сервиса Billify, вы "
+"можете обратиться следующими способами:"
+msgstr ""
+
+#: .\templates\core\legal.html:162
+#, fuzzy
+#| msgid "Электронная почта"
+msgid "По электронной почте:"
+msgstr "E-Mail"
+
+#: .\templates\core\legal.html:163
+#, fuzzy
+#| msgid "Телефон"
+msgid "По телефону:"
+msgstr "Telefon"
+
+#: .\templates\core\legal.html:163
+msgid "с 9:00 до 18:00 по московскому времени в рабочие дни"
+msgstr ""
+
+#: .\templates\core\legal.html:164
+msgid "Письменно по адресу:"
+msgstr ""
+
+#: .\templates\core\legal.html:164
+#, fuzzy
+#| msgid "Введите юридический адрес"
+msgid "с пометкой «Юридический отдел»"
+msgstr "Geben Sie die Geschäftsadresse ein"
+
+#: .\templates\core\legal.html:174
+msgid "Если у вас возникли вопросы по правовой информации, пожалуйста,"
+msgstr ""
+
+#: .\templates\core\privacy.html:94
+msgid ""
+"Информация о том, как мы обрабатываем и защищаем ваши персональные данные"
+msgstr ""
+
+#: .\templates\core\privacy.html:100
+msgid ""
+"1.1. Настоящая Политика конфиденциальности (далее — «Политика») действует в "
+"отношении всей информации, которую ООО «Биллифай» (далее — «Оператор») может "
+"получить о пользователе во время использования им сервиса Billify (далее — "
+"«Сервис»)."
+msgstr ""
+
+#: .\templates\core\privacy.html:101
+msgid ""
+"1.2. Использование Сервиса означает согласие пользователя с настоящей "
+"Политикой и указанными в ней условиями обработки его персональных данных."
+msgstr ""
+
+#: .\templates\core\privacy.html:102
+msgid ""
+"1.3. В случае несогласия с условиями Политики пользователь должен прекратить "
+"использование Сервиса."
+msgstr ""
+
+#: .\templates\core\privacy.html:103
+msgid ""
+"1.4. Настоящая Политика применяется только к Сервису Billify. Оператор не "
+"контролирует и не несет ответственность за сайты третьих лиц, на которые "
+"пользователь может перейти по ссылкам, доступным на сайте Сервиса."
+msgstr ""
+
+#: .\templates\core\privacy.html:107
+msgid "2. Цели сбора персональных данных"
+msgstr ""
+
+#: .\templates\core\privacy.html:108
+msgid ""
+"2.1. Оператор собирает и хранит только те персональные данные, которые "
+"необходимы для предоставления Сервиса и оказания услуг."
+msgstr ""
+
+#: .\templates\core\privacy.html:109
+#, fuzzy
+#| msgid ""
+#| "Настройте данные вашей компании, которые будут использоваться в документах"
+msgid ""
+"2.2. Персональные данные пользователя Оператор может использовать в "
+"следующих целях:"
+msgstr ""
+"Konfigurieren Sie Ihre Unternehmensdaten, die in Dokumenten verwendet werden"
+
+#: .\templates\core\privacy.html:111
+msgid "Идентификация стороны в рамках соглашений и договоров с Оператором;"
+msgstr ""
+
+#: .\templates\core\privacy.html:112
+msgid "Предоставление пользователю персонализированных услуг;"
+msgstr ""
+
+#: .\templates\core\privacy.html:113
+msgid ""
+"Связь с пользователем, в том числе направление уведомлений, запросов и "
+"информации, касающихся использования Сервиса, оказания услуг, а также "
+"обработка запросов и заявок от пользователя;"
+msgstr ""
+
+#: .\templates\core\privacy.html:114
+msgid "Улучшение качества Сервиса, удобства его использования;"
+msgstr ""
+
+#: .\templates\core\privacy.html:115
+msgid ""
+"Проведение статистических и иных исследований на основе обезличенных данных."
+msgstr ""
+
+#: .\templates\core\privacy.html:120
+msgid "3. Условия обработки персональных данных"
+msgstr ""
+
+#: .\templates\core\privacy.html:121
+msgid ""
+"3.1. Обработка персональных данных пользователя осуществляется без "
+"ограничения срока, любым законным способом, в том числе в информационных "
+"системах персональных данных с использованием средств автоматизации или без "
+"использования таких средств."
+msgstr ""
+
+#: .\templates\core\privacy.html:122
+msgid ""
+"3.2. Персональные данные пользователя могут быть переданы уполномоченным "
+"органам государственной власти Российской Федерации только по основаниям и в "
+"порядке, установленным законодательством Российской Федерации."
+msgstr ""
+
+#: .\templates\core\privacy.html:123
+msgid ""
+"3.3. При утрате или разглашении персональных данных Оператор информирует "
+"пользователя об утрате или разглашении персональных данных."
+msgstr ""
+
+#: .\templates\core\privacy.html:124
+msgid ""
+"3.4. Оператор принимает необходимые организационные и технические меры для "
+"защиты персональной информации пользователя от неправомерного или случайного "
+"доступа, уничтожения, изменения, блокирования, копирования, распространения, "
+"а также от иных неправомерных действий третьих лиц."
+msgstr ""
+
+#: .\templates\core\privacy.html:128
+#, fuzzy
+#| msgid "Шифрование данных"
+msgid "4. Сбор персональных данных"
+msgstr "Datenverschlüsselung"
+
+#: .\templates\core\privacy.html:129
+msgid "4.1. Оператор собирает следующие персональные данные:"
+msgstr ""
+
+#: .\templates\core\privacy.html:131
+#, fuzzy
+#| msgid "Введите имя пользователя"
+msgid "Фамилия, имя, отчество пользователя;"
+msgstr "Geben Sie Ihren Benutzernamen ein"
+
+#: .\templates\core\privacy.html:132
+#, fuzzy
+#| msgid "Подтверждение электронной почты"
+msgid "Адрес электронной почты;"
+msgstr "E-Mail-Bestätigung"
+
+#: .\templates\core\privacy.html:133
+#, fuzzy
+#| msgid "Введите номер телефона"
+msgid "Номер телефона;"
+msgstr "Geben Sie die Telefonnummer ein"
+
+#: .\templates\core\privacy.html:134
+msgid ""
+"Данные компании (для юридических лиц и индивидуальных предпринимателей);"
+msgstr ""
+
+#: .\templates\core\privacy.html:135
+msgid "Другую информацию, необходимую для работы Сервиса."
+msgstr ""
+
+#: .\templates\core\privacy.html:137
+msgid ""
+"4.2. Также Оператор собирает и обрабатывает обезличенные данные о "
+"посетителях (в т.ч. файлы «cookie») с помощью сервисов интернет-статистики "
+"(Яндекс Метрика и Google Analytics) и других технологий."
+msgstr ""
+
+#: .\templates\core\privacy.html:141
+#, fuzzy
+#| msgid "Придумайте имя пользователя"
+msgid "5. Права и обязанности пользователя"
+msgstr "Wählen Sie einen Benutzernamen"
+
+#: .\templates\core\privacy.html:142
+msgid "5.1. Пользователь имеет право:"
+msgstr ""
+
+#: .\templates\core\privacy.html:144
+msgid ""
+"Получать информацию, касающуюся обработки его персональных данных, в том "
+"числе содержащей:"
+msgstr ""
+
+#: .\templates\core\privacy.html:146
+msgid "подтверждение факта обработки персональных данных оператором;"
+msgstr ""
+
+#: .\templates\core\privacy.html:147
+msgid "правовые основания и цели обработки персональных данных;"
+msgstr ""
+
+#: .\templates\core\privacy.html:148
+msgid "применяемые оператором способы обработки персональных данных;"
+msgstr ""
+
+#: .\templates\core\privacy.html:149
+msgid "сроки обработки персональных данных, в том числе сроки их хранения;"
+msgstr ""
+
+#: .\templates\core\privacy.html:151
+msgid ""
+"Требовать от оператора уточнения его персональных данных, их блокирования "
+"или уничтожения в случае, если персональные данные являются неполными, "
+"устаревшими, неточными, незаконно полученными или не являются необходимыми "
+"для заявленной цели обработки;"
+msgstr ""
+
+#: .\templates\core\privacy.html:152
+msgid "Отозвать свое согласие на обработку персональных данных;"
+msgstr ""
+
+#: .\templates\core\privacy.html:153
+msgid "Требовать прекращения обработки своих персональных данных;"
+msgstr ""
+
+#: .\templates\core\privacy.html:154
+msgid ""
+"Обжаловать действия или бездействие оператора в уполномоченный орган по "
+"защите прав субъектов персональных данных или в судебном порядке."
+msgstr ""
+
+#: .\templates\core\privacy.html:159
+msgid "6. Обеспечение безопасности персональных данных"
+msgstr ""
+
+#: .\templates\core\privacy.html:160
+msgid ""
+"6.1. Безопасность персональных данных, обрабатываемых Оператором, "
+"обеспечивается реализацией правовых, организационных и технических мер, "
+"необходимых для обеспечения требований федерального законодательства в "
+"области защиты персональных данных."
+msgstr ""
+
+#: .\templates\core\privacy.html:161
+msgid ""
+"6.2. Для предотвращения несанкционированного доступа к персональным данным "
+"Оператором применяются следующие организационно-технические меры:"
+msgstr ""
+
+#: .\templates\core\privacy.html:163
+msgid ""
+"назначение должностных лиц, ответственных за организацию обработки и защиты "
+"персональных данных;"
+msgstr ""
+
+#: .\templates\core\privacy.html:164
+msgid "ограничение состава лиц, имеющих доступ к персональным данным;"
+msgstr ""
+
+#: .\templates\core\privacy.html:165
+msgid ""
+"издание внутренних документов по вопросам обработки персональных данных, а "
+"также локальных актов, устанавливающих процедуры, направленные на "
+"предотвращение и выявление нарушений законодательства Российской Федерации;"
+msgstr ""
+
+#: .\templates\core\privacy.html:166
+msgid ""
+"ознакомление сотрудников с требованиями федерального законодательства и "
+"нормативных документов Оператора по обработке и защите персональных данных;"
+msgstr ""
+
+#: .\templates\core\privacy.html:167
+msgid "регистрация и учёт всех действий, совершаемых с персональными данными;"
+msgstr ""
+
+#: .\templates\core\privacy.html:168
+msgid ""
+"использование антивирусных средств и средств восстановления системы защиты "
+"персональных данных;"
+msgstr ""
+
+#: .\templates\core\privacy.html:169
+msgid ""
+"применение средств межсетевого экранирования, обнаружения вторжений и "
+"анализа защищенности;"
+msgstr ""
+
+#: .\templates\core\privacy.html:170
+msgid ""
+"шифрование персональных данных при их передаче по открытым каналам связи."
+msgstr ""
+
+#: .\templates\core\privacy.html:175
+#, fuzzy
+#| msgid "Завершите подтверждение"
+msgid "7. Заключительные положения"
+msgstr "Schließen Sie die Bestätigung ab"
+
+#: .\templates\core\privacy.html:176
+msgid ""
+"7.1. Оператор имеет право вносить изменения в настоящую Политику "
+"конфиденциальности. При внесении изменений в актуальной редакции указывается "
+"дата последнего обновления."
+msgstr ""
+
+#: .\templates\core\privacy.html:177
+msgid ""
+"7.2. Новая редакция Политики вступает в силу с момента ее размещения на "
+"сайте Сервиса, если иное не предусмотрено новой редакцией Политики."
+msgstr ""
+
+#: .\templates\core\privacy.html:178
+msgid ""
+"7.3. Все предложения или вопросы по настоящей Политике конфиденциальности "
+"следует сообщать через форму обратной связи на сайте Сервиса."
+msgstr ""
+
+#: .\templates\core\privacy.html:187
+msgid "Если у вас возникли вопросы по Политике конфиденциальности, пожалуйста,"
+msgstr ""
+
+#: .\templates\core\profile.html:7 .\templates\core\profile.html:12
+msgid ""
+"Управление профилем вашей компании в системе Flowfy. Редактируйте контактные "
+"данные, логотип, банковские реквизиты и другую информацию о вашей "
+"организации."
+msgstr ""
+"Verwaltung Ihres Unternehmensprofils im Flowfy-System. Bearbeiten Sie "
+"Kontaktdaten, Logo, Bankverbindung und andere Informationen über Ihre "
+"Organisation."
+
+#: .\templates\core\profile.html:9
+msgid ""
+"профиль компании, данные организации, настройки компании, реквизиты, "
+"управление профилем"
+msgstr ""
+"Unternehmensprofil, Organisationsdaten, Unternehmenseinstellungen, "
+"Bankverbindung, Profilverwaltung"
+
+#: .\templates\core\profile.html:11 .\templates\core\profile.html:19
+msgid "Управление профилем компании | Flowfy"
+msgstr "Verwaltung des Unternehmensprofils | Flowfy"
+
+#: .\templates\core\profile.html:20
+msgid ""
+"Управление профилем вашей компании в системе Flowfy. Редактируйте контактные "
+"данные, логотип, банковские реквизиты и другую информацию."
+msgstr ""
+"Verwaltung Ihres Unternehmensprofils im Flowfy-System. Bearbeiten Sie "
+"Kontaktdaten, Logo, Bankverbindung und andere Informationen."
+
+#: .\templates\core\profile.html:467
+msgid ""
+"Настройте данные вашей компании, которые будут использоваться в документах"
+msgstr ""
+"Konfigurieren Sie Ihre Unternehmensdaten, die in Dokumenten verwendet werden"
+
+#: .\templates\core\profile.html:483
+msgid "Данные компании"
+msgstr "Unternehmensdaten"
+
+#: .\templates\core\profile.html:485
+msgid "Электронная почта"
+msgstr "E-Mail"
+
+#: .\templates\core\profile.html:486
+msgid "Настройки"
+msgstr "Einstellungen"
+
+#: .\templates\core\profile.html:511 .\templates\core\profile.html:554
+msgid "Информация о компании"
+msgstr "Unternehmensinformationen"
+
+#: .\templates\core\profile.html:519
+msgid "Подтверждение почты"
+msgstr "E-Mail-Bestätigung"
+
+#: .\templates\core\profile.html:527 .\templates\core\profile.html:806
+msgid "Смена пароля"
+msgstr "Passwort ändern"
+
+#: .\templates\core\profile.html:535 .\templates\core\profile.html:837
+msgid "Язык и валюта"
+msgstr "Sprache und Währung"
+
+#: .\templates\core\profile.html:543 .\templates\core\profile.html:928
+msgid "Загрузка файлов"
+msgstr "Dateien hochladen"
+
+#: .\templates\core\profile.html:566
+msgid "Индивидуальный предприниматель"
+msgstr "Einzelunternehmer"
+
+#: .\templates\core\profile.html:577
+msgid "Введите название компании"
+msgstr "Geben Sie den Firmennamen ein"
+
+#: .\templates\core\profile.html:586
+msgid "Введите юридический адрес"
+msgstr "Geben Sie die Geschäftsadresse ein"
+
+#: .\templates\core\profile.html:594
+msgid "Введите почтовый адрес"
+msgstr "Geben Sie die Postanschrift ein"
+
+#: .\templates\core\profile.html:603
+msgid "Контактная информация"
+msgstr "Kontaktinformationen"
+
+#: .\templates\core\profile.html:608
+msgid "Введите номер телефона"
+msgstr "Geben Sie die Telefonnummer ein"
+
+#: .\templates\core\profile.html:616
+msgid "Введите email"
+msgstr "Geben Sie die E-Mail-Adresse ein"
+
+#: .\templates\core\profile.html:624
+msgid "Введите веб-сайт"
+msgstr "Geben Sie die Website ein"
+
+#: .\templates\core\profile.html:638
+msgid "Введите ИНН"
+msgstr "Geben Sie die Steuernummer ein"
+
+#: .\templates\core\profile.html:647
+msgid "Введите КПП"
+msgstr "Geben Sie die Umsatzsteuer-ID ein"
+
+#: .\templates\core\profile.html:656
+msgid "Введите ОГРН"
+msgstr "Geben Sie die Handelsregisternummer ein"
+
+#: .\templates\core\profile.html:664
+msgid "Введите ОКПО"
+msgstr "Geben Sie die Unternehmensidentifikationsnummer ein"
+
+#: .\templates\core\profile.html:678
+msgid "Введите название банка"
+msgstr "Geben Sie den Banknamen ein"
+
+#: .\templates\core\profile.html:686
+msgid "Введите расчетный счет"
+msgstr "Geben Sie die Kontonummer ein"
+
+#: .\templates\core\profile.html:694
+msgid "Введите корр. счет"
+msgstr "Geben Sie die Korrespondenzkontonummer ein"
+
+#: .\templates\core\profile.html:702
+msgid "Введите БИК"
+msgstr "Geben Sie die Bankleitzahl ein"
+
+#: .\templates\core\profile.html:718
+msgid "Подтверждение электронной почты"
+msgstr "E-Mail-Bestätigung"
+
+#: .\templates\core\profile.html:728
+msgid "Ваша электронная почта подтверждена!"
+msgstr "Ihre E-Mail-Adresse wurde bestätigt!"
+
+#: .\templates\core\profile.html:729
+msgid "Все функции Flowfy доступны в полном объеме."
+msgstr "Alle Funktionen von Flowfy sind vollständig verfügbar."
+
+#: .\templates\core\profile.html:740
+msgid "Требуется подтверждение электронной почты"
+msgstr "E-Mail-Bestätigung erforderlich"
+
+#: .\templates\core\profile.html:741
+msgid "На адрес"
+msgstr "An die Adresse"
+
+#: .\templates\core\profile.html:741
+msgid "было отправлено письмо с инструкциями по подтверждению."
+msgstr "wurde eine E-Mail mit Bestätigungsanweisungen gesendet."
+
+#: .\templates\core\profile.html:742
+msgid "Проверьте папку"
+msgstr "Überprüfen Sie den Ordner"
+
+#: .\templates\core\profile.html:742
+msgid "если не можете найти письмо."
+msgstr "wenn Sie die E-Mail nicht finden können."
+
+#: .\templates\core\profile.html:748
+msgid "Как подтвердить электронную почту"
+msgstr "Wie Sie Ihre E-Mail-Adresse bestätigen"
+
+#: .\templates\core\profile.html:754
+msgid "Проверьте почту"
+msgstr "Überprüfen Sie Ihre E-Mails"
+
+#: .\templates\core\profile.html:755
+msgid "Откройте email-клиент и найдите письмо от Flowfy с темой"
+msgstr ""
+"Öffnen Sie Ihren E-Mail-Client und suchen Sie nach einer E-Mail von Flowfy "
+"mit dem Betreff"
+
+#: .\templates\core\profile.html:762
+msgid "Откройте письмо"
+msgstr "Öffnen Sie die E-Mail"
+
+#: .\templates\core\profile.html:763
+msgid "В письме вы найдете кнопку"
+msgstr "In der E-Mail finden Sie einen Button"
+
+#: .\templates\core\profile.html:763
+msgid "и ссылку для подтверждения"
+msgstr "und einen Bestätigungslink"
+
+#: .\templates\core\profile.html:770
+msgid "Завершите подтверждение"
+msgstr "Schließen Sie die Bestätigung ab"
+
+#: .\templates\core\profile.html:771
+msgid ""
+"Нажмите на кнопку или перейдите по ссылке, чтобы завершить процесс "
+"подтверждения"
+msgstr ""
+"Klicken Sie auf den Button oder folgen Sie dem Link, um den "
+"Bestätigungsprozess abzuschließen"
+
+#: .\templates\core\profile.html:777
+msgid "Не получили письмо?"
+msgstr "Keine E-Mail erhalten?"
+
+#: .\templates\core\profile.html:778
+msgid ""
+"Если письмо не пришло в течение нескольких минут, вы можете запросить "
+"повторную отправку."
+msgstr ""
+"Wenn Sie innerhalb weniger Minuten keine E-Mail erhalten haben, können Sie "
+"eine erneute Zusendung anfordern."
+
+#: .\templates\core\profile.html:782
+msgid "Отправить письмо повторно"
+msgstr "E-Mail erneut senden"
+
+#: .\templates\core\profile.html:795
+msgid "Требуется добавить электронную почту"
+msgstr "E-Mail-Adresse muss hinzugefügt werden"
+
+#: .\templates\core\profile.html:796
+msgid "У вас не указана электронная почта. Пожалуйста, добавьте её в раздел"
+msgstr ""
+"Sie haben keine E-Mail-Adresse angegeben. Bitte fügen Sie sie im Abschnitt "
+"hinzu"
+
+#: .\templates\core\profile.html:796
+msgid "чтобы получить доступ ко всем функциям системы."
+msgstr "um Zugang zu allen Funktionen des Systems zu erhalten."
+
+#: .\templates\core\profile.html:797
+msgid "Перейти к настройкам профиля"
+msgstr "Zu den Profileinstellungen gehen"
+
+#: .\templates\core\profile.html:809
+msgid "Изменение пароля"
+msgstr "Passwort ändern"
+
+#: .\templates\core\profile.html:813
+msgid "Текущий пароль"
+msgstr "Aktuelles Passwort"
+
+#: .\templates\core\profile.html:820
+msgid "Пароль должен содержать не менее 8 символов, включая буквы и цифры."
+msgstr ""
+"Das Passwort muss mindestens 8 Zeichen lang sein und Buchstaben und Zahlen "
+"enthalten."
+
+#: .\templates\core\profile.html:824
+msgid "Подтверждение нового пароля"
+msgstr "Bestätigung des neuen Passworts"
+
+#: .\templates\core\profile.html:829
+msgid "Изменить пароль"
+msgstr "Passwort ändern"
+
+#: .\templates\core\profile.html:840
+msgid "Предпочтения языка"
+msgstr "Spracheinstellungen"
+
+#: .\templates\core\profile.html:876
+msgid "Язык успешно изменен"
+msgstr "Sprache erfolgreich geändert"
+
+#: .\templates\core\profile.html:882
+msgid "Настройки валюты"
+msgstr "Währungseinstellungen"
+
+#: .\templates\core\profile.html:920
+msgid "Валюта успешно изменена"
+msgstr "Währung erfolgreich geändert"
+
+#: .\templates\core\profile.html:931
+msgid "Логотип, печать и подпись"
+msgstr "Logo, Stempel und Unterschrift"
+
+#: .\templates\core\profile.html:941 .\templates\core\profile.html:959
+#: .\templates\core\profile.html:977
+msgid "Текущий файл:"
+msgstr "Aktuelle Datei:"
+
+#: .\templates\core\profile.html:945
+msgid "Выбрать файл логотипа"
+msgstr "Logodatei auswählen"
+
+#: .\templates\core\profile.html:946
+msgid "Выбрать логотип"
+msgstr "Logo auswählen"
+
+#: .\templates\core\profile.html:963
+msgid "Выбрать файл печати"
+msgstr "Stempeldatei auswählen"
+
+#: .\templates\core\profile.html:964
+msgid "Выбрать печать"
+msgstr "Stempel auswählen"
+
+#: .\templates\core\profile.html:981
+msgid "Выбрать файл подписи"
+msgstr "Unterschriftsdatei auswählen"
+
+#: .\templates\core\profile.html:982
+msgid "Выбрать подпись"
+msgstr "Unterschrift auswählen"
+
+#: .\templates\core\profile.html:992
+msgid "Сохранить файлы"
+msgstr "Dateien speichern"
+
+#: .\templates\invoices\create_incoming.html:5
+#: .\templates\invoices\create_incoming.html:16
+#: .\templates\invoices\create_outgoing.html:5
+#: .\templates\invoices\create_outgoing.html:16
+msgid "Редактирование счета"
+msgstr "Rechnungsbearbeitung"
+
+#: .\templates\invoices\create_incoming.html:5
+msgid "Новый входящий счет"
+msgstr "Neue eingehende Rechnung"
+
+#: .\templates\invoices\create_incoming.html:16
+msgid "Создание входящего счета"
+msgstr "Erstellung einer eingehenden Rechnung"
+
+#: .\templates\invoices\create_incoming.html:17
+#: .\templates\invoices\create_outgoing.html:17
+msgid "Измените данные счета"
+msgstr "Rechnungsdaten ändern"
+
+#: .\templates\invoices\create_incoming.html:17
+msgid "Заполните данные для создания нового входящего счета"
+msgstr "Füllen Sie die Daten für eine neue eingehende Rechnung aus"
+
+#: .\templates\invoices\create_incoming.html:21
+#: .\templates\invoices\create_outgoing.html:21
+msgid "К списку счетов"
+msgstr "Zur Rechnungsliste"
+
+#: .\templates\invoices\create_incoming.html:37
+#: .\templates\invoices\create_outgoing.html:40
+msgid "Номер счета"
+msgstr "Rechnungsnummer"
+
+#: .\templates\invoices\create_incoming.html:41
+#: .\templates\invoices\create_outgoing.html:44
+msgid "Дата счета"
+msgstr "Rechnungsdatum"
+
+#: .\templates\invoices\create_incoming.html:45
+#: .\templates\invoices\create_outgoing.html:48
+msgid "Срок оплаты"
+msgstr "Zahlungsfrist"
+
+#: .\templates\invoices\create_incoming.html:52
+#: .\templates\invoices\create_outgoing.html:56
+#: .\templates\invoices\list.html:93 .\templates\invoices\list.html:158
+msgid "Ожидает оплаты"
+msgstr "Wartet auf Zahlung"
+
+#: .\templates\invoices\create_incoming.html:53
+#: .\templates\invoices\create_outgoing.html:57
+#: .\templates\invoices\list.html:94 .\templates\invoices\list.html:160
+msgid "Оплачен"
+msgstr "Bezahlt"
+
+#: .\templates\invoices\create_incoming.html:54
+#: .\templates\invoices\create_outgoing.html:59
+#: .\templates\invoices\list.html:96 .\templates\invoices\list.html:164
+msgid "Отменен"
+msgstr "Storniert"
+
+#: .\templates\invoices\create_incoming.html:61
+msgid "Информация о поставщике"
+msgstr "Lieferanteninformationen"
+
+#: .\templates\invoices\create_incoming.html:69
+msgid "Выберите поставщика"
+msgstr "Lieferanten auswählen"
+
+#: .\templates\invoices\create_incoming.html:72
+msgid "Поиск поставщика..."
+msgstr "Lieferantensuche..."
+
+#: .\templates\invoices\create_incoming.html:80
+msgid "Добавить нового поставщика"
+msgstr "Neuen Lieferanten hinzufügen"
+
+#: .\templates\invoices\create_incoming.html:97
+msgid "Банковские реквизиты поставщика"
+msgstr "Bankverbindung des Lieferanten"
+
+#: .\templates\invoices\create_incoming.html:100
+#: .\templates\invoices\create_outgoing.html:105
+msgid "Название организации"
+msgstr "Firmenname"
+
+#: .\templates\invoices\create_incoming.html:111
+#: .\templates\invoices\create_outgoing.html:116
+msgid "Банк"
+msgstr "Bank"
+
+#: .\templates\invoices\create_incoming.html:128
+#: .\templates\invoices\create_outgoing.html:133
+msgid "Позиции счета"
+msgstr "Rechnungspositionen"
+
+#: .\templates\invoices\create_incoming.html:133
+#: .\templates\invoices\create_outgoing.html:138
+msgid "Сканировать PDF"
+msgstr "PDF scannen"
+
+#: .\templates\invoices\create_incoming.html:135
+#: .\templates\invoices\create_outgoing.html:140
+msgid "Загрузите PDF-файл счета для автоматического заполнения позиций"
+msgstr ""
+"Laden Sie die PDF-Rechnung hoch, um die Positionen automatisch auszufüllen"
+
+#: .\templates\invoices\create_incoming.html:141
+#: .\templates\invoices\create_outgoing.html:146
+msgid "Наименование"
+msgstr "Bezeichnung"
+
+#: .\templates\invoices\create_incoming.html:142
+#: .\templates\invoices\create_incoming.html:156
+#: .\templates\invoices\create_incoming.html:175
+#: .\templates\invoices\create_outgoing.html:147
+#: .\templates\invoices\create_outgoing.html:161
+#: .\templates\invoices\create_outgoing.html:180
+msgid "Количество"
+msgstr "Menge"
+
+#: .\templates\invoices\create_incoming.html:143
+#: .\templates\invoices\create_outgoing.html:148
+msgid "Цена, ₽"
+msgstr "Preis, ₽"
+
+#: .\templates\invoices\create_incoming.html:144
+#: .\templates\invoices\create_outgoing.html:149
+msgid "Сумма, ₽"
+msgstr "Summe, ₽"
+
+#: .\templates\invoices\create_incoming.html:153
+#: .\templates\invoices\create_incoming.html:172
+#: .\templates\invoices\create_outgoing.html:158
+#: .\templates\invoices\create_outgoing.html:177
+msgid "Наименование товара/услуги"
+msgstr "Bezeichnung der Ware/Dienstleistung"
+
+#: .\templates\invoices\create_incoming.html:159
+#: .\templates\invoices\create_incoming.html:178
+#: .\templates\invoices\create_outgoing.html:164
+#: .\templates\invoices\create_outgoing.html:183
+msgid "Цена за единицу"
+msgstr "Preis pro Einheit"
+
+#: .\templates\invoices\create_incoming.html:163
+#: .\templates\invoices\create_incoming.html:182
+#: .\templates\invoices\create_outgoing.html:168
+#: .\templates\invoices\create_outgoing.html:187
+msgid "Удалить позицию"
+msgstr "Position löschen"
+
+#: .\templates\invoices\create_incoming.html:192
+#: .\templates\invoices\create_outgoing.html:197
+msgid "Добавить позицию"
+msgstr "Position hinzufügen"
+
+#: .\templates\invoices\create_incoming.html:197
+#: .\templates\invoices\create_outgoing.html:202
+msgid "Подытог:"
+msgstr "Zwischensumme:"
+
+#: .\templates\invoices\create_incoming.html:201
+#: .\templates\invoices\create_outgoing.html:206
+#, python-format
+msgid "НДС (20%%):"
+msgstr "MwSt. (20%%):"
+
+#: .\templates\invoices\create_incoming.html:205
+#: .\templates\invoices\create_outgoing.html:217
+msgid "Итого:"
+msgstr "Gesamt:"
+
+#: .\templates\invoices\create_incoming.html:212
+#: .\templates\invoices\create_outgoing.html:224
+msgid "Дополнительная информация"
+msgstr "Zusätzliche Informationen"
+
+#: .\templates\invoices\create_incoming.html:215
+#: .\templates\invoices\create_outgoing.html:227
+msgid "Примечания"
+msgstr "Anmerkungen"
+
+#: .\templates\invoices\create_incoming.html:222
+#: .\templates\invoices\create_outgoing.html:239
+msgid "Обновить"
+msgstr "Aktualisieren"
+
+#: .\templates\invoices\create_incoming.html:222
+#: .\templates\invoices\create_outgoing.html:239
+msgid "счет"
+msgstr "Rechnung"
+
+#: .\templates\invoices\create_incoming.html:225
+#: .\templates\invoices\create_outgoing.html:242
+msgid "Предпросмотр"
+msgstr "Vorschau"
+
+#: .\templates\invoices\create_incoming.html:238
+#: .\templates\invoices\create_outgoing.html:255
+msgid "Информация"
+msgstr "Information"
+
+#: .\templates\invoices\create_incoming.html:241
+msgid ""
+"Входящий счет - это счет, полученный от поставщика за приобретенные товары "
+"или услуги."
+msgstr ""
+"Eine eingehende Rechnung ist eine Rechnung, die von einem Lieferanten für "
+"gekaufte Waren oder Dienstleistungen erhalten wurde."
+
+#: .\templates\invoices\create_incoming.html:244
+#: .\templates\invoices\create_outgoing.html:261
+msgid "Заполните основную информацию о счете"
+msgstr "Füllen Sie die grundlegenden Rechnungsinformationen aus"
+
+#: .\templates\invoices\create_incoming.html:245
+msgid "Выберите поставщика из списка или создайте нового"
+msgstr ""
+"Wählen Sie einen Lieferanten aus der Liste oder erstellen Sie einen neuen"
+
+#: .\templates\invoices\create_incoming.html:246
+msgid "Добавьте товары или услуги, указанные в счете"
+msgstr ""
+"Fügen Sie die in der Rechnung aufgeführten Waren oder Dienstleistungen hinzu"
+
+#: .\templates\invoices\create_incoming.html:247
+msgid "Проверьте итоговую сумму"
+msgstr "Überprüfen Sie die Gesamtsumme"
+
+#: .\templates\invoices\create_incoming.html:248
+msgid "Укажите дополнительные примечания при необходимости"
+msgstr "Fügen Sie bei Bedarf zusätzliche Anmerkungen hinzu"
+
+#: .\templates\invoices\create_incoming.html:251
+msgid ""
+"Отслеживайте статус оплаты входящих счетов, чтобы контролировать ваши "
+"расходы."
+msgstr ""
+"Verfolgen Sie den Zahlungsstatus eingehender Rechnungen, um Ihre Ausgaben zu "
+"kontrollieren."
+
+#: .\templates\invoices\create_outgoing.html:5
+msgid "Новый исходящий счет"
+msgstr "Neue ausgehende Rechnung"
+
+#: .\templates\invoices\create_outgoing.html:16
+msgid "Создание исходящего счета"
+msgstr "Erstellung einer ausgehenden Rechnung"
+
+#: .\templates\invoices\create_outgoing.html:17
+msgid "Заполните данные для создания нового исходящего счета"
+msgstr "Füllen Sie die Daten für eine neue ausgehende Rechnung aus"
+
+#: .\templates\invoices\create_outgoing.html:55
+#: .\templates\invoices\list.html:92 .\templates\invoices\list.html:156
+msgid "Отправлен"
+msgstr "Gesendet"
+
+#: .\templates\invoices\create_outgoing.html:58
+#: .\templates\invoices\list.html:95 .\templates\invoices\list.html:162
+msgid "Просрочен"
+msgstr "Überfällig"
+
+#: .\templates\invoices\create_outgoing.html:66
+msgid "Информация о клиенте"
+msgstr "Kundeninformationen"
+
+#: .\templates\invoices\create_outgoing.html:74
+msgid "Выберите клиента"
+msgstr "Kunden auswählen"
+
+#: .\templates\invoices\create_outgoing.html:77
+msgid "Поиск клиента..."
+msgstr "Kundensuche..."
+
+#: .\templates\invoices\create_outgoing.html:85
+msgid "Добавить нового клиента"
+msgstr "Neuen Kunden hinzufügen"
+
+#: .\templates\invoices\create_outgoing.html:102
+msgid "Банковские реквизиты клиента"
+msgstr "Bankverbindung des Kunden"
+
+#: .\templates\invoices\create_outgoing.html:210
+msgid "Скидка:"
+msgstr "Rabatt:"
+
+#: .\templates\invoices\create_outgoing.html:212
+msgid "Скидка"
+msgstr "Rabatt"
+
+#: .\templates\invoices\create_outgoing.html:232
+msgid "Платежная информация"
+msgstr "Zahlungsinformationen"
+
+#: .\templates\invoices\create_outgoing.html:258
+msgid ""
+"Исходящий счет - это счет, выставляемый клиенту за предоставленные товары "
+"или услуги."
+msgstr ""
+"Eine ausgehende Rechnung ist eine Rechnung, die einem Kunden für gelieferte "
+"Waren oder Dienstleistungen gestellt wird."
+
+#: .\templates\invoices\create_outgoing.html:262
+msgid "Выберите клиента из списка или создайте нового"
+msgstr "Wählen Sie einen Kunden aus der Liste oder erstellen Sie einen neuen"
+
+#: .\templates\invoices\create_outgoing.html:263
+msgid "Добавьте товары или услуги в позиции счета"
+msgstr "Fügen Sie Waren oder Dienstleistungen zu den Rechnungspositionen hinzu"
+
+#: .\templates\invoices\create_outgoing.html:264
+msgid "Проверьте итоговую сумму и примените скидки при необходимости"
+msgstr "Überprüfen Sie die Gesamtsumme und wenden Sie bei Bedarf Rabatte an"
+
+#: .\templates\invoices\create_outgoing.html:265
+msgid "Укажите дополнительные примечания и платежную информацию"
+msgstr "Geben Sie zusätzliche Anmerkungen und Zahlungsinformationen an"
+
+#: .\templates\invoices\create_outgoing.html:268
+msgid ""
+"Создавайте профессиональные счета и отслеживайте их оплату для контроля "
+"дебиторской задолженности."
+msgstr ""
+"Erstellen Sie professionelle Rechnungen und verfolgen Sie deren Bezahlung "
+"zur Kontrolle der Forderungen."
+
+#: .\templates\invoices\create_outgoing.html:282
+msgid "Сканирование PDF-счета"
+msgstr "PDF-Rechnungsscanning"
+
+#: .\templates\invoices\create_outgoing.html:290
+msgid "Перетащите PDF-файл сюда"
+msgstr "PDF-Datei hierher ziehen"
+
+#: .\templates\invoices\create_outgoing.html:291
+msgid "или"
+msgstr "oder"
+
+#: .\templates\invoices\create_outgoing.html:292
+msgid "Выберите файл"
+msgstr "Datei auswählen"
+
+#: .\templates\invoices\create_outgoing.html:293
+msgid "Выберите PDF файл для сканирования"
+msgstr "Wählen Sie eine PDF-Datei zum Scannen aus"
+
+#: .\templates\invoices\create_outgoing.html:311
+msgid "Сканирование документа..."
+msgstr "Dokument wird gescannt..."
+
+#: .\templates\invoices\create_outgoing.html:316
+msgid "Ошибка сканирования"
+msgstr "Scanfehler"
+
+#: .\templates\invoices\create_outgoing.html:322
+msgid "Найденные позиции"
+msgstr "Gefundene Positionen"
+
+#: .\templates\invoices\create_outgoing.html:331
+msgid "Сканировать"
+msgstr "Scannen"
+
+#: .\templates\invoices\list.html:7
+msgid ""
+"Система управления счетами Billify - создавайте и отслеживайте счета в "
+"едином интерфейсе. Автоматизация выставления, мониторинга и оплаты счетов "
+"для малого бизнеса."
+msgstr ""
+"Billify Rechnungsverwaltungssystem - Erstellen und verfolgen Sie Rechnungen "
+"in einer einheitlichen Oberfläche. Automatisierung der Rechnungsstellung, "
+"Überwachung und Bezahlung für Kleinunternehmen."
+
+#: .\templates\invoices\list.html:9
+msgid ""
+"управление счетами, выставление счетов, оплата счетов, финансовый учет, "
+"автоматизация бизнеса, учет для ИП, документооборот, входящие счета, "
+"исходящие счета"
+msgstr ""
+"Rechnungsverwaltung, Rechnungsstellung, Rechnungszahlung, Finanzbuchhaltung, "
+"Geschäftsautomatisierung, Buchhaltung für Einzelunternehmer, "
+"Dokumentenfluss, eingehende Rechnungen, ausgehende Rechnungen"
+
+#: .\templates\invoices\list.html:11
+msgid ""
+"Управление счетами и платежами | Billify - автоматизация финансового учета"
+msgstr ""
+"Rechnungs- und Zahlungsverwaltung | Billify - Automatisierung der "
+"Finanzbuchhaltung"
+
+#: .\templates\invoices\list.html:24
+msgid "Управление счетами и платежами в Billify"
+msgstr "Rechnungs- und Zahlungsverwaltung in Billify"
+
+#: .\templates\invoices\list.html:25
+msgid "Система для создания и отслеживания счетов в бизнесе"
+msgstr "System zur Erstellung und Verfolgung von Rechnungen im Geschäft"
+
+#: .\templates\invoices\list.html:31
+msgid "Входящие счета"
+msgstr "Eingehende Rechnungen"
+
+#: .\templates\invoices\list.html:33
+msgid "Счета от поставщиков услуг или товаров"
+msgstr "Rechnungen von Dienstleistern oder Warenlieferanten"
+
+#: .\templates\invoices\list.html:38
+msgid "Исходящие счета"
+msgstr "Ausgehende Rechnungen"
+
+#: .\templates\invoices\list.html:40
+msgid "Счета для ваших клиентов"
+msgstr "Rechnungen für Ihre Kunden"
+
+#: .\templates\invoices\list.html:48
+msgid "Управление счетами"
+msgstr "Rechnungsverwaltung"
+
+#: .\templates\invoices\list.html:50
+msgid "Входящий счет"
+msgstr "Eingehende Rechnung"
+
+#: .\templates\invoices\list.html:51
+msgid "Исходящий счет"
+msgstr "Ausgehende Rechnung"
+
+#: .\templates\invoices\list.html:61
+msgid "Фильтры"
+msgstr "Filter"
+
+#: .\templates\invoices\list.html:71
+msgid "Поиск по номеру или контрагенту..."
+msgstr "Suche nach Nummer oder Geschäftspartner..."
+
+#: .\templates\invoices\list.html:81
+msgid "Фильтр по типу счета"
+msgstr "Filter nach Rechnungstyp"
+
+#: .\templates\invoices\list.html:83
+msgid "Входящие"
+msgstr "Eingehend"
+
+#: .\templates\invoices\list.html:84
+msgid "Исходящие"
+msgstr "Ausgehend"
+
+#: .\templates\invoices\list.html:90
+msgid "Все статусы"
+msgstr "Alle Status"
+
+#: .\templates\invoices\list.html:119
+msgid "Контрагент"
+msgstr "Geschäftspartner"
+
+#: .\templates\invoices\list.html:198
+msgid "Вы уверены, что хотите удалить этот счет?"
+msgstr "Sind Sie sicher, dass Sie diese Rechnung löschen möchten?"
+
+#: .\templates\invoices\list.html:217
+msgid "Первая"
+msgstr "Erste"
+
+#: .\templates\invoices\list.html:231
+msgid "Последняя"
+msgstr "Letzte"
+
+#: .\templates\invoices\list.html:248
+msgid "Нет счетов"
+msgstr "Keine Rechnungen"
+
+#: .\templates\invoices\list.html:249
+msgid "В системе пока нет счетов"
+msgstr "Es gibt noch keine Rechnungen im System"
+
+#: .\templates\invoices\list.html:251
+msgid "Создать входящий"
+msgstr "Eingehende erstellen"
+
+#: .\templates\invoices\list.html:252
+msgid "Создать исходящий"
+msgstr "Ausgehende erstellen"
+
+#~ msgid "Управление профилем компании и настройками аккаунта"
+#~ msgstr "Verwaltung des Unternehmensprofils und der Kontoeinstellungen"
+
+#~ msgid "Счета и платежи"
+#~ msgstr "Rechnungen und Zahlungen"
+
+#~ msgid "Онлайн-оплата через интегрированные платежные системы"
+#~ msgstr "Online-Zahlung über integrierte Zahlungssysteme"
+
+#~ msgid "Отслеживание статуса платежей"
+#~ msgstr "Überwachung des Zahlungsstatus"
+
+#~ msgid "Централизованное хранение всех реквизитов"
+#~ msgstr "Zentralisierte Speicherung aller Bankverbindungen"
+
+#~ msgid "Автоматическое заполнение данных в документах"
+#~ msgstr "Automatisches Ausfüllen von Daten in Dokumenten"
+
+#~ msgid "Индивидуальные условия работы для разных клиентов"
+#~ msgstr "Individuelle Arbeitsbedingungen für verschiedene Kunden"
+
+#~ msgid "мес"
+#~ msgstr "Monat"
+
+#~ msgid "Оценка эффективности работы с клиентами"
+#~ msgstr "Bewertung der Effizienz der Kundenarbeit"
+
+#~ msgid "Экспорт отчетов в различных форматах"
+#~ msgstr "Export von Berichten in verschiedenen Formaten"
+
+#~ msgid "Безопасность"
+#~ msgstr "Sicherheit"
+
+#~ msgid "Шифрование данных на всех этапах передачи"
+#~ msgstr "Datenverschlüsselung in allen Übertragungsphasen"
+
+#~ msgid "Защита от несанкционированного доступа"
+#~ msgstr "Schutz vor unbefugtem Zugriff"

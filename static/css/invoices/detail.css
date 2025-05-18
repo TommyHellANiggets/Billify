@@ -73,8 +73,9 @@
     gap: 0.5rem;
 }
 
-.btn i {
-    font-size: 1rem;
+.btn svg {
+    width: 16px;
+    height: 16px;
 }
 
 .btn-outline {
@@ -167,10 +168,10 @@
     color: var(--primary-color);
 }
 
-.dropdown-item i {
+.dropdown-item svg {
     margin-right: 0.8rem;
     width: 16px;
-    text-align: center;
+    height: 16px;
 }
 
 .text-danger {
@@ -654,5 +655,408 @@
     .items-table {
         display: block;
         overflow-x: auto;
+    }
+}
+
+/* PDF-подобные стили */
+.pdf-invoice-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    padding: 2rem;
+    font-family: 'Segoe UI', 'Arial', sans-serif;
+    font-size: 11pt;
+    line-height: 1.3;
+    color: #333;
+    position: relative;
+}
+
+.pdf-invoice-container:hover {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
+    transition: all 0.3s ease;
+}
+
+.doc-header {
+    text-align: center;
+    margin-bottom: 25px;
+    position: relative;
+}
+
+.doc-title {
+    font-size: 24pt;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #1e73be;
+}
+
+.doc-number {
+    font-size: 12pt;
+    margin-bottom: 12px;
+}
+
+.invoice-status-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 10pt;
+    font-weight: bold;
+    color: white;
+}
+
+.status-draft {
+    background-color: var(--secondary-color);
+}
+
+.status-sent {
+    background-color: var(--primary-color);
+}
+
+.status-paid {
+    background-color: var(--success-color);
+}
+
+.status-overdue {
+    background-color: var(--danger-color);
+}
+
+.status-cancelled {
+    background-color: #6c757d;
+}
+
+.parties {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.party-box {
+    flex: 1;
+    padding: 16px;
+    border: 1px solid #e0e0e0;
+    font-size: 10pt;
+    border-radius: 6px;
+    background-color: #fcfcfc;
+}
+
+.party-title {
+    font-size: 12pt;
+    font-weight: bold;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 6px;
+    color: #1e73be;
+}
+
+.party-details p {
+    margin: 6px 0;
+    line-height: 1.4;
+}
+
+.bank-details {
+    margin-top: 12px;
+    font-size: 9.5pt;
+    border-top: 1px dashed #eee;
+    padding-top: 8px;
+}
+
+.bank-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.bank-table td {
+    padding: 3px 4px;
+    vertical-align: top;
+    line-height: 1.3;
+}
+
+.bank-table .label {
+    width: 40%;
+    color: #666;
+}
+
+table.items {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0 25px 0;
+    font-size: 10pt;
+}
+
+table.items th, table.items td {
+    border: 1px solid #e0e0e0;
+    padding: 8px 10px;
+    text-align: left;
+}
+
+table.items th {
+    background-color: #f2f7fc;
+    font-weight: bold;
+    font-size: 9.5pt;
+    color: #1e73be;
+}
+
+table.items tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+
+.summary-container {
+    display: flex;
+    justify-content: flex-end;
+    margin: 20px 0;
+}
+
+.summary-table {
+    width: 100%;
+    max-width: 350px;
+    border-collapse: collapse;
+}
+
+.summary-table td {
+    padding: 6px 10px;
+}
+
+.summary-table .label {
+    text-align: right;
+    width: 70%;
+}
+
+.summary-table .value {
+    text-align: right;
+    width: 30%;
+    font-weight: bold;
+}
+
+.total-row {
+    font-weight: bold;
+    border-top: 1px solid #ddd;
+    color: #1e73be;
+}
+
+.total-in-words {
+    margin: 15px 0;
+    font-style: italic;
+    font-size: 10pt;
+    line-height: 1.4;
+}
+
+.notes-block, .payment-info-block {
+    margin: 20px 0;
+    padding: 12px;
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 6px;
+}
+
+.notes-title {
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: #1e73be;
+}
+
+.notes-content {
+    font-size: 10pt;
+    line-height: 1.4;
+}
+
+.legal-note {
+    margin: 20px 0;
+    padding: 12px;
+    background-color: #f8fbff;
+    border: 1px solid #e5f0ff;
+    font-size: 9.5pt;
+    color: #666;
+    line-height: 1.4;
+    border-radius: 6px;
+}
+
+.signatures {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 35px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.signature {
+    width: 45%;
+}
+
+.signature-title {
+    font-weight: bold;
+    margin-bottom: 3px;
+    font-size: 10pt;
+    color: #1e73be;
+}
+
+.signature-position {
+    font-size: 9pt;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.signature-line {
+    border-bottom: 1px solid #000;
+    width: 80%;
+    height: 40px;
+    margin-bottom: 5px;
+    position: relative;
+}
+
+.signature-image {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    max-width: 100%;
+    max-height: 40px;
+}
+
+.signature-name {
+    font-style: italic;
+    font-size: 9pt;
+}
+
+.stamp-place {
+    margin-top: 15px;
+    font-style: italic;
+    font-size: 9pt;
+    color: #666;
+    position: relative;
+    height: 80px;
+}
+
+.stamp-image {
+    position: absolute;
+    top: -40px;
+    left: 20px;
+    max-width: 100px;
+    max-height: 100px;
+    opacity: 0.7;
+}
+
+.invoice-meta {
+    margin-top: 30px;
+    text-align: right;
+    font-size: 8pt;
+    color: #999;
+    border-top: 1px dashed #eee;
+    padding-top: 10px;
+}
+
+.meta-item {
+    margin-bottom: 3px;
+}
+
+/* Адаптивные стили */
+@media (max-width: 992px) {
+    .pdf-invoice-container {
+        padding: 1.5rem;
+    }
+    
+    .parties {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .doc-title {
+        font-size: 20pt;
+    }
+    
+    .doc-number {
+        font-size: 11pt;
+    }
+}
+
+@media (max-width: 768px) {
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .header-actions {
+        margin-top: 15px;
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: 10px;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+    
+    .btn {
+        padding: 0.7rem 1rem;
+    }
+    
+    .pdf-invoice-container {
+        padding: 1rem;
+        margin: 0 -15px;
+        border-radius: 0;
+        box-shadow: none;
+        border: 1px solid #eee;
+    }
+    
+    .doc-title {
+        font-size: 18pt;
+    }
+    
+    .signatures {
+        flex-direction: column;
+        gap: 30px;
+    }
+    
+    .signature {
+        width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .table.items {
+        font-size: 9pt;
+    }
+    
+    .table.items th,
+    .table.items td {
+        padding: 6px 8px;
+    }
+    
+    .summary-table {
+        max-width: 100%;
+    }
+    
+    .legal-note {
+        font-size: 9pt;
+    }
+    
+    .party-box {
+        padding: 12px;
+        font-size: 9pt;
+    }
+}
+
+@media print {
+    .page-header,
+    .invoice-status-bar,
+    .header-actions,
+    .footer-actions {
+        display: none;
+    }
+    
+    .pdf-invoice-container {
+        box-shadow: none;
+        padding: 0;
+        margin: 0;
+        max-width: 100%;
+    }
+    
+    body {
+        background-color: white;
     }
 } 

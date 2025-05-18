@@ -1,0 +1,1856 @@
+
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="/static/images/favicon/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/images/favicon/favicon_16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/images/favicon/favicon_32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/static/images/favicon/favicon_48x48.png">
+    <link rel="icon" type="image/png" sizes="64x64" href="/static/images/favicon/favicon_64x64.png">
+    <link rel="icon" type="image/png" sizes="128x128" href="/static/images/favicon/favicon_128x128.png">
+    <link rel="icon" type="image/png" sizes="256x256" href="/static/images/favicon/favicon_256x256.png">
+    
+    <!-- CSRF Token - скрытый токен для AJAX-запросов -->
+    <input type="hidden" name="csrfmiddlewaretoken" value="EHdg7PcIt6vjDiYNEXBaK460v0LnkhSCSmqvWjsoWyjO94m9UDmkbVdo4cs5nw3r">
+    
+    <!-- SEO Meta Tags -->
+    <title>Регистрация - Billify | Flowfy</title>
+    <meta name="description" content="Flowfy - удобная система для автоматизации финансового учета и документооборота, идеальна для малого бизнеса и индивидуальных предпринимателей">
+    <meta name="keywords" content="автоматизация учета, финансовый учет, электронный документооборот, управление счетами, малый бизнес">
+    <meta name="author" content="Flowfy">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="http://127.0.0.1:8000/ru/login/?next=/ru/invoices/create/%3Ftype%3Doutgoing">
+    
+    <!-- Open Graph / ВКонтакте -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="http://127.0.0.1:8000/ru/login/?next=/ru/invoices/create/%3Ftype%3Doutgoing">
+    <meta property="og:title" content=" | Flowfy">
+    <meta property="og:description" content="">
+    <meta property="og:image" content="/static/images/flowfy-social-share.png">
+    <meta property="og:site_name" content="Flowfy">
+    <meta property="vk:image" content="/static/images/flowfy-social-share.png">
+    
+    <!-- Яндекс микроразметка -->
+    <meta property="ya:ovs:phone_number" content="+7 (XXX) XXX-XX-XX">
+    <meta property="ya:ovs:address" content="Россия">
+    <meta property="ya:ovs:work_time" content="Пн-Пт 09:00-18:00">
+    
+    <!-- Мета-данные Яндекс и Google -->
+    <meta name="yandex-verification" content="c3819bcfbf68fe85">
+    <meta name="google-site-verification" content="G4cj6hbdSOvvP0s_696GYW16oyrtM4ko8gSa0yXuQPI">
+    
+    <!-- Шрифты и стили -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/global.css">
+    <link rel="stylesheet" href="/static/css/header-footer.css">
+    
+    <!-- CSRF токен для AJAX запросов и форм -->
+    <meta name="csrf-token" content="EHdg7PcIt6vjDiYNEXBaK460v0LnkhSCSmqvWjsoWyjO94m9UDmkbVdo4cs5nw3r">
+    <style>
+        /* Обязательное применение шрифта Poppins ко всем элементам */
+        html, body, * {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        /* Базовый шрифт для всего сайта */
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        /* Стили для сообщений в правом верхнем углу */
+        .notifications-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            width: 350px;
+        }
+        
+        .notification {
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.3s ease-out forwards;
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .notification-success {
+            background-color: #e3f8d2;
+            color: #2c7a14;
+            border-left: 4px solid #4caf50;
+        }
+
+        .notification-error {
+            background-color: #ffe4e4;
+            color: #d32f2f;
+            border-left: 4px solid #f44336;
+        }
+
+        .notification-warning {
+            background-color: #fff7e3;
+            color: #ba8011;
+            border-left: 4px solid #ff9800;
+        }
+
+        .notification-info {
+            background-color: #e3f1fd;
+            color: #0d5fa6;
+            border-left: 4px solid #2196f3;
+        }
+
+        .notification-icon {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            color: inherit;
+            opacity: 0.7;
+            margin-left: 10px;
+        }
+
+        .notification-close:hover {
+            opacity: 1;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+        
+        /* Utility класс для принудительного применения шрифта Poppins */
+        .poppins-font {
+            font-family: 'Poppins', sans-serif !important;
+        }
+    </style>
+    
+<link rel="stylesheet" href="/static/css/accounts/auth.css">
+<style>
+    .main-content {
+        min-height: auto !important;
+    }
+
+    .auth-card {
+        max-width: 1200px;
+        margin: 3rem auto;
+        border-radius: 30px;
+        box-shadow: 0 15px 35px rgba(77, 139, 248, 0.1);
+        position: relative;
+        z-index: 5;
+        border: none;
+        overflow: hidden;
+        transition: height 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+    }
+    
+    .auth-shape {
+        position: absolute;
+        border-radius: 50%;
+        z-index: 1;
+        filter: blur(40px);
+        pointer-events: none;
+    }
+    
+    .auth-shape-1 {
+        width: 40%; 
+        height: 40%;
+        max-width: 400px;
+        max-height: 400px;
+        background: rgba(77, 139, 248, 0.06);
+        top: -15%;
+        right: -10%;
+        animation: float 8s ease-in-out infinite;
+    }
+    
+    .auth-shape-2 {
+        width: 30%;
+        height: 30%;
+        max-width: 300px;
+        max-height: 300px;
+        background: rgba(90, 103, 216, 0.05);
+        bottom: -10%;
+        left: -5%;
+        animation: float 10s ease-in-out infinite reverse;
+    }
+    
+    .auth-shape-3 {
+        width: 20%;
+        height: 20%;
+        max-width: 200px;
+        max-height: 200px;
+        background: rgba(108, 117, 125, 0.04);
+        top: 60%;
+        right: 10%;
+        animation: float 12s ease-in-out infinite 1s;
+    }
+    
+    @keyframes float {
+        0% {
+            transform: translateY(0) translateX(0);
+        }
+        50% {
+            transform: translateY(20px) translateX(10px);
+        }
+        100% {
+            transform: translateY(0) translateX(0);
+        }
+    }
+    
+    /* Новые стили для анимированного переключения */
+    .auth-wrapper {
+        position: relative;
+        width: 100%;
+        box-shadow: 0 10px 30px rgba(77, 139, 248, 0.08);
+        overflow: visible;
+        transition: height 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+    }
+    
+    /* Фиксируем пропорции для каждой стороны */
+    .auth-sides-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        position: relative;
+        width: 100%;
+        transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+    }
+    
+    .forms-wrapper {
+        width: 100%;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    
+    .auth-sides-container.front {
+        transform: translateX(0);
+        grid-template-rows: auto;
+    }
+    
+    .auth-sides-container.back {
+        transform: translateX(100%);
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        pointer-events: none;
+    }
+    
+    .auth-wrapper.flipped .auth-sides-container.front {
+        transform: translateX(-100%);
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        pointer-events: none;
+    }
+    
+    .auth-wrapper.flipped .auth-sides-container.back {
+        transform: translateX(0);
+        opacity: 1;
+        position: relative;
+        pointer-events: all;
+    }
+    
+    /* Добавляем эффект отражения и тени при движении */
+    .auth-side {
+        transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1), box-shadow 0.8s ease;
+    }
+    
+    .auth-wrapper.flipped .front .auth-side {
+        transform: scale(0.95);
+    }
+    
+    .auth-wrapper:not(.flipped) .back .auth-side {
+        transform: scale(0.95);
+    }
+    
+    .auth-wrapper.flipped .front .auth-forms {
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.05);
+    }
+    
+    .auth-wrapper:not(.flipped) .back .auth-forms {
+        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.05);
+    }
+    
+    /* Панель переключения */
+    .mode-toggle {
+        position: absolute;
+        top: 39px;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 20;
+        background-color: white;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 30px;
+        padding: 6px;
+        box-shadow: 0 8px 24px rgba(149, 157, 165, 0.2);
+        width: auto;
+        display: flex;
+        justify-content: center;
+    }
+    
+    .mode-toggle button {
+        background: none;
+        border: none;
+        padding: 12px 24px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: rgba(0, 0, 0, 0.6);
+        cursor: pointer;
+        border-radius: 24px;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .mode-toggle button svg {
+        width: 16px;
+        height: 16px;
+    }
+    
+    .mode-toggle button.active {
+        background-color: var(--color-primary);
+        color: white;
+        box-shadow: 0 4px 12px rgba(77, 139, 248, 0.3);
+    }
+    
+    .mode-toggle button.active svg path {
+        fill: white;
+    }
+    
+    /* Стили для инпутов с SVG иконками */
+    .input-with-icon {
+        position: relative;
+    }
+    
+    .input-with-icon input {
+        padding: 1rem 1rem 1rem 3rem;
+        border-radius: 16px;
+        font-size: 1.05rem;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+        transition: all 0.3s ease;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    .input-with-icon svg {
+        position: absolute;
+        left: 1.2rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 20px;
+        height: 20px;
+        color: var(--color-primary);
+    }
+    
+    .input-with-icon svg path {
+        fill: var(--color-primary);
+    }
+    
+    .input-with-icon input:focus {
+        box-shadow: 0 0 0 4px rgba(77, 139, 248, 0.15);
+        transform: translateY(-2px);
+        border-color: var(--color-primary);
+    }
+    
+    .forgot-password {
+        color: var(--color-primary);
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .forgot-password:hover {
+        text-decoration: underline;
+    }
+    
+    .auth-side {
+        padding: 4rem;
+        padding-top: 5rem;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .auth-illustration {
+        background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+        border-radius: 0;
+        height: 100%;
+    }
+    
+    .auth-forms {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    
+    .illustration-content {
+        text-align: center;
+        color: white;
+        max-width: 80%;
+        margin: 0 auto;
+    }
+    
+    .illustration-content h2 {
+        font-weight: 700;
+        font-size: 2rem;
+        margin: 1.5rem 0 1rem;
+    }
+    
+    .illustration-content p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+    }
+    
+    .auth-image {
+        max-width: 80%;
+        height: auto;
+        margin-bottom: 1rem;
+    }
+    
+    .auth-tabs {
+        display: none; /* Скрываем старые табы */
+    }
+    
+    .auth-form-container h3 {
+        font-size: 2rem;
+        margin-bottom: 0.8rem;
+        color: var(--color-text-dark);
+        font-weight: 700;
+    }
+    
+    .form-subtitle {
+        font-size: 1.1rem;
+        margin-bottom: 2.5rem;
+    }
+    
+    .form-group label {
+        font-size: 1.05rem;
+        margin-bottom: 0.8rem;
+    }
+    
+    .btn-auth {
+        padding: 1.1rem;
+        border-radius: 16px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        background-color: var(--color-primary);
+        color: white;
+        border: none;
+        box-shadow: 0 8px 15px rgba(77, 139, 248, 0.2);
+        transition: all 0.3s ease;
+        width: 100%;
+        cursor: pointer;
+    }
+    
+    .btn-auth:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 20px rgba(77, 139, 248, 0.3);
+    }
+    
+    .form-options {
+        margin-bottom: 2rem;
+    }
+    
+    .remember-me input, .terms-agree input {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgba(0, 0, 0, 0.2);
+        border-radius: 4px;
+        outline: none;
+        transition: all 0.3s;
+        position: relative;
+        margin-right: 8px;
+        vertical-align: middle;
+        cursor: pointer;
+    }
+    
+    .remember-me input:checked, 
+    .terms-agree input:checked {
+        background-color: var(--color-primary);
+        border-color: var(--color-primary);
+    }
+    
+    .remember-me input:checked::before, 
+    .terms-agree input:checked::before {
+        content: '';
+        position: absolute;
+        left: 6px;
+        top: 2px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+    }
+    
+    .remember-me label, .terms-agree label {
+        font-size: 0.95rem;
+        color: rgba(0, 0, 0, 0.7);
+        vertical-align: middle;
+        cursor: pointer;
+    }
+    
+    .form-footer {
+        margin-top: 2rem;
+        font-size: 1.05rem;
+        text-align: center;
+    }
+    
+    .form-footer a {
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        color: var(--color-primary);
+    }
+    
+    .form-footer a:hover {
+        text-decoration: underline;
+    }
+    
+    /* Анимация для форм */
+    .auth-form-container {
+        display: block;
+        opacity: 1;
+        transform: translateY(0);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    
+    /* Плавные переходы для контейнеров */
+    .auth-sides-container, 
+    .auth-side, 
+    .auth-forms, 
+    .auth-illustration, 
+    .forms-wrapper,
+    .auth-form-container {
+        transition: all 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+    }
+    
+    /* Улучшаем анимацию для внутренних элементов */
+    .illustration-content h2,
+    .illustration-content p,
+    .auth-form-container h3,
+    .form-subtitle,
+    .form-group,
+    .btn-auth,
+    .form-footer {
+        transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+        transition-delay: calc(var(--delay, 0) * 0.05s);
+    }
+    
+    /* Обновляем стили для мобильной версии */
+    @media (max-width: 992px) {
+        .auth-sides-container {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            width: 100%;
+            transition: all 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+        
+        .auth-side {
+            padding: 3rem;
+        }
+        
+        .auth-card {
+            padding-top: 2rem;
+        }
+        
+        .mode-toggle {
+            transform: translate(-50%, -50%) scale(0.9);
+        }
+        
+        .auth-illustration {
+            border-radius: 30px 30px 0 0;
+            padding: 2rem;
+        }
+        
+        /* Для мобильных устройств используем другую анимацию */
+        .auth-wrapper {
+            overflow: visible;
+        }
+        
+        .auth-sides-container.front {
+            transform: translateY(0);
+            opacity: 1;
+            z-index: 2;
+            position: relative;
+        }
+        
+        .auth-sides-container.back {
+            transform: translateY(20px);
+            opacity: 0;
+            z-index: 1;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            right: 0;
+        }
+        
+        .auth-wrapper.flipped .auth-sides-container.front {
+            transform: translateY(-20px);
+            opacity: 0;
+            z-index: 1;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+        }
+        
+        .auth-wrapper.flipped .auth-sides-container.back {
+            transform: translateY(0);
+            opacity: 1; 
+            z-index: 2;
+            position: relative;
+        }
+        
+        /* Отключаем анимации трансформации для внутренних элементов на мобильных */
+        .auth-wrapper.flipped .front .illustration-content h2,
+        .auth-wrapper.flipped .front .auth-form-container h3,
+        .auth-wrapper.flipped .front .illustration-content p,
+        .auth-wrapper.flipped .front .form-subtitle,
+        .auth-wrapper.flipped .front .form-group,
+        .auth-wrapper.flipped .front .btn-auth,
+        .auth-wrapper.flipped .front .form-footer,
+        .auth-wrapper:not(.flipped) .back .illustration-content h2,
+        .auth-wrapper:not(.flipped) .back .auth-form-container h3,
+        .auth-wrapper:not(.flipped) .back .illustration-content p,
+        .auth-wrapper:not(.flipped) .back .form-subtitle,
+        .auth-wrapper:not(.flipped) .back .form-group,
+        .auth-wrapper:not(.flipped) .back .btn-auth,
+        .auth-wrapper:not(.flipped) .back .form-footer {
+            transform: none;
+            opacity: 1;
+        }
+        
+        .auth-forms {
+            padding-bottom: 3rem;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .auth-card {
+            margin: 2rem auto;
+        }
+        
+        .auth-side {
+            padding: 2.5rem 2rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .auth-side {
+            padding: 1.5rem;
+        }
+        
+        .auth-card {
+            margin: 2rem auto;
+            padding-top: 1.5rem;
+        }
+        
+        .mode-toggle {
+            transform: translate(-50%, -50%) scale(0.8);
+        }
+        
+        .mode-toggle button {
+            padding: 10px 16px;
+            font-size: 0.85rem;
+        }
+        
+        .mode-toggle button svg {
+            width: 14px;
+            height: 14px;
+        }
+        
+        .illustration-content h2 {
+            font-size: 1.5rem;
+        }
+        
+        .illustration-content p {
+            font-size: 0.95rem;
+        }
+        
+        .auth-illustration {
+            padding: 2rem 1.5rem;
+        }
+        
+        .auth-form-container h3 {
+            font-size: 1.8rem;
+        }
+        
+        .form-subtitle {
+            font-size: 1rem;
+        }
+        
+        .btn-auth {
+            padding: 1rem;
+        }
+    }
+
+    /* Анимации для элементов при переключении вправо (вход -> регистрация) */
+    .auth-wrapper:not(.flipped) .front .illustration-content h2,
+    .auth-wrapper:not(.flipped) .front .illustration-content p,
+    .auth-wrapper:not(.flipped) .front .form-group,
+    .auth-wrapper:not(.flipped) .front .btn-auth,
+    .auth-wrapper:not(.flipped) .front .form-footer {
+        --delay: 0;
+    }
+
+    .auth-wrapper.flipped .front .illustration-content h2,
+    .auth-wrapper.flipped .front .auth-form-container h3 {
+        transform: translateX(-30px);
+        opacity: 0;
+        --delay: 0;
+    }
+
+    .auth-wrapper.flipped .front .illustration-content p,
+    .auth-wrapper.flipped .front .form-subtitle {
+        transform: translateX(-30px);
+        opacity: 0;
+        --delay: 1;
+    }
+
+    .auth-wrapper.flipped .front .form-group {
+        transform: translateX(-30px);
+        opacity: 0;
+        --delay: 2;
+    }
+
+    .auth-wrapper.flipped .front .btn-auth,
+    .auth-wrapper.flipped .front .form-footer {
+        transform: translateX(-30px);
+        opacity: 0;
+        --delay: 3;
+    }
+
+    /* Анимации при переключении влево (регистрация -> вход) */
+    .auth-wrapper:not(.flipped) .back .illustration-content h2,
+    .auth-wrapper:not(.flipped) .back .auth-form-container h3 {
+        transform: translateX(30px);
+        opacity: 0;
+        --delay: 0;
+    }
+
+    .auth-wrapper:not(.flipped) .back .illustration-content p,
+    .auth-wrapper:not(.flipped) .back .form-subtitle {
+        transform: translateX(30px);
+        opacity: 0;
+        --delay: 1;
+    }
+
+    .auth-wrapper:not(.flipped) .back .form-group {
+        transform: translateX(30px);
+        opacity: 0;
+        --delay: 2;
+    }
+
+    .auth-wrapper:not(.flipped) .back .btn-auth,
+    .auth-wrapper:not(.flipped) .back .form-footer {
+        transform: translateX(30px);
+        opacity: 0;
+        --delay: 3;
+    }
+
+    /* Возвращаем нормальное состояние для активных форм */
+    .auth-wrapper.flipped .back .illustration-content h2,
+    .auth-wrapper.flipped .back .illustration-content p,
+    .auth-wrapper.flipped .back .auth-form-container h3,
+    .auth-wrapper.flipped .back .form-subtitle,
+    .auth-wrapper.flipped .back .form-group,
+    .auth-wrapper.flipped .back .btn-auth,
+    .auth-wrapper.flipped .back .form-footer {
+        transform: translateX(0);
+        opacity: 1;
+    }
+</style>
+
+</head>
+<body class="poppins-font ">
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript" >
+       (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+       m[i].l=1*new Date();
+       for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+       k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+       (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+    
+       ym(101623298, "init", {
+            clickmap:true,
+            trackLinks:true,
+            accurateTrackBounce:true
+       });
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/101623298" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+    
+    <header class="header">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="logo">
+                    <a href="/ru/">
+                        <img src="/static/images/logo.svg" alt="Flowfy" width="120" height="40">
+                    </a>
+                </div>
+                
+                <div class="nav-separator"></div>
+                
+                
+                <!-- Форма выбора языка для Django i18n -->
+                <div class="locale-dropdown">
+                    <div class="locale-dropdown-toggle">
+                        <div class="locale-current">
+                            <div class="locale-flag">
+                                
+                                    <img src="/static/images/flags/ru.svg" alt="Русский" class="locale-flag-img">
+                                
+                            </div>
+                            <span class="locale-currency">
+                                ₽
+                            </span>
+                        </div>
+                        <svg class="locale-dropdown-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16">
+                            <path d="M7 10l5 5 5-5z" />
+                        </svg>
+                    </div>
+                    <div class="locale-dropdown-content">
+                        <div class="locale-dropdown-section">
+                            <h3 class="locale-dropdown-title">Язык (ru)</h3>
+                            <div class="locale-options">
+                                <div class="locale-option active" data-lang="ru">
+                                    <div class="locale-flag">
+                                        <img src="/static/images/flags/ru.svg" alt="Русский">
+                                    </div>
+                                    <div class="locale-details">
+                                        <div class="locale-name">Русский</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="locale-option " data-lang="en">
+                                    <div class="locale-flag">
+                                        <img src="/static/images/flags/gb.svg" alt="English">
+                                    </div>
+                                    <div class="locale-details">
+                                        <div class="locale-name">Английский</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="locale-option " data-lang="de">
+                                    <div class="locale-flag">
+                                        <img src="/static/images/flags/de.svg" alt="Deutsch">
+                                    </div>
+                                    <div class="locale-details">
+                                        <div class="locale-name">Deutsch</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="locale-dropdown-section">
+                            <h3 class="locale-dropdown-title">Валюта</h3>
+                            <div class="locale-options">
+                                <div class="locale-option active" data-currency="RUB">
+                                    <div class="locale-currency-symbol">₽</div>
+                                    <div class="locale-details">
+                                        <div class="locale-name">Российский рубль</div>
+                                        <div class="locale-code">RUB</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="locale-option" data-currency="USD">
+                                    <div class="locale-currency-symbol">$</div>
+                                    <div class="locale-details">
+                                        <div class="locale-name">Доллар США</div>
+                                        <div class="locale-code">USD</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="locale-option" data-currency="EUR">
+                                    <div class="locale-currency-symbol">€</div>
+                                    <div class="locale-details">
+                                        <div class="locale-name">Евро</div>
+                                        <div class="locale-code">EUR</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="locale-option" data-currency="GBP">
+                                    <div class="locale-currency-symbol">£</div>
+                                    <div class="locale-details">
+                                        <div class="locale-name">Фунт стерлингов</div>
+                                        <div class="locale-code">GBP</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="user-menu" style="white-space: nowrap;">
+                    
+                        <a href="/ru/login/" class="btn btn-primary">Вход</a>
+                    
+                </div>
+                <button class="mobile-menu-btn" title="Открыть меню">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Мобильное меню -->
+    <div class="mobile-menu">
+        <div class="mobile-menu-header">
+            <div class="mobile-logo">
+                <a href="/ru/">
+                    <img src="/static/images/logo.svg" alt="Flowfy" width="100" height="35">
+                </a>
+            </div>
+            <button class="mobile-menu-close" title="Закрыть меню">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        
+        <nav>
+            <ul class="nav-list">
+                
+                <li class="nav-item"><a href="/ru/login/">Вход</a></li>
+                <li class="nav-item"><a href="/ru/">Главная</a></li>
+                <li class="nav-item"><a href="/ru/about/">О системе</a></li>
+                
+            </ul>
+        </nav>
+        
+        <!-- Секция выбора языка (дропбокс) -->
+        <div class="locale-section">
+            <h3 class="locale-title">Язык (ru)</h3>
+            <div class="mobile-dropdown">
+                <div class="mobile-dropdown-toggle">
+                    <div class="locale-flag">
+                        
+                            <img src="/static/images/flags/ru.svg" alt="Русский" id="current-lang-flag">
+                        
+                    </div>
+                    <div class="locale-name" id="current-lang-name">
+                        
+                            Русский
+                        
+                    </div>
+                    <svg class="mobile-dropdown-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16">
+                        <path d="M7 10l5 5 5-5z" />
+                    </svg>
+                </div>
+                <div class="mobile-dropdown-content">
+                    <div class="locale-option active" data-lang="ru">
+                        <div class="locale-flag">
+                            <img src="/static/images/flags/ru.svg" alt="Русский">
+                        </div>
+                        <div class="locale-details">
+                            <div class="locale-name">Русский</div>
+                        </div>
+                    </div>
+                    
+                    <div class="locale-option " data-lang="en">
+                        <div class="locale-flag">
+                            <img src="/static/images/flags/gb.svg" alt="English">
+                        </div>
+                        <div class="locale-details">
+                            <div class="locale-name">Английский</div>
+                        </div>
+                    </div>
+                    
+                    <div class="locale-option " data-lang="de">
+                        <div class="locale-flag">
+                            <img src="/static/images/flags/de.svg" alt="Deutsch">
+                        </div>
+                        <div class="locale-details">
+                            <div class="locale-name">Deutsch</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Секция выбора валюты (дропбокс) -->
+        <div class="locale-section">
+            <h3 class="locale-title">Валюта</h3>
+            <div class="mobile-dropdown">
+                <div class="mobile-dropdown-toggle">
+                    <div class="locale-currency-symbol" id="current-currency-symbol">₽</div>
+                    <div class="locale-name" id="current-currency-name">Российский рубль</div>
+                    <svg class="mobile-dropdown-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16">
+                        <path d="M7 10l5 5 5-5z" />
+                    </svg>
+                </div>
+                <div class="mobile-dropdown-content">
+                    <div class="locale-option active" data-currency="RUB" data-symbol="₽" data-name="Российский рубль">
+                        <div class="locale-currency-symbol">₽</div>
+                        <div class="locale-details">
+                            <div class="locale-name">Российский рубль</div>
+                            <div class="locale-code">RUB</div>
+                        </div>
+                    </div>
+                    
+                    <div class="locale-option" data-currency="USD" data-symbol="$" data-name="Доллар США">
+                        <div class="locale-currency-symbol">$</div>
+                        <div class="locale-details">
+                            <div class="locale-name">Доллар США</div>
+                            <div class="locale-code">USD</div>
+                        </div>
+                    </div>
+                    
+                    <div class="locale-option" data-currency="EUR" data-symbol="€" data-name="Евро">
+                        <div class="locale-currency-symbol">€</div>
+                        <div class="locale-details">
+                            <div class="locale-name">Евро</div>
+                            <div class="locale-code">EUR</div>
+                        </div>
+                    </div>
+                    
+                    <div class="locale-option" data-currency="GBP" data-symbol="£" data-name="Фунт стерлингов">
+                        <div class="locale-currency-symbol">£</div>
+                        <div class="locale-details">
+                            <div class="locale-name">Фунт стерлингов</div>
+                            <div class="locale-code">GBP</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Затемнение фона при открытии меню -->
+    <div class="mobile-menu-backdrop"></div>
+
+    <!-- Контейнер для уведомлений -->
+    <div class="notifications-container" id="notifications-container">
+        
+    </div>
+
+    <main class="main-content">
+        <div class="container">
+            
+    <div class="auth-card">
+        <div class="auth-wrapper ">
+            <!-- Панель переключения между формами -->
+            <div class="mode-toggle">
+                <button id="register-toggle" class="">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15,4A4,4 0 0,0 11,8A4,4 0 0,0 15,12A4,4 0 0,0 19,8A4,4 0 0,0 15,4M15,14C12.33,14 7,15.34 7,18V20H23V18C23,15.34 17.67,14 15,14M7,8A4,4 0 0,1 3,12A4,4 0 0,1 7,16A4,4 0 0,1 11,12A4,4 0 0,1 7,8M7,18C5.67,18 5.33,18 4,18.67V20H10V18.67C8.67,18 8.33,18 7,18Z"/>
+                    </svg>
+                    Регистрация
+                </button>
+                <button id="login-toggle" class="">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12,4C9.79,4 8,5.79 8,8C8,10.21 9.79,12 12,12C14.21,12 16,10.21 16,8C16,5.79 14.21,4 12,4M12,14C14.67,14 20,15.34 20,18V20H4V18C4,15.34 9.33,14 12,14Z"/>
+                    </svg>
+                    Вход
+                </button>
+            </div>
+            <!-- Передняя сторона (Вход) -->
+            <div class="auth-sides-container front">
+                <!-- Левая сторона (иллюстрация для входа) -->
+            <div class="auth-side auth-illustration">
+                <div class="illustration-content">
+                    <img src="/static/images/key-concept-illustration.png" alt="Иллюстрация" class="auth-image">
+                </div>
+            </div>
+            
+                <!-- Правая сторона (форма входа) -->
+            <div class="auth-side auth-forms">
+                <div class="forms-wrapper">
+                    <!-- Сообщения об ошибках/успехе -->
+                    
+                    
+                    
+                    
+                    <!-- Форма входа -->
+                        <div class="auth-form-container" id="login-form">
+                        <h3>Добро пожаловать</h3>
+                        <p class="form-subtitle">Войдите в свою учетную запись</p>
+                        
+                            <form method="post" action="/ru/login/" class="auth-form login-form">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="EHdg7PcIt6vjDiYNEXBaK460v0LnkhSCSmqvWjsoWyjO94m9UDmkbVdo4cs5nw3r">
+                            <div class="form-group">
+                                <label for="id_username">Имя пользователя</label>
+                                <div class="input-with-icon">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/>
+                                        </svg>
+                                    <input type="text" name="username" id="id_username" placeholder="Введите имя пользователя" required>
+                                </div>
+                                
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="id_password">Пароль</label>
+                                <div class="input-with-icon">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12,17A2,2 0 0,0 14,15C14,13.89 13.1,13 12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10C4,8.89 4.9,8 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z"/>
+                                        </svg>
+                                    <input type="password" name="password" id="id_password" placeholder="Введите пароль" required>
+                                </div>
+                                
+                            </div>
+                            
+                            <div class="form-options">
+                                <div class="remember-me">
+                                    <input type="checkbox" name="remember" id="remember">
+                                    <label for="remember">Запомнить меня</label>
+                                </div>
+                                <a href="/ru/password-reset/" class="forgot-password">Забыли пароль?</a>
+                            </div>
+                            
+                            <button type="submit" class="btn-auth">Войти</button>
+                            
+                            <input type="hidden" name="next" value="/ru/invoices/create/?type=outgoing">
+                        </form>
+                        
+                        <div class="form-footer">
+                                <p>Нет учетной записи? <a id="flip-to-register" class="switch-form" data-form="register">Зарегистрироваться</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Обратная сторона (Регистрация) -->
+            <div class="auth-sides-container back">
+                <!-- Левая сторона (форма регистрации) -->
+                <div class="auth-side auth-forms">
+                    <div class="forms-wrapper">
+                        <!-- Сообщения об ошибках/успехе для регистрации -->
+                        
+                        
+                        
+                    
+                    <!-- Форма регистрации -->
+                        <div class="auth-form-container" id="register-form">
+                        <h3>Создайте учетную запись</h3>
+                        <p class="form-subtitle">Заполните данные для регистрации</p>
+                        
+                            <form method="post" action="/ru/register/" class="auth-form register-form">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="EHdg7PcIt6vjDiYNEXBaK460v0LnkhSCSmqvWjsoWyjO94m9UDmkbVdo4cs5nw3r">
+                            <div class="form-group">
+                                <label for="id_username_reg">Имя пользователя</label>
+                                <div class="input-with-icon">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/>
+                                        </svg>
+                                    <input type="text" name="username" id="id_username_reg" placeholder="Придумайте имя пользователя" required>
+                                </div>
+                                
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="id_email">Email</label>
+                                <div class="input-with-icon">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M20,8L12,13L4,8V6L12,11L20,6M20,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6C22,4.89 21.1,4 20,4Z"/>
+                                        </svg>
+                                    <input type="email" name="email" id="id_email" placeholder="Введите ваш email" required>
+                                </div>
+                                
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="id_password1">Пароль</label>
+                                <div class="input-with-icon">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12,17A2,2 0 0,0 14,15C14,13.89 13.1,13 12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10C4,8.89 4.9,8 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z"/>
+                                        </svg>
+                                    <input type="password" name="password1" id="id_password1" placeholder="Придумайте надежный пароль" required>
+                                </div>
+                                
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="id_password2">Подтверждение пароля</label>
+                                <div class="input-with-icon">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12,17A2,2 0 0,0 14,15C14,13.89 13.1,13 12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10C4,8.89 4.9,8 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z"/>
+                                        </svg>
+                                    <input type="password" name="password2" id="id_password2" placeholder="Повторите пароль" required>
+                                </div>
+                                
+                            </div>
+                            
+                            <div class="form-options">
+                                <div class="terms-agree">
+                                    <input type="checkbox" name="terms" id="terms" required>
+                                    <label for="terms">Я согласен с <a href="/ru/terms/">условиями использования</a></label>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn-auth">Зарегистрироваться</button>
+                        </form>
+                        
+                        <div class="form-footer">
+                                <p>Уже есть учетная запись? <a id="flip-to-login" class="switch-form" data-form="login">Войти</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Правая сторона (иллюстрация для регистрации) -->
+                <div class="auth-side auth-illustration">
+                    <div class="illustration-content">
+                        <img src="/static/images/auth-illustration.svg" alt="Иллюстрация" class="auth-image">
+                        <h2>Присоединяйтесь к нам!</h2>
+                        <p>Создайте аккаунт и начните пользоваться возможностями Billify</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <img src="/static/images/logo.svg" alt="Flowfy" width="120" height="40">
+                    </div>
+                    <p class="footer-description">
+                        Автоматизация финансового учета и документооборота для малого бизнеса и индивидуальных предпринимателей.
+                    </p>
+                    <div class="social-links">
+                        <a href="https://vk.com/flowfy" class="social-link" title="ВКонтакте">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.07 2H8.93C3.33 2 2 3.33 2 8.93v6.14C2 20.67 3.33 22 8.93 22h6.14c5.6 0 6.93-1.33 6.93-6.93V8.93C22 3.33 20.67 2 15.07 2zm.62 14.67h-1.75c-.67 0-.87-.5-2.08-1.75-.94-.94-1.35-1.08-1.58-1.08-.32 0-.41.09-.41.53v1.59c0 .41-.18.71-1.04.71-1.21 0-2.54-.57-3.49-1.62-1.43-1.48-1.91-3.44-1.91-3.54 0-.2.09-.39.53-.39h1.75c.39 0 .53.18.68.53.73 2.06 1.89 3.19 2.35 3.19.19 0 .27-.09.27-.57v-2.35c-.05-.8-.41-1.11-.41-1.48 0-.2.16-.39.41-.39h2.77c.33 0 .43.18.43.57v3.19c0 .34.14.46.23.46.19 0 .34-.12.69-.46.96-1.16 1.64-2.94 1.64-2.94.09-.2.23-.39.62-.39h1.75c.5 0 .62.3.5.57-.19.89-2.12 3.63-2.12 3.63-.16.27-.23.39 0 .66.14.2.68.59 1.02 1.02.66.73 1.14 1.35 1.25 1.8.12.41-.1.64-.53.64z"/></svg>
+                        </a>
+                        <a href="https://zen.yandex.ru/flowfy" class="social-link" title="Яндекс Дзен">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2c-5.5 0-10 4.5-10 10s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 2c4.4 0 8 3.6 8 8s-3.6 8-8 8-8-3.6-8-8 3.6-8 8-8zm0 2c-3.3 0-6 2.7-6 6s2.7 6 6 6 6-2.7 6-6-2.7-6-6-6zm0 2c2.2 0 4 1.8 4 4s-1.8 4-4 4-4-1.8-4-4 1.8-4 4-4zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                        </a>
+                        <a href="https://www.youtube.com/channel/flowfy" class="social-link" title="YouTube">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+                        </a>
+                        <a href="https://t.me/flowfy" class="social-link" title="Telegram">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h3 class="footer-heading">Навигация</h3>
+                    <ul class="footer-links">
+                        
+                        <li class="footer-link"><a href="/ru/">Главная</a></li>
+                        <li class="footer-link"><a href="/ru/changelog/">Ченджлог</a></li>
+                        
+                        <li class="footer-link"><a href="/ru/about/">О системе</a></li>
+                    </ul>
+                </div>
+                <!-- <div class="footer-col">
+                    <h3 class="footer-heading">Поддержка</h3>
+                    <ul class="footer-links">
+                        <li class="footer-link"><a href="#">Помощь</a></li>
+                        <li class="footer-link"><a href="#">База знаний</a></li>
+                        <li class="footer-link"><a href="#">Связаться с нами</a></li>
+                    </ul>
+                </div> -->
+                <div class="footer-col">
+                    <h3 class="footer-heading">Документы</h3>
+                    <ul class="footer-links">
+                        <li class="footer-link"><a href="/ru/privacy/">Политика конфиденциальности</a></li>
+                        <li class="footer-link"><a href="/ru/terms/">Условия использования</a></li>
+                        <li class="footer-link"><a href="/ru/legal/">Правовая информация</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="copyright">
+                    &copy; 2025 Flowfy. Все права защищены.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Модальное окно подтверждения выхода -->
+    
+
+    <script src="/static/js/global.js"></script>
+    <script src="/static/js/notifications.js"></script>
+    <script>
+        // Скрипт для обработки закрытия уведомлений
+        document.addEventListener('DOMContentLoaded', function() {
+            const notificationsContainer = document.getElementById('notifications-container');
+            
+            // Закрытие уведомлений по клику на крестик
+            notificationsContainer.addEventListener('click', function(e) {
+                if (e.target && e.target.classList.contains('notification-close')) {
+                    const notification = e.target.closest('.notification');
+                    notification.style.animation = 'fadeOut 0.3s ease-out forwards';
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 300);
+                }
+            });
+            
+            // Автоматическое закрытие уведомлений через 5 секунд
+            const notifications = document.querySelectorAll('.notification');
+            notifications.forEach(notification => {
+                setTimeout(() => {
+                    notification.style.animation = 'fadeOut 0.3s ease-out forwards';
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 300);
+                }, 5000);
+            });
+            
+            // Управление мобильным меню
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const mobileMenu = document.querySelector('.mobile-menu');
+            const mobileMenuClose = document.querySelector('.mobile-menu-close');
+            const mobileMenuBackdrop = document.querySelector('.mobile-menu-backdrop');
+            
+            if (mobileMenuBtn && mobileMenu) {
+                let isMenuOpen = false;
+                
+                // Функция открытия меню
+                function openMobileMenu() {
+                    mobileMenu.classList.add('open');
+                    mobileMenuBackdrop.classList.add('active');
+                    document.body.style.overflow = 'hidden'; // Блокируем прокрутку страницы
+                    mobileMenuBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>';
+                    isMenuOpen = true;
+                }
+                
+                // Функция закрытия меню
+                function closeMobileMenu() {
+                    mobileMenu.classList.remove('open');
+                    mobileMenuBackdrop.classList.remove('active');
+                    document.body.style.overflow = ''; // Возвращаем прокрутку
+                    mobileMenuBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>';
+                    isMenuOpen = false;
+                }
+                
+                // Обработчик кнопки бургер-меню
+                mobileMenuBtn.addEventListener('click', function() {
+                    if (isMenuOpen) {
+                        closeMobileMenu();
+                    } else {
+                        openMobileMenu();
+                    }
+                });
+                
+                // Обработчик кнопки закрытия в мобильном меню
+                if (mobileMenuClose) {
+                    mobileMenuClose.addEventListener('click', closeMobileMenu);
+                }
+                
+                // Закрытие меню при клике на затемнение
+                mobileMenuBackdrop.addEventListener('click', closeMobileMenu);
+                
+                // Закрытие меню при клике на ссылку внутри
+                mobileMenu.querySelectorAll('a:not(#mobile-logout-btn)').forEach(link => {
+                    link.addEventListener('click', closeMobileMenu);
+                });
+                
+                // Обработка кнопки выхода в мобильном меню
+                const mobileLogoutBtn = document.getElementById('mobile-logout-btn');
+                if (mobileLogoutBtn) {
+                    mobileLogoutBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const logoutModal = document.getElementById('logout-modal');
+                        if (logoutModal) {
+                            logoutModal.style.display = 'flex';
+                            closeMobileMenu();
+                        }
+                    });
+                }
+                
+                // Обработка дропбоксов в мобильном меню
+                const mobileDropdowns = document.querySelectorAll('.mobile-dropdown');
+                mobileDropdowns.forEach(dropdown => {
+                    const toggle = dropdown.querySelector('.mobile-dropdown-toggle');
+                    const content = dropdown.querySelector('.mobile-dropdown-content');
+                    
+                    toggle.addEventListener('click', function(e) {
+                        e.stopPropagation(); // Предотвращаем закрытие выпадающего списка при клике на него
+                        const isOpen = dropdown.classList.contains('open');
+                        
+                        // Закрываем все открытые дропбоксы
+                        mobileDropdowns.forEach(dd => {
+                            dd.classList.remove('open');
+                        });
+                        
+                        // Открываем текущий дропбокс (если он был закрыт)
+                        if (!isOpen) {
+                            dropdown.classList.add('open');
+                        }
+                    });
+                    
+                    // Закрытие дропбокса при клике вне его области
+                    document.addEventListener('click', function(e) {
+                        if (!dropdown.contains(e.target)) {
+                            dropdown.classList.remove('open');
+                        }
+                    });
+                    
+                    // Обработка выбора опции в дропбоксе языка
+                    if (dropdown.closest('.locale-section').querySelector('.locale-title').textContent === 'Язык') {
+                        const options = dropdown.querySelectorAll('.locale-option');
+                        const currentFlag = document.getElementById('current-lang-flag');
+                        const currentName = document.getElementById('current-lang-name');
+                        
+                        options.forEach(option => {
+                            option.addEventListener('click', function() {
+                                const language = this.getAttribute('data-lang');
+                                
+                                // Показываем индикатор загрузки
+                                showNotification(`Изменение языка на ${language}...`, 'info');
+                                
+                                // Используем AJAX для смены языка (как в language-switcher.js)
+                                // Получаем CSRF токен
+                                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || 
+                                                 document.querySelector('[name=csrfmiddlewaretoken]')?.value || '';
+                                
+                                // Вычисляем next параметр (текущая страница без языкового префикса)
+                                const pathParts = window.location.pathname.split('/');
+                                let nextPath = '';
+                                
+                                // Если путь имеет языковой префикс (первый сегмент - 'ru', 'en', 'de' и т.д.)
+                                if (pathParts.length > 1 && ['ru', 'en', 'de'].includes(pathParts[1])) {
+                                    // Сохраняем путь без языкового префикса
+                                    nextPath = '/' + pathParts.slice(2).join('/');
+                                    if (nextPath === '/') {
+                                        nextPath = '/';
+                                    }
+                                } else {
+                                    // Если нет языкового префикса, используем текущий путь
+                                    nextPath = window.location.pathname;
+                                }
+                                
+                                // Создаём данные для отправки
+                                const formData = new FormData();
+                                formData.append('language', language);
+                                formData.append('next', nextPath);
+                                if (csrfToken) {
+                                    formData.append('csrfmiddlewaretoken', csrfToken);
+                                }
+                                
+                                // Используем POST-запрос на API точку для смены языка
+                                fetch(window.location.origin + '/api/change-language/', {
+                                    method: 'POST',
+                                    body: formData,
+                                    credentials: 'same-origin'
+                                })
+                                                                 .then(response => {
+                                     if (response.ok) {
+                                         // Вместо перезагрузки текущей страницы, явно перенаправляем на новый URL с языковым префиксом
+                                         const newUrl = window.location.origin + '/' + language + nextPath;
+                                         console.log("Redirecting to:", newUrl);
+                                         window.location.href = newUrl;
+                                     } else {
+                                        // Если ошибка, пробуем стандартный метод
+                                        // Создаем форму для отправки
+                                        const form = document.createElement('form');
+                                        form.method = 'POST'; 
+                                        form.action = window.location.origin + '/i18n/setlang/';
+                                        form.style.display = 'none';
+                                        
+                                        if (csrfToken) {
+                                            const csrfInput = document.createElement('input');
+                                            csrfInput.type = 'hidden';
+                                            csrfInput.name = 'csrfmiddlewaretoken';
+                                            csrfInput.value = csrfToken;
+                                            form.appendChild(csrfInput);
+                                        }
+                                        
+                                        const langInput = document.createElement('input');
+                                        langInput.type = 'hidden';
+                                        langInput.name = 'language';
+                                        langInput.value = language;
+                                        form.appendChild(langInput);
+                                        
+                                        const nextInput = document.createElement('input');
+                                        nextInput.type = 'hidden';
+                                        nextInput.name = 'next';
+                                        nextInput.value = nextPath;
+                                        form.appendChild(nextInput);
+                                        
+                                        document.body.appendChild(form);
+                                        form.submit();
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error("Error changing language:", error);
+                                    showNotification("Ошибка при смене языка", "error");
+                                });
+                            });
+                        });
+                    }
+                    
+                    // Обработка выбора опции в дропбоксе валюты
+                    if (dropdown.closest('.locale-section').querySelector('.locale-title').textContent === 'Валюта') {
+                        const options = dropdown.querySelectorAll('.locale-option');
+                        const currentSymbol = document.getElementById('current-currency-symbol');
+                        const currentName = document.getElementById('current-currency-name');
+                        
+                        options.forEach(option => {
+                            option.addEventListener('click', function() {
+                                const currency = this.getAttribute('data-currency');
+                                const currencySymbol = this.getAttribute('data-symbol');
+                                const currencyName = this.getAttribute('data-name');
+                                
+                                // Активируем выбранную валюту
+                                options.forEach(opt => opt.classList.remove('active'));
+                                this.classList.add('active');
+                                
+                                // Обновляем текущие значения в дропбоксе
+                                currentSymbol.textContent = currencySymbol;
+                                currentName.textContent = currencyName;
+                                
+                                // Также активируем в десктопном дропдауне если есть
+                                const desktopOption = document.querySelector(`.locale-dropdown .locale-option[data-currency="${currency}"]`);
+                                if (desktopOption) {
+                                    const desktopOptions = document.querySelectorAll('.locale-dropdown .locale-option[data-currency]');
+                                    desktopOptions.forEach(opt => opt.classList.remove('active'));
+                                    desktopOption.classList.add('active');
+                                    document.querySelector('.locale-current .locale-currency').textContent = currencySymbol;
+                                }
+                                
+                                // Закрываем дропбокс
+                                dropdown.classList.remove('open');
+                                
+                                // Отправляем AJAX-запрос для изменения валюты
+                                fetch('/api/change-currency/', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                                    },
+                                    body: JSON.stringify({ currency: currency })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        showNotification('Валюта успешно изменена', 'success');
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Ошибка при изменении валюты:', error);
+                                });
+                            });
+                        });
+                    }
+                });
+            }
+            
+            // Обработка выбора языка и валюты в десктопном дропдауне
+            const localeDropdown = document.querySelector('.locale-dropdown');
+            if (localeDropdown) {
+                // Обработка выбора языка - делегируем обработку стандартному скрипту language-switcher.js
+                // Не добавляем обработчики здесь, чтобы избежать дублирования
+                
+                // Обработка выбора валюты
+                const currencyOptions = document.querySelectorAll('.locale-option[data-currency]');
+                currencyOptions.forEach(option => {
+                    option.addEventListener('click', function() {
+                        const currency = this.getAttribute('data-currency');
+                        const currencySymbol = this.querySelector('.locale-currency-symbol').textContent;
+                        
+                        // Активируем выбранную валюту
+                        currencyOptions.forEach(opt => opt.classList.remove('active'));
+                        this.classList.add('active');
+                        
+                        // Обновляем символ текущей валюты
+                        document.querySelector('.locale-current .locale-currency').textContent = currencySymbol;
+                        
+                        // Отправляем AJAX-запрос для изменения валюты
+                        fetch('/api/change-currency/', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                            },
+                            body: JSON.stringify({ currency: currency })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                showNotification('Валюта успешно изменена', 'success');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Ошибка при изменении валюты:', error);
+                        });
+                    });
+                });
+            }
+            
+            // Функция для отображения уведомлений
+            function showNotification(message, type = 'info') {
+                const notification = document.createElement('div');
+                notification.className = `notification notification-${type}`;
+                
+                let iconHTML = '<i class="fas fa-info-circle"></i>';
+                if (type === 'success') {
+                    iconHTML = '<i class="fas fa-check-circle"></i>';
+                } else if (type === 'error') {
+                    iconHTML = '<i class="fas fa-exclamation-circle"></i>';
+                } else if (type === 'warning') {
+                    iconHTML = '<i class="fas fa-exclamation-triangle"></i>';
+                }
+                
+                notification.innerHTML = `
+                    <div class="notification-icon">${iconHTML}</div>
+                    <div class="notification-content">${message}</div>
+                    <button class="notification-close">&times;</button>
+                `;
+                
+                notificationsContainer.appendChild(notification);
+                
+                // Автоматически скрыть уведомление через 5 секунд
+                setTimeout(() => {
+                    notification.style.animation = 'fadeOut 0.3s ease-out forwards';
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 300);
+                }, 5000);
+            }
+        });
+    </script>
+    <script src="/static/js/language-switcher.js"></script>
+    
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Переключатели режимов
+    const loginToggle = document.getElementById('login-toggle');
+    const registerToggle = document.getElementById('register-toggle');
+    const flipToRegister = document.getElementById('flip-to-register');
+    const flipToLogin = document.getElementById('flip-to-login');
+    const authWrapper = document.querySelector('.auth-wrapper');
+    const authCard = document.querySelector('.auth-card');
+    
+    // Коллекции контейнеров и их высот
+    const frontContainer = document.querySelector('.auth-sides-container.front');
+    const backContainer = document.querySelector('.auth-sides-container.back');
+    
+    // Функция для установки высоты контейнера
+    function setWrapperHeight(container) {
+        // Сначала делаем контейнер видимым для корректного расчета высоты,
+        // но прозрачным, чтобы пользователь не видел мигания
+        container.style.opacity = '0';
+        container.style.position = 'relative';
+        container.style.transform = 'translateX(0)';
+        container.style.zIndex = '-1';
+        
+        // Расчет высоты с небольшим отступом
+        setTimeout(() => {
+            const containerHeight = container.offsetHeight;
+            authWrapper.style.height = `${containerHeight}px`;
+            
+            // Восстанавливаем оригинальные свойства
+            container.style.removeProperty('opacity');
+            container.style.removeProperty('position');
+            container.style.removeProperty('transform');
+            container.style.removeProperty('z-index');
+        }, 10);
+    }
+    
+    // Обработчики событий для переключения
+    loginToggle.addEventListener('click', switchToLogin);
+    registerToggle.addEventListener('click', switchToRegister);
+    flipToRegister.addEventListener('click', switchToRegister);
+    flipToLogin.addEventListener('click', switchToLogin);
+    
+    // Функция переключения на вход
+    function switchToLogin() {
+        loginToggle.classList.add('active');
+        registerToggle.classList.remove('active');
+        
+        // Устанавливаем высоту на основе передней панели перед переключением
+        setWrapperHeight(frontContainer);
+        
+        // Анимируем переключение через небольшой таймаут
+        setTimeout(() => {
+            authWrapper.classList.remove('flipped');
+            
+            // Обновление URL без перезагрузки страницы
+            window.history.pushState({}, '', '/login/');
+        }, 50);
+    }
+    
+    // Функция переключения на регистрацию
+    function switchToRegister() {
+        registerToggle.classList.add('active');
+        loginToggle.classList.remove('active');
+        
+        // Устанавливаем высоту на основе задней панели перед переключением
+        setWrapperHeight(backContainer);
+        
+        // Анимируем переключение через небольшой таймаут
+        setTimeout(() => {
+            authWrapper.classList.add('flipped');
+            
+            // Обновление URL без перезагрузки страницы
+            window.history.pushState({}, '', '/register/');
+        }, 50);
+    }
+    
+    // Инициализация в зависимости от URL
+    const path = window.location.pathname;
+    if (path === '/register/') {
+        // Запускаем с небольшой задержкой, чтобы DOM успел полностью загрузиться
+        setTimeout(() => {
+            setWrapperHeight(backContainer);
+            authWrapper.classList.add('flipped');
+        }, 200);
+    } else {
+        setTimeout(() => {
+            setWrapperHeight(frontContainer);
+        }, 200);
+    }
+    
+    // При изменении размера окна пересчитываем высоту
+    window.addEventListener('resize', function() {
+        if (authWrapper.classList.contains('flipped')) {
+            setWrapperHeight(backContainer);
+        } else {
+            setWrapperHeight(frontContainer);
+        }
+    });
+    
+    // Валидация формы входа
+    const loginForm = document.querySelector('.login-form');
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            const username = this.querySelector('#id_username').value.trim();
+            const password = this.querySelector('#id_password').value.trim();
+            
+            if (!username || !password) {
+                e.preventDefault();
+                showError('login', 'Заполните все поля формы');
+            }
+        });
+    }
+    
+    // Валидация формы регистрации
+    const registerForm = document.querySelector('.register-form');
+    if (registerForm) {
+        registerForm.addEventListener('submit', function(e) {
+            const username = this.querySelector('#id_username_reg').value.trim();
+            const password1 = this.querySelector('#id_password1').value.trim();
+            const password2 = this.querySelector('#id_password2').value.trim();
+            const terms = this.querySelector('#terms');
+            
+            if (!username || !password1 || !password2) {
+                e.preventDefault();
+                showError('register', 'Заполните все поля формы');
+                return;
+            }
+            
+            if (password1 !== password2) {
+                e.preventDefault();
+                showError('register', 'Пароли не совпадают');
+                return;
+            }
+            
+            if (password1.length < 8) {
+                e.preventDefault();
+                showError('register', 'Пароль должен содержать не менее 8 символов');
+                return;
+            }
+            
+            if (!terms.checked) {
+                e.preventDefault();
+                showError('register', 'Необходимо согласиться с условиями использования');
+                return;
+            }
+        });
+    }
+    
+    // Функция для отображения ошибок
+    function showError(form, message) {
+        // Определяем контейнер для ошибок
+        const formType = form === 'login' ? 'login' : 'register';
+        let errorsContainer = document.querySelector(`.${formType}-errors`);
+        
+        if (!errorsContainer) {
+            // Создаем контейнер для ошибок
+            errorsContainer = document.createElement('div');
+            errorsContainer.className = `auth-errors ${formType}-errors`;
+            
+            // Вставляем контейнер для ошибок в нужную форму
+            const formWrapper = document.querySelector(`#${formType}-form`);
+            formWrapper.insertBefore(errorsContainer, formWrapper.querySelector('h3').nextSibling);
+        }
+        
+        // Очищаем контейнер
+        errorsContainer.innerHTML = '';
+        
+        // Создаем и добавляем сообщение об ошибке
+        const errorElement = document.createElement('div');
+        errorElement.className = 'auth-error';
+        errorElement.textContent = message;
+        
+        errorsContainer.appendChild(errorElement);
+        
+        // Анимация появления сообщения
+        errorElement.style.opacity = '0';
+        errorElement.style.transform = 'translateY(-10px)';
+        
+        setTimeout(() => {
+            errorElement.style.opacity = '1';
+            errorElement.style.transform = 'translateY(0)';
+            errorElement.style.transition = 'opacity 0.3s, transform 0.3s';
+        }, 10);
+    }
+});
+</script>
+
+</body>
+</html> 

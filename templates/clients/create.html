@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}Новый {{ is_supplier|yesno:"поставщик,клиент" }} - Billify{% endblock %}
+{% block title %}{% trans "Новый" %} {{ is_supplier|yesno:_("поставщик,клиент") }} - Billify{% endblock %}
 
 {% block extra_css %}
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -14,43 +15,45 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 20px;
-        margin-bottom: 10px;
+        margin-bottom: 20px;
     }
     
     .toggle-container {
-        background-color: #f6f6f6;
-        border-radius: 50px;
+        background-color: var(--color-light-gray);
+        border-radius: var(--radius-full);
         padding: 4px;
         position: relative;
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        border: 1px solid var(--color-gray);
+        height: 50px;
         transition: all 0.3s ease;
     }
     
     .toggle-options {
         display: flex;
         position: relative;
-        z-index: 3; /* Повышаем z-index чтобы текст был всегда поверх слайдера */
+        z-index: 3;
+        height: 100%;
     }
     
     .toggle-option {
         flex: 1;
-        padding: 12px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         text-align: center;
         cursor: pointer;
-        border-radius: 50px;
+        border-radius: var(--radius-full);
         font-weight: 500;
-        font-size: 14px;
+        font-size: 0.95rem;
         transition: all 0.3s ease;
         position: relative;
-        z-index: 3; /* Повышаем z-index */
-        color: #555;
+        z-index: 3;
+        color: var(--color-text);
+        height: 100%;
     }
     
     .toggle-option.active {
         color: white;
-        font-weight: 700;
-        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
-        letter-spacing: 0.5px;
     }
     
     .toggle-slider {
@@ -59,26 +62,14 @@
         left: 4px;
         width: calc(50% - 4px);
         height: calc(100% - 8px);
-        border-radius: 50px;
+        border-radius: var(--radius-full);
+        background-color: var(--color-primary);
         transition: all 0.3s ease;
-        z-index: 1; /* Убедимся, что слайдер под текстом */
-        transform: translateX(0);
-    }
-    
-    /* Фиолетовый градиент для левой капсулы (Статус) */
-    .entity-toggle .toggle-slider {
-        background: linear-gradient(135deg, #5c35ca, #8150d9);
-        box-shadow: 0 2px 8px rgba(92, 53, 202, 0.35);
+        z-index: 1;
     }
     
     .entity-toggle[data-active="supplier"] .toggle-slider {
         transform: translateX(100%);
-    }
-    
-    /* Синий градиент для правой капсулы (Тип) */
-    .type-toggle .toggle-slider {
-        background: linear-gradient(135deg, #0084ff, #46b3ff);
-        box-shadow: 0 2px 8px rgba(0, 132, 255, 0.35);
     }
     
     .type-toggle[data-active="business"] .toggle-slider {
@@ -86,27 +77,31 @@
     }
     
     .toggle-container:hover {
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-    }
-    
-    .entity-toggle .toggle-option:hover:not(.active) {
-        color: #5c35ca;
-    }
-    
-    .type-toggle .toggle-option:hover:not(.active) {
-        color: #0084ff;
-    }
-    
-    .toggle-option.active:hover {
-        color: white !important;
+        border-color: var(--color-primary);
     }
     
     .toggle-label {
         display: block;
         margin-bottom: 8px;
         font-weight: 500;
-        color: #444;
+        color: var(--color-text);
         font-size: 0.9rem;
+    }
+    
+    /* Стили для инпутов и контролов */
+    .form-control {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        font-size: 0.95rem;
+        border: 1px solid #e9ecef;
+        border-radius: 16px;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: var(--color-primary);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(94, 114, 228, 0.15);
     }
     
     /* Сетка для трех полей в строку */
@@ -140,11 +135,6 @@
         margin-bottom: 3px;
     }
     
-    .address-form input {
-        font-size: 0.9rem;
-        padding: 8px 10px;
-    }
-    
     /* Стили для валидации */
     .form-control.error {
         border-color: #dc3545;
@@ -162,11 +152,19 @@
     }
     
     /* Адаптивность для мобильных устройств */
+    @media (max-width: 992px) {
+        .toggle-container {
+            height: 46px;
+        }
+        
+        .toggle-option {
+            font-size: 0.9rem;
+        }
+    }
+    
     @media (max-width: 768px) {
         .switch-toggles {
-            display: grid;
-            grid-template-columns: 1fr; /* Изменено: теперь капсулы будут располагаться одна под другой */
-            gap: 15px;
+            grid-template-columns: 1fr;
         }
         
         .form-grid-triple {
@@ -178,13 +176,21 @@
         }
     }
     
-    @media (max-width: 600px) {
+    @media (max-width: 576px) {
         .step-label {
             display: none;
         }
         
         .address-form .form-grid {
             grid-template-columns: 1fr;
+        }
+        
+        .toggle-container {
+            height: 42px;
+        }
+        
+        .toggle-option {
+            font-size: 0.85rem;
         }
     }
     
@@ -255,16 +261,57 @@
         color: #4caf50;
         font-size: 14px;
     }
+    
+    /* Стили оформления для формы */
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-group label {
+        display: block;
+        font-weight: 500;
+        font-size: 0.9rem;
+        color: var(--color-text);
+        margin-bottom: 8px;
+    }
+    
+    /* Кнопки */
+    .btn {
+        padding: 0.8rem 1.5rem;
+        border-radius: 16px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+    
+    .btn-primary {
+        background-color: var(--color-primary);
+        color: white;
+    }
+    
+    .btn-primary:hover {
+        background-color: var(--color-primary-dark);
+    }
+    
+    .btn-secondary {
+        background-color: #f0f0f0;
+        color: var(--color-text);
+    }
+    
+    .btn-secondary:hover {
+        background-color: #e0e0e0;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="client-form-page">
         <div class="breadcrumbs">
-        <a href="{% url 'clients:list' %}">Все клиенты</a> / <span>Новый {% if is_supplier %}поставщик{% else %}клиент{% endif %}</span>
+        <a href="{% url 'clients:list' %}">{% trans "Все клиенты" %}</a> / <span>{% trans "Новый" %} {% if is_supplier %}{% trans "поставщик" %}{% else %}{% trans "клиент" %}{% endif %}</span>
         </div>
         
-    <h1>Новый {% if is_supplier %}поставщик{% else %}клиент{% endif %}</h1>
+    <h1>{% trans "Новый" %} {% if is_supplier %}{% trans "поставщик" %}{% else %}{% trans "клиент" %}{% endif %}</h1>
     
     {% if messages %}
     <div class="alert-container">
@@ -280,19 +327,19 @@
         <div class="wizard-steps">
             <div class="step active" data-step="1">
                 <div class="step-number">1</div>
-                <div class="step-label">Основная информация</div>
+                <div class="step-label">{% trans "Основная информация" %}</div>
             </div>
             <div class="step" data-step="2">
                 <div class="step-number">2</div>
-            <div class="step-label">Контактные данные</div>
+            <div class="step-label">{% trans "Контактные данные" %}</div>
             </div>
             <div class="step" data-step="3">
                 <div class="step-number">3</div>
-            <div class="step-label">Банковские реквизиты</div>
+            <div class="step-label">{% trans "Банковские реквизиты" %}</div>
             </div>
             <div class="step" data-step="4">
                 <div class="step-number">4</div>
-            <div class="step-label">Дополнительно</div>
+            <div class="step-label">{% trans "Дополнительно" %}</div>
             </div>
         </div>
         
@@ -307,21 +354,21 @@
                 <div class="full-width">
                         <div class="switch-toggles">
                             <div>
-                                <label class="toggle-label">Статус</label>
+                                <label class="toggle-label">{% trans "Статус" %}</label>
                             <div class="toggle-container entity-toggle" id="entity-toggle" data-active="{% if is_supplier %}supplier{% else %}client{% endif %}">
                                     <div class="toggle-options">
-                                    <div class="toggle-option {% if not is_supplier %}active{% endif %}" data-value="client">Клиент</div>
-                                    <div class="toggle-option {% if is_supplier %}active{% endif %}" data-value="supplier">Поставщик</div>
+                                    <div class="toggle-option {% if not is_supplier %}active{% endif %}" data-value="client">{% trans "Клиент" %}</div>
+                                    <div class="toggle-option {% if is_supplier %}active{% endif %}" data-value="supplier">{% trans "Поставщик" %}</div>
                                     </div>
                                 <div class="toggle-slider"></div>
                                 </div>
                             </div>
                             <div>
-                            <label class="toggle-label">Тип</label>
+                            <label class="toggle-label">{% trans "Тип" %}</label>
                             <div class="toggle-container type-toggle" id="type-toggle" data-active="{% if form_data and form_data.type == 'business' %}business{% else %}individual{% endif %}">
                                     <div class="toggle-options">
-                                    <div class="toggle-option {% if not form_data or form_data.type != 'business' %}active{% endif %}" data-value="individual">Физическое лицо</div>
-                                    <div class="toggle-option {% if form_data and form_data.type == 'business' %}active{% endif %}" data-value="business">Юридическое лицо</div>
+                                    <div class="toggle-option {% if not form_data or form_data.type != 'business' %}active{% endif %}" data-value="individual">{% trans "Физическое лицо" %}</div>
+                                    <div class="toggle-option {% if form_data and form_data.type == 'business' %}active{% endif %}" data-value="business">{% trans "Юридическое лицо" %}</div>
                                     </div>
                                 <div class="toggle-slider"></div>
                                 </div>
@@ -331,41 +378,41 @@
                     
                 <div class="full-width">
                         <div class="form-group">
-                        <label for="name">{{ is_supplier|yesno:"Название организации / ФИО ИП,Имя / Название организации" }}</label>
+                        <label for="name">{{ is_supplier|yesno:_("Название организации / ФИО ИП,Имя / Название организации") }}</label>
                         <input type="text" id="name" name="name" class="form-control" required value="{% if form_data %}{{ form_data.name }}{% endif %}">
                     </div>
                         </div>
                     
                 <div class="full-width">
-                    <h3>Адрес</h3>
+                    <h3>{% trans "Адрес" %}</h3>
                     <div class="address-grid">
                         <div class="form-group">
-                            <label for="region">Область/Край</label>
+                            <label for="region">{% trans "Область/Край" %}</label>
                             <input type="text" id="region" name="region" class="form-control" value="{% if form_data %}{{ form_data.region }}{% endif %}">
                         </div>
                         
                         <div class="form-group">
-                            <label for="city">Город/Населенный пункт</label>
+                            <label for="city">{% trans "Город/Населенный пункт" %}</label>
                             <input type="text" id="city" name="city" class="form-control" value="{% if form_data %}{{ form_data.city }}{% endif %}">
                         </div>
                         
                         <div class="form-group full-width">
-                            <label for="street">Улица</label>
+                            <label for="street">{% trans "Улица" %}</label>
                             <input type="text" id="street" name="street" class="form-control" value="{% if form_data %}{{ form_data.street }}{% endif %}">
                     </div>
                     
                         <div class="form-group">
-                            <label for="house">Дом</label>
+                            <label for="house">{% trans "Дом" %}</label>
                             <input type="text" id="house" name="house" class="form-control" value="{% if form_data %}{{ form_data.house }}{% endif %}">
                         </div>
                         
                         <div class="form-group">
-                            <label for="apartment">Квартира/Офис</label>
+                            <label for="apartment">{% trans "Квартира/Офис" %}</label>
                             <input type="text" id="apartment" name="apartment" class="form-control" value="{% if form_data %}{{ form_data.apartment }}{% endif %}">
                     </div>
                     
                         <div class="form-group">
-                            <label for="postal_code">Индекс</label>
+                            <label for="postal_code">{% trans "Индекс" %}</label>
                             <input type="text" id="postal_code" name="postal_code" class="form-control" value="{% if form_data %}{{ form_data.postal_code }}{% endif %}">
                         </div>
                     </div>
@@ -373,85 +420,85 @@
                 </div>
                 
             <div class="form-actions">
-                <button type="button" class="btn btn-secondary" id="cancel-button">Отмена</button>
-                    <button type="button" class="btn btn-primary next-step" data-goto="2">Далее</button>
+                <button type="button" class="btn btn-secondary" id="cancel-button">{% trans "Отмена" %}</button>
+                    <button type="button" class="btn btn-primary next-step" data-goto="2">{% trans "Далее" %}</button>
                 </div>
             </div>
             
             <div class="wizard-panel" data-panel="2">
                             <div class="form-grid">
                                 <div class="form-group">
-                    <label for="email">Email</label>
+                    <label for="email">{% trans "Email" %}</label>
                     <input type="email" id="email" name="email" class="form-control" value="{% if form_data %}{{ form_data.email }}{% endif %}">
                                 </div>
                                 
                                 <div class="form-group">
-                    <label for="phone">Телефон</label>
+                    <label for="phone">{% trans "Телефон" %}</label>
                     <input type="tel" id="phone" name="phone" class="form-control" value="{% if form_data %}{{ form_data.phone }}{% endif %}">
                                 </div>
                                 
                                 <div class="form-group">
-                    <label for="contact_person">Контактное лицо</label>
+                    <label for="contact_person">{% trans "Контактное лицо" %}</label>
                     <input type="text" id="contact_person" name="contact_person" class="form-control" value="{% if form_data %}{{ form_data.contact_person }}{% endif %}">
                                 </div>
                                 
                                 <div class="form-group">
-                    <label for="contact_email">Email контактного лица</label>
+                    <label for="contact_email">{% trans "Email контактного лица" %}</label>
                     <input type="email" id="contact_email" name="contact_email" class="form-control" value="{% if form_data %}{{ form_data.contact_email }}{% endif %}">
                                 </div>
                                 </div>
                                 
             <div class="form-actions">
-                <button type="button" class="btn btn-secondary prev-step" data-goto="1">Назад</button>
-                    <button type="button" class="btn btn-primary next-step" data-goto="3">Далее</button>
+                <button type="button" class="btn btn-secondary prev-step" data-goto="1">{% trans "Назад" %}</button>
+                    <button type="button" class="btn btn-primary next-step" data-goto="3">{% trans "Далее" %}</button>
                 </div>
             </div>
             
             <div class="wizard-panel" data-panel="3">
                 <div class="form-grid">
                 <div class="full-width">
-                    <h3>Банковские реквизиты</h3>
+                    <h3>{% trans "Банковские реквизиты" %}</h3>
                 </div>
                 
                     <div class="form-group">
-                        <label for="tax_id">ИНН</label>
+                        <label for="tax_id">{% trans "ИНН" %}</label>
                     <input type="text" id="tax_id" name="tax_id" class="form-control" value="{% if form_data %}{{ form_data.tax_id }}{% endif %}">
                     </div>
                     
                 <div class="form-group">
-                        <label for="kpp">КПП</label>
+                        <label for="kpp">{% trans "КПП" %}</label>
                     <input type="text" id="kpp" name="kpp" class="form-control" value="{% if form_data %}{{ form_data.kpp }}{% endif %}">
                     </div>
                     
                     <div class="form-group">
-                        <label for="ogrn">ОГРН / ОГРНИП</label>
+                        <label for="ogrn">{% trans "ОГРН / ОГРНИП" %}</label>
                     <input type="text" id="ogrn" name="ogrn" class="form-control" value="{% if form_data %}{{ form_data.ogrn }}{% endif %}">
                     </div>
                     
                     <div class="form-group">
-                        <label for="bank_name">Название банка</label>
+                        <label for="bank_name">{% trans "Название банка" %}</label>
                     <input type="text" id="bank_name" name="bank_name" class="form-control" value="{% if form_data %}{{ form_data.bank_name }}{% endif %}">
                     </div>
                     
                     <div class="form-group">
-                    <label for="bank_bik">БИК</label>
+                    <label for="bank_bik">{% trans "БИК" %}</label>
                     <input type="text" id="bank_bik" name="bank_bik" class="form-control" value="{% if form_data %}{{ form_data.bank_bik }}{% endif %}">
                     </div>
                     
                     <div class="form-group">
-                    <label for="bank_account">Расчетный счет</label>
+                    <label for="bank_account">{% trans "Расчетный счет" %}</label>
                     <input type="text" id="bank_account" name="bank_account" class="form-control" value="{% if form_data %}{{ form_data.bank_account }}{% endif %}">
                 </div>
                 
                 <div class="form-group">
-                    <label for="bank_corr_account">Корреспондентский счет</label>
+                    <label for="bank_corr_account">{% trans "Корреспондентский счет" %}</label>
                     <input type="text" id="bank_corr_account" name="bank_corr_account" class="form-control" value="{% if form_data %}{{ form_data.bank_corr_account }}{% endif %}">
                     </div>
                 </div>
                 
             <div class="form-actions">
-                <button type="button" class="btn btn-secondary prev-step" data-goto="2">Назад</button>
-                    <button type="button" class="btn btn-primary next-step" data-goto="4">Далее</button>
+                <button type="button" class="btn btn-secondary prev-step" data-goto="2">{% trans "Назад" %}</button>
+                    <button type="button" class="btn btn-primary next-step" data-goto="4">{% trans "Далее" %}</button>
                 </div>
             </div>
             
@@ -459,15 +506,15 @@
             <div class="form-grid">
                 <div class="full-width">
                 <div class="form-group">
-                    <label for="comment">Комментарий</label>
-                        <textarea id="comment" name="comment" class="form-control" rows="3" placeholder="Введите дополнительную информацию">{% if form_data %}{{ form_data.comment }}{% endif %}</textarea>
+                    <label for="comment">{% trans "Комментарий" %}</label>
+                        <textarea id="comment" name="comment" class="form-control" rows="3" placeholder="{% trans "Введите дополнительную информацию" %}">{% if form_data %}{{ form_data.comment }}{% endif %}</textarea>
                 </div>
                     </div>
                 </div>
                 
             <div class="form-actions">
-                <button type="button" class="btn btn-secondary prev-step" data-goto="3">Назад</button>
-                <button type="submit" class="btn btn-primary" id="submit-button">Сохранить</button>
+                <button type="button" class="btn btn-secondary prev-step" data-goto="3">{% trans "Назад" %}</button>
+                <button type="submit" class="btn btn-primary" id="submit-button">{% trans "Сохранить" %}</button>
                 </div>
             </div>
         </form>
@@ -504,9 +551,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const titleLabels = document.querySelectorAll('h1, .breadcrumbs span');
             titleLabels.forEach(label => {
                 if (label.tagName === 'H1') {
-                    label.textContent = 'Новый поставщик';
+                    label.textContent = '{% trans "Новый" %} поставщик';
                 } else {
-                    label.textContent = 'Новый поставщик';
+                    label.textContent = '{% trans "Новый" %} поставщик';
                 }
             });
             
@@ -859,9 +906,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const titleLabels = document.querySelectorAll('h1, .breadcrumbs span');
             titleLabels.forEach(label => {
                 if (label.tagName === 'H1') {
-                    label.textContent = `Новый ${entityType}`;
+                    label.textContent = `{% trans "Новый" %} ${entityType}`;
                 } else {
-                    label.textContent = `Новый ${entityType}`;
+                    label.textContent = `{% trans "Новый" %} ${entityType}`;
                 }
             });
             

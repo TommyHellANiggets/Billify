@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'django.contrib.sitemaps',
+    'django.contrib.sites',  # Добавлен Sites framework
+    'robots',  # Django Robots
     
     # Приложения проекта
     'core',
@@ -49,16 +51,21 @@ INSTALLED_APPS = [
     'clients',
     'analytics',
     'suppliers',
+    'api',  # Новое API приложение
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'core.middleware.UserLanguageMiddleware',  # Наш middleware для установки языка пользователя
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'core.middleware.Custom404Middleware',  # Наш кастомный middleware для обработки 404
+    'core.middleware.AuthRequiredMiddleware',  # Наш middleware для проверки авторизации
 ]
 
 ROOT_URLCONF = 'billify.urls'
@@ -74,6 +81,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.i18n',  # Добавляем контекстный процессор для i18n
             ],
         },
     },
@@ -140,6 +148,18 @@ USE_I18N = True
 
 USE_TZ = True
 
+# Настройки доступных языков
+LANGUAGES = [
+    ('ru', 'Русский'),
+    ('en', 'English'),
+    ('de', 'Deutsch'),
+]
+
+# Пути к каталогам с файлами переводов
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale'),
+]
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
@@ -160,6 +180,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Настройки аутентификации
+LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
@@ -231,3 +252,6 @@ LOGGING = {
         },
     },
 }
+
+# Идентификатор сайта по умолчанию
+SITE_ID = 1

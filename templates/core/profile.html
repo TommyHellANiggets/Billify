@@ -1,22 +1,23 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
-{% block title %}Профиль компании{% endblock %}
+{% block title %}{% trans "Профиль компании" %}{% endblock %}
 
-{% block meta_description %}Управление профилем вашей компании в системе Flowfy. Редактируйте контактные данные, логотип, банковские реквизиты и другую информацию о вашей организации.{% endblock %}
+{% block meta_description %}{% trans "Управление профилем вашей компании в системе Flowfy. Редактируйте контактные данные, логотип, банковские реквизиты и другую информацию о вашей организации." %}{% endblock %}
 
-{% block meta_keywords %}профиль компании, данные организации, настройки компании, реквизиты, управление профилем{% endblock %}
+{% block meta_keywords %}{% trans "профиль компании, данные организации, настройки компании, реквизиты, управление профилем" %}{% endblock %}
 
-{% block og_title %}Управление профилем компании | Flowfy{% endblock %}
-{% block og_description %}Управление профилем вашей компании в системе Flowfy. Редактируйте контактные данные, логотип, банковские реквизиты и другую информацию о вашей организации.{% endblock %}
+{% block og_title %}{% trans "Управление профилем компании | Flowfy" %}{% endblock %}
+{% block og_description %}{% trans "Управление профилем вашей компании в системе Flowfy. Редактируйте контактные данные, логотип, банковские реквизиты и другую информацию о вашей организации." %}{% endblock %}
 {% block og_image %}{% static 'images/og/profile-og.jpg' %}{% endblock %}
 {% block og_type %}website{% endblock %}
 
 {% block meta_extra %}
 <meta property="vk:image" content="{% static 'images/og/profile-og.jpg' %}" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Управление профилем компании | Flowfy" />
-<meta name="twitter:description" content="Управление профилем вашей компании в системе Flowfy. Редактируйте контактные данные, логотип, банковские реквизиты и другую информацию." />
+<meta name="twitter:title" content="{% trans "Управление профилем компании | Flowfy" %}" />
+<meta name="twitter:description" content="{% trans "Управление профилем вашей компании в системе Flowfy. Редактируйте контактные данные, логотип, банковские реквизиты и другую информацию." %}" />
 <meta name="twitter:image" content="{% static 'images/og/profile-og.jpg' %}" />
 <meta name="robots" content="index, follow" />
 <meta name="yandex-verification" content="verification_token" />
@@ -27,23 +28,42 @@
 <link rel="stylesheet" href="{% static 'css/global.css' %}">
 <link rel="stylesheet" href="{% static 'css/core/profile.css' %}">
 <style>
+    /* Стили для SVG иконок */
+    .icon {
+        width: 1em;
+        height: 1em;
+        display: inline-block;
+        fill: currentColor;
+        vertical-align: -0.125em;
+    }
+    
     .company-type-toggle {
         display: flex;
         width: 100%;
-        margin-bottom: 10px;
+        margin-bottom: 20px;
         border-radius: var(--radius-full);
         overflow: hidden;
         background-color: var(--color-light-gray);
         border: 1px solid var(--color-gray);
+        position: relative;
+        height: 50px;
+        padding: 4px;
+        transition: all 0.3s ease;
     }
     
     .company-type-toggle label {
         flex: 1;
         text-align: center;
-        padding: 10px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         cursor: pointer;
         transition: all 0.3s ease;
         font-weight: 500;
+        border-radius: var(--radius-full);
+        z-index: 2;
+        height: 100%;
+        font-size: 0.95rem;
     }
     
     .company-type-toggle input[type="radio"] {
@@ -51,8 +71,23 @@
     }
     
     .company-type-toggle input[type="radio"]:checked + label {
-        background-color: var(--color-primary);
         color: white;
+    }
+    
+    .company-type-toggle .toggle-slider {
+        position: absolute;
+        height: calc(100% - 8px);
+        width: calc(50% - 4px);
+        left: 4px;
+        top: 4px;
+        background-color: var(--color-primary);
+        border-radius: var(--radius-full);
+        transition: all 0.3s ease;
+        z-index: 1;
+    }
+    
+    .company-type-toggle #type_business:checked ~ .toggle-slider {
+        transform: translateX(100%);
     }
     
     .file-upload-container {
@@ -112,11 +147,27 @@
         .form-grid {
             grid-template-columns: repeat(2, 1fr);
         }
+        
+        .company-type-toggle {
+            height: 46px;
+        }
+        
+        .company-type-toggle label {
+            font-size: 0.9rem;
+        }
     }
     
     @media (max-width: 576px) {
         .form-grid {
             grid-template-columns: 1fr;
+        }
+        
+        .company-type-toggle {
+            height: 42px;
+        }
+        
+        .company-type-toggle label {
+            font-size: 0.85rem;
         }
     }
     
@@ -262,509 +313,686 @@
     .profile-btn i {
         margin-right: 8px;
     }
+    
+    /* Добавляем стили для выбора валюты */
+    .currency-options {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .currency-option {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        border-radius: var(--radius-full);
+        background-color: var(--color-light);
+        border: 1px solid var(--color-gray);
+        cursor: pointer;
+        transition: border-color 0.2s ease;
+    }
+    
+    .currency-option:hover {
+        border-color: var(--color-primary);
+    }
+    
+    .currency-option.active {
+        border-color: var(--color-primary);
+        background-color: rgba(var(--color-primary-rgb), 0.05);
+    }
+    
+    .currency-symbol {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: var(--color-light-gray);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        font-weight: 600;
+        margin-right: 15px;
+        color: var(--color-text-dark);
+        flex-shrink: 0;
+    }
+    
+    .currency-option.active .currency-symbol {
+        background-color: var(--color-primary);
+        color: white;
+    }
+    
+    .currency-details {
+        flex-grow: 1;
+    }
+    
+    .currency-name {
+        font-weight: 500;
+        margin-bottom: 4px;
+        color: var(--color-text-dark);
+    }
+    
+    .currency-code {
+        font-size: 0.8rem;
+        color: var(--color-text-light);
+    }
+    
+    /* Стили для выбора языка - аналогично валюте */
+    .language-options {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .language-option {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        border-radius: var(--radius-full);
+        background-color: var(--color-light);
+        border: 1px solid var(--color-gray);
+        cursor: pointer;
+        transition: border-color 0.2s ease;
+    }
+    
+    .language-option:hover {
+        border-color: var(--color-primary);
+    }
+    
+    .language-option.active {
+        border-color: var(--color-primary);
+        background-color: rgba(var(--color-primary-rgb), 0.05);
+    }
+    
+    .language-flag {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: var(--color-light-gray);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        flex-shrink: 0;
+        overflow: hidden;
+    }
+    
+    .language-flag img {
+        width: 30px;
+        height: 20px;
+        object-fit: cover;
+    }
+    
+    .language-option.active .language-flag {
+        background-color: var(--color-primary);
+        padding: 5px;
+    }
+    
+    .language-details {
+        flex-grow: 1;
+    }
+    
+    .language-name {
+        font-weight: 500;
+        margin-bottom: 4px;
+        color: var(--color-text-dark);
+    }
+    
+    .language-native {
+        font-size: 0.8rem;
+        color: var(--color-text-light);
+    }
+    
+    @media (max-width: 768px) {
+        .currency-options,
+        .language-options {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Отключаем анимацию поднятия у карточек профиля */
+    .profile-card:hover {
+        box-shadow: var(--profile-shadow-md);
+        transform: none;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="page-header">
-    <h1 class="profile-title">Профиль компании</h1>
-    <p class="page-description">Управление профилем компании и настройками аккаунта</p>
-</div>
-
-<div class="profile-container">
-    <!-- Боковая панель с навигацией -->
-    <div class="profile-sidebar">
-        <div class="profile-sidebar-header">
-            <div class="profile-avatar">
-                {% if form.instance.logo %}
-                    <img src="{{ form.instance.logo.url }}" alt="{{ request.user.username }}">
-                {% else %}
-                    <i class="fas fa-building"></i>
-                {% endif %}
-            </div>
-            <div class="profile-username">{{ form.instance.company_name|default:request.user.username }}</div>
-            <div class="profile-email">{{ request.user.email }}</div>
-        </div>
-        
-        <div class="profile-tabs">
-            <ul class="profile-nav">
-                <li class="profile-nav-item">
-                    <a href="#company-info" class="profile-nav-link active" data-tab="company-info" id="company-info-tab">
-                        <span class="profile-nav-icon"><i class="fas fa-building"></i></span>
-                        Информация о компании
-                    </a>
-                </li>
-                <li class="profile-nav-item">
-                    <a href="#email-verification" class="profile-nav-link" data-tab="email-verification" id="email-verification-tab">
-                        <span class="profile-nav-icon"><i class="fas fa-envelope"></i></span>
-                        Подтверждение почты
-                    </a>
-                </li>
-                <li class="profile-nav-item">
-                    <a href="#change-password" class="profile-nav-link" data-tab="change-password" id="change-password-tab">
-                        <span class="profile-nav-icon"><i class="fas fa-lock"></i></span>
-                        Смена пароля
-                    </a>
-                </li>
-                <li class="profile-nav-item">
-                    <a href="#language-currency" class="profile-nav-link" data-tab="language-currency" id="language-currency-tab">
-                        <span class="profile-nav-icon"><i class="fas fa-globe"></i></span>
-                        Язык и валюта
-                    </a>
-                </li>
-                <li class="profile-nav-item">
-                    <a href="#upload-files" class="profile-nav-link" data-tab="upload-files" id="upload-files-tab">
-                        <span class="profile-nav-icon"><i class="fas fa-file-upload"></i></span>
-                        Загрузка файлов
-                    </a>
-                </li>
-            </ul>
+<div class="profile-page">
+    <div class="page-header">
+        <div class="header-content">
+            <h1>{% trans "Профиль компании" %}</h1>
+            <p class="page-subtitle">{% trans "Настройте данные вашей компании, которые будут использоваться в документах" %}</p>
         </div>
     </div>
     
-    <!-- Содержимое вкладок -->
-    <div class="profile-content">
-        <!-- Вкладка с информацией о компании -->
-        <div id="company-info" class="profile-tab active">
-            <h2 class="profile-tab-title">Информация о компании</h2>
+    {% if messages %}
+    <div class="alert-container">
+        {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} alert-dismissible">
+            {{ message }}
+            <button type="button" class="close-alert" onclick="this.parentElement.style.display='none';">&times;</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <div class="profile-tabs" id="profile-tabs">
+        <button class="profile-tab active" data-tab="company">{% trans "Данные компании" %}</button>
+        <button class="profile-tab" data-tab="bank">{% trans "Банковские реквизиты" %}</button>
+        <button class="profile-tab" data-tab="email">{% trans "Электронная почта" %}</button>
+        <button class="profile-tab" data-tab="preferences">{% trans "Настройки" %}</button>
+    </div>
+
+    <div class="profile-container">
+        <!-- Боковая панель с навигацией -->
+        <div class="profile-sidebar">
+            <div class="profile-sidebar-header">
+                <div class="profile-avatar">
+                    {% if form.instance.logo %}
+                        <img src="{{ form.instance.logo.url }}" alt="{{ request.user.username }}">
+                    {% else %}
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg>
+                    {% endif %}
+                </div>
+                <div class="profile-username">{{ form.instance.company_name|default:request.user.username }}</div>
+                <div class="profile-email">{{ request.user.email }}</div>
+            </div>
             
-            <form method="post" enctype="multipart/form-data" id="company-form">
-                {% csrf_token %}
+            <div class="profile-tabs">
+                <ul class="profile-nav">
+                    <li class="profile-nav-item">
+                        <a href="#company-info" class="profile-nav-link active" data-tab="company-info" id="company-info-tab">
+                            <span class="profile-nav-icon">
+                                <svg class="icon" viewBox="0 0 24 24"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg>
+                            </span>
+                            {% trans "Информация о компании" %}
+                        </a>
+                    </li>
+                    <li class="profile-nav-item">
+                        <a href="#email-verification" class="profile-nav-link" data-tab="email-verification" id="email-verification-tab">
+                            <span class="profile-nav-icon">
+                                <svg class="icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                            </span>
+                            {% trans "Подтверждение почты" %}
+                        </a>
+                    </li>
+                    <li class="profile-nav-item">
+                        <a href="#change-password" class="profile-nav-link" data-tab="change-password" id="change-password-tab">
+                            <span class="profile-nav-icon">
+                                <svg class="icon" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                            </span>
+                            {% trans "Смена пароля" %}
+                        </a>
+                    </li>
+                    <li class="profile-nav-item">
+                        <a href="#language-currency" class="profile-nav-link" data-tab="language-currency" id="language-currency-tab">
+                            <span class="profile-nav-icon">
+                                <svg class="icon" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c-.43-1.43-1.08-2.76-1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2 0 .68.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.9-4.33-3.56zm2.95-8H5.08c.96-1.66 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2 0-.68.07-1.35.16-2h4.68c.09.65.16 1.32.16 2 0 .68-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2 0-.68-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z"/></svg>
+                            </span>
+                            {% trans "Язык и валюта" %}
+                        </a>
+                    </li>
+                    <li class="profile-nav-item">
+                        <a href="#upload-files" class="profile-nav-link" data-tab="upload-files" id="upload-files-tab">
+                            <span class="profile-nav-icon">
+                                <svg class="icon" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+                            </span>
+                            {% trans "Загрузка файлов" %}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Содержимое вкладок -->
+        <div class="profile-content">
+            <!-- Вкладка с информацией о компании -->
+            <div id="company-info" class="profile-tab active">
+                <h2 class="profile-tab-title">{% trans "Информация о компании" %}</h2>
                 
-                <div class="profile-card">
-                    <h3 class="profile-card-title">Основная информация</h3>
+                <form method="post" enctype="multipart/form-data" id="company-form">
+                    {% csrf_token %}
                     
-                    <div class="profile-form-group">
-                        <label>{{ form.company_type.label }}</label>
-                        <div class="company-type-toggle">
-                            <input type="radio" id="type_individual" name="company_type" value="individual" {% if form.instance.company_type == 'individual' or not form.instance.company_type %}checked{% endif %}>
-                            <label for="type_individual">Индивидуальный предприниматель</label>
+                    <div class="profile-card">
+                        <h3 class="profile-card-title">{% trans "Основная информация" %}</h3>
+                        
+                        <div class="profile-form-group">
+                            <label>{{ form.company_type.label }}</label>
+                            <div class="company-type-toggle">
+                                <input type="radio" id="type_individual" name="company_type" value="individual" {% if form.instance.company_type == 'individual' or not form.instance.company_type %}checked{% endif %}>
+                                <label for="type_individual">{% trans "Индивидуальный предприниматель" %}</label>
+                                
+                                <input type="radio" id="type_business" name="company_type" value="business" {% if form.instance.company_type == 'business' %}checked{% endif %}>
+                                <label for="type_business">{% trans "Юридическое лицо" %}</label>
+                                
+                                <div class="toggle-slider"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="profile-form-group">
+                            <label for="id_company_name">{{ form.company_name.label }}</label>
+                            <input type="text" id="id_company_name" name="company_name" value="{{ form.company_name.value|default:'' }}" class="profile-form-control" placeholder="{% trans "Введите название компании" %}">
+                            {% if form.company_name.errors %}
+                            <div class="form-error">{{ form.company_name.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="profile-form-grid">
+                            <div class="profile-form-group">
+                                <label for="id_legal_address">{{ form.legal_address.label }}</label>
+                                <textarea id="id_legal_address" name="legal_address" class="profile-form-control" rows="3" placeholder="{% trans "Введите юридический адрес" %}">{{ form.legal_address.value|default:'' }}</textarea>
+                                {% if form.legal_address.errors %}
+                                <div class="form-error">{{ form.legal_address.errors }}</div>
+                                {% endif %}
+                            </div>
                             
-                            <input type="radio" id="type_business" name="company_type" value="business" {% if form.instance.company_type == 'business' %}checked{% endif %}>
-                            <label for="type_business">Юридическое лицо</label>
-                        </div>
-                    </div>
-                    
-                    <div class="profile-form-group">
-                        <label for="id_company_name">{{ form.company_name.label }}</label>
-                        {{ form.company_name }}
-                        {% if form.company_name.errors %}
-                        <div class="form-error">{{ form.company_name.errors }}</div>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="profile-form-grid">
-                        <div class="profile-form-group">
-                            <label for="id_legal_address">{{ form.legal_address.label }}</label>
-                            {{ form.legal_address }}
-                            {% if form.legal_address.errors %}
-                            <div class="form-error">{{ form.legal_address.errors }}</div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="profile-form-group">
-                            <label for="id_postal_address">{{ form.postal_address.label }}</label>
-                            {{ form.postal_address }}
-                            {% if form.postal_address.errors %}
-                            <div class="form-error">{{ form.postal_address.errors }}</div>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="profile-card">
-                    <h3 class="profile-card-title">Контактная информация</h3>
-                    
-                    <div class="profile-form-grid">
-                        <div class="profile-form-group">
-                            <label for="id_phone">{{ form.phone.label }}</label>
-                            {{ form.phone }}
-                            {% if form.phone.errors %}
-                            <div class="form-error">{{ form.phone.errors }}</div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="profile-form-group">
-                            <label for="id_email">{{ form.email.label }}</label>
-                            {{ form.email }}
-                            {% if form.email.errors %}
-                            <div class="form-error">{{ form.email.errors }}</div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="profile-form-group">
-                            <label for="id_website">{{ form.website.label }}</label>
-                            {{ form.website }}
-                            {% if form.website.errors %}
-                            <div class="form-error">{{ form.website.errors }}</div>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="profile-card">
-                    <h3 class="profile-card-title">Реквизиты</h3>
-                    
-                    <div class="profile-form-grid">
-                        <div class="profile-form-group">
-                            <label for="id_inn">{{ form.inn.label }}</label>
-                            {{ form.inn }}
-                            <small class="form-help">{{ form.inn.help_text }}</small>
-                            {% if form.inn.errors %}
-                            <div class="form-error">{{ form.inn.errors }}</div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="profile-form-group business-only">
-                            <label for="id_kpp">{{ form.kpp.label }}</label>
-                            {{ form.kpp }}
-                            <small class="form-help">{{ form.kpp.help_text }}</small>
-                            {% if form.kpp.errors %}
-                            <div class="form-error">{{ form.kpp.errors }}</div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="profile-form-group">
-                            <label for="id_ogrn">{{ form.ogrn.label }}</label>
-                            {{ form.ogrn }}
-                            {% if form.ogrn.errors %}
-                            <div class="form-error">{{ form.ogrn.errors }}</div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="profile-form-group">
-                            <label for="id_okpo">{{ form.okpo.label }}</label>
-                            {{ form.okpo }}
-                            {% if form.okpo.errors %}
-                            <div class="form-error">{{ form.okpo.errors }}</div>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="profile-card">
-                    <h3 class="profile-card-title">Банковские реквизиты</h3>
-                    
-                    <div class="profile-form-grid">
-                        <div class="profile-form-group">
-                            <label for="id_bank_name">{{ form.bank_name.label }}</label>
-                            {{ form.bank_name }}
-                            {% if form.bank_name.errors %}
-                            <div class="form-error">{{ form.bank_name.errors }}</div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="profile-form-group">
-                            <label for="id_bank_account">{{ form.bank_account.label }}</label>
-                            {{ form.bank_account }}
-                            {% if form.bank_account.errors %}
-                            <div class="form-error">{{ form.bank_account.errors }}</div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="profile-form-group">
-                            <label for="id_bank_corr_account">{{ form.bank_corr_account.label }}</label>
-                            {{ form.bank_corr_account }}
-                            {% if form.bank_corr_account.errors %}
-                            <div class="form-error">{{ form.bank_corr_account.errors }}</div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="profile-form-group">
-                            <label for="id_bank_bik">{{ form.bank_bik.label }}</label>
-                            {{ form.bank_bik }}
-                            {% if form.bank_bik.errors %}
-                            <div class="form-error">{{ form.bank_bik.errors }}</div>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="profile-tab-footer">
-                    <button type="submit" class="profile-btn profile-btn-primary" name="action" value="company_info">Сохранить изменения</button>
-                </div>
-            </form>
-        </div>
-        
-        <!-- Вкладка подтверждения почты -->
-        <div id="email-verification" class="profile-tab">
-            <h2 class="profile-tab-title">Подтверждение электронной почты</h2>
-            
-            {% if user.email %}
-                {% if email_verified %}
-                <div class="profile-alert profile-alert-success">
-                    <div class="verification-status">
-                        <div class="verification-icon verified">
-                            <i class="fas fa-check-circle"></i>
-                        </div>
-                        <div class="verification-info">
-                            <h3>Ваша электронная почта подтверждена!</h3>
-                            <p>Все функции Flowfy доступны в полном объеме.</p>
-                        </div>
-                    </div>
-                </div>
-                {% else %}
-                <div class="profile-alert profile-alert-warning">
-                    <div class="verification-status">
-                        <div class="verification-icon unverified">
-                            <i class="fas fa-exclamation-triangle"></i>
-                        </div>
-                        <div class="verification-info">
-                            <h3>Требуется подтверждение электронной почты</h3>
-                            <p>На адрес <strong>{{ user.email }}</strong> было отправлено письмо с инструкциями по подтверждению.</p>
-                            <p class="verification-tip">Проверьте папку "Спам", если не можете найти письмо.</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="profile-card verification-steps">
-                    <h3 class="profile-card-title">Как подтвердить электронную почту</h3>
-                    
-                    <div class="verification-steps-list">
-                        <div class="verification-step">
-                            <div class="verification-step-number">1</div>
-                            <div class="verification-step-content">
-                                <h4>Проверьте почту</h4>
-                                <p>Откройте email-клиент и найдите письмо от Flowfy с темой "Подтверждение электронной почты в Flowfy"</p>
-                            </div>
-                        </div>
-                        
-                        <div class="verification-step">
-                            <div class="verification-step-number">2</div>
-                            <div class="verification-step-content">
-                                <h4>Откройте письмо</h4>
-                                <p>В письме вы найдете кнопку "Подтвердить email" и ссылку для подтверждения</p>
-                            </div>
-                        </div>
-                        
-                        <div class="verification-step">
-                            <div class="verification-step-number">3</div>
-                            <div class="verification-step-content">
-                                <h4>Завершите подтверждение</h4>
-                                <p>Нажмите на кнопку или перейдите по ссылке, чтобы завершить процесс подтверждения</p>
+                            <div class="profile-form-group">
+                                <label for="id_postal_address">{{ form.postal_address.label }}</label>
+                                <textarea id="id_postal_address" name="postal_address" class="profile-form-control" rows="3" placeholder="{% trans "Введите почтовый адрес" %}">{{ form.postal_address.value|default:'' }}</textarea>
+                                {% if form.postal_address.errors %}
+                                <div class="form-error">{{ form.postal_address.errors }}</div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
                     
-                    <div class="verification-resend">
-                        <h3 class="verification-resend-title">Не получили письмо?</h3>
-                        <p>Если письмо не пришло в течение нескольких минут, вы можете запросить повторную отправку.</p>
-                        <form method="post">
-                            {% csrf_token %}
-                            <button type="submit" name="action" value="resend_verification" class="profile-btn profile-btn-primary">
-                                <i class="fas fa-envelope"></i> Отправить письмо повторно
-                            </button>
-                        </form>
-                    </div>
-                </div>
-                {% endif %}
-            {% else %}
-                <div class="profile-alert profile-alert-info">
-                    <div class="verification-status">
-                        <div class="verification-icon no-email">
-                            <i class="fas fa-info-circle"></i>
-                        </div>
-                        <div class="verification-info">
-                            <h3>Требуется добавить электронную почту</h3>
-                            <p>У вас не указана электронная почта. Пожалуйста, добавьте её в разделе "Информация о компании", чтобы получить доступ ко всем функциям системы.</p>
-                            <a href="#company-info" class="profile-btn profile-btn-secondary">Перейти к настройкам профиля</a>
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-        </div>
-        
-        <!-- Вкладка смены пароля -->
-        <div id="change-password" class="profile-tab">
-            <h2 class="profile-tab-title">Смена пароля</h2>
-            
-            <div class="profile-card">
-                <h3 class="profile-card-title">Изменение пароля</h3>
-                <form method="post">
-                    {% csrf_token %}
-                    <div class="profile-form-group">
-                        <label for="id_old_password">Текущий пароль</label>
-                        <input type="password" name="old_password" id="id_old_password" class="profile-form-control" required>
-                    </div>
-                    
-                    <div class="profile-form-group">
-                        <label for="id_new_password1">Новый пароль</label>
-                        <input type="password" name="new_password1" id="id_new_password1" class="profile-form-control" required>
-                        <small class="form-help">Пароль должен содержать не менее 8 символов, включая буквы и цифры.</small>
-                    </div>
-                    
-                    <div class="profile-form-group">
-                        <label for="id_new_password2">Подтверждение нового пароля</label>
-                        <input type="password" name="new_password2" id="id_new_password2" class="profile-form-control" required>
-                    </div>
-                    
-                    <div class="profile-form-footer">
-                        <button type="submit" name="action" value="change_password" class="profile-btn profile-btn-primary">Изменить пароль</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-        
-        <!-- Вкладка выбора языка и валюты -->
-        <div id="language-currency" class="profile-tab">
-            <h2 class="profile-tab-title">Язык и валюта</h2>
-            
-            <div class="profile-card">
-                <h3 class="profile-card-title">Предпочтения языка</h3>
-                
-                <div class="language-options">
-                    <div class="language-option {% if form.instance.preferred_language == 'ru' %}active{% endif %}" data-lang="ru">
-                        <div class="language-flag">
-                            <img src="{% static 'images/flags/ru.svg' %}" alt="Русский">
-                        </div>
-                        <div class="language-details">
-                            <div class="language-name">Русский</div>
-                            <div class="language-native">Русский</div>
-                        </div>
-                    </div>
-                    
-                    <div class="language-option {% if form.instance.preferred_language == 'en' %}active{% endif %}" data-lang="en">
-                        <div class="language-flag">
-                            <img src="{% static 'images/flags/gb.svg' %}" alt="English">
-                        </div>
-                        <div class="language-details">
-                            <div class="language-name">English</div>
-                            <div class="language-native">English</div>
-                        </div>
-                    </div>
-                    
-                    <div class="language-option {% if form.instance.preferred_language == 'de' %}active{% endif %}" data-lang="de">
-                        <div class="language-flag">
-                            <img src="{% static 'images/flags/de.svg' %}" alt="Deutsch">
-                        </div>
-                        <div class="language-details">
-                            <div class="language-name">Deutsch</div>
-                            <div class="language-native">German</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="profile-form-footer">
-                    <div class="settings-saved language-saved">
-                        <i class="fas fa-check-circle"></i> Язык успешно изменен
-                    </div>
-                </div>
-            </div>
-            
-            <div class="profile-card">
-                <h3 class="profile-card-title">Настройки валюты</h3>
-                
-                <div class="currency-options">
-                    <div class="currency-option {% if form.instance.preferred_currency == 'RUB' %}active{% endif %}" data-currency="RUB">
-                        <div class="currency-symbol">₽</div>
-                        <div class="currency-details">
-                            <div class="currency-name">Российский рубль</div>
-                            <div class="currency-code">RUB</div>
-                        </div>
-                    </div>
-                    
-                    <div class="currency-option {% if form.instance.preferred_currency == 'USD' %}active{% endif %}" data-currency="USD">
-                        <div class="currency-symbol">$</div>
-                        <div class="currency-details">
-                            <div class="currency-name">Доллар США</div>
-                            <div class="currency-code">USD</div>
-                        </div>
-                    </div>
-                    
-                    <div class="currency-option {% if form.instance.preferred_currency == 'EUR' %}active{% endif %}" data-currency="EUR">
-                        <div class="currency-symbol">€</div>
-                        <div class="currency-details">
-                            <div class="currency-name">Евро</div>
-                            <div class="currency-code">EUR</div>
-                        </div>
-                    </div>
-                    
-                    <div class="currency-option {% if form.instance.preferred_currency == 'GBP' %}active{% endif %}" data-currency="GBP">
-                        <div class="currency-symbol">£</div>
-                        <div class="currency-details">
-                            <div class="currency-name">Фунт стерлингов</div>
-                            <div class="currency-code">GBP</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="profile-form-footer">
-                    <div class="settings-saved currency-saved">
-                        <i class="fas fa-check-circle"></i> Валюта успешно изменена
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Вкладка загрузки файлов -->
-        <div id="upload-files" class="profile-tab">
-            <h2 class="profile-tab-title">Загрузка файлов</h2>
-            
-            <div class="profile-card">
-                <h3 class="profile-card-title">Логотип, печать и подпись</h3>
-                <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    
-                    <div class="profile-form-grid">
-                        <div class="profile-form-group">
-                            <label for="id_logo">{{ form.logo.label }}</label>
-                            {% if form.instance.logo %}
-                            <div class="current-file">
-                                <img src="{{ form.instance.logo.url }}" alt="Текущий логотип" style="max-width: 150px; max-height: 150px;">
-                                <p>Текущий файл: {{ form.instance.logo.name }}</p>
-                            </div>
-                            {% endif %}
-                            <div class="file-upload-container">
-                                <input type="file" id="id_logo" name="logo" accept="image/*" class="file-input" aria-label="Выбрать файл логотипа">
-                                <label for="id_logo" class="file-upload-button">Выбрать логотип</label>
-                                <span class="file-name" id="logo_filename"></span>
-                            </div>
-                            {% if form.logo.errors %}
-                            <div class="form-error">{{ form.logo.errors }}</div>
-                            {% endif %}
-                        </div>
+                    <div class="profile-card">
+                        <h3 class="profile-card-title">{% trans "Контактная информация" %}</h3>
                         
-                        <div class="profile-form-group">
-                            <label for="id_stamp">{{ form.stamp.label }}</label>
-                            {% if form.instance.stamp %}
-                            <div class="current-file">
-                                <img src="{{ form.instance.stamp.url }}" alt="Текущая печать" style="max-width: 150px; max-height: 150px;">
-                                <p>Текущий файл: {{ form.instance.stamp.name }}</p>
+                        <div class="profile-form-grid">
+                            <div class="profile-form-group">
+                                <label for="id_phone">{{ form.phone.label }}</label>
+                                <input type="tel" id="id_phone" name="phone" value="{{ form.phone.value|default:'' }}" class="profile-form-control" placeholder="{% trans "Введите номер телефона" %}">
+                                {% if form.phone.errors %}
+                                <div class="form-error">{{ form.phone.errors }}</div>
+                                {% endif %}
                             </div>
-                            {% endif %}
-                            <div class="file-upload-container">
-                                <input type="file" id="id_stamp" name="stamp" accept="image/*" class="file-input" aria-label="Выбрать файл печати">
-                                <label for="id_stamp" class="file-upload-button">Выбрать печать</label>
-                                <span class="file-name" id="stamp_filename"></span>
+                            
+                            <div class="profile-form-group">
+                                <label for="id_email">{{ form.email.label }}</label>
+                                <input type="email" id="id_email" name="email" value="{{ form.email.value|default:'' }}" class="profile-form-control" placeholder="{% trans "Введите email" %}">
+                                {% if form.email.errors %}
+                                <div class="form-error">{{ form.email.errors }}</div>
+                                {% endif %}
                             </div>
-                            {% if form.stamp.errors %}
-                            <div class="form-error">{{ form.stamp.errors }}</div>
-                            {% endif %}
+                            
+                            <div class="profile-form-group">
+                                <label for="id_website">{{ form.website.label }}</label>
+                                <input type="url" id="id_website" name="website" value="{{ form.website.value|default:'' }}" class="profile-form-control" placeholder="{% trans "Введите веб-сайт" %}">
+                                {% if form.website.errors %}
+                                <div class="form-error">{{ form.website.errors }}</div>
+                                {% endif %}
+                            </div>
                         </div>
+                    </div>
+                    
+                    <div class="profile-card">
+                        <h3 class="profile-card-title">{% trans "Реквизиты" %}</h3>
                         
-                        <div class="profile-form-group">
-                            <label for="id_signature">{{ form.signature.label }}</label>
-                            {% if form.instance.signature %}
-                            <div class="current-file">
-                                <img src="{{ form.instance.signature.url }}" alt="Текущая подпись" style="max-width: 150px; max-height: 150px;">
-                                <p>Текущий файл: {{ form.instance.signature.name }}</p>
+                        <div class="profile-form-grid">
+                            <div class="profile-form-group">
+                                <label for="id_inn">{{ form.inn.label }}</label>
+                                <input type="text" id="id_inn" name="inn" value="{{ form.inn.value|default:'' }}" class="profile-form-control" placeholder="{% trans "Введите ИНН" %}">
+                                <small class="form-help">{{ form.inn.help_text }}</small>
+                                {% if form.inn.errors %}
+                                <div class="form-error">{{ form.inn.errors }}</div>
+                                {% endif %}
                             </div>
-                            {% endif %}
-                            <div class="file-upload-container">
-                                <input type="file" id="id_signature" name="signature" accept="image/*" class="file-input" aria-label="Выбрать файл подписи">
-                                <label for="id_signature" class="file-upload-button">Выбрать подпись</label>
-                                <span class="file-name" id="signature_filename"></span>
+                            
+                            <div class="profile-form-group business-only">
+                                <label for="id_kpp">{{ form.kpp.label }}</label>
+                                <input type="text" id="id_kpp" name="kpp" value="{{ form.kpp.value|default:'' }}" class="profile-form-control" placeholder="{% trans "Введите КПП" %}">
+                                <small class="form-help">{{ form.kpp.help_text }}</small>
+                                {% if form.kpp.errors %}
+                                <div class="form-error">{{ form.kpp.errors }}</div>
+                                {% endif %}
                             </div>
-                            {% if form.signature.errors %}
-                            <div class="form-error">{{ form.signature.errors }}</div>
-                            {% endif %}
+                            
+                            <div class="profile-form-group">
+                                <label for="id_ogrn">{{ form.ogrn.label }}</label>
+                                <input type="text" id="id_ogrn" name="ogrn" value="{{ form.ogrn.value|default:'' }}" class="profile-form-control" placeholder="{% trans "Введите ОГРН" %}">
+                                {% if form.ogrn.errors %}
+                                <div class="form-error">{{ form.ogrn.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="profile-form-group">
+                                <label for="id_okpo">{{ form.okpo.label }}</label>
+                                <input type="text" id="id_okpo" name="okpo" value="{{ form.okpo.value|default:'' }}" class="profile-form-control" placeholder="{% trans "Введите ОКПО" %}">
+                                {% if form.okpo.errors %}
+                                <div class="form-error">{{ form.okpo.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-card">
+                        <h3 class="profile-card-title">{% trans "Банковские реквизиты" %}</h3>
+                        
+                        <div class="profile-form-grid">
+                            <div class="profile-form-group">
+                                <label for="id_bank_name">{{ form.bank_name.label }}</label>
+                                <input type="text" id="id_bank_name" name="bank_name" value="{{ form.bank_name.value|default:'' }}" class="profile-form-control" placeholder="{% trans "Введите название банка" %}">
+                                {% if form.bank_name.errors %}
+                                <div class="form-error">{{ form.bank_name.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="profile-form-group">
+                                <label for="id_bank_account">{{ form.bank_account.label }}</label>
+                                <input type="text" id="id_bank_account" name="bank_account" value="{{ form.bank_account.value|default:'' }}" class="profile-form-control" placeholder="{% trans "Введите расчетный счет" %}">
+                                {% if form.bank_account.errors %}
+                                <div class="form-error">{{ form.bank_account.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="profile-form-group">
+                                <label for="id_bank_corr_account">{{ form.bank_corr_account.label }}</label>
+                                <input type="text" id="id_bank_corr_account" name="bank_corr_account" value="{{ form.bank_corr_account.value|default:'' }}" class="profile-form-control" placeholder="{% trans "Введите корр. счет" %}">
+                                {% if form.bank_corr_account.errors %}
+                                <div class="form-error">{{ form.bank_corr_account.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="profile-form-group">
+                                <label for="id_bank_bik">{{ form.bank_bik.label }}</label>
+                                <input type="text" id="id_bank_bik" name="bank_bik" value="{{ form.bank_bik.value|default:'' }}" class="profile-form-control" placeholder="{% trans "Введите БИК" %}">
+                                {% if form.bank_bik.errors %}
+                                <div class="form-error">{{ form.bank_bik.errors }}</div>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                     
                     <div class="profile-tab-footer">
-                        <button type="submit" name="action" value="upload_files" class="profile-btn profile-btn-primary">Сохранить файлы</button>
+                        <button type="submit" class="profile-btn profile-btn-primary" name="action" value="company_info">{% trans "Сохранить изменения" %}</button>
                     </div>
                 </form>
+            </div>
+            
+            <!-- Вкладка подтверждения почты -->
+            <div id="email-verification" class="profile-tab">
+                <h2 class="profile-tab-title">{% trans "Подтверждение электронной почты" %}</h2>
+                
+                {% if user.email %}
+                    {% if email_verified %}
+                    <div class="profile-alert profile-alert-success">
+                        <div class="verification-status">
+                            <div class="verification-icon verified">
+                                <svg class="icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                            </div>
+                            <div class="verification-info">
+                                <h3>{% trans "Ваша электронная почта подтверждена!" %}</h3>
+                                <p>{% trans "Все функции Flowfy доступны в полном объеме." %}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="profile-alert profile-alert-warning">
+                        <div class="verification-status">
+                            <div class="verification-icon unverified">
+                                <svg class="icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                            </div>
+                            <div class="verification-info">
+                                <h3>{% trans "Требуется подтверждение электронной почты" %}</h3>
+                                <p>{% trans "На адрес" %} <strong>{{ user.email }}</strong> {% trans "было отправлено письмо с инструкциями по подтверждению." %}</p>
+                                <p class="verification-tip">{% trans "Проверьте папку" %} "Спам", {% trans "если не можете найти письмо." %}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-card verification-steps">
+                        <h3 class="profile-card-title">{% trans "Как подтвердить электронную почту" %}</h3>
+                        
+                        <div class="verification-steps-list">
+                            <div class="verification-step">
+                                <div class="verification-step-number">1</div>
+                                <div class="verification-step-content">
+                                    <h4>{% trans "Проверьте почту" %}</h4>
+                                    <p>{% trans "Откройте email-клиент и найдите письмо от Flowfy с темой" %} "Подтверждение электронной почты в Flowfy"</p>
+                                </div>
+                            </div>
+                            
+                            <div class="verification-step">
+                                <div class="verification-step-number">2</div>
+                                <div class="verification-step-content">
+                                    <h4>{% trans "Откройте письмо" %}</h4>
+                                    <p>{% trans "В письме вы найдете кнопку" %} "Подтвердить email" {% trans "и ссылку для подтверждения" %}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="verification-step">
+                                <div class="verification-step-number">3</div>
+                                <div class="verification-step-content">
+                                    <h4>{% trans "Завершите подтверждение" %}</h4>
+                                    <p>{% trans "Нажмите на кнопку или перейдите по ссылке, чтобы завершить процесс подтверждения" %}</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="verification-resend">
+                            <h3 class="verification-resend-title">{% trans "Не получили письмо?" %}</h3>
+                            <p>{% trans "Если письмо не пришло в течение нескольких минут, вы можете запросить повторную отправку." %}</p>
+                            <form method="post">
+                                {% csrf_token %}
+                                <button type="submit" name="action" value="resend_verification" class="profile-btn profile-btn-primary">
+                                    <svg class="icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg> {% trans "Отправить письмо повторно" %}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% else %}
+                    <div class="profile-alert profile-alert-info">
+                        <div class="verification-status">
+                            <div class="verification-icon no-email">
+                                <svg class="icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                            </div>
+                            <div class="verification-info">
+                                <h3>{% trans "Требуется добавить электронную почту" %}</h3>
+                                <p>{% trans "У вас не указана электронная почта. Пожалуйста, добавьте её в раздел" %} "Информация о компании", {% trans "чтобы получить доступ ко всем функциям системы." %}</p>
+                                <a href="#company-info" class="profile-btn profile-btn-secondary">{% trans "Перейти к настройкам профиля" %}</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <!-- Вкладка смены пароля -->
+            <div id="change-password" class="profile-tab">
+                <h2 class="profile-tab-title">{% trans "Смена пароля" %}</h2>
+                
+                <div class="profile-card">
+                    <h3 class="profile-card-title">{% trans "Изменение пароля" %}</h3>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="profile-form-group">
+                            <label for="id_old_password">{% trans "Текущий пароль" %}</label>
+                            <input type="password" name="old_password" id="id_old_password" class="profile-form-control" required>
+                        </div>
+                        
+                        <div class="profile-form-group">
+                            <label for="id_new_password1">{% trans "Новый пароль" %}</label>
+                            <input type="password" name="new_password1" id="id_new_password1" class="profile-form-control" required>
+                            <small class="form-help">{% trans "Пароль должен содержать не менее 8 символов, включая буквы и цифры." %}</small>
+                        </div>
+                        
+                        <div class="profile-form-group">
+                            <label for="id_new_password2">{% trans "Подтверждение нового пароля" %}</label>
+                            <input type="password" name="new_password2" id="id_new_password2" class="profile-form-control" required>
+                        </div>
+                        
+                        <div class="profile-form-footer">
+                            <button type="submit" name="action" value="change_password" class="profile-btn profile-btn-primary">{% trans "Изменить пароль" %}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Вкладка выбора языка и валюты -->
+            <div id="language-currency" class="profile-tab">
+                <h2 class="profile-tab-title">{% trans "Язык и валюта" %}</h2>
+                
+                <div class="profile-card">
+                    <h3 class="profile-card-title">{% trans "Предпочтения языка" %}</h3>
+                    
+                    <div class="language-options">
+                        <div class="language-option {% if form.instance.preferred_language == 'ru' %}active{% endif %}" data-lang="ru">
+                            <div class="language-flag">
+                                <img src="{% static 'images/flags/ru.svg' %}" alt="Русский">
+                            </div>
+                            <div class="language-details">
+                                <div class="language-name">Русский</div>
+                                <div class="language-native">Русский</div>
+                            </div>
+                        </div>
+                        
+                        <div class="language-option {% if form.instance.preferred_language == 'en' %}active{% endif %}" data-lang="en">
+                            <div class="language-flag">
+                                <img src="{% static 'images/flags/gb.svg' %}" alt="English">
+                            </div>
+                            <div class="language-details">
+                                <div class="language-name">English</div>
+                                <div class="language-native">English</div>
+                            </div>
+                        </div>
+                        
+                        <div class="language-option {% if form.instance.preferred_language == 'de' %}active{% endif %}" data-lang="de">
+                            <div class="language-flag">
+                                <img src="{% static 'images/flags/de.svg' %}" alt="Deutsch">
+                            </div>
+                            <div class="language-details">
+                                <div class="language-name">Deutsch</div>
+                                <div class="language-native">German</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-form-footer">
+                        <div class="settings-saved language-saved">
+                            <svg class="icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg> {% trans "Язык успешно изменен" %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="profile-card">
+                    <h3 class="profile-card-title">{% trans "Настройки валюты" %}</h3>
+                    
+                    <div class="currency-options">
+                        <div class="currency-option {% if form.instance.preferred_currency == 'RUB' %}active{% endif %}" data-currency="RUB">
+                            <div class="currency-symbol">₽</div>
+                            <div class="currency-details">
+                                <div class="currency-name">Российский рубль</div>
+                                <div class="currency-code">RUB</div>
+                            </div>
+                        </div>
+                        
+                        <div class="currency-option {% if form.instance.preferred_currency == 'USD' %}active{% endif %}" data-currency="USD">
+                            <div class="currency-symbol">$</div>
+                            <div class="currency-details">
+                                <div class="currency-name">Доллар США</div>
+                                <div class="currency-code">USD</div>
+                            </div>
+                        </div>
+                        
+                        <div class="currency-option {% if form.instance.preferred_currency == 'EUR' %}active{% endif %}" data-currency="EUR">
+                            <div class="currency-symbol">€</div>
+                            <div class="currency-details">
+                                <div class="currency-name">Евро</div>
+                                <div class="currency-code">EUR</div>
+                            </div>
+                        </div>
+                        
+                        <div class="currency-option {% if form.instance.preferred_currency == 'GBP' %}active{% endif %}" data-currency="GBP">
+                            <div class="currency-symbol">£</div>
+                            <div class="currency-details">
+                                <div class="currency-name">Фунт стерлингов</div>
+                                <div class="currency-code">GBP</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-form-footer">
+                        <div class="settings-saved currency-saved">
+                            <svg class="icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg> {% trans "Валюта успешно изменена" %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Вкладка загрузки файлов -->
+            <div id="upload-files" class="profile-tab">
+                <h2 class="profile-tab-title">{% trans "Загрузка файлов" %}</h2>
+                
+                <div class="profile-card">
+                    <h3 class="profile-card-title">{% trans "Логотип, печать и подпись" %}</h3>
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="profile-form-grid">
+                            <div class="profile-form-group">
+                                <label for="id_logo">{{ form.logo.label }}</label>
+                                {% if form.instance.logo %}
+                                <div class="current-file">
+                                    <img src="{{ form.instance.logo.url }}" alt="Текущий логотип" style="max-width: 150px; max-height: 150px;">
+                                    <p>{% trans "Текущий файл:" %} {{ form.instance.logo.name }}</p>
+                                </div>
+                                {% endif %}
+                                <div class="file-upload-container">
+                                    <input type="file" id="id_logo" name="logo" accept="image/*" class="file-input" aria-label="{% trans "Выбрать файл логотипа" %}">
+                                    <label for="id_logo" class="file-upload-button">{% trans "Выбрать логотип" %}</label>
+                                    <span class="file-name" id="logo_filename"></span>
+                                </div>
+                                {% if form.logo.errors %}
+                                <div class="form-error">{{ form.logo.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="profile-form-group">
+                                <label for="id_stamp">{{ form.stamp.label }}</label>
+                                {% if form.instance.stamp %}
+                                <div class="current-file">
+                                    <img src="{{ form.instance.stamp.url }}" alt="Текущая печать" style="max-width: 150px; max-height: 150px;">
+                                    <p>{% trans "Текущий файл:" %} {{ form.instance.stamp.name }}</p>
+                                </div>
+                                {% endif %}
+                                <div class="file-upload-container">
+                                    <input type="file" id="id_stamp" name="stamp" accept="image/*" class="file-input" aria-label="{% trans "Выбрать файл печати" %}">
+                                    <label for="id_stamp" class="file-upload-button">{% trans "Выбрать печать" %}</label>
+                                    <span class="file-name" id="stamp_filename"></span>
+                                </div>
+                                {% if form.stamp.errors %}
+                                <div class="form-error">{{ form.stamp.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="profile-form-group">
+                                <label for="id_signature">{{ form.signature.label }}</label>
+                                {% if form.instance.signature %}
+                                <div class="current-file">
+                                    <img src="{{ form.instance.signature.url }}" alt="Текущая подпись" style="max-width: 150px; max-height: 150px;">
+                                    <p>{% trans "Текущий файл:" %} {{ form.instance.signature.name }}</p>
+                                </div>
+                                {% endif %}
+                                <div class="file-upload-container">
+                                    <input type="file" id="id_signature" name="signature" accept="image/*" class="file-input" aria-label="{% trans "Выбрать файл подписи" %}">
+                                    <label for="id_signature" class="file-upload-button">{% trans "Выбрать подпись" %}</label>
+                                    <span class="file-name" id="signature_filename"></span>
+                                </div>
+                                {% if form.signature.errors %}
+                                <div class="form-error">{{ form.signature.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="profile-tab-footer">
+                            <button type="submit" name="action" value="upload_files" class="profile-btn profile-btn-primary">{% trans "Сохранить файлы" %}</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -893,25 +1121,30 @@
                 // Получаем выбранный язык
                 const language = this.getAttribute('data-lang');
                 
-                // Отправляем AJAX-запрос для сохранения выбранного языка
-                fetch('/api/change-language/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-                    },
-                    body: JSON.stringify({ language: language })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Показываем сообщение об успешном сохранении
-                        languageSaved.classList.add('visible');
-                        setTimeout(() => {
-                            languageSaved.classList.remove('visible');
-                        }, 3000);
-                    }
-                });
+                // Создаем форму для отправки запроса
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/api/change-language/';
+                form.style.display = 'none';
+                
+                // Добавляем CSRF токен
+                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || '';
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = 'csrfmiddlewaretoken';
+                csrfInput.value = csrfToken;
+                form.appendChild(csrfInput);
+                
+                // Добавляем выбранный язык
+                const langInput = document.createElement('input');
+                langInput.type = 'hidden';
+                langInput.name = 'language';
+                langInput.value = language;
+                form.appendChild(langInput);
+                
+                // Добавляем форму на страницу и отправляем
+                document.body.appendChild(form);
+                form.submit();
             });
         });
         

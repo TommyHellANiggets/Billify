@@ -96,20 +96,35 @@ function addNewItemRow() {
     const newRow = document.createElement('tr');
     newRow.className = 'invoice-item';
     
+    // Используем SVG иконку мусорного бака, если доступна функция getSvgIconHtml
+    const trashIcon = window.svgIcons && typeof window.svgIcons.getHtml === 'function' 
+        ? window.svgIcons.getHtml('icon-trash') 
+        : '<i class="fas fa-trash"></i>';
+    
     newRow.innerHTML = `
-        <td>
+        <td class="item-name-cell">
             <input type="text" name="item_name[]" title="Наименование товара/услуги" required>
         </td>
-        <td>
-            <input type="text" name="item_quantity[]" title="Количество" value="1" required>
+        <td class="item-quantity-cell">
+            <div class="quantity-unit-wrapper">
+                <input type="text" name="item_quantity[]" title="Количество" required>
+                <select name="item_unit[]" title="Единица измерения" class="item-unit">
+                    <option value="шт.">шт.</option>
+                    <option value="час.">час.</option>
+                    <option value="услуга">услуга</option>
+                    <option value="м²">м²</option>
+                    <option value="компл.">компл.</option>
+                    <option value="мес.">мес.</option>
+                </select>
+            </div>
         </td>
         <td>
-            <input type="text" name="item_price[]" title="Цена за единицу" value="0,00" required>
+            <input type="text" name="item_price[]" title="Цена за единицу" required>
         </td>
         <td class="item-total">0,00</td>
         <td>
             <button type="button" class="btn-icon remove-item" title="Удалить позицию">
-                <i class="fas fa-trash"></i>
+                ${trashIcon}
             </button>
         </td>
     `;
@@ -794,20 +809,35 @@ function initializeInvoiceItems() {
         const newRow = document.createElement('tr');
         newRow.className = 'invoice-item';
         
+        // Используем SVG иконку мусорного бака
+        const trashIcon = window.svgIcons && typeof window.svgIcons.getHtml === 'function' 
+            ? window.svgIcons.getHtml('icon-trash')
+            : '<i class="fas fa-trash"></i>';
+        
         newRow.innerHTML = `
-            <td>
+            <td class="item-name-cell">
                 <input type="text" name="item_name[]" title="Наименование товара/услуги" required>
             </td>
-            <td>
-                <input type="text" name="item_quantity[]" title="Количество" value="1" required>
+            <td class="item-quantity-cell">
+                <div class="quantity-unit-wrapper">
+                    <input type="text" name="item_quantity[]" title="Количество" required>
+                    <select name="item_unit[]" title="Единица измерения" class="item-unit">
+                        <option value="шт.">шт.</option>
+                        <option value="час.">час.</option>
+                        <option value="услуга">услуга</option>
+                        <option value="м²">м²</option>
+                        <option value="компл.">компл.</option>
+                        <option value="мес.">мес.</option>
+                    </select>
+                </div>
             </td>
             <td>
-                <input type="text" name="item_price[]" title="Цена за единицу" value="0,00" required>
+                <input type="text" name="item_price[]" title="Цена за единицу" required>
             </td>
             <td class="item-total">0,00</td>
             <td>
                 <button type="button" class="btn-icon remove-item" title="Удалить позицию">
-                    <i class="fas fa-trash"></i>
+                    ${trashIcon}
                 </button>
             </td>
         `;

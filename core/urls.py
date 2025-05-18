@@ -14,4 +14,7 @@ urlpatterns = [
     path('api/change-currency/', views.change_currency_ajax, name='change_currency_ajax'),
     path('api/send-verification-email/', views.send_verification_email_ajax, name='send_verification_email_ajax'),
     path('logout/', views.custom_logout, name='logout'),
+    path('terms/', views.terms, name='terms'),
+    path('privacy/', views.privacy, name='privacy'),
+    path('legal/', views.legal, name='legal'),
 ] 

@@ -7,9 +7,11 @@ from datetime import datetime, timedelta
 import json
 from decimal import Decimal
 from django.utils import timezone
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
+@login_required
 def dashboard(request):
     """Панель аналитики с реальными данными из БД"""
     # Получаем данные для верхней сводки
@@ -261,6 +263,7 @@ def dashboard(request):
     
     return render(request, 'analytics/dashboard.html', context)
 
+@login_required
 def reports(request):
     """Страница отчетов"""
     return render(request, 'analytics/reports.html', {

@@ -5,10 +5,244 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/accounts/auth.css' %}">
+<style>
+    /* Добавляем улучшенные стили */
+    .auth-container {
+        background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
+        min-height: calc(100vh - 140px);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .auth-card {
+        max-width: 1200px;
+        margin: 3rem auto;
+        border-radius: 30px;
+        box-shadow: 0 15px 35px rgba(77, 139, 248, 0.1);
+        position: relative;
+        z-index: 5;
+        border: none;
+        overflow: hidden;
+    }
+    
+    .auth-shape {
+        position: absolute;
+        border-radius: 50%;
+        z-index: 1;
+        filter: blur(40px);
+        pointer-events: none;
+    }
+    
+    .auth-shape-1 {
+        width: 40%; 
+        height: 40%;
+        max-width: 400px;
+        max-height: 400px;
+        background: rgba(77, 139, 248, 0.06);
+        top: -15%;
+        right: -10%;
+        animation: float 8s ease-in-out infinite;
+    }
+    
+    .auth-shape-2 {
+        width: 30%;
+        height: 30%;
+        max-width: 300px;
+        max-height: 300px;
+        background: rgba(90, 103, 216, 0.05);
+        bottom: -10%;
+        left: -5%;
+        animation: float 10s ease-in-out infinite reverse;
+    }
+    
+    .auth-shape-3 {
+        width: 20%;
+        height: 20%;
+        max-width: 200px;
+        max-height: 200px;
+        background: rgba(108, 117, 125, 0.04);
+        top: 60%;
+        right: 10%;
+        animation: float 12s ease-in-out infinite 1s;
+    }
+    
+    @keyframes float {
+        0% {
+            transform: translateY(0) translateX(0);
+        }
+        50% {
+            transform: translateY(20px) translateX(10px);
+        }
+        100% {
+            transform: translateY(0) translateX(0);
+        }
+    }
+    
+    .auth-sides-container {
+        box-shadow: 0 10px 30px rgba(77, 139, 248, 0.08);
+        min-height: 650px;
+    }
+    
+    .auth-side {
+        padding: 4rem;
+    }
+    
+    .auth-illustration {
+        background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+        border-radius: 0 0 100px 0;
+    }
+    
+    .auth-tabs {
+        position: relative;
+        margin-bottom: 2.5rem;
+    }
+    
+    .tab-btn {
+        font-size: 1.1rem;
+        font-weight: 600;
+        padding: 1.2rem 1rem;
+        position: relative;
+        z-index: 2;
+    }
+    
+    .tab-btn.active {
+        color: var(--color-primary);
+    }
+    
+    .tab-indicator {
+        height: 4px;
+        bottom: -1px;
+        border-radius: 10px 10px 0 0;
+    }
+    
+    .auth-form-container h3 {
+        font-size: 2rem;
+        margin-bottom: 0.8rem;
+        color: var(--color-text-dark);
+        font-weight: 700;
+    }
+    
+    .form-subtitle {
+        font-size: 1.1rem;
+        margin-bottom: 2.5rem;
+    }
+    
+    .input-with-icon input {
+        padding: 1rem 1rem 1rem 3rem;
+        border-radius: 16px;
+        font-size: 1.05rem;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+        transition: all 0.3s ease;
+    }
+    
+    .input-with-icon input:focus {
+        box-shadow: 0 0 0 4px rgba(77, 139, 248, 0.15);
+        transform: translateY(-2px);
+    }
+    
+    .input-with-icon i {
+        left: 1.2rem;
+        color: var(--color-primary);
+    }
+    
+    .form-group label {
+        font-size: 1.05rem;
+        margin-bottom: 0.8rem;
+    }
+    
+    .btn-auth {
+        padding: 1.1rem;
+        border-radius: 16px;
+        font-size: 1.1rem;
+        box-shadow: 0 8px 15px rgba(77, 139, 248, 0.2);
+        transition: all 0.3s ease;
+    }
+    
+    .btn-auth:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 20px rgba(77, 139, 248, 0.3);
+    }
+    
+    .form-options {
+        margin-bottom: 2rem;
+    }
+    
+    .remember-me input, .terms-agree input {
+        margin-right: 0.8rem;
+        width: 18px;
+        height: 18px;
+    }
+    
+    .form-footer {
+        margin-top: 2rem;
+        font-size: 1.05rem;
+    }
+    
+    .form-footer a {
+        font-weight: 600;
+    }
+    
+    @media (max-width: 992px) {
+        .auth-side {
+            padding: 3rem;
+        }
+        
+        .auth-sides-container {
+            min-height: auto;
+        }
+        
+        .auth-illustration {
+            border-radius: 30px 30px 0 0;
+            padding: 3rem 2rem;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .auth-card {
+            margin: 2rem auto;
+        }
+        
+        .auth-side {
+            padding: 2.5rem 2rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .auth-side {
+            padding: 2rem 1.5rem;
+        }
+        
+        .auth-illustration {
+            padding: 2rem 1.5rem;
+        }
+        
+        .auth-form-container h3 {
+            font-size: 1.8rem;
+        }
+        
+        .form-subtitle {
+            font-size: 1rem;
+        }
+        
+        .btn-auth {
+            padding: 1rem;
+        }
+    }
+</style>
 {% endblock %}
 
 {% block content %}
 <div class="auth-container">
+    <div class="auth-shape auth-shape-1"></div>
+    <div class="auth-shape auth-shape-2"></div>
+    <div class="auth-shape auth-shape-3"></div>
+    
     <div class="auth-card">
         <div class="auth-sides-container">
             <!-- Левая сторона (иллюстрация) -->

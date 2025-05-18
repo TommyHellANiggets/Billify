@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="/static/css/clients/form.css">
@@ -111,31 +112,31 @@
 <div class="client-form-page">
     <div class="page-header">
         <div class="breadcrumbs">
-            <a href="{% url 'clients:list' %}">Клиенты</a> &gt; 
+            <a href="{% url 'clients:list' %}">{% trans "Клиенты" %}</a> &gt; 
             <a href="{% url 'clients:detail' client_id=client.id %}">{{ client.name }}</a> &gt;
-            <span>Редактирование</span>
+            <span>{% trans "Редактирование" %}</span>
         </div>
         
-        <h1>Редактирование клиента</h1>
+        <h1>{% trans "Редактирование клиента" %}</h1>
     </div>
     
     <div class="wizard-container card">
         <div class="wizard-steps">
             <div class="step active" data-step="1">
                 <div class="step-number">1</div>
-                <div class="step-label">Основная информация</div>
+                <div class="step-label">{% trans "Основная информация" %}</div>
             </div>
             <div class="step" data-step="2">
                 <div class="step-number">2</div>
-                <div class="step-label">Адрес</div>
+                <div class="step-label">{% trans "Адрес" %}</div>
             </div>
             <div class="step" data-step="3">
                 <div class="step-number">3</div>
-                <div class="step-label">Реквизиты</div>
+                <div class="step-label">{% trans "Реквизиты" %}</div>
             </div>
             <div class="step" data-step="4">
                 <div class="step-number">4</div>
-                <div class="step-label">Завершение</div>
+                <div class="step-label">{% trans "Завершение" %}</div>
             </div>
         </div>
         
@@ -148,25 +149,25 @@
                     <div class="form-group full-width">
                         <div class="switch-toggles">
                             <div>
-                                <label class="toggle-label">Статус</label>
+                                <label class="toggle-label">{% trans "Статус" %}</label>
                                 <div class="toggle-container entity-toggle" id="entity-toggle" data-active="{% if is_supplier %}supplier{% else %}client{% endif %}">
                                     <div class="toggle-slider"></div>
                                     <input type="hidden" id="entity_type" name="entity_type" value="{% if is_supplier %}supplier{% else %}client{% endif %}">
                                     <div class="toggle-options">
-                                        <div class="toggle-option {% if not is_supplier %}active{% endif %}" data-value="client">Клиент</div>
-                                        <div class="toggle-option {% if is_supplier %}active{% endif %}" data-value="supplier">Поставщик</div>
+                                        <div class="toggle-option {% if not is_supplier %}active{% endif %}" data-value="client">{% trans "Клиент" %}</div>
+                                        <div class="toggle-option {% if is_supplier %}active{% endif %}" data-value="supplier">{% trans "Поставщик" %}</div>
                                     </div>
                                 </div>
                             </div>
                             
                             <div>
-                                <label class="toggle-label">Тип клиента</label>
+                                <label class="toggle-label">{% trans "Тип клиента" %}</label>
                                 <div class="toggle-container type-toggle" id="type-toggle" data-active="{{ client.type }}">
                                     <div class="toggle-slider"></div>
                                     <input type="hidden" id="type" name="type" value="{{ client.type }}">
                                     <div class="toggle-options">
-                                        <div class="toggle-option {% if client.type == 'individual' %}active{% endif %}" data-value="individual">Физическое лицо</div>
-                                        <div class="toggle-option {% if client.type == 'business' %}active{% endif %}" data-value="business">Юридическое лицо</div>
+                                        <div class="toggle-option {% if client.type == 'individual' %}active{% endif %}" data-value="individual">{% trans "Физическое лицо" %}</div>
+                                        <div class="toggle-option {% if client.type == 'business' %}active{% endif %}" data-value="business">{% trans "Юридическое лицо" %}</div>
                                     </div>
                                 </div>
                             </div>
@@ -174,48 +175,48 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="name">Имя / Название организации</label>
+                        <label for="name">{% trans "Имя / Название организации" %}</label>
                         <input type="text" id="name" name="name" class="form-control" value="{{ client.name }}" required>
                     </div>
                     
                     <div class="form-group">
-                        <label for="phone">Телефон</label>
+                        <label for="phone">{% trans "Телефон" %}</label>
                         <input type="text" id="phone" name="phone" class="form-control" value="{{ client.phone }}">
                     </div>
                     
                     <div class="form-group">
-                        <label for="email">Email</label>
+                        <label for="email">{% trans "Email" %}</label>
                         <input type="email" id="email" name="email" class="form-control" value="{{ client.email }}">
                     </div>
                     
                     <!-- Поля для контактного лица -->
                     <div class="form-group">
-                        <label for="contact_person">Контактное лицо</label>
-                        <input type="text" id="contact_person" name="contact_person" class="form-control" value="{{ client.contact_person }}" placeholder="ФИО контактного лица">
+                        <label for="contact_person">{% trans "Контактное лицо" %}</label>
+                        <input type="text" id="contact_person" name="contact_person" class="form-control" value="{{ client.contact_person }}" placeholder="{% trans "ФИО контактного лица" %}">
                     </div>
                     
                     <div class="form-group">
-                        <label for="contact_email">Email контактного лица</label>
+                        <label for="contact_email">{% trans "Email контактного лица" %}</label>
                         <input type="email" id="contact_email" name="contact_email" class="form-control" value="{{ client.contact_email }}" placeholder="email@example.com">
                     </div>
                 </div>
                 
                 <div class="wizard-actions">
-                    <a href="{% url 'clients:detail' client_id=client.id %}" class="btn btn-light">Отмена</a>
-                    <button type="button" class="btn btn-primary next-step" data-goto="2">Далее</button>
+                    <a href="{% url 'clients:detail' client_id=client.id %}" class="btn btn-light">{% trans "Отмена" %}</a>
+                    <button type="button" class="btn btn-primary next-step" data-goto="2">{% trans "Далее" %}</button>
                 </div>
             </div>
             
             <!-- Шаг 2: Адрес -->
             <div class="wizard-panel" data-panel="2">
                 <div class="form-group full-width">
-                    <label for="address">Адрес</label>
+                    <label for="address">{% trans "Адрес" %}</label>
                     <textarea id="address" name="address" class="form-control" rows="2">{{ client.address }}</textarea>
                 </div>
                 
                 <div class="wizard-actions">
-                    <button type="button" class="btn btn-light prev-step" data-goto="1">Назад</button>
-                    <button type="button" class="btn btn-primary next-step" data-goto="3">Далее</button>
+                    <button type="button" class="btn btn-light prev-step" data-goto="1">{% trans "Назад" %}</button>
+                    <button type="button" class="btn btn-primary next-step" data-goto="3">{% trans "Далее" %}</button>
                 </div>
             </div>
             
@@ -223,27 +224,27 @@
             <div class="wizard-panel" data-panel="3">
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="tax_id">ИНН</label>
+                        <label for="tax_id">{% trans "ИНН" %}</label>
                         <input type="text" id="tax_id" name="tax_id" class="form-control" maxlength="12" value="{{ client.tax_id }}">
                     </div>
                     
                     <div class="form-group business-only">
-                        <label for="kpp">КПП</label>
+                        <label for="kpp">{% trans "КПП" %}</label>
                         <input type="text" id="kpp" name="kpp" class="form-control" maxlength="9" value="{{ client.kpp }}">
                     </div>
                     
                     <div class="form-group">
-                        <label for="ogrn">ОГРН / ОГРНИП</label>
+                        <label for="ogrn">{% trans "ОГРН / ОГРНИП" %}</label>
                         <input type="text" id="ogrn" name="ogrn" class="form-control" maxlength="15" value="{{ client.ogrn }}">
                     </div>
                     
                     <div class="form-group">
-                        <label for="bank_name">Название банка</label>
+                        <label for="bank_name">{% trans "Название банка" %}</label>
                         <input type="text" id="bank_name" name="bank_name" class="form-control" value="{{ client.bank_name }}">
                     </div>
                     
                     <div class="form-group">
-                        <label for="bank_account">Р/с</label>
+                        <label for="bank_account">{% trans "Р/с" %}</label>
                         <input type="text" id="bank_account" name="bank_account" class="form-control" maxlength="20" value="{{ client.bank_account }}">
                     </div>
                     
@@ -254,8 +255,8 @@
                 </div>
                 
                 <div class="wizard-actions">
-                    <button type="button" class="btn btn-light prev-step" data-goto="2">Назад</button>
-                    <button type="button" class="btn btn-primary next-step" data-goto="4">Далее</button>
+                    <button type="button" class="btn btn-light prev-step" data-goto="2">{% trans "Назад" %}</button>
+                    <button type="button" class="btn btn-primary next-step" data-goto="4">{% trans "Далее" %}</button>
                 </div>
             </div>
             
@@ -274,8 +275,8 @@
                 </div>
                 
                 <div class="wizard-actions">
-                    <button type="button" class="btn btn-light prev-step" data-goto="3">Назад</button>
-                    <button type="submit" class="btn btn-success">Сохранить изменения</button>
+                    <button type="button" class="btn btn-light prev-step" data-goto="3">{% trans "Назад" %}</button>
+                    <button type="submit" class="btn btn-success">{% trans "Сохранить изменения" %}</button>
                 </div>
             </div>
         </form>

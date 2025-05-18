@@ -21,6 +21,33 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+    
+    // Подсветка текущего типа фильтрации
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentType = urlParams.get('type');
+    const currentStatus = urlParams.get('status');
+    
+    if (currentType) {
+        const typeSelect = document.querySelector('select[name="type"]');
+        if (typeSelect) {
+            typeSelect.value = currentType;
+        }
+    }
+    
+    if (currentStatus) {
+        const statusSelect = document.querySelector('select[name="status"]');
+        if (statusSelect) {
+            statusSelect.value = currentStatus;
+        }
+    }
+    
+    // Адаптивные улучшения для мобильных устройств
+    const mediaQuery = window.matchMedia('(max-width: 768px)');
+    adjustForMobile(mediaQuery.matches);
+    
+    mediaQuery.addEventListener('change', (e) => {
+        adjustForMobile(e.matches);
+    });
 });
 
 // Анимация для счетчиков статистики
@@ -109,4 +136,21 @@ function initTooltips() {
             }, { once: true });
         });
     });
+}
+
+function adjustForMobile(isMobile) {
+    if (isMobile) {
+        // Действия для мобильных устройств
+        const actionButtons = document.querySelectorAll('.actions .btn-action');
+        actionButtons.forEach(button => {
+            // Убедиться, что кнопки хорошо видны на мобильных
+            button.style.padding = '8px';
+        });
+    } else {
+        // Вернуть нормальный вид для настольных устройств
+        const actionButtons = document.querySelectorAll('.actions .btn-action');
+        actionButtons.forEach(button => {
+            button.style.padding = '';
+        });
+    }
 } 

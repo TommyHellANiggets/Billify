@@ -1,6 +1,7 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,10 +15,13 @@
     <link rel="icon" type="image/png" sizes="128x128" href="{% static 'images/favicon/favicon_128x128.png' %}">
     <link rel="icon" type="image/png" sizes="256x256" href="{% static 'images/favicon/favicon_256x256.png' %}">
     
+    <!-- CSRF Token - скрытый токен для AJAX-запросов -->
+    {% csrf_token %}
+    
     <!-- SEO Meta Tags -->
     <title>{% block title %}{{ title }}{% endblock %} | Flowfy</title>
-    <meta name="description" content="{% block meta_description %}Flowfy - удобная система для автоматизации финансового учета и документооборота, идеальна для малого бизнеса и индивидуальных предпринимателей{% endblock %}">
-    <meta name="keywords" content="{% block meta_keywords %}автоматизация учета, финансовый учет, электронный документооборот, управление счетами, малый бизнес{% endblock %}">
+    <meta name="description" content="{% block meta_description %}{% trans "Flowfy - удобная система для автоматизации финансового учета и документооборота, идеальна для малого бизнеса и индивидуальных предпринимателей" %}{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}{% trans "автоматизация учета, финансовый учет, электронный документооборот, управление счетами, малый бизнес" %}{% endblock %}">
     <meta name="author" content="Flowfy">
     
     <!-- Canonical URL -->
@@ -45,9 +49,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/global.css' %}">
     <link rel="stylesheet" href="{% static 'css/header-footer.css' %}">
+    
+    <!-- CSRF токен для AJAX запросов и форм -->
+    <meta name="csrf-token" content="{{ csrf_token }}">
     <style>
         /* Обязательное применение шрифта Poppins ко всем элементам */
         html, body, * {
@@ -155,7 +162,7 @@
     </style>
     {% block extra_css %}{% endblock %}
 </head>
-<body class="poppins-font">
+<body class="poppins-font {% if user.is_authenticated %}user-authenticated{% endif %}">
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript" >
        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
@@ -184,38 +191,270 @@
                 {% if user.is_authenticated %}
                 <nav class="main-nav">
                     <ul class="nav-list">
-                        <li class="nav-item"><a href="{% url 'core:home_inside' %}" {% if request.path == '/dashboard/' %}class="active"{% endif %}>Главная</a></li>
-                        <li class="nav-item"><a href="{% url 'clients:list' %}" {% if '/clients/' in request.path or '/clients-suppliers/' in request.path %}class="active"{% endif %}>Клиенты и поставщики</a></li>
-                        <li class="nav-item"><a href="{% url 'invoices:list' %}" {% if '/invoices/' in request.path %}class="active"{% endif %}>Счета</a></li>
-                        <li class="nav-item"><a href="{% url 'analytics:dashboard' %}" {% if '/analytics/' in request.path %}class="active"{% endif %}>Аналитика</a></li>
+                        <li class="nav-item"><a href="{% url 'core:home_inside' %}" {% if request.path == '/dashboard/' %}class="active"{% endif %}>{% trans "Главная" %}</a></li>
+                        <li class="nav-item"><a href="{% url 'clients:list' %}" {% if '/clients/' in request.path or '/clients-suppliers/' in request.path %}class="active"{% endif %}>{% trans "Клиенты и поставщики" %}</a></li>
+                        <li class="nav-item"><a href="{% url 'invoices:list' %}" {% if '/invoices/' in request.path %}class="active"{% endif %}>{% trans "Счета" %}</a></li>
+                        <li class="nav-item"><a href="{% url 'analytics:dashboard' %}" {% if '/analytics/' in request.path %}class="active"{% endif %}>{% trans "Аналитика" %}</a></li>
                     </ul>
                 </nav>
                 {% else %}
                 <div class="nav-separator"></div>
                 {% endif %}
-                <div class="user-menu">
+                
+                <!-- Форма выбора языка для Django i18n -->
+                <div class="locale-dropdown">
+                    <div class="locale-dropdown-toggle">
+                        <div class="locale-current">
+                            <div class="locale-flag">
+                                {% if LANGUAGE_CODE == 'en' %}
+                                    <img src="{% static 'images/flags/gb.svg' %}" alt="English" class="locale-flag-img">
+                                {% elif LANGUAGE_CODE == 'de' %}
+                                    <img src="{% static 'images/flags/de.svg' %}" alt="Deutsch" class="locale-flag-img">
+                                {% else %}
+                                    <img src="{% static 'images/flags/ru.svg' %}" alt="Русский" class="locale-flag-img">
+                                {% endif %}
+                            </div>
+                            <span class="locale-currency">
+                                {% if LANGUAGE_CODE == 'en' %}${% elif LANGUAGE_CODE == 'de' %}€{% else %}₽{% endif %}
+                            </span>
+                        </div>
+                        <svg class="locale-dropdown-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16">
+                            <path d="M7 10l5 5 5-5z" />
+                        </svg>
+                    </div>
+                    <div class="locale-dropdown-content">
+                        <div class="locale-dropdown-section">
+                            <h3 class="locale-dropdown-title">{% trans "Язык" %} ({{ LANGUAGE_CODE }})</h3>
+                            <div class="locale-options">
+                                <div class="locale-option {% if LANGUAGE_CODE == 'ru' %}active{% endif %}" data-lang="ru">
+                                    <div class="locale-flag">
+                                        <img src="{% static 'images/flags/ru.svg' %}" alt="Русский">
+                                    </div>
+                                    <div class="locale-details">
+                                        <div class="locale-name">{% trans "Русский" %}</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="locale-option {% if LANGUAGE_CODE == 'en' %}active{% endif %}" data-lang="en">
+                                    <div class="locale-flag">
+                                        <img src="{% static 'images/flags/gb.svg' %}" alt="English">
+                                    </div>
+                                    <div class="locale-details">
+                                        <div class="locale-name">{% trans "English" %}</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="locale-option {% if LANGUAGE_CODE == 'de' %}active{% endif %}" data-lang="de">
+                                    <div class="locale-flag">
+                                        <img src="{% static 'images/flags/de.svg' %}" alt="Deutsch">
+                                    </div>
+                                    <div class="locale-details">
+                                        <div class="locale-name">{% trans "Deutsch" %}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="locale-dropdown-section">
+                            <h3 class="locale-dropdown-title">{% trans "Валюта" %}</h3>
+                            <div class="locale-options">
+                                <div class="locale-option active" data-currency="RUB">
+                                    <div class="locale-currency-symbol">₽</div>
+                                    <div class="locale-details">
+                                        <div class="locale-name">{% trans "Российский рубль" %}</div>
+                                        <div class="locale-code">RUB</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="locale-option" data-currency="USD">
+                                    <div class="locale-currency-symbol">$</div>
+                                    <div class="locale-details">
+                                        <div class="locale-name">{% trans "Доллар США" %}</div>
+                                        <div class="locale-code">USD</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="locale-option" data-currency="EUR">
+                                    <div class="locale-currency-symbol">€</div>
+                                    <div class="locale-details">
+                                        <div class="locale-name">{% trans "Евро" %}</div>
+                                        <div class="locale-code">EUR</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="locale-option" data-currency="GBP">
+                                    <div class="locale-currency-symbol">£</div>
+                                    <div class="locale-details">
+                                        <div class="locale-name">{% trans "Фунт стерлингов" %}</div>
+                                        <div class="locale-code">GBP</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="user-menu" style="white-space: nowrap;">
                     {% if user.is_authenticated %}
                         <div class="user-dropdown">
                             <span class="user-name">{{ user.username }}</span>
                             <div class="user-dropdown-content">
-                                <a href="{% url 'core:profile' %}" class="dropdown-item">Профиль компании</a>
-                                <a href="#" id="logout-btn" class="dropdown-item">Выйти</a>
+                                <a href="{% url 'core:profile' %}" class="dropdown-item">{% trans "Профиль компании" %}</a>
+                                <a href="#" id="logout-btn" class="dropdown-item">{% trans "Выйти" %}</a>
                             </div>
                         </div>
                     {% else %}
-                        <a href="{% url 'login' %}" class="btn btn-primary">Вход</a>
+                        <a href="{% url 'login' %}" class="btn btn-primary">{% trans "Вход" %}</a>
                     {% endif %}
                 </div>
-                {% if user.is_authenticated %}
-                <button class="mobile-menu-btn" title="Открыть меню">
+                <button class="mobile-menu-btn" title="{% trans "Открыть меню" %}">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
                     </svg>
                 </button>
-                {% endif %}
             </div>
         </div>
     </header>
+
+    <!-- Мобильное меню -->
+    <div class="mobile-menu">
+        <div class="mobile-menu-header">
+            <div class="mobile-logo">
+                <a href="{% url 'core:home' %}">
+                    <img src="{% static 'images/logo.svg' %}" alt="Flowfy" width="100" height="35">
+                </a>
+            </div>
+            <button class="mobile-menu-close" title="{% trans "Закрыть меню" %}">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        
+        <nav>
+            <ul class="nav-list">
+                {% if user.is_authenticated %}
+                <li class="nav-item"><a href="{% url 'core:home_inside' %}" {% if request.path == '/dashboard/' %}class="active"{% endif %}>{% trans "Главная" %}</a></li>
+                <li class="nav-item"><a href="{% url 'clients:list' %}" {% if '/clients/' in request.path or '/clients-suppliers/' in request.path %}class="active"{% endif %}>{% trans "Клиенты и поставщики" %}</a></li>
+                <li class="nav-item"><a href="{% url 'invoices:list' %}" {% if '/invoices/' in request.path %}class="active"{% endif %}>{% trans "Счета" %}</a></li>
+                <li class="nav-item"><a href="{% url 'analytics:dashboard' %}" {% if '/analytics/' in request.path %}class="active"{% endif %}>{% trans "Аналитика" %}</a></li>
+                <li class="nav-item"><a href="{% url 'core:profile' %}">{% trans "Профиль компании" %}</a></li>
+                <li class="nav-item"><a href="#" id="mobile-logout-btn">{% trans "Выйти" %}</a></li>
+                {% else %}
+                <li class="nav-item"><a href="{% url 'login' %}">{% trans "Вход" %}</a></li>
+                <li class="nav-item"><a href="{% url 'core:home' %}">{% trans "Главная" %}</a></li>
+                <li class="nav-item"><a href="{% url 'core:about' %}">{% trans "О системе" %}</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        
+        <!-- Секция выбора языка (дропбокс) -->
+        <div class="locale-section">
+            <h3 class="locale-title">{% trans "Язык" %} ({{ LANGUAGE_CODE }})</h3>
+            <div class="mobile-dropdown">
+                <div class="mobile-dropdown-toggle">
+                    <div class="locale-flag">
+                        {% if LANGUAGE_CODE == 'en' %}
+                            <img src="{% static 'images/flags/gb.svg' %}" alt="English" id="current-lang-flag">
+                        {% elif LANGUAGE_CODE == 'de' %}
+                            <img src="{% static 'images/flags/de.svg' %}" alt="Deutsch" id="current-lang-flag">
+                        {% else %}
+                            <img src="{% static 'images/flags/ru.svg' %}" alt="Русский" id="current-lang-flag">
+                        {% endif %}
+                    </div>
+                    <div class="locale-name" id="current-lang-name">
+                        {% if LANGUAGE_CODE == 'en' %}
+                            {% trans "English" %}
+                        {% elif LANGUAGE_CODE == 'de' %}
+                            {% trans "Deutsch" %}
+                        {% else %}
+                            {% trans "Русский" %}
+                        {% endif %}
+                    </div>
+                    <svg class="mobile-dropdown-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16">
+                        <path d="M7 10l5 5 5-5z" />
+                    </svg>
+                </div>
+                <div class="mobile-dropdown-content">
+                    <div class="locale-option {% if LANGUAGE_CODE == 'ru' %}active{% endif %}" data-lang="ru">
+                        <div class="locale-flag">
+                            <img src="{% static 'images/flags/ru.svg' %}" alt="Русский">
+                        </div>
+                        <div class="locale-details">
+                            <div class="locale-name">{% trans "Русский" %}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="locale-option {% if LANGUAGE_CODE == 'en' %}active{% endif %}" data-lang="en">
+                        <div class="locale-flag">
+                            <img src="{% static 'images/flags/gb.svg' %}" alt="English">
+                        </div>
+                        <div class="locale-details">
+                            <div class="locale-name">{% trans "English" %}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="locale-option {% if LANGUAGE_CODE == 'de' %}active{% endif %}" data-lang="de">
+                        <div class="locale-flag">
+                            <img src="{% static 'images/flags/de.svg' %}" alt="Deutsch">
+                        </div>
+                        <div class="locale-details">
+                            <div class="locale-name">{% trans "Deutsch" %}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Секция выбора валюты (дропбокс) -->
+        <div class="locale-section">
+            <h3 class="locale-title">{% trans "Валюта" %}</h3>
+            <div class="mobile-dropdown">
+                <div class="mobile-dropdown-toggle">
+                    <div class="locale-currency-symbol" id="current-currency-symbol">₽</div>
+                    <div class="locale-name" id="current-currency-name">{% trans "Российский рубль" %}</div>
+                    <svg class="mobile-dropdown-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16">
+                        <path d="M7 10l5 5 5-5z" />
+                    </svg>
+                </div>
+                <div class="mobile-dropdown-content">
+                    <div class="locale-option active" data-currency="RUB" data-symbol="₽" data-name="{% trans "Российский рубль" %}">
+                        <div class="locale-currency-symbol">₽</div>
+                        <div class="locale-details">
+                            <div class="locale-name">{% trans "Российский рубль" %}</div>
+                            <div class="locale-code">RUB</div>
+                        </div>
+                    </div>
+                    
+                    <div class="locale-option" data-currency="USD" data-symbol="$" data-name="{% trans "Доллар США" %}">
+                        <div class="locale-currency-symbol">$</div>
+                        <div class="locale-details">
+                            <div class="locale-name">{% trans "Доллар США" %}</div>
+                            <div class="locale-code">USD</div>
+                        </div>
+                    </div>
+                    
+                    <div class="locale-option" data-currency="EUR" data-symbol="€" data-name="{% trans "Евро" %}">
+                        <div class="locale-currency-symbol">€</div>
+                        <div class="locale-details">
+                            <div class="locale-name">{% trans "Евро" %}</div>
+                            <div class="locale-code">EUR</div>
+                        </div>
+                    </div>
+                    
+                    <div class="locale-option" data-currency="GBP" data-symbol="£" data-name="{% trans "Фунт стерлингов" %}">
+                        <div class="locale-currency-symbol">£</div>
+                        <div class="locale-details">
+                            <div class="locale-name">{% trans "Фунт стерлингов" %}</div>
+                            <div class="locale-code">GBP</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Затемнение фона при открытии меню -->
+    <div class="mobile-menu-backdrop"></div>
 
     <!-- Контейнер для уведомлений -->
     <div class="notifications-container" id="notifications-container">
@@ -256,59 +495,59 @@
                         <img src="{% static 'images/logo.svg' %}" alt="Flowfy" width="120" height="40">
                     </div>
                     <p class="footer-description">
-                        Автоматизация финансового учета и документооборота для малого бизнеса и индивидуальных предпринимателей.
+                        {% trans "Автоматизация финансового учета и документооборота для малого бизнеса и индивидуальных предпринимателей." %}
                     </p>
                     <div class="social-links">
-                        <a href="https://vk.com/flowfy" class="social-link" title="ВКонтакте">
+                        <a href="https://vk.com/flowfy" class="social-link" title="{% trans "ВКонтакте" %}">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.07 2H8.93C3.33 2 2 3.33 2 8.93v6.14C2 20.67 3.33 22 8.93 22h6.14c5.6 0 6.93-1.33 6.93-6.93V8.93C22 3.33 20.67 2 15.07 2zm.62 14.67h-1.75c-.67 0-.87-.5-2.08-1.75-.94-.94-1.35-1.08-1.58-1.08-.32 0-.41.09-.41.53v1.59c0 .41-.18.71-1.04.71-1.21 0-2.54-.57-3.49-1.62-1.43-1.48-1.91-3.44-1.91-3.54 0-.2.09-.39.53-.39h1.75c.39 0 .53.18.68.53.73 2.06 1.89 3.19 2.35 3.19.19 0 .27-.09.27-.57v-2.35c-.05-.8-.41-1.11-.41-1.48 0-.2.16-.39.41-.39h2.77c.33 0 .43.18.43.57v3.19c0 .34.14.46.23.46.19 0 .34-.12.69-.46.96-1.16 1.64-2.94 1.64-2.94.09-.2.23-.39.62-.39h1.75c.5 0 .62.3.5.57-.19.89-2.12 3.63-2.12 3.63-.16.27-.23.39 0 .66.14.2.68.59 1.02 1.02.66.73 1.14 1.35 1.25 1.8.12.41-.1.64-.53.64z"/></svg>
                         </a>
-                        <a href="https://zen.yandex.ru/flowfy" class="social-link" title="Яндекс Дзен">
+                        <a href="https://zen.yandex.ru/flowfy" class="social-link" title="{% trans "Яндекс Дзен" %}">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2c-5.5 0-10 4.5-10 10s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 2c4.4 0 8 3.6 8 8s-3.6 8-8 8-8-3.6-8-8 3.6-8 8-8zm0 2c-3.3 0-6 2.7-6 6s2.7 6 6 6 6-2.7 6-6-2.7-6-6-6zm0 2c2.2 0 4 1.8 4 4s-1.8 4-4 4-4-1.8-4-4 1.8-4 4-4zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
                         </a>
-                        <a href="https://www.youtube.com/channel/flowfy" class="social-link" title="YouTube">
+                        <a href="https://www.youtube.com/channel/flowfy" class="social-link" title="{% trans "YouTube" %}">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
                         </a>
-                        <a href="https://t.me/flowfy" class="social-link" title="Telegram">
+                        <a href="https://t.me/flowfy" class="social-link" title="{% trans "Telegram" %}">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
                         </a>
                     </div>
                 </div>
                 <div class="footer-col">
-                    <h3 class="footer-heading">Навигация</h3>
+                    <h3 class="footer-heading">{% trans "Навигация" %}</h3>
                     <ul class="footer-links">
                         {% if user.is_authenticated %}
-                        <li class="footer-link"><a href="{% url 'core:home_inside' %}">Главная</a></li>
-                        <li class="footer-link"><a href="{% url 'clients:list' %}">Клиенты</a></li>
-                        <li class="footer-link"><a href="{% url 'invoices:list' %}">Счета</a></li>
-                        <li class="footer-link"><a href="{% url 'analytics:dashboard' %}">Аналитика</a></li>
-                        <li class="footer-link"><a href="{% url 'core:profile' %}">Профиль компании</a></li>
+                        <li class="footer-link"><a href="{% url 'core:home_inside' %}">{% trans "Главная" %}</a></li>
+                        <li class="footer-link"><a href="{% url 'clients:list' %}">{% trans "Клиенты" %}</a></li>
+                        <li class="footer-link"><a href="{% url 'invoices:list' %}">{% trans "Счета" %}</a></li>
+                        <li class="footer-link"><a href="{% url 'analytics:dashboard' %}">{% trans "Аналитика" %}</a></li>
+                        <li class="footer-link"><a href="{% url 'core:profile' %}">{% trans "Профиль компании" %}</a></li>
                         {% else %}
-                        <li class="footer-link"><a href="{% url 'core:home' %}">Главная</a></li>
-                        <li class="footer-link"><a href="{% url 'core:changelog' %}">Ченджлог</a></li>
+                        <li class="footer-link"><a href="{% url 'core:home' %}">{% trans "Главная" %}</a></li>
+                        <li class="footer-link"><a href="{% url 'core:changelog' %}">{% trans "Ченджлог" %}</a></li>
                         {% endif %}
-                        <li class="footer-link"><a href="{% url 'core:about' %}">О системе</a></li>
+                        <li class="footer-link"><a href="{% url 'core:about' %}">{% trans "О системе" %}</a></li>
                     </ul>
                 </div>
-                <div class="footer-col">
-                    <h3 class="footer-heading">Поддержка</h3>
+                <!-- <div class="footer-col">
+                    <h3 class="footer-heading">{% trans "Поддержка" %}</h3>
                     <ul class="footer-links">
-                        <li class="footer-link"><a href="#">Помощь</a></li>
-                        <li class="footer-link"><a href="#">База знаний</a></li>
-                        <li class="footer-link"><a href="#">Связаться с нами</a></li>
+                        <li class="footer-link"><a href="#">{% trans "Помощь" %}</a></li>
+                        <li class="footer-link"><a href="#">{% trans "База знаний" %}</a></li>
+                        <li class="footer-link"><a href="#">{% trans "Связаться с нами" %}</a></li>
                     </ul>
-                </div>
+                </div> -->
                 <div class="footer-col">
-                    <h3 class="footer-heading">Документы</h3>
+                    <h3 class="footer-heading">{% trans "Документы" %}</h3>
                     <ul class="footer-links">
-                        <li class="footer-link"><a href="#">Политика конфиденциальности</a></li>
-                        <li class="footer-link"><a href="#">Условия использования</a></li>
-                        <li class="footer-link"><a href="#">Правовая информация</a></li>
+                        <li class="footer-link"><a href="{% url 'core:privacy' %}">{% trans "Политика конфиденциальности" %}</a></li>
+                        <li class="footer-link"><a href="{% url 'core:terms' %}">{% trans "Условия использования" %}</a></li>
+                        <li class="footer-link"><a href="{% url 'core:legal' %}">{% trans "Правовая информация" %}</a></li>
                     </ul>
                 </div>
             </div>
             <div class="footer-bottom">
                 <div class="copyright">
-                    &copy; {% now "Y" %} Flowfy. Все права защищены.
+                    &copy; {% now "Y" %} Flowfy. {% trans "Все права защищены" %}.
                 </div>
             </div>
         </div>
@@ -319,15 +558,15 @@
     <div id="logout-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Подтверждение выхода</h3>
-                <button class="modal-close" title="Закрыть">&times;</button>
+                <h3>{% trans "Подтверждение выхода" %}</h3>
+                <button class="modal-close" title="{% trans "Закрыть" %}">&times;</button>
             </div>
             <div class="modal-body">
-                <p>Вы уверены, что хотите выйти из системы?</p>
+                <p>{% trans "Вы уверены, что хотите выйти из системы?" %}</p>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary modal-cancel">Отмена</button>
-                <a href="{% url 'core:logout' %}" class="btn btn-primary">Выйти</a>
+                <button class="btn btn-secondary modal-cancel">{% trans "Отмена" %}</button>
+                <a href="{% url 'core:logout' %}" class="btn btn-primary">{% trans "Выйти" %}</a>
             </div>
         </div>
     </div>
@@ -361,8 +600,322 @@
                     }, 300);
                 }, 5000);
             });
+            
+            // Управление мобильным меню
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const mobileMenu = document.querySelector('.mobile-menu');
+            const mobileMenuClose = document.querySelector('.mobile-menu-close');
+            const mobileMenuBackdrop = document.querySelector('.mobile-menu-backdrop');
+            
+            if (mobileMenuBtn && mobileMenu) {
+                let isMenuOpen = false;
+                
+                // Функция открытия меню
+                function openMobileMenu() {
+                    mobileMenu.classList.add('open');
+                    mobileMenuBackdrop.classList.add('active');
+                    document.body.style.overflow = 'hidden'; // Блокируем прокрутку страницы
+                    mobileMenuBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>';
+                    isMenuOpen = true;
+                }
+                
+                // Функция закрытия меню
+                function closeMobileMenu() {
+                    mobileMenu.classList.remove('open');
+                    mobileMenuBackdrop.classList.remove('active');
+                    document.body.style.overflow = ''; // Возвращаем прокрутку
+                    mobileMenuBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>';
+                    isMenuOpen = false;
+                }
+                
+                // Обработчик кнопки бургер-меню
+                mobileMenuBtn.addEventListener('click', function() {
+                    if (isMenuOpen) {
+                        closeMobileMenu();
+                    } else {
+                        openMobileMenu();
+                    }
+                });
+                
+                // Обработчик кнопки закрытия в мобильном меню
+                if (mobileMenuClose) {
+                    mobileMenuClose.addEventListener('click', closeMobileMenu);
+                }
+                
+                // Закрытие меню при клике на затемнение
+                mobileMenuBackdrop.addEventListener('click', closeMobileMenu);
+                
+                // Закрытие меню при клике на ссылку внутри
+                mobileMenu.querySelectorAll('a:not(#mobile-logout-btn)').forEach(link => {
+                    link.addEventListener('click', closeMobileMenu);
+                });
+                
+                // Обработка кнопки выхода в мобильном меню
+                const mobileLogoutBtn = document.getElementById('mobile-logout-btn');
+                if (mobileLogoutBtn) {
+                    mobileLogoutBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const logoutModal = document.getElementById('logout-modal');
+                        if (logoutModal) {
+                            logoutModal.style.display = 'flex';
+                            closeMobileMenu();
+                        }
+                    });
+                }
+                
+                // Обработка дропбоксов в мобильном меню
+                const mobileDropdowns = document.querySelectorAll('.mobile-dropdown');
+                mobileDropdowns.forEach(dropdown => {
+                    const toggle = dropdown.querySelector('.mobile-dropdown-toggle');
+                    const content = dropdown.querySelector('.mobile-dropdown-content');
+                    
+                    toggle.addEventListener('click', function(e) {
+                        e.stopPropagation(); // Предотвращаем закрытие выпадающего списка при клике на него
+                        const isOpen = dropdown.classList.contains('open');
+                        
+                        // Закрываем все открытые дропбоксы
+                        mobileDropdowns.forEach(dd => {
+                            dd.classList.remove('open');
+                        });
+                        
+                        // Открываем текущий дропбокс (если он был закрыт)
+                        if (!isOpen) {
+                            dropdown.classList.add('open');
+                        }
+                    });
+                    
+                    // Закрытие дропбокса при клике вне его области
+                    document.addEventListener('click', function(e) {
+                        if (!dropdown.contains(e.target)) {
+                            dropdown.classList.remove('open');
+                        }
+                    });
+                    
+                    // Обработка выбора опции в дропбоксе языка
+                    if (dropdown.closest('.locale-section').querySelector('.locale-title').textContent === 'Язык') {
+                        const options = dropdown.querySelectorAll('.locale-option');
+                        const currentFlag = document.getElementById('current-lang-flag');
+                        const currentName = document.getElementById('current-lang-name');
+                        
+                        options.forEach(option => {
+                            option.addEventListener('click', function() {
+                                const language = this.getAttribute('data-lang');
+                                
+                                // Показываем индикатор загрузки
+                                showNotification(`Изменение языка на ${language}...`, 'info');
+                                
+                                // Используем AJAX для смены языка (как в language-switcher.js)
+                                // Получаем CSRF токен
+                                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || 
+                                                 document.querySelector('[name=csrfmiddlewaretoken]')?.value || '';
+                                
+                                // Вычисляем next параметр (текущая страница без языкового префикса)
+                                const pathParts = window.location.pathname.split('/');
+                                let nextPath = '';
+                                
+                                // Если путь имеет языковой префикс (первый сегмент - 'ru', 'en', 'de' и т.д.)
+                                if (pathParts.length > 1 && ['ru', 'en', 'de'].includes(pathParts[1])) {
+                                    // Сохраняем путь без языкового префикса
+                                    nextPath = '/' + pathParts.slice(2).join('/');
+                                    if (nextPath === '/') {
+                                        nextPath = '/';
+                                    }
+                                } else {
+                                    // Если нет языкового префикса, используем текущий путь
+                                    nextPath = window.location.pathname;
+                                }
+                                
+                                // Создаём данные для отправки
+                                const formData = new FormData();
+                                formData.append('language', language);
+                                formData.append('next', nextPath);
+                                if (csrfToken) {
+                                    formData.append('csrfmiddlewaretoken', csrfToken);
+                                }
+                                
+                                // Используем POST-запрос на API точку для смены языка
+                                fetch(window.location.origin + '/api/change-language/', {
+                                    method: 'POST',
+                                    body: formData,
+                                    credentials: 'same-origin'
+                                })
+                                                                 .then(response => {
+                                     if (response.ok) {
+                                         // Вместо перезагрузки текущей страницы, явно перенаправляем на новый URL с языковым префиксом
+                                         const newUrl = window.location.origin + '/' + language + nextPath;
+                                         console.log("Redirecting to:", newUrl);
+                                         window.location.href = newUrl;
+                                     } else {
+                                        // Если ошибка, пробуем стандартный метод
+                                        // Создаем форму для отправки
+                                        const form = document.createElement('form');
+                                        form.method = 'POST'; 
+                                        form.action = window.location.origin + '/i18n/setlang/';
+                                        form.style.display = 'none';
+                                        
+                                        if (csrfToken) {
+                                            const csrfInput = document.createElement('input');
+                                            csrfInput.type = 'hidden';
+                                            csrfInput.name = 'csrfmiddlewaretoken';
+                                            csrfInput.value = csrfToken;
+                                            form.appendChild(csrfInput);
+                                        }
+                                        
+                                        const langInput = document.createElement('input');
+                                        langInput.type = 'hidden';
+                                        langInput.name = 'language';
+                                        langInput.value = language;
+                                        form.appendChild(langInput);
+                                        
+                                        const nextInput = document.createElement('input');
+                                        nextInput.type = 'hidden';
+                                        nextInput.name = 'next';
+                                        nextInput.value = nextPath;
+                                        form.appendChild(nextInput);
+                                        
+                                        document.body.appendChild(form);
+                                        form.submit();
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error("Error changing language:", error);
+                                    showNotification("Ошибка при смене языка", "error");
+                                });
+                            });
+                        });
+                    }
+                    
+                    // Обработка выбора опции в дропбоксе валюты
+                    if (dropdown.closest('.locale-section').querySelector('.locale-title').textContent === 'Валюта') {
+                        const options = dropdown.querySelectorAll('.locale-option');
+                        const currentSymbol = document.getElementById('current-currency-symbol');
+                        const currentName = document.getElementById('current-currency-name');
+                        
+                        options.forEach(option => {
+                            option.addEventListener('click', function() {
+                                const currency = this.getAttribute('data-currency');
+                                const currencySymbol = this.getAttribute('data-symbol');
+                                const currencyName = this.getAttribute('data-name');
+                                
+                                // Активируем выбранную валюту
+                                options.forEach(opt => opt.classList.remove('active'));
+                                this.classList.add('active');
+                                
+                                // Обновляем текущие значения в дропбоксе
+                                currentSymbol.textContent = currencySymbol;
+                                currentName.textContent = currencyName;
+                                
+                                // Также активируем в десктопном дропдауне если есть
+                                const desktopOption = document.querySelector(`.locale-dropdown .locale-option[data-currency="${currency}"]`);
+                                if (desktopOption) {
+                                    const desktopOptions = document.querySelectorAll('.locale-dropdown .locale-option[data-currency]');
+                                    desktopOptions.forEach(opt => opt.classList.remove('active'));
+                                    desktopOption.classList.add('active');
+                                    document.querySelector('.locale-current .locale-currency').textContent = currencySymbol;
+                                }
+                                
+                                // Закрываем дропбокс
+                                dropdown.classList.remove('open');
+                                
+                                // Отправляем AJAX-запрос для изменения валюты
+                                fetch('/api/change-currency/', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                                    },
+                                    body: JSON.stringify({ currency: currency })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        showNotification('Валюта успешно изменена', 'success');
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Ошибка при изменении валюты:', error);
+                                });
+                            });
+                        });
+                    }
+                });
+            }
+            
+            // Обработка выбора языка и валюты в десктопном дропдауне
+            const localeDropdown = document.querySelector('.locale-dropdown');
+            if (localeDropdown) {
+                // Обработка выбора языка - делегируем обработку стандартному скрипту language-switcher.js
+                // Не добавляем обработчики здесь, чтобы избежать дублирования
+                
+                // Обработка выбора валюты
+                const currencyOptions = document.querySelectorAll('.locale-option[data-currency]');
+                currencyOptions.forEach(option => {
+                    option.addEventListener('click', function() {
+                        const currency = this.getAttribute('data-currency');
+                        const currencySymbol = this.querySelector('.locale-currency-symbol').textContent;
+                        
+                        // Активируем выбранную валюту
+                        currencyOptions.forEach(opt => opt.classList.remove('active'));
+                        this.classList.add('active');
+                        
+                        // Обновляем символ текущей валюты
+                        document.querySelector('.locale-current .locale-currency').textContent = currencySymbol;
+                        
+                        // Отправляем AJAX-запрос для изменения валюты
+                        fetch('/api/change-currency/', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                            },
+                            body: JSON.stringify({ currency: currency })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                showNotification('Валюта успешно изменена', 'success');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Ошибка при изменении валюты:', error);
+                        });
+                    });
+                });
+            }
+            
+            // Функция для отображения уведомлений
+            function showNotification(message, type = 'info') {
+                const notification = document.createElement('div');
+                notification.className = `notification notification-${type}`;
+                
+                let iconHTML = '<i class="fas fa-info-circle"></i>';
+                if (type === 'success') {
+                    iconHTML = '<i class="fas fa-check-circle"></i>';
+                } else if (type === 'error') {
+                    iconHTML = '<i class="fas fa-exclamation-circle"></i>';
+                } else if (type === 'warning') {
+                    iconHTML = '<i class="fas fa-exclamation-triangle"></i>';
+                }
+                
+                notification.innerHTML = `
+                    <div class="notification-icon">${iconHTML}</div>
+                    <div class="notification-content">${message}</div>
+                    <button class="notification-close">&times;</button>
+                `;
+                
+                notificationsContainer.appendChild(notification);
+                
+                // Автоматически скрыть уведомление через 5 секунд
+                setTimeout(() => {
+                    notification.style.animation = 'fadeOut 0.3s ease-out forwards';
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 300);
+                }, 5000);
+            }
         });
     </script>
+    <script src="{% static 'js/language-switcher.js' %}"></script>
     {% block extra_js %}{% endblock %}
 </body>
 </html> 

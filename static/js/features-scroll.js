@@ -1,98 +1,116 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Получаем элементы
-    const featuresSection = document.querySelector('.features-section');
-    if (!featuresSection) return; // Если секции нет на странице, выходим
+    console.log('Новый features.js загружен');
     
-    const tabHeaders = featuresSection.querySelectorAll('.tab-header');
-    const tabContents = featuresSection.querySelectorAll('.tab-content');
+    // Анимация карточек при скролле
+    const featureBoxes = document.querySelectorAll('.feature-box');
     
-    // Текущая активная вкладка
-    let activeTabIndex = 0;
-    
-    // Функция для активации вкладки по индексу
-    function activateTab(index) {
-        if (index < 0 || index >= tabHeaders.length) return;
-        
-        // Убираем активный класс у всех вкладок и контентов
-        tabHeaders.forEach(tab => tab.classList.remove('active'));
-        tabContents.forEach(content => content.classList.remove('active'));
-        
-        // Устанавливаем активный класс для выбранной вкладки и контента
-        tabHeaders[index].classList.add('active');
-        tabContents[index].classList.add('active');
-        
-        activeTabIndex = index;
+    if (featureBoxes.length === 0) {
+        console.log('Карточки возможностей не найдены');
+        return;
     }
     
-    // Обработка клика по заголовкам вкладок
-    tabHeaders.forEach((header, index) => {
-        header.addEventListener('click', function() {
-            activateTab(index);
+    // Инициализация Intersection Observer для анимации появления
+    const observerOptions = {
+        threshold: 0.15,
+        rootMargin: '0px 0px -10% 0px'
+    };
+    
+    const featureObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('feature-box-visible');
+                console.log('Карточка в зоне видимости:', entry.target.classList);
+                
+                // Отключаем observer после анимации
+                // featureObserver.unobserve(entry.target);
+            } else {
+                entry.target.classList.remove('feature-box-visible');
+            }
+        });
+    }, observerOptions);
+    
+    // Наблюдаем за всеми карточками
+    featureBoxes.forEach((box, index) => {
+        // Добавляем задержку появления для каждой карточки
+        box.style.transitionDelay = `${index * 0.1}s`;
+        featureObserver.observe(box);
+    });
+    
+    // Параллакс эффект для фоновых элементов
+    const floatingShapes = document.querySelectorAll('.floating-shape');
+    
+    if (floatingShapes.length > 0) {
+        window.addEventListener('mousemove', function(e) {
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+            
+            floatingShapes.forEach((shape, index) => {
+                const speed = (index + 1) * 2;
+                const offsetX = (mouseX - 0.5) * speed;
+                const offsetY = (mouseY - 0.5) * speed;
+                
+                shape.style.transform = `translate(${offsetX}%, ${offsetY}%) scale(${1 + (index * 0.05)})`;
+            });
+        });
+    }
+    
+    // Добавляем интерактивность для карточек
+    featureBoxes.forEach(box => {
+        box.addEventListener('mouseenter', function() {
+            // Плавно увеличиваем размер иконки при наведении
+            const icon = this.querySelector('.feature-icon');
+            if (icon) {
+                icon.style.transform = 'scale(1.15)';
+            }
+            
+            // Изменяем свечение иконки
+            const glow = this.querySelector('.feature-icon-glow');
+            if (glow) {
+                glow.style.opacity = '0.6';
+                glow.style.filter = 'blur(15px)';
+            }
+        });
+        
+        box.addEventListener('mouseleave', function() {
+            // Возвращаем нормальный размер иконке
+            const icon = this.querySelector('.feature-icon');
+            if (icon) {
+                icon.style.transform = 'scale(1)';
+            }
+            
+            // Возвращаем нормальное свечение
+            const glow = this.querySelector('.feature-icon-glow');
+            if (glow) {
+                glow.style.opacity = '0.3';
+                glow.style.filter = 'blur(20px)';
+            }
         });
     });
     
-    // Делаем активной первую вкладку по умолчанию
-    activateTab(0);
+    // Добавляем эффект для кнопок
+    const featureButtons = document.querySelectorAll('.feature-btn');
     
-    // Простая прокрутка для переключения вкладок (опциональная функция)
-    // Будет работать для видимой секции при прокрутке
-    let isScrollingEnabled = true;
-    let scrollTimeout = null;
-    
-    window.addEventListener('wheel', function(event) {
-        // Проверяем, находится ли секция в поле зрения
-        const rect = featuresSection.getBoundingClientRect();
-        const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
-        
-        if (isVisible && isScrollingEnabled) {
-            const delta = Math.sign(event.deltaY);
-            
-            if (delta > 0 && activeTabIndex < tabHeaders.length - 1) {
-                // Прокрутка вниз - следующая вкладка
-                activateTab(activeTabIndex + 1);
-                isScrollingEnabled = false;
-            } else if (delta < 0 && activeTabIndex > 0) {
-                // Прокрутка вверх - предыдущая вкладка
-                activateTab(activeTabIndex - 1);
-                isScrollingEnabled = false;
+    featureButtons.forEach(btn => {
+        btn.addEventListener('mouseenter', function() {
+            const svg = this.querySelector('svg');
+            if (svg) {
+                svg.style.transform = 'translateX(5px)';
             }
-            
-            // Устанавливаем задержку перед следующим переключением
-            if (!isScrollingEnabled) {
-                if (scrollTimeout) clearTimeout(scrollTimeout);
-                scrollTimeout = setTimeout(() => {
-                    isScrollingEnabled = true;
-                }, 500);
+        });
+        
+        btn.addEventListener('mouseleave', function() {
+            const svg = this.querySelector('svg');
+            if (svg) {
+                svg.style.transform = 'translateX(0)';
             }
-        }
-    }, { passive: true }); // Делаем его пассивным, чтобы не блокировать прокрутку страницы
+        });
+    });
     
-    // Обработка свайпов для мобильных устройств
-    let touchStartY = 0;
-    let touchEndY = 0;
-    
-    featuresSection.addEventListener('touchstart', function(e) {
-        touchStartY = e.changedTouches[0].screenY;
-    }, { passive: true });
-    
-    featuresSection.addEventListener('touchend', function(e) {
-        const rect = featuresSection.getBoundingClientRect();
-        const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
-        
-        if (!isVisible) return;
-        
-        touchEndY = e.changedTouches[0].screenY;
-        const deltaY = touchStartY - touchEndY;
-        
-        // Если свайп достаточной длины
-        if (Math.abs(deltaY) > 70) {
-            if (deltaY > 0 && activeTabIndex < tabHeaders.length - 1) {
-                // Свайп вверх - следующая вкладка
-                activateTab(activeTabIndex + 1);
-            } else if (deltaY < 0 && activeTabIndex > 0) {
-                // Свайп вниз - предыдущая вкладка
-                activateTab(activeTabIndex - 1);
-            }
-        }
-    }, { passive: true });
+    // Функция для отладки (можно вызвать в консоли)
+    window.toggleFeaturesDebug = function() {
+        console.log('Отладка элементов секции "Возможности системы"');
+        console.log('Карточки:', featureBoxes);
+        console.log('Фоновые элементы:', floatingShapes);
+        console.log('Кнопки:', featureButtons);
+    };
 }); 

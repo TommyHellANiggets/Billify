@@ -1,4 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Добавляем фавикон, если он не существует
+    if (!document.querySelector('link[rel="icon"]')) {
+        const favicon = document.createElement('link');
+        favicon.rel = 'icon';
+        favicon.href = 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📄</text></svg>';
+        document.head.appendChild(favicon);
+    }
+
     // Получаем элементы формы
     const invoiceForm = document.querySelector('.invoice-form');
     const invoiceItems = document.getElementById('invoice-items');
@@ -9,6 +17,26 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Вызываем функцию предзаполнения формы
     prepopulateFormForEditing();
+
+    // Установка текущей даты для полей с датой, если они пустые
+    setDefaultDates();
+    
+    // Инициализация кастомных селекторов
+    initializeEntitySelectors();
+    
+    // Инициализация таблицы товаров/услуг
+    initializeInvoiceItems();
+    
+    // Обновление денежных форматов при загрузке страницы
+    formatCurrencyInputs();
+
+    // Обработчик кнопки предпросмотра
+    const previewButton = document.getElementById('preview-invoice');
+    if (previewButton) {
+        previewButton.addEventListener('click', function() {
+            alert('Функция предпросмотра будет доступна в ближайшем обновлении');
+        });
+    }
 });
 
 // Функция для обновления сумм по строкам и общих итогов - сделана глобальной
@@ -115,6 +143,8 @@ function addNewItemRow() {
 function populateSupplierBankDetails(supplier) {
     if (!supplier) return;
     
+    console.log('Заполняем реквизиты поставщика из API:', supplier);
+    
     // Заполнение реквизитов
     const nameDisplay = document.getElementById('supplier_name_display');
     const innDisplay = document.getElementById('supplier_inn_display');
@@ -124,18 +154,29 @@ function populateSupplierBankDetails(supplier) {
     const corrAccountDisplay = document.getElementById('supplier_corr_account_display');
     const paymentDetails = document.getElementById('payment_details');
     
+    // Находим поля для контактного лица и email
+    const contactNameInput = document.getElementById('contact_name');
+    const contactEmailInput = document.getElementById('contact_email');
+    
+    // Определяем ИНН (может быть как inn, так и tax_id в зависимости от источника данных)
+    const inn = supplier.inn || supplier.tax_id || '';
+    
     if (nameDisplay) nameDisplay.value = supplier.name || '';
-    if (innDisplay) innDisplay.value = supplier.inn || '';
+    if (innDisplay) innDisplay.value = inn;
     if (bankDisplay) bankDisplay.value = supplier.bank_name || '';
     if (bikDisplay) bikDisplay.value = supplier.bank_bik || '';
     if (accountDisplay) accountDisplay.value = supplier.bank_account || '';
     if (corrAccountDisplay) corrAccountDisplay.value = supplier.bank_corr_account || '';
     
+    // Заполняем контактную информацию исключительно из API данных
+    if (contactNameInput) contactNameInput.value = supplier.contact_person || '';
+    if (contactEmailInput) contactEmailInput.value = supplier.contact_email || '';
+    
     // Сохранение полных реквизитов в скрытом поле
     if (paymentDetails) {
         const fullDetails = [
             `Название организации: ${supplier.name || '-'}`,
-            `ИНН: ${supplier.inn || '-'}`,
+            `ИНН: ${inn || '-'}`,
             `Банк: ${supplier.bank_name || '-'}`,
             `БИК: ${supplier.bank_bik || '-'}`,
             `Р/с: ${supplier.bank_account || '-'}`,
@@ -242,6 +283,10 @@ function populateClientBankDetails(client) {
     const accountDisplay = document.getElementById('client_account_display');
     const bankDetailsContainer = document.getElementById('client_bank_details');
     
+    // Находим поля для контактного лица и email
+    const contactNameInput = document.getElementById('contact_name');
+    const contactEmailInput = document.getElementById('contact_email');
+    
     // Если таких элементов нет на странице, выходим
     if (!nameDisplay || !innDisplay) return;
     
@@ -251,6 +296,10 @@ function populateClientBankDetails(client) {
     bankDisplay.value = client.bank_name || '';
     bikDisplay.value = client.bank_bik || '';
     accountDisplay.value = client.bank_account || '';
+    
+    // Заполняем контактную информацию
+    if (contactNameInput) contactNameInput.value = client.contact_person || '';
+    if (contactEmailInput) contactEmailInput.value = client.contact_email || '';
     
     // Показываем блок с реквизитами
     if (bankDetailsContainer) bankDetailsContainer.style.display = 'block';
@@ -498,116 +547,416 @@ function prepopulateFormForEditing() {
     }
 }
 
-// Добавляем обработчики событий при загрузке документа
-document.addEventListener('DOMContentLoaded', function() {
-    // Получаем элементы формы
-    const invoiceForm = document.querySelector('.invoice-form');
-    const invoiceItems = document.getElementById('invoice-items');
+// Устанавливает текущую дату для полей с датой
+function setDefaultDates() {
+    const today = new Date();
+    const formattedDate = today.toISOString().split('T')[0]; // YYYY-MM-DD
+    
+    // Устанавливаем текущую дату для поля даты счета, если оно пустое
+    const invoiceDateInput = document.getElementById('invoice_date');
+    if (invoiceDateInput && !invoiceDateInput.value) {
+        invoiceDateInput.value = formattedDate;
+    }
+    
+    // Устанавливаем срок оплаты через 15 дней, если поле пустое
+    const dueDateInput = document.getElementById('due_date');
+    if (dueDateInput && !dueDateInput.value) {
+        const dueDate = new Date(today);
+        dueDate.setDate(today.getDate() + 15);
+        dueDateInput.value = dueDate.toISOString().split('T')[0];
+    }
+}
+
+// Инициализация кастомных селекторов (клиент/поставщик)
+function initializeEntitySelectors() {
+    // Инициализация селектора клиента (для исходящего счета)
+    initializeEntitySelector('client');
+    
+    // Инициализация селектора поставщика (для входящего счета)
+    initializeEntitySelector('supplier');
+}
+
+// Инициализация конкретного селектора (клиент или поставщик)
+function initializeEntitySelector(type) {
+    const entitySelect = document.getElementById(`${type}-select`);
+    const entityDropdown = document.getElementById(`${type}-dropdown`);
+    const entitySearch = document.getElementById(`${type}-search`);
+    const idInput = document.getElementById(`${type}_id`);
+    const contactNameInput = document.getElementById('contact_name');
+    const contactEmailInput = document.getElementById('contact_email');
+    const addButton = document.getElementById(`add-${type}`);
+    const dynamicListId = `dynamic-${type}s-list`;
+    const listContainer = document.getElementById(dynamicListId);
+    
+    if (!entitySelect || !entityDropdown || !listContainer) {
+        return; // Если элементы не найдены, прерываем инициализацию
+    }
+    
+    // Получаем данные из JSON-скрипта
+    const dataScriptId = `${type}s-data`;
+    const dataScript = document.getElementById(dataScriptId);
+    let entities = [];
+    
+    if (dataScript) {
+        try {
+            entities = JSON.parse(dataScript.textContent);
+        } catch (e) {
+            console.error(`Ошибка при парсинге данных ${type}:`, e);
+        }
+    }
+    
+    // Функция для открытия/закрытия выпадающего списка
+    function toggleDropdown() {
+        entitySelect.classList.toggle('active');
+        entityDropdown.classList.toggle('show');
+        
+        if (entityDropdown.classList.contains('show')) {
+            entitySearch.focus();
+        }
+    }
+    
+    // Обработчик клика на селект
+    entitySelect.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleDropdown();
+    });
+    
+    // Закрытие выпадающего списка при клике вне его
+    document.addEventListener('click', function(e) {
+        if (!entitySelect.contains(e.target) && !entityDropdown.contains(e.target)) {
+            entitySelect.classList.remove('active');
+            entityDropdown.classList.remove('show');
+        }
+    });
+    
+    // Заполняем список элементами
+    if (listContainer && entities.length > 0) {
+        entities.forEach(entity => {
+            const element = document.createElement('div');
+            element.className = 'entity-item';
+            element.setAttribute('data-id', entity.id);
+            element.setAttribute('data-name', entity.name);
+            element.setAttribute('data-contact', entity.contact_person || '');
+            element.setAttribute('data-email', entity.email || '');
+            element.setAttribute('data-inn', entity.tax_id || '');
+            element.setAttribute('data-bank', entity.bank_name || '');
+            element.setAttribute('data-bik', entity.bank_bik || '');
+            element.setAttribute('data-account', entity.bank_account || '');
+            element.setAttribute('data-corr-account', entity.bank_corr_account || '');
+            
+            element.innerHTML = `
+                <div class="entity-item-name">${entity.name}</div>
+                <div class="entity-item-info">
+                    <span class="entity-item-inn">ИНН: ${entity.tax_id || 'Не указан'}</span>
+                    ${entity.phone ? `<span class="entity-item-phone">Тел: ${entity.phone}</span>` : ''}
+                </div>
+            `;
+            
+            // Обработчик клика на элемент списка
+            element.addEventListener('click', function() {
+                selectEntity(this, type);
+            });
+            
+            listContainer.appendChild(element);
+        });
+    } else {
+        // Если список пуст
+        const noResults = document.createElement('div');
+        noResults.className = 'no-results';
+        noResults.textContent = `Список ${type === 'client' ? 'клиентов' : 'поставщиков'} пуст`;
+        listContainer.appendChild(noResults);
+    }
+    
+    // Функция выбора элемента из списка
+    function selectEntity(item, entityType) {
+        const id = item.getAttribute('data-id');
+        const name = item.getAttribute('data-name');
+        const contact = item.getAttribute('data-contact') || '';
+        const email = item.getAttribute('data-email') || '';
+        const inn = item.getAttribute('data-inn') || '';
+        const bank = item.getAttribute('data-bank') || '';
+        const bik = item.getAttribute('data-bik') || '';
+        const account = item.getAttribute('data-account') || '';
+        const corrAccount = item.getAttribute('data-corr-account') || '';
+        
+        // Обновляем выбранное значение в селекторе
+        entitySelect.querySelector('span').textContent = name;
+        idInput.value = id;
+        
+        // Заполняем контактные данные
+        contactNameInput.value = contact;
+        contactEmailInput.value = email;
+        
+        // Заполняем банковские реквизиты, если доступны
+        const bankDetailsContainer = document.getElementById(`${entityType}_bank_details`);
+        if (bankDetailsContainer) {
+            document.getElementById(`${entityType}_name_display`).value = name;
+            document.getElementById(`${entityType}_inn_display`).value = inn;
+            document.getElementById(`${entityType}_bank_display`).value = bank;
+            document.getElementById(`${entityType}_bik_display`).value = bik;
+            document.getElementById(`${entityType}_account_display`).value = account;
+            
+            const corrAccountDisplay = document.getElementById(`${entityType}_corr_account_display`);
+            if (corrAccountDisplay) {
+                corrAccountDisplay.value = corrAccount;
+            }
+            
+            // Показываем блок с реквизитами
+            bankDetailsContainer.style.display = 'block';
+        }
+        
+        // Скрываем выпадающий список
+        entitySelect.classList.remove('active');
+        entityDropdown.classList.remove('show');
+    }
+    
+    // Обработчик для поиска
+    if (entitySearch) {
+        entitySearch.addEventListener('input', function() {
+            const searchValue = this.value.toLowerCase();
+            const items = listContainer.querySelectorAll('.entity-item');
+            let hasResults = false;
+            
+            items.forEach(item => {
+                const name = item.querySelector('.entity-item-name').textContent.toLowerCase();
+                const info = item.querySelector('.entity-item-info').textContent.toLowerCase();
+                
+                if (name.includes(searchValue) || info.includes(searchValue)) {
+                    item.style.display = 'block';
+                    hasResults = true;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+            
+            // Показать/скрыть сообщение об отсутствии результатов
+            let noResults = listContainer.querySelector('.no-results');
+            if (!hasResults) {
+                if (!noResults) {
+                    noResults = document.createElement('div');
+                    noResults.className = 'no-results';
+                    noResults.textContent = `Нет результатов для "${searchValue}"`;
+                    listContainer.appendChild(noResults);
+                } else {
+                    noResults.textContent = `Нет результатов для "${searchValue}"`;
+                    noResults.style.display = 'block';
+                }
+            } else if (noResults) {
+                noResults.style.display = 'none';
+            }
+        });
+    }
+    
+    // Обработчик для добавления нового элемента
+    if (addButton) {
+        addButton.addEventListener('click', function() {
+            window.location.href = type === 'client' 
+                ? '/clients/create/' 
+                : '/suppliers/create/';
+        });
+    }
+    
+    // Инициализация выбранного элемента по ID при загрузке страницы
+    const isEditMode = document.querySelector('.invoice-form').getAttribute('data-is-edit') === 'true';
+    if (isEditMode && idInput.value) {
+        const items = listContainer.querySelectorAll('.entity-item');
+        for (let i = 0; i < items.length; i++) {
+            if (items[i].getAttribute('data-id') === idInput.value) {
+                selectEntity(items[i], type);
+                break;
+            }
+        }
+    }
+}
+
+// Инициализация таблицы товаров/услуг
+function initializeInvoiceItems() {
+    const itemsContainer = document.getElementById('invoice-items');
     const addItemButton = document.getElementById('add-item');
     
-    // Обработчик для кнопки добавления позиции
-    if (addItemButton) {
-        addItemButton.addEventListener('click', addNewItemRow);
+    if (!itemsContainer || !addItemButton) {
+        return;
     }
     
-    // Обработчики для существующих полей количества и цены
-    document.querySelectorAll('input[name="item_quantity[]"], input[name="item_price[]"]').forEach(input => {
-        input.addEventListener('input', updateTotals);
+    // Обработчик для добавления новой позиции
+    addItemButton.addEventListener('click', function() {
+        addInvoiceItem();
     });
     
-    // Обработчики для кнопок удаления
-    document.querySelectorAll('.remove-item').forEach(button => {
-        button.addEventListener('click', function() {
-            // Проверяем, чтобы всегда оставалась хотя бы одна строка
-            if (document.querySelectorAll('.invoice-item').length > 1) {
-                this.closest('.invoice-item').remove();
-                updateTotals();
+    // Добавляем обработчики событий для существующих позиций
+    updateExistingItemsHandlers();
+    
+    // Выполняем первоначальный расчет итогов
+    calculateTotals();
+    
+    // Добавляет новую позицию в таблицу
+    function addInvoiceItem() {
+        const newRow = document.createElement('tr');
+        newRow.className = 'invoice-item';
+        
+        newRow.innerHTML = `
+            <td>
+                <input type="text" name="item_name[]" title="Наименование товара/услуги" required>
+            </td>
+            <td>
+                <input type="text" name="item_quantity[]" title="Количество" value="1" required>
+            </td>
+            <td>
+                <input type="text" name="item_price[]" title="Цена за единицу" value="0,00" required>
+            </td>
+            <td class="item-total">0,00</td>
+            <td>
+                <button type="button" class="btn-icon remove-item" title="Удалить позицию">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+        `;
+        
+        itemsContainer.appendChild(newRow);
+        
+        // Добавляем обработчики для новой строки
+        addItemHandlers(newRow);
+        
+        // Фокусируемся на поле названия
+        const nameInput = newRow.querySelector('input[name="item_name[]"]');
+        nameInput.focus();
+    }
+    
+    // Добавляет обработчики событий для существующих позиций
+    function updateExistingItemsHandlers() {
+        const rows = itemsContainer.querySelectorAll('.invoice-item');
+        
+        rows.forEach(row => {
+            addItemHandlers(row);
+        });
+    }
+    
+    // Добавляет обработчики событий для конкретной строки
+    function addItemHandlers(row) {
+        // Кнопка удаления
+        const removeButton = row.querySelector('.remove-item');
+        removeButton.addEventListener('click', function() {
+            if (itemsContainer.querySelectorAll('.invoice-item').length > 1) {
+                row.remove();
+                calculateTotals();
             } else {
-                showNotification('Необходимо оставить как минимум одну позицию в счете.', 'warning');
+                alert('Должна быть хотя бы одна позиция в счете');
+            }
+        });
+        
+        // Обработчики ввода для полей количества и цены
+        const quantityInput = row.querySelector('input[name="item_quantity[]"]');
+        const priceInput = row.querySelector('input[name="item_price[]"]');
+        
+        // Форматирование при фокусе и потере фокуса
+        quantityInput.addEventListener('focus', function() {
+            this.value = this.value.replace(/\s/g, '').replace(',', '.');
+        });
+        
+        quantityInput.addEventListener('blur', function() {
+            if (this.value) {
+                this.value = parseFloat(this.value.replace(',', '.')).toFixed(2).replace('.', ',');
+                calculateRowTotal(row);
+            }
+        });
+        
+        priceInput.addEventListener('focus', function() {
+            this.value = this.value.replace(/\s/g, '').replace(',', '.');
+        });
+        
+        priceInput.addEventListener('blur', function() {
+            if (this.value) {
+                this.value = parseFloat(this.value.replace(',', '.')).toFixed(2).replace('.', ',');
+                calculateRowTotal(row);
+            }
+        });
+        
+        // Пересчет суммы при изменении количества или цены
+        quantityInput.addEventListener('input', function() {
+            calculateRowTotal(row);
+        });
+        
+        priceInput.addEventListener('input', function() {
+            calculateRowTotal(row);
+        });
+    }
+    
+    // Расчет суммы для конкретной строки
+    function calculateRowTotal(row) {
+        const quantityInput = row.querySelector('input[name="item_quantity[]"]');
+        const priceInput = row.querySelector('input[name="item_price[]"]');
+        const totalCell = row.querySelector('.item-total');
+        
+        const quantity = parseFloat(quantityInput.value.replace(',', '.')) || 0;
+        const price = parseFloat(priceInput.value.replace(',', '.')) || 0;
+        const total = quantity * price;
+        
+        totalCell.textContent = total.toFixed(2).replace('.', ',');
+        
+        // Пересчитываем общие итоги
+        calculateTotals();
+    }
+}
+
+// Расчет итоговых сумм
+function calculateTotals() {
+    const rows = document.querySelectorAll('.invoice-item');
+    let subtotal = 0;
+    
+    // Суммируем все позиции
+    rows.forEach(row => {
+        const totalCell = row.querySelector('.item-total');
+        subtotal += parseFloat(totalCell.textContent.replace(/\s/g, '').replace(',', '.')) || 0;
+    });
+    
+    // Обновляем подытог
+    const subtotalElement = document.getElementById('subtotal');
+    subtotalElement.textContent = subtotal.toFixed(2).replace('.', ',') + ' ₽';
+    
+    // Вычисляем НДС (20%)
+    const tax = subtotal * 0.2;
+    const taxElement = document.getElementById('tax');
+    taxElement.textContent = tax.toFixed(2).replace('.', ',') + ' ₽';
+    
+    // Получаем скидку
+    const discountInput = document.getElementById('discount');
+    const discount = parseFloat(discountInput.value.replace(/\s/g, '').replace(',', '.')) || 0;
+    
+    // Вычисляем итоговую сумму
+    const total = subtotal + tax - discount;
+    const totalElement = document.getElementById('total');
+    totalElement.textContent = total.toFixed(2).replace('.', ',') + ' ₽';
+    
+    // Обработчик изменения скидки
+    discountInput.addEventListener('input', function() {
+        calculateTotals();
+    });
+    
+    discountInput.addEventListener('focus', function() {
+        this.value = this.value.replace(/\s/g, '').replace(',', '.');
+    });
+    
+    discountInput.addEventListener('blur', function() {
+        if (this.value) {
+            this.value = parseFloat(this.value.replace(',', '.')).toFixed(2).replace('.', ',');
+            calculateTotals();
+        }
+    });
+}
+
+// Форматирование полей с денежными значениями
+function formatCurrencyInputs() {
+    const currencyInputs = document.querySelectorAll('input[name="item_price[]"], input[name="item_quantity[]"], #discount');
+    
+    currencyInputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.value = this.value.replace(/\s/g, '').replace(',', '.');
+        });
+        
+        input.addEventListener('blur', function() {
+            if (this.value) {
+                this.value = parseFloat(this.value.replace(',', '.')).toFixed(2).replace('.', ',');
             }
         });
     });
-    
-    // Автоматическая установка текущей даты для полей даты
-    const dateInputs = document.querySelectorAll('input[type="date"]');
-    if (dateInputs.length > 0) {
-        const today = new Date().toISOString().split('T')[0];
-        dateInputs.forEach(input => {
-            if (!input.value) {
-                input.value = today;
-            }
-        });
-    }
-    
-    // Обработчик для поля скидки
-    const discountInput = document.getElementById('discount');
-    if (discountInput) {
-        discountInput.addEventListener('input', updateTotals);
-    }
-    
-    // Обработчик отправки формы
-    if (invoiceForm) {
-        invoiceForm.addEventListener('submit', function(e) {
-            // Здесь можно добавить валидацию перед отправкой
-        });
-    }
-    
-    // Вызов функций инициализации при загрузке страницы
-    if (document.getElementById('company_name')) {
-        populateCompanyBankDetails();
-    }
-    
-    // Обработчик для выбора поставщика (для входящего счета)
-    const supplierItems = document.querySelectorAll('#supplier-list .supplier-item');
-    if (supplierItems.length > 0) {
-        supplierItems.forEach(item => {
-            item.addEventListener('click', function() {
-                // Получаем данные из атрибутов элемента
-                const supplierId = this.getAttribute('data-id');
-                
-                // В реальном приложении здесь должен быть AJAX-запрос к серверу
-                // для получения полных данных о поставщике
-                // Временно используем заглушку
-                const supplierData = {
-                    name: this.querySelector('.supplier-item-name').textContent,
-                    inn: this.querySelector('.supplier-item-inn').textContent.replace('ИНН: ', ''),
-                    bank_name: 'АО "Банк поставщика"',
-                    bank_bik: '044525123',
-                    bank_account: '40702810200000000456',
-                    bank_corr_account: '30101810400000000123'
-                };
-                
-                populateSupplierBankDetails(supplierData);
-            });
-        });
-    }
-    
-    // Обработчик для выбора клиента
-    const clientItems = document.querySelectorAll('#client-list .client-item');
-    if (clientItems.length > 0) {
-        clientItems.forEach(item => {
-            item.addEventListener('click', function() {
-                // Получаем данные из атрибутов элемента
-                const clientId = this.getAttribute('data-id');
-                
-                // В реальном приложении здесь нужен AJAX-запрос к серверу
-                // для получения полных данных о клиенте
-                const clientData = {
-                    name: this.querySelector('.client-item-name').textContent,
-                    inn: this.querySelector('.client-item-inn').textContent.replace('ИНН: ', ''),
-                    bank_name: '',
-                    bank_bik: '',
-                    bank_account: ''
-                };
-                
-                populateClientBankDetails(clientData);
-            });
-        });
-    }
-    
-    // Инициализация расчета итогов
-    updateTotals();
-    
-    // Вызываем функцию предзаполнения формы
-    prepopulateFormForEditing();
-}); 
+} 

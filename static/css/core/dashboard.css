@@ -52,7 +52,6 @@ h1, h2, h3, h4, h5, h6 {
     gap: 1.5rem;
     max-width: 1280px;
     margin: 1.5rem auto;
-    padding: 0 1.5rem;
 }
 
 .dashboard-main {
@@ -69,7 +68,6 @@ h1, h2, h3, h4, h5, h6 {
     border: 1px solid #f0f0f0;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     overflow: hidden;
-    height: fit-content;
 }
 
 .dashboard-sidebar:hover {
@@ -232,7 +230,6 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .activity-list {
-    max-height: 450px;
     overflow-y: auto;
 }
 

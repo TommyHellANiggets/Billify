@@ -1,0 +1,389 @@
+/* Стили для дашборда - современный и компактный дизайн */
+:root {
+    --primary-color: #5e72e4;
+    --primary-light: rgba(94, 114, 228, 0.1);
+    --secondary-color: #6c757d;
+    --accent-color: #2dce89;
+    --accent-light: rgba(45, 206, 137, 0.1);
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+    --border-color: #edf2f7;
+    --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.03);
+    --shadow-md: 0 8px 25px rgba(0, 0, 0, 0.06);
+    --border-radius: 20px;
+    --border-radius-sm: 16px;
+    --font-main: 'Segoe UI', Arial, sans-serif;
+    --danger-color: #e13c3c;
+    --danger-light: rgba(225, 60, 60, 0.1);
+    --warning-color: #fb6340;
+    --warning-light: rgba(251, 99, 64, 0.1);
+    --info-color: #11cdef;
+    --info-light: rgba(17, 205, 239, 0.1);
+}
+
+body {
+    font-family: var(--font-main);
+    color: var(--dark-color);
+    background-color: #f5f7fa;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    margin-top: 0;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    margin: 0 0 1.2rem 0;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.section-title i {
+    color: var(--primary-color);
+}
+
+/* Структура дашборда */
+.dashboard-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    max-width: 1280px;
+    margin: 1.5rem auto;
+    padding: 0 1.5rem;
+}
+
+.dashboard-main {
+    flex: 1;
+    min-width: 65%;
+}
+
+.dashboard-sidebar {
+    width: 30%;
+    min-width: 300px;
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid #f0f0f0;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+    height: fit-content;
+}
+
+.dashboard-sidebar:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Уведомления */
+.notification-card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.notification-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.notification-content {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.notification-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    margin-right: 1rem;
+    flex-shrink: 0;
+}
+
+.notification-text {
+    flex: 1;
+}
+
+.notification-text h3 {
+    font-size: 1.1rem;
+    margin: 0 0 0.5rem 0;
+    font-weight: 600;
+}
+
+.notification-text p {
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+    margin: 0;
+}
+
+.email-notification .notification-icon {
+    background-color: var(--info-light);
+    color: var(--info-color);
+}
+
+.profile-notification .notification-icon {
+    background-color: var(--warning-light);
+    color: var(--warning-color);
+}
+
+/* Быстрые действия */
+.quick-actions {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 1.8rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid #f0f0f0;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.quick-actions:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.action-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.action-card {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.2rem;
+    border-radius: var(--border-radius-sm);
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    transition: all 0.2s ease-in-out;
+    text-decoration: none;
+    color: var(--dark-color);
+}
+
+.action-card:hover {
+    background-color: var(--primary-light);
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(94, 114, 228, 0.12);
+}
+
+.action-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    color: var(--primary-color);
+    border-radius: var(--border-radius-sm);
+    margin-right: 1rem;
+    flex-shrink: 0;
+    box-shadow: var(--shadow-sm);
+}
+
+.action-text {
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+/* Блок недавней активности */
+.activity-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 1.8rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.activity-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0;
+    color: #333;
+}
+
+.see-all {
+    font-size: 0.9rem;
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.see-all:hover {
+    color: #4756ca;
+}
+
+.activity-feed {
+    padding: 0.5rem 0;
+}
+
+.activity-list {
+    max-height: 450px;
+    overflow-y: auto;
+}
+
+.activity-item {
+    display: flex;
+    padding: 1rem 1.8rem;
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.2s;
+}
+
+.activity-item:hover {
+    background-color: #f8f9fa;
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background-color: var(--primary-light);
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    flex-shrink: 0;
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 0.2rem;
+    color: #333;
+}
+
+.activity-desc {
+    font-size: 0.85rem;
+    color: var(--secondary-color);
+    margin-bottom: 0.3rem;
+}
+
+.activity-time {
+    font-size: 0.75rem;
+    color: #adb5bd;
+}
+
+.activity-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1.5rem;
+    color: #adb5bd;
+}
+
+.activity-empty i {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+/* Стили кнопок */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.9rem 1.2rem;
+    border-radius: 16px;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn i {
+    font-size: 1rem;
+}
+
+.btn-sm {
+    padding: 0.6rem 1rem;
+    font-size: 0.8rem;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 3px 6px rgba(94, 114, 228, 0.12);
+}
+
+.btn-primary:hover {
+    background-color: #4756ca;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(94, 114, 228, 0.15);
+}
+
+.btn-accent {
+    background-color: var(--accent-color);
+    color: white;
+    box-shadow: 0 3px 6px rgba(45, 206, 137, 0.12);
+}
+
+.btn-accent:hover {
+    background-color: #26b178;
+    transform: translateY(-2px);
+}
+
+.btn-white {
+    background-color: white;
+    color: var(--dark-color);
+    border: 1px solid #e9ecef;
+}
+
+.btn-white:hover {
+    background-color: #f8f9fa;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+    
+    .dashboard-sidebar {
+        width: 100%;
+    }
+    
+    .notification-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .notification-card .btn {
+        margin-top: 1rem;
+        align-self: flex-end;
+    }
+    
+    .action-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    .action-grid {
+        grid-template-columns: 1fr;
+    }
+} 

@@ -1,22 +1,23 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
-{% block title %}Flowfy - умная система автоматизации бухгалтерии и финансов для бизнеса{% endblock %}
+{% block title %}{% trans "Flowfy - умная система автоматизации бухгалтерии и финансов для бизнеса" %}{% endblock %}
 
-{% block meta_description %}Flowfy - современная российская онлайн-система для ведения бухгалтерии, учета финансов и автоматизации бизнес-процессов. Оптимизируйте работу вашего бизнеса с Flowfy.{% endblock %}
+{% block meta_description %}{% trans "Flowfy - современная российская онлайн-система для ведения бухгалтерии, учета финансов и автоматизации бизнес-процессов. Оптимизируйте работу вашего бизнеса с Flowfy." %}{% endblock %}
 
-{% block meta_keywords %}flowfy, флоуфай, автоматизация бухгалтерии, управление финансами, онлайн бухгалтерия, финансовый учёт, электронные счета, российская система учета{% endblock %}
+{% block meta_keywords %}{% trans "flowfy, флоуфай, автоматизация бухгалтерии, управление финансами, онлайн бухгалтерия, финансовый учёт, электронные счета, российская система учета" %}{% endblock %}
 
-{% block og_title %}Flowfy - умная система автоматизации бухгалтерии и финансов для бизнеса{% endblock %}
-{% block og_description %}Flowfy - современная российская онлайн-система для ведения бухгалтерии, учета финансов и автоматизации бизнес-процессов. Оптимизируйте работу вашего бизнеса с Flowfy.{% endblock %}
+{% block og_title %}{% trans "Flowfy - умная система автоматизации бухгалтерии и финансов для бизнеса" %}{% endblock %}
+{% block og_description %}{% trans "Flowfy - современная российская онлайн-система для ведения бухгалтерии, учета финансов и автоматизации бизнес-процессов. Оптимизируйте работу вашего бизнеса с Flowfy." %}{% endblock %}
 {% block og_image %}{% static 'images/og/home-og.jpg' %}{% endblock %}
 {% block og_type %}website{% endblock %}
 
 {% block meta_extra %}
 <meta property="vk:image" content="{% static 'images/og/home-og.jpg' %}" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Flowfy - умная система автоматизации бухгалтерии и финансов для бизнеса" />
-<meta name="twitter:description" content="Flowfy - современная российская онлайн-система для ведения бухгалтерии, учета финансов и автоматизации бизнес-процессов." />
+<meta name="twitter:title" content="{% trans "Flowfy - умная система автоматизации бухгалтерии и финансов для бизнеса" %}" />
+<meta name="twitter:description" content="{% trans "Flowfy - современная российская онлайн-система для ведения бухгалтерии, учета финансов и автоматизации бизнес-процессов." %}" />
 <meta name="twitter:image" content="{% static 'images/og/home-og.jpg' %}" />
 <meta name="robots" content="index, follow" />
 <meta name="yandex-verification" content="verification_token" />
@@ -58,7 +59,7 @@
   "name": "Flowfy",
   "url": "https://flowfy.ru",
   "logo": "https://flowfy.ru{% static 'images/logo.png' %}",
-  "description": "Flowfy - современная российская система автоматизации бухгалтерии и управления финансами для бизнеса.",
+  "description": "{% trans "Flowfy - современная российская система автоматизации бухгалтерии и управления финансами для бизнеса." %}",
   "contactPoint": {
     "@type": "ContactPoint",
     "telephone": "+7-495-123-4567",
@@ -76,30 +77,33 @@
 <section class="hero">
     <div class="hero-content-wrapper">
         <div class="hero-content">
-            <h1 class="hero-title poppins-font">Flowfy - Ваш финансовый учет стал проще</h1>
-            <p class="hero-subtitle poppins-font">Автоматизация финансового учета и документооборота для малого бизнеса и индивидуальных предпринимателей</p>
+            <h1 class="hero-title poppins-font">{% trans "Flowfy - Ваш финансовый учет стал проще" %}</h1>
+            <p class="hero-subtitle poppins-font">{% trans "Автоматизация финансового учета и документооборота для малого бизнеса и индивидуальных предпринимателей" %}</p>
             <div class="hero-buttons">
-                <a href="{% url 'clients:list' %}" class="btn btn-primary btn-lg hero-btn">Управление клиентами</a>
-                <a href="{% url 'invoices:list' %}" class="btn btn-secondary btn-lg hero-btn">Создать счет</a>
+                <a href="{% url 'clients:list' %}" class="btn btn-primary btn-lg hero-btn">{% trans "Управление клиентами" %}</a>
+                <a href="{% url 'invoices:list' %}" class="btn btn-secondary btn-lg hero-btn">{% trans "Создать счет" %}</a>
             </div>
         </div>
         <div class="hero-image">
-            <img src="{% static '/images/hero.png' %}" alt="Flowfy Dashboard - система автоматизации финансового учета" class="dashboard-preview">
+            <video autoplay loop muted playsinline preload="metadata" class="dashboard-preview">
+                <source src="{% static '/images/large (2).webm' %}" type="video/webm">
+                <img src="{% static '/images/hero.png' %}" alt="{% trans "Flowfy Dashboard - система автоматизации финансового учета" %}" class="dashboard-preview">
+            </video>
         </div>
     </div>
     <div class="hero-shape hero-shape-1"></div>
     <div class="hero-shape hero-shape-2"></div>
     <div class="hero-shape hero-shape-3"></div>
     <div class="hero-scroll-indicator">
-        <span>Узнать больше</span>
+        <span>{% trans "Узнать больше" %}</span>
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 13l5 5 5-5M7 6l5 5 5-5"/></svg>
     </div>
 </section>
 
 <section class="stats-section">
     <div class="section-header">
-        <h2 class="section-title">Надежное решение для бизнеса</h2>
-        <p class="section-subtitle">Flowfy в цифрах - от начинающих предпринимателей до крупных компаний</p>
+        <h2 class="section-title">{% trans "Надежное решение для бизнеса" %}</h2>
+        <p class="section-subtitle">{% trans "Flowfy в цифрах - от начинающих предпринимателей до крупных компаний" %}</p>
     </div>
     <div class="stats-container">
         <div class="stat-card">
@@ -113,7 +117,7 @@
             </div>
             <div class="stat-content">
                 <div class="stat-number" data-count="{{ total_users|default:'2' }}">2</div>
-                <div class="stat-label">Активных пользователей</div>
+                <div class="stat-label">{% trans "Активных пользователей" %}</div>
             </div>
             <div class="stat-bg"></div>
         </div>
@@ -129,7 +133,7 @@
             </div>
             <div class="stat-content">
                 <div class="stat-number" data-count="{{ total_invoices|default:'10' }}">10</div>
-                <div class="stat-label">Документов создано</div>
+                <div class="stat-label">{% trans "Документов создано" %}</div>
             </div>
             <div class="stat-bg"></div>
         </div>
@@ -142,7 +146,7 @@
             </div>
             <div class="stat-content">
                 <div class="stat-number" data-count="{{ system_stats.invoices.monthly_growth|floatformat:'1'|default:'12.5' }}">12,5%</div>
-                <div class="stat-label">Рост эффективности</div>
+                <div class="stat-label">{% trans "Рост эффективности" %}</div>
             </div>
             <div class="stat-bg"></div>
         </div>
@@ -155,7 +159,7 @@
             </div>
             <div class="stat-content">
                 <div class="stat-number" data-count="{{ system_stats.security.uptime_percentage|default:'99.9' }}">99,9%</div>
-                <div class="stat-label">Защита данных</div>
+                <div class="stat-label">{% trans "Защита данных" %}</div>
             </div>
             <div class="stat-bg"></div>
         </div>
@@ -164,58 +168,58 @@
 
 <section class="about-section">
     <div class="section-header">
-        <h2 class="section-title">О системе Flowfy</h2>
-        <p class="section-subtitle">Мы делаем финансовый учет простым и понятным для малого бизнеса</p>
+        <h2 class="section-title">{% trans "О системе Flowfy" %}</h2>
+        <p class="section-subtitle">{% trans "Мы делаем финансовый учет простым и понятным для малого бизнеса" %}</p>
     </div>
     
     <div class="about-container">
         <div class="about-card about-mission">
             <div class="about-content">
-                <h3 class="about-title">Наша миссия</h3>
-                <p class="about-text">Flowfy разработан с целью помочь малому бизнесу и индивидуальным предпринимателям эффективно управлять своими финансами без необходимости в специальных бухгалтерских знаниях.</p>
-                <p class="about-text">Мы стремимся сделать процесс учета и документооборота максимально простым, автоматизированным и интуитивно понятным.</p>
+                <h3 class="about-title">{% trans "Наша миссия" %}</h3>
+                <p class="about-text">{% trans "Flowfy разработан с целью помочь малому бизнесу и индивидуальным предпринимателям эффективно управлять своими финансами без необходимости в специальных бухгалтерских знаниях." %}</p>
+                <p class="about-text">{% trans "Мы стремимся сделать процесс учета и документооборота максимально простым, автоматизированным и интуитивно понятным." %}</p>
                 <div class="about-features">
                     <div class="about-feature">
                         <div class="about-feature-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                         </div>
-                        <div class="about-feature-text">Простота интеграции</div>
+                        <div class="about-feature-text">{% trans "Простота интеграции" %}</div>
                     </div>
                     <div class="about-feature">
                         <div class="about-feature-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                         </div>
-                        <div class="about-feature-text">Экономия времени</div>
+                        <div class="about-feature-text">{% trans "Экономия времени" %}</div>
                     </div>
                     <div class="about-feature">
                         <div class="about-feature-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
                         </div>
-                        <div class="about-feature-text">Уведомления и напоминания</div>
+                        <div class="about-feature-text">{% trans "Уведомления и напоминания" %}</div>
                     </div>
                 </div>
             </div>
             <div class="about-image">
-                <img src="{% static '/images/mission.png' %}" alt="Наша миссия" class="about-img">
+                <img src="{% static '/images/mission.png' %}" alt="{% trans "Наша миссия" %}" class="about-img">
                 <div class="about-image-shape"></div>
             </div>
         </div>
         
         <div class="about-card about-solution">
             <div class="about-image">
-                <img src="{% static '/images/idea.png' %}" alt="Для кого это решение" class="about-img">
+                <img src="{% static '/images/idea.png' %}" alt="{% trans "Для кого это решение" %}" class="about-img">
                 <div class="about-image-shape"></div>
             </div>
             <div class="about-content">
-                <h3 class="about-title">Для кого это решение?</h3>
+                <h3 class="about-title">{% trans "Для кого это решение?" %}</h3>
                 <div class="about-solution-items">
                     <div class="solution-item">
                         <div class="solution-item-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                         </div>
                         <div class="solution-item-text">
-                            <h4>Малый бизнес</h4>
-                            <p>Компании, которые хотят упростить финансовый учет и сократить расходы</p>
+                            <h4>{% trans "Малый бизнес" %}</h4>
+                            <p>{% trans "Компании, которые хотят упростить финансовый учет и сократить расходы" %}</p>
                         </div>
                     </div>
                     <div class="solution-item">
@@ -223,8 +227,8 @@
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
                         </div>
                         <div class="solution-item-text">
-                            <h4>Фрилансеры</h4>
-                            <p>Самозанятые, которым нужно управлять счетами и клиентами</p>
+                            <h4>{% trans "Фрилансеры" %}</h4>
+                            <p>{% trans "Самозанятые, которым нужно управлять счетами и клиентами" %}</p>
                         </div>
                     </div>
                     <div class="solution-item">
@@ -232,8 +236,8 @@
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
                         </div>
                         <div class="solution-item-text">
-                            <h4>Индивидуальные предприниматели</h4>
-                            <p>ИП, стремящиеся автоматизировать рутинные задачи</p>
+                            <h4>{% trans "Индивидуальные предприниматели" %}</h4>
+                            <p>{% trans "ИП, стремящиеся автоматизировать рутинные задачи" %}</p>
                         </div>
                     </div>
                     <div class="solution-item">
@@ -241,13 +245,13 @@
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
                         </div>
                         <div class="solution-item-text">
-                            <h4>Стартапы</h4>
-                            <p>Молодые компании, которым нужно эффективное решение без больших затрат</p>
+                            <h4>{% trans "Стартапы" %}</h4>
+                            <p>{% trans "Молодые компании, которым нужно эффективное решение без больших затрат" %}</p>
                         </div>
                     </div>
                 </div>
                 <div class="about-cta">
-                    <a href="#" class="btn btn-outline about-btn">Узнать больше</a>
+                    <a href="#" class="btn btn-outline about-btn">{% trans "Узнать больше" %}</a>
                 </div>
             </div>
         </div>
@@ -255,117 +259,259 @@
 </section>
 
 <section class="features-section">
-    <div class="section-header-container">
+    <div class="floating-shapes">
+        <div class="floating-shape floating-shape-1"></div>
+        <div class="floating-shape floating-shape-2"></div>
+        <div class="floating-shape floating-shape-3"></div>
+        <div class="floating-shape floating-shape-4"></div>
+    </div>
+    
+    <div class="container">
         <div class="section-header">
-            <h2>Возможности системы</h2>
-        </div>
-        
-        <div class="features-progress">
-            <div class="progress-step active" data-target="feature-invoices"><span>Счета</span></div>
-            <div class="progress-step" data-target="feature-clients"><span>Клиенты</span></div>
-            <div class="progress-step" data-target="feature-analytics"><span>Аналитика</span></div>
-            <div class="progress-step" data-target="feature-security"><span>Безопасность</span></div>
-            <div class="progress-line"></div>
+            <h2 class="section-title">{% trans "Возможности системы" %}</h2>
+            <p class="section-subtitle">{% trans "Мощные инструменты для управления вашими финансами и клиентами" %}</p>
         </div>
     </div>
     
-    <div class="features-sticky-container">
-        <div class="features-sticky-wrapper">
-            <div class="feature-card-container">
-                <div class="feature-card" id="feature-invoices">
-                    <div class="feature-visual">
-                        <div class="feature-image-wrapper">
-                            <img src="{% static '/images/financial.png' %}" alt="Счета и платежи" class="feature-img">
+    <div class="features-grid-container">
+        <!-- Первая карточка -->
+        <div class="feature-box feature-box-1">
+            <div class="feature-box-inner">
+                <div class="feature-icon-area">
+                    <div class="feature-icon-wrapper">
+                        <div class="feature-icon-glow"></div>
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 3h16a2 2 0 0 1 2 2v6a10 10 0 0 1-10 10A10 10 0 0 1 2 11V5a2 2 0 0 1 2-2z"></path>
+                                <polyline points="8 10 12 14 16 10"></polyline>
+                            </svg>
                         </div>
                     </div>
-                    <div class="feature-content">
-                        <h3>Управление счетами и платежами</h3>
-                        <p>Создавайте профессиональные счета и предложения по настраиваемым шаблонам. Автоматическая генерация PDF документов и отправка клиентам.</p>
-                        <ul class="feature-list">
-                            <li>Создание и отправка счетов в несколько кликов</li>
-                            <li>Настраиваемые шаблоны с вашим брендом</li>
-                            <li>Автоматические напоминания об оплате</li>
-                            <li>Онлайн-оплата через интегрированные платежные системы</li>
-                            <li>Отслеживание статуса платежей <span class="stats-badge">{{ system_stats.invoices.paid_percentage|default:"90" }}% оплачиваемость</span></li>
-                        </ul>
-                        <a href="{% url 'invoices:list' %}" class="btn btn-primary">Попробовать</a>
+                </div>
+                <div class="feature-content-area">
+                    <div class="feature-header">
+                        <div class="feature-tag-pills">
+                            <span class="feature-tag-pill">{% trans "PDF" %}</span>
+                            <span class="feature-tag-pill">{% trans "XML" %}</span>
+                        </div>
+                        <h3 class="feature-title">{% trans "Управление счетами и платежами" %}</h3>
+                    </div>
+                    <p class="feature-desc">{% trans "Создавайте профессиональные счета и предложения по настраиваемым шаблонам" %}</p>
+                    
+                    <div class="feature-details">
+                        <div class="feature-detail-item">
+                            <div class="feature-detail-icon"></div>
+                            <span>{% trans "Создание в несколько кликов" %}</span>
+                        </div>
+                        <div class="feature-detail-item">
+                            <div class="feature-detail-icon"></div>
+                            <span>{% trans "Настраиваемые шаблоны" %}</span>
+                        </div>
+                        <div class="feature-detail-item">
+                            <div class="feature-detail-icon"></div>
+                            <span>{% trans "Автоматические напоминания" %}</span>
+                        </div>
+                        <div class="feature-stat">
+                            <div class="feature-stat-value">{{ system_stats.invoices.paid_percentage|default:"90" }}%</div>
+                            <div class="feature-stat-label">{% trans "оплачиваемость" %}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-action">
+                        <a href="{% url 'invoices:list' %}" class="feature-btn">
+                            <span>{% trans "Попробовать" %}</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14"></path>
+                                <path d="M12 5l7 7-7 7"></path>
+                            </svg>
+                        </a>
                     </div>
                 </div>
             </div>
-            
-            <div class="feature-card-container">
-                <div class="feature-card" id="feature-clients">
-                    <div class="feature-visual">
-                        <div class="feature-image-wrapper">
-                            <img src="{% static '/images/client_manage.png' %}" alt="Управление клиентами" class="feature-img">
+            <div class="feature-box-backdrop"></div>
+        </div>
+        
+        <!-- Вторая карточка -->
+        <div class="feature-box feature-box-2">
+            <div class="feature-box-inner">
+                <div class="feature-icon-area">
+                    <div class="feature-icon-wrapper">
+                        <div class="feature-icon-glow"></div>
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
                         </div>
                     </div>
-                    <div class="feature-content">
-                        <h3>Управление клиентами</h3>
-                        <p>Удобное хранение и управление контактной информацией и реквизитами ваших клиентов в едином интерфейсе.</p>
-                        <ul class="feature-list">
-                            <li>Полная история взаимодействия с клиентами</li>
-                            <li>Категоризация и группировка клиентов</li>
-                            <li>Централизованное хранение всех реквизитов</li>
-                            <li>Автоматическое заполнение данных в документах</li>
-                            <li>Индивидуальные условия работы для разных клиентов <span class="stats-badge">{{ system_stats.clients.active_percentage|default:"95" }}% активных</span></li>
-                        </ul>
-                        <a href="{% url 'clients:list' %}" class="btn btn-primary">Попробовать</a>
+                </div>
+                <div class="feature-content-area">
+                    <div class="feature-header">
+                        <div class="feature-tag-pills">
+                            <span class="feature-tag-pill">{% trans "CRM" %}</span>
+                            <span class="feature-tag-pill">{% trans "Контакты" %}</span>
+                        </div>
+                        <h3 class="feature-title">{% trans "Управление клиентами" %}</h3>
+                    </div>
+                    <p class="feature-desc">{% trans "Управление контактной информацией и реквизитами клиентов в едином интерфейсе" %}</p>
+                    
+                    <div class="feature-details">
+                        <div class="feature-detail-item">
+                            <div class="feature-detail-icon"></div>
+                            <span>{% trans "История взаимодействия" %}</span>
+                        </div>
+                        <div class="feature-detail-item">
+                            <div class="feature-detail-icon"></div>
+                            <span>{% trans "Группировка клиентов" %}</span>
+                        </div>
+                        <div class="feature-detail-item">
+                            <div class="feature-detail-icon"></div>
+                            <span>{% trans "Индивидуальные условия" %}</span>
+                        </div>
+                        <div class="feature-stat">
+                            <div class="feature-stat-value">{{ system_stats.clients.active_percentage|default:"95" }}%</div>
+                            <div class="feature-stat-label">{% trans "активных" %}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-action">
+                        <a href="{% url 'clients:list' %}" class="feature-btn">
+                            <span>{% trans "Попробовать" %}</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14"></path>
+                                <path d="M12 5l7 7-7 7"></path>
+                            </svg>
+                        </a>
                     </div>
                 </div>
             </div>
-            
-            <div class="feature-card-container">
-                <div class="feature-card" id="feature-analytics">
-                    <div class="feature-visual">
-                        <div class="feature-image-wrapper">
-                            <img src="{% static '/images/analytics.png' %}" alt="Аналитика" class="feature-img">
+            <div class="feature-box-backdrop"></div>
+        </div>
+        
+        <!-- Третья карточка -->
+        <div class="feature-box feature-box-3">
+            <div class="feature-box-inner">
+                <div class="feature-icon-area">
+                    <div class="feature-icon-wrapper">
+                        <div class="feature-icon-glow"></div>
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="20" x2="18" y2="10"></line>
+                                <line x1="12" y1="20" x2="12" y2="4"></line>
+                                <line x1="6" y1="20" x2="6" y2="14"></line>
+                                <path d="M2 20h20"></path>
+                            </svg>
                         </div>
                     </div>
-                    <div class="feature-content">
-                        <h3>Продвинутая аналитика</h3>
-                        <p>Интерактивные графики и диаграммы для анализа ваших финансовых показателей в режиме реального времени.</p>
-                        <ul class="feature-list">
-                            <li>Наглядные отчеты о движении денежных средств</li>
-                            <li>Анализ доходов и расходов по категориям</li>
-                            <li>Прогнозирование финансовых показателей <span class="stats-badge">Рост {{ system_stats.invoices.monthly_growth|floatformat:"1"|default:"12.5" }}%/мес</span></li>
-                            <li>Оценка эффективности работы с клиентами</li>
-                            <li>Экспорт отчетов в различных форматах</li>
-                        </ul>
-                        <a href="{% url 'invoices:list' %}?view=analytics" class="btn btn-primary">Попробовать</a>
+                </div>
+                <div class="feature-content-area">
+                    <div class="feature-header">
+                        <div class="feature-tag-pills">
+                            <span class="feature-tag-pill">{% trans "Графики" %}</span>
+                            <span class="feature-tag-pill">{% trans "Отчеты" %}</span>
+                        </div>
+                        <h3 class="feature-title">{% trans "Продвинутая аналитика" %}</h3>
+                    </div>
+                    <p class="feature-desc">{% trans "Интерактивные графики и диаграммы для анализа финансовых показателей" %}</p>
+                    
+                    <div class="feature-details">
+                        <div class="feature-detail-item">
+                            <div class="feature-detail-icon"></div>
+                            <span>{% trans "Движение денежных средств" %}</span>
+                        </div>
+                        <div class="feature-detail-item">
+                            <div class="feature-detail-icon"></div>
+                            <span>{% trans "Анализ по категориям" %}</span>
+                        </div>
+                        <div class="feature-detail-item">
+                            <div class="feature-detail-icon"></div>
+                            <span>{% trans "Прогнозирование" %}</span>
+                        </div>
+                        <div class="feature-stat">
+                            <div class="feature-stat-value">{{ system_stats.invoices.monthly_growth|floatformat:"1"|default:"12.5" }}%</div>
+                            <div class="feature-stat-label">{% trans "рост/мес" %}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-action">
+                        <a href="{% url 'invoices:list' %}?view=analytics" class="feature-btn">
+                            <span>{% trans "Попробовать" %}</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14"></path>
+                                <path d="M12 5l7 7-7 7"></path>
+                            </svg>
+                        </a>
                     </div>
                 </div>
             </div>
-            
-            <div class="feature-card-container">
-                <div class="feature-card" id="feature-security">
-                    <div class="feature-visual">
-                        <div class="feature-image-wrapper">
-                            <img src="{% static '/images/safety.png' %}" alt="Безопасность" class="feature-img">
+            <div class="feature-box-backdrop"></div>
+        </div>
+        
+        <!-- Четвертая карточка -->
+        <div class="feature-box feature-box-4">
+            <div class="feature-box-inner">
+                <div class="feature-icon-area">
+                    <div class="feature-icon-wrapper">
+                        <div class="feature-icon-glow"></div>
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
                         </div>
                     </div>
-                    <div class="feature-content">
-                        <h3>Высокий уровень безопасности</h3>
-                        <p>Ваши данные надежно защищены с помощью современных технологий шифрования и многоуровневой системы безопасности.</p>
-                        <ul class="feature-list">
-                            <li>Шифрование данных на всех этапах передачи</li>
-                            <li>Двухфакторная аутентификация</li>
-                            <li>Резервное копирование данных <span class="stats-badge">{{ system_stats.security.data_backup_count|default:"5000" }}+ копий</span></li>
-                            <li>Защита от несанкционированного доступа</li>
-                            <li>Соответствие международным стандартам безопасности</li>
-                        </ul>
-                        <a href="#" class="btn btn-primary">Попробовать</a>
+                </div>
+                <div class="feature-content-area">
+                    <div class="feature-header">
+                        <div class="feature-tag-pills">
+                            <span class="feature-tag-pill">{% trans "Шифрование" %}</span>
+                            <span class="feature-tag-pill">{% trans "2FA" %}</span>
+                        </div>
+                        <h3 class="feature-title">{% trans "Высокий уровень безопасности" %}</h3>
+                    </div>
+                    <p class="feature-desc">{% trans "Ваши данные надежно защищены с помощью современных технологий шифрования" %}</p>
+                    
+                    <div class="feature-details">
+                        <div class="feature-detail-item">
+                            <div class="feature-detail-icon"></div>
+                            <span>{% trans "Шифрование данных" %}</span>
+                        </div>
+                        <div class="feature-detail-item">
+                            <div class="feature-detail-icon"></div>
+                            <span>{% trans "Двухфакторная аутентификация" %}</span>
+                        </div>
+                        <div class="feature-detail-item">
+                            <div class="feature-detail-icon"></div>
+                            <span>{% trans "Резервное копирование" %}</span>
+                        </div>
+                        <div class="feature-stat">
+                            <div class="feature-stat-value">{{ system_stats.security.data_backup_count|default:"5000" }}+</div>
+                            <div class="feature-stat-label">{% trans "копий" %}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-action">
+                        <a href="#" class="feature-btn">
+                            <span>{% trans "Попробовать" %}</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14"></path>
+                                <path d="M12 5l7 7-7 7"></path>
+                            </svg>
+                        </a>
                     </div>
                 </div>
             </div>
+            <div class="feature-box-backdrop"></div>
         </div>
     </div>
 </section>
 
 <section class="testimonials-section">
     <div class="section-header">
-        <h2 class="section-title">Отзывы наших клиентов</h2>
-        <p class="section-subtitle">Присоединяйтесь к тысячам довольных пользователей</p>
+        <h2 class="section-title">{% trans "Отзывы наших клиентов" %}</h2>
+        <p class="section-subtitle">{% trans "Присоединяйтесь к тысячам довольных пользователей" %}</p>
     </div>
     
     <div class="testimonials-wrapper">
@@ -383,7 +529,7 @@
                     <p>"{{ testimonial.text }}"</p>
                 </div>
                 <div class="testimonial-author">
-                    <img src="{% static 'img/testimonial-'|add:forloop.counter|add:'.jpg' %}" alt="Фото клиента" class="testimonial-avatar">
+                    <img src="{% static 'images/testimonials/testimonial-'|add:forloop.counter|add:'.jpg' %}" alt="{% trans "Фото клиента" %}" class="testimonial-avatar">
                     <div class="testimonial-info">
                         <div class="testimonial-name">{{ testimonial.name }}</div>
                         <div class="testimonial-position">{{ testimonial.position }}, {{ testimonial.company }}</div>
@@ -402,13 +548,13 @@
                     <span class="star-icon">★</span>
                 </div>
                 <div class="testimonial-content">
-                    <p>"Flowfy существенно упростил процесс выставления счетов и отслеживания платежей. Теперь я трачу на финансовый учет в 5 раз меньше времени!"</p>
+                    <p>{% trans "\"Flowfy существенно упростил процесс выставления счетов и отслеживания платежей. Теперь я трачу на финансовый учет в 5 раз меньше времени!\"" %}</p>
                 </div>
                 <div class="testimonial-author">
-                    <img src="/static/img/testimonial-1.jpg" alt="Фото клиента" class="testimonial-avatar">
+                    <img src="{% static 'images/testimonials/testimonial-1.jpg' %}" alt="{% trans "Фото клиента" %}" class="testimonial-avatar">
                     <div class="testimonial-info">
-                        <div class="testimonial-name">Елена Петрова</div>
-                        <div class="testimonial-position">Фрилансер, дизайнер</div>
+                        <div class="testimonial-name">{% trans "Елена Петрова" %}</div>
+                        <div class="testimonial-position">{% trans "Фрилансер, дизайнер" %}</div>
                     </div>
                 </div>
                 <div class="testimonial-shape"></div>
@@ -423,13 +569,13 @@
                     <span class="star-icon">★</span>
                 </div>
                 <div class="testimonial-content">
-                    <p>"Нам нравится аналитика в Flowfy. Благодаря наглядным отчетам мы смогли оптимизировать наши расходы и увеличить прибыль на 20% за квартал."</p>
+                    <p>{% trans "\"Нам нравится аналитика в Flowfy. Благодаря наглядным отчетам мы смогли оптимизировать наши расходы и увеличить прибыль на 20% за квартал.\"" %}</p>
                 </div>
                 <div class="testimonial-author">
-                    <img src="/static/img/testimonial-2.jpg" alt="Фото клиента" class="testimonial-avatar">
+                    <img src="{% static 'images/testimonials/testimonial-2.jpg' %}" alt="{% trans "Фото клиента" %}" class="testimonial-avatar">
                     <div class="testimonial-info">
-                        <div class="testimonial-name">Алексей Иванов</div>
-                        <div class="testimonial-position">Директор, ООО "ТехСервис"</div>
+                        <div class="testimonial-name">{% trans "Алексей Иванов" %}</div>
+                        <div class="testimonial-position">{% trans "Директор, ООО \"ТехСервис\"" %}</div>
                     </div>
                 </div>
                 <div class="testimonial-shape"></div>
@@ -444,13 +590,13 @@
                     <span class="star-icon">★</span>
                 </div>
                 <div class="testimonial-content">
-                    <p>"Я перепробовал множество систем для учета, но Flowfy оказался самым понятным и функциональным. Рекомендую всем предпринимателям!"</p>
+                    <p>{% trans "\"Я перепробовал множество систем для учета, но Flowfy оказался самым понятным и функциональным. Рекомендую всем предпринимателям!\"" %}</p>
                 </div>
                 <div class="testimonial-author">
-                    <img src="/static/img/testimonial-3.jpg" alt="Фото клиента" class="testimonial-avatar">
+                    <img src="{% static 'images/testimonials/testimonial-3.jpg' %}" alt="{% trans "Фото клиента" %}" class="testimonial-avatar">
                     <div class="testimonial-info">
-                        <div class="testimonial-name">Сергей Новиков</div>
-                        <div class="testimonial-position">ИП, консультант</div>
+                        <div class="testimonial-name">{% trans "Сергей Новиков" %}</div>
+                        <div class="testimonial-position">{% trans "ИП, консультант" %}</div>
                     </div>
                 </div>
                 <div class="testimonial-shape"></div>
@@ -459,7 +605,7 @@
         </div>
         
         <div class="testimonial-nav">
-            <button class="testimonial-nav-btn testimonial-prev" aria-label="Предыдущий отзыв">
+            <button class="testimonial-nav-btn testimonial-prev" aria-label="{% trans "Предыдущий отзыв" %}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="15 18 9 12 15 6"></polyline>
                 </svg>
@@ -469,7 +615,7 @@
                 <span class="testimonial-indicator"></span>
                 <span class="testimonial-indicator"></span>
             </div>
-            <button class="testimonial-nav-btn testimonial-next" aria-label="Следующий отзыв">
+            <button class="testimonial-nav-btn testimonial-next" aria-label="{% trans "Следующий отзыв" %}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="9 18 15 12 9 6"></polyline>
                 </svg>
@@ -478,13 +624,13 @@
     </div>
     
     <div class="brands-section">
-        <p class="brands-title">Нам доверяют</p>
+        <p class="brands-title">{% trans "Нам доверяют" %}</p>
         <div class="brands-container">
-            <img src="/static/img/brand-1.png" alt="Логотип компании" class="brand-logo">
-            <img src="/static/img/brand-2.png" alt="Логотип компании" class="brand-logo">
-            <img src="/static/img/brand-3.png" alt="Логотип компании" class="brand-logo">
-            <img src="/static/img/brand-4.png" alt="Логотип компании" class="brand-logo">
-            <img src="/static/img/brand-5.png" alt="Логотип компании" class="brand-logo">
+            <img src="{% static 'images/brands/brand-1.png' %}" alt="{% trans "Логотип компании" %}" class="brand-logo">
+            <img src="{% static 'images/brands/brand-2.png' %}" alt="{% trans "Логотип компании" %}" class="brand-logo">
+            <img src="{% static 'images/brands/brand-3.png' %}" alt="{% trans "Логотип компании" %}" class="brand-logo">
+            <img src="{% static 'images/brands/brand-4.png' %}" alt="{% trans "Логотип компании" %}" class="brand-logo">
+            <img src="{% static 'images/brands/brand-5.png' %}" alt="{% trans "Логотип компании" %}" class="brand-logo">
         </div>
     </div>
 </section>
@@ -492,90 +638,90 @@
 <section id="pricing" class="pricing-section">
     <div class="container pricing-container">
         <div class="section-header text-center">
-            <h2>Подходящий тариф для каждого</h2>
-            <p>Выберите тарифный план, который лучше всего соответствует вашим потребностям</p>
+            <h2>{% trans "Подходящий тариф для каждого" %}</h2>
+            <p>{% trans "Выберите тарифный план, который лучше всего соответствует вашим потребностям" %}</p>
         </div>
 
         <div class="pricing-grid">
             <!-- Базовый тариф -->
             <div class="pricing-card">
                 <div class="pricing-header">
-                    <h3>Базовый</h3>
-                    <div class="price">₽0<span>/месяц</span></div>
+                    <h3>{% trans "Базовый" %}</h3>
+                    <div class="price">₽0<span>/{% trans "месяц" %}</span></div>
                 </div>
                 <ul class="pricing-features">
-                    <li>До 5 клиентов/поставщиков</li>
-                    <li>250 МБ места на диске</li>
-                    <li>Неограниченное кол-во документов</li>
-                    <li>Генерация PDF/XML с водяным знаком</li>
-                    <li>Только базовая аналитика</li>
-                    <li class="disabled">Нет уведомлений</li>
-                    <li class="disabled">Нет сканирования документов (OCR)</li>
-                    <li class="disabled">Нет поддержки</li>
+                    <li>{% trans "До 5 клиентов/поставщиков" %}</li>
+                    <li>250 {% trans "МБ места на диске" %}</li>
+                    <li>{% trans "Неограниченное кол-во документов" %}</li>
+                    <li>{% trans "Генерация PDF/XML с водяным знаком" %}</li>
+                    <li>{% trans "Только базовая аналитика" %}</li>
+                    <li class="disabled">{% trans "Нет уведомлений" %}</li>
+                    <li class="disabled">{% trans "Нет сканирования документов (OCR)" %}</li>
+                    <li class="disabled">{% trans "Нет поддержки" %}</li>
                 </ul>
                 <button class="pricing-toggle-btn">
-                    Показать больше
+                    {% trans "Показать больше" %}
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
                 </button>
                 <div class="pricing-footer">
-                    <a href="#" class="btn btn-outline">Выбрать тариф</a>
+                    <a href="#" class="btn btn-outline">{% trans "Выбрать тариф" %}</a>
                 </div>
             </div>
 
             <!-- Стандарт тариф -->
             <div class="pricing-card featured">
-                <div class="pricing-badge">Популярный</div>
+                <div class="pricing-badge">{% trans "Популярный" %}</div>
                 <div class="pricing-header">
-                    <h3>Стандарт</h3>
-                    <div class="price">₽900<span>/месяц</span></div>
+                    <h3>{% trans "Стандарт" %}</h3>
+                    <div class="price">₽900<span>/{% trans "месяц" %}</span></div>
                 </div>
                 <ul class="pricing-features">
-                    <li>Без ограничений на клиентов и поставщиков</li>
-                    <li>1 ГБ места на диске</li>
-                    <li>Неограниченное кол-во документов</li>
-                    <li>Экспорт PDF/XML без водяного знака</li>
-                    <li>Продвинутая аналитика</li>
-                    <li>Система уведомлений</li>
-                    <li>Сканирование документов (OCR)</li>
-                    <li>Техническая поддержка</li>
+                    <li>{% trans "Без ограничений на клиентов и поставщиков" %}</li>
+                    <li>1 {% trans "ГБ места на диске" %}</li>
+                    <li>{% trans "Неограниченное кол-во документов" %}</li>
+                    <li>{% trans "Экспорт PDF/XML без водяного знака" %}</li>
+                    <li>{% trans "Продвинутая аналитика" %}</li>
+                    <li>{% trans "Система уведомлений" %}</li>
+                    <li>{% trans "Сканирование документов (OCR)" %}</li>
+                    <li>{% trans "Техническая поддержка" %}</li>
                 </ul>
                 <button class="pricing-toggle-btn">
-                    Показать больше
+                    {% trans "Показать больше" %}
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
                 </button>
                 <div class="pricing-footer">
-                    <a href="#" class="btn btn-primary">Выбрать тариф</a>
+                    <a href="#" class="btn btn-primary">{% trans "Выбрать тариф" %}</a>
                 </div>
             </div>
 
             <!-- Премиум тариф -->
             <div class="pricing-card">
                 <div class="pricing-header">
-                    <h3>Премиум</h3>
-                    <div class="price">₽1900<span>/месяц</span></div>
+                    <h3>{% trans "Премиум" %}</h3>
+                    <div class="price">₽1900<span>/{% trans "месяц" %}</span></div>
                 </div>
                 <ul class="pricing-features">
-                    <li>Все функции тарифа Стандарт</li>
-                    <li>5 ГБ места на диске</li>
-                    <li>Интеграция с 1С и CRM</li>
-                    <li>Приоритетная техническая поддержка 24/7</li>
-                    <li>Расширенная аналитика и отчёты</li>
-                    <li>API для интеграции</li>
-                    <li>Групповой доступ (до 5 пользователей)</li>
-                    <li>Персональный менеджер</li>
+                    <li>{% trans "Все функции тарифа Стандарт" %}</li>
+                    <li>5 {% trans "ГБ места на диске" %}</li>
+                    <li>{% trans "Интеграция с 1С и CRM" %}</li>
+                    <li>{% trans "Приоритетная техническая поддержка 24/7" %}</li>
+                    <li>{% trans "Расширенная аналитика и отчёты" %}</li>
+                    <li>{% trans "API для интеграции" %}</li>
+                    <li>{% trans "Групповой доступ (до 5 пользователей)" %}</li>
+                    <li>{% trans "Персональный менеджер" %}</li>
                 </ul>
                 <button class="pricing-toggle-btn">
-                    Показать больше
+                    {% trans "Показать больше" %}
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
                 </button>
                 <div class="pricing-footer">
-                    <a href="#" class="btn btn-primary">Выбрать тариф</a>
+                    <a href="#" class="btn btn-primary">{% trans "Выбрать тариф" %}</a>
                 </div>
             </div>
         </div>
@@ -584,65 +730,65 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
             </svg>
-            <p>30-дневная гарантия возврата денег без вопросов</p>
+            <p>{% trans "30-дневная гарантия возврата денег без вопросов" %}</p>
         </div>
     </div>
 </section>
 
 <section class="faq-section">
     <div class="section-header">
-        <h2>Часто задаваемые вопросы</h2>
-        <p class="section-subtitle">Ответы на популярные вопросы о Flowfy</p>
+        <h2>{% trans "Часто задаваемые вопросы" %}</h2>
+        <p class="section-subtitle">{% trans "Ответы на популярные вопросы о Flowfy" %}</p>
     </div>
     
     <div class="faq-container">
         <div class="faq-item">
             <div class="faq-question">
-                <h3>Как начать пользоваться Flowfy?</h3>
+                <h3>{% trans "Как начать пользоваться Flowfy?" %}</h3>
                 <span class="faq-toggle">+</span>
             </div>
             <div class="faq-answer">
-                <p>Для начала работы с Flowfy просто зарегистрируйтесь на сайте, выберите подходящий тариф и начните создавать документы. У нас есть подробные руководства и видеоуроки, которые помогут вам быстро освоиться.</p>
+                <p>{% trans "Для начала работы с Flowfy просто зарегистрируйтесь на сайте, выберите подходящий тариф и начните создавать документы. У нас есть подробные руководства и видеоуроки, которые помогут вам быстро освоиться." %}</p>
             </div>
         </div>
         
         <div class="faq-item">
             <div class="faq-question">
-                <h3>Могу ли я перейти с бесплатного тарифа на платный позже?</h3>
+                <h3>{% trans "Могу ли я перейти с бесплатного тарифа на платный позже?" %}</h3>
                 <span class="faq-toggle">+</span>
             </div>
             <div class="faq-answer">
-                <p>Да, вы можете начать с бесплатного тарифа и в любой момент перейти на любой из платных тарифов. Все ваши данные и настройки сохранятся при переходе.</p>
+                <p>{% trans "Да, вы можете начать с бесплатного тарифа и в любой момент перейти на любой из платных тарифов. Все ваши данные и настройки сохранятся при переходе." %}</p>
             </div>
         </div>
         
         <div class="faq-item">
             <div class="faq-question">
-                <h3>Насколько безопасны мои финансовые данные в системе?</h3>
+                <h3>{% trans "Насколько безопасны мои финансовые данные в системе?" %}</h3>
                 <span class="faq-toggle">+</span>
             </div>
             <div class="faq-answer">
-                <p>Безопасность данных - наш приоритет. Мы используем шифрование данных, двухфакторную аутентификацию и регулярное резервное копирование. Наша система соответствует всем стандартам безопасности и защиты персональных данных.</p>
+                <p>{% trans "Безопасность данных - наш приоритет. Мы используем шифрование данных, двухфакторную аутентификацию и регулярное резервное копирование. Наша система соответствует всем стандартам безопасности и защиты персональных данных." %}</p>
             </div>
         </div>
         
         <div class="faq-item">
             <div class="faq-question">
-                <h3>Можно ли интегрировать Flowfy с другими сервисами?</h3>
+                <h3>{% trans "Можно ли интегрировать Flowfy с другими сервисами?" %}</h3>
                 <span class="faq-toggle">+</span>
             </div>
             <div class="faq-answer">
-                <p>Да, Flowfy предлагает интеграцию с популярными сервисами для бизнеса, включая CRM-системы, банковские сервисы, облачные хранилища и платежные платформы. На тарифе "Премиум" доступен API для создания собственных интеграций.</p>
+                <p>{% trans "Да, Flowfy предлагает интеграцию с популярными сервисами для бизнеса, включая CRM-системы, банковские сервисы, облачные хранилища и платежные платформы. На тарифе \"Премиум\" доступен API для создания собственных интеграций." %}</p>
             </div>
         </div>
         
         <div class="faq-item">
             <div class="faq-question">
-                <h3>Каким образом я получаю техническую поддержку?</h3>
+                <h3>{% trans "Каким образом я получаю техническую поддержку?" %}</h3>
                 <span class="faq-toggle">+</span>
             </div>
             <div class="faq-answer">
-                <p>Мы предлагаем техническую поддержку через email для всех пользователей. Клиенты с тарифами "Бизнес" и "Премиум" получают приоритетную поддержку, а пользователи "Премиум" - персонального менеджера.</p>
+                <p>{% trans "Мы предлагаем техническую поддержку через email для всех пользователей. Клиенты с тарифами \"Бизнес\" и \"Премиум\" получают приоритетную поддержку, а пользователи \"Премиум\" - персонального менеджера." %}</p>
             </div>
         </div>
     </div>
@@ -652,22 +798,38 @@
     <div class="cta-bg-shape cta-bg-shape-1"></div>
     <div class="cta-bg-shape cta-bg-shape-2"></div>
     <div class="cta-content">
-        <h2>Готовы оптимизировать свой бизнес?</h2>
-        <p>Присоединяйтесь к тысячам предпринимателей, которые уже оптимизировали свой финансовый учет с Flowfy</p>
+        <h2>{% trans "Готовы оптимизировать свой бизнес?" %}</h2>
+        <p>{% trans "Присоединяйтесь к тысячам предпринимателей, которые уже оптимизировали свой финансовый учет с Flowfy" %}</p>
         <div class="cta-buttons">
-            <a href="#" class="btn btn-primary btn-lg">Начать бесплатно</a>
-            <a href="#" class="btn btn-outline btn-lg">Запросить демо</a>
+            <a href="#" class="btn btn-primary btn-lg">{% trans "Начать бесплатно" %}</a>
+            <a href="#" class="btn btn-outline btn-lg">{% trans "Запросить демо" %}</a>
         </div>
     </div>
 </section>
 {% endblock %}
 
 {% block extra_js %}
+<!-- Сначала загружаем базовые скрипты -->
+<script src="{% static 'js/core/home.js' %}"></script>
+
+<!-- Затем загружаем скрипты для эффектов -->
 <script src="{% static 'js/pricing-carousel.js' %}"></script>
 <script src="{% static 'js/testimonials-carousel.js' %}"></script>
 <script src="{% static 'js/cta-effects.js' %}"></script>
-<script src="{% static 'js/core/home.js' %}"></script>
+
+<!-- В конце загружаем скрипт для стакинга карточек -->
+<script src="{% static 'js/features-scroll.js' %}"></script>
+
 <script>
+    console.log('Загрузка всех скриптов проверена');
+    
+    // Проверка загрузки features-scroll.js
+    if (typeof window.toggleFeaturesDebug === 'function') {
+        console.log('Скрипт features-scroll.js успешно инициализирован');
+    } else {
+        console.warn('Скрипт features-scroll.js не загрузился корректно');
+    }
+    
     document.addEventListener('DOMContentLoaded', function() {
         // Анимация чисел в блоке статистики
         function animateStats() {

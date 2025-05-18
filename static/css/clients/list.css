@@ -161,23 +161,40 @@
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
     overflow: hidden;
     border: 1px solid #f0f0f0;
+    padding: 0 10px;
+    margin-top: 10px;
 }
 
 .clients-list table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed;
 }
 
 .clients-list th {
     background-color: #f8f9fa;
     font-weight: 600;
-    text-align: left;
+    text-align: center;
     padding: 0.625rem 0.75rem;
     border-bottom: 1px solid #edf2f7;
     color: #6c757d;
     font-size: 13px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+}
+
+.clients-list th:first-child {
+    padding-left: 10px;
+    text-align: left;
+}
+
+.clients-list th:nth-child(2),
+.clients-list td:nth-child(2) {
+    text-align: center;
+}
+
+.clients-list th:last-child {
+    padding-right: 10px;
 }
 
 .clients-list td {
@@ -189,6 +206,30 @@
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 200px;
+}
+
+.clients-list td:first-child {
+    padding-left: 10px;
+    text-align: left;
+}
+
+.clients-list td:last-child {
+    padding-right: 10px;
+}
+
+.clients-list td:nth-child(3), 
+.clients-list th:nth-child(3) {
+    text-align: center;
+}
+
+.clients-list td:nth-child(4), 
+.clients-list th:nth-child(4) {
+    text-align: right;
+}
+
+.clients-list td:nth-child(5), 
+.clients-list th:nth-child(5) {
+    text-align: center;
 }
 
 .clients-list tr:last-child td {
@@ -259,20 +300,28 @@
 
 /* Кнопки действий */
 .actions {
-    display: flex;
-    gap: 0.8rem;
-    justify-content: flex-end;
+    text-align: center;
+    white-space: nowrap;
+    width: 160px;
+    overflow: visible;
 }
 
 .btn-action {
-    display: inline-flex;
-    align-items: center;
+    display: inline-flex !important;
     justify-content: center;
+    align-items: center;
     width: 36px;
     height: 36px;
-    border-radius: 12px;
-    transition: all 0.2s ease-in-out;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    color: #495057;
+    margin-right: 0.35rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
     text-decoration: none;
+    opacity: 1 !important;
+    visibility: visible !important;
 }
 
 .btn-view {

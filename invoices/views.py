@@ -18,6 +18,7 @@ from django.contrib.sites.shortcuts import get_current_site
 
 # Create your views here.
 
+@login_required
 def invoice_list(request):
     """Список счетов"""
     # Получаем тип счетов из параметров запроса
@@ -78,6 +79,7 @@ def invoice_list(request):
     
     return render(request, 'invoices/list.html', context)
 
+@login_required
 def invoice_detail(request, pk):
     """Детальная информация о счете"""
     try:
@@ -111,6 +113,7 @@ def invoice_detail(request, pk):
         messages.error(request, f'Ошибка при загрузке счета: {str(e)}')
         return redirect('invoices:list')
 
+@login_required
 def invoice_create(request):
     """Перенаправление на соответствующую форму создания счета"""
     # Получаем тип счета из параметров запроса
@@ -132,8 +135,7 @@ def invoice_create(request):
         # Для исходящего счета нужны клиенты
         clients = Client.objects.filter(
             user=request.user,
-            is_active=True, 
-            entity_type='client'
+            is_active=True
         ).order_by('name')
         
         # Получаем выбранного клиента, если указан ID
@@ -143,7 +145,6 @@ def invoice_create(request):
                 selected_client = Client.objects.get(
                     id=client_id,
                     user=request.user, 
-                    entity_type='client', 
                     is_active=True
                 )
                 print(f"DEBUG - invoice_create: найден выбранный клиент: {selected_client.id} - {selected_client.name}")
@@ -237,6 +238,7 @@ def get_next_invoice_number(user=None, invoice_type=None):
     # Форматируем номер с ведущими нулями
     return f'Счет №{expected_number:05d}'
 
+@login_required
 def create_incoming(request):
     """Создание нового входящего счета"""
     
@@ -369,6 +371,7 @@ def create_incoming(request):
     
     return render(request, 'invoices/create_incoming.html', context)
 
+@login_required
 def create_outgoing(request):
     """Создание нового исходящего счета"""
     # Получаем ID клиента из URL-параметра
@@ -517,6 +520,7 @@ def create_outgoing(request):
     
     return render(request, 'invoices/create_outgoing.html', context)
 
+@login_required
 def invoice_pdf(request, pk):
     """Генерация PDF для счета"""
     try:
@@ -577,6 +581,7 @@ def invoice_pdf(request, pk):
         messages.error(request, f'Ошибка при генерации PDF: {str(e)}')
         return redirect('invoices:detail', pk=pk)
 
+@login_required
 @require_POST
 def mark_invoice_paid(request, pk):
     """Отмечает счет как оплаченный"""
@@ -594,6 +599,7 @@ def mark_invoice_paid(request, pk):
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)})
 
+@login_required
 @require_POST
 def delete_invoice(request, pk):
     """Удаляет счет"""
@@ -609,6 +615,7 @@ def delete_invoice(request, pk):
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)})
 
+@login_required
 def duplicate_invoice(request, pk):
     """Создает копию существующего счета"""
     try:
@@ -678,6 +685,7 @@ def duplicate_invoice(request, pk):
         messages.error(request, f'Ошибка при дублировании счета: {str(e)}')
         return redirect('invoices:list')
 
+@login_required
 def edit_invoice(request, pk):
     """Редактирование счета"""
     try:
