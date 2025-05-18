@@ -15,16 +15,16 @@ from django.contrib.auth.decorators import login_required
 def dashboard(request):
     """Панель аналитики с реальными данными из БД"""
     # Получаем данные для верхней сводки
-    total_amount = Invoice.objects.aggregate(total=Sum('total')).get('total') or 0
-    paid_amount = Invoice.objects.filter(status='paid').aggregate(total=Sum('total')).get('total') or 0
-    overdue_amount = Invoice.objects.filter(status='overdue').aggregate(total=Sum('total')).get('total') or 0
+    total_amount = Invoice.objects.filter(user=request.user).aggregate(total=Sum('total')).get('total') or 0
+    paid_amount = Invoice.objects.filter(user=request.user, status='paid').aggregate(total=Sum('total')).get('total') or 0
+    overdue_amount = Invoice.objects.filter(user=request.user, status='overdue').aggregate(total=Sum('total')).get('total') or 0
     
     # Количество счетов по статусам
     status_counts = {
-        'draft': Invoice.objects.filter(status='draft').count(),
-        'sent': Invoice.objects.filter(status='sent').count(),
-        'paid': Invoice.objects.filter(status='paid').count(),
-        'overdue': Invoice.objects.filter(status='overdue').count(),
+        'draft': Invoice.objects.filter(user=request.user, status='draft').count(),
+        'sent': Invoice.objects.filter(user=request.user, status='sent').count(),
+        'paid': Invoice.objects.filter(user=request.user, status='paid').count(),
+        'overdue': Invoice.objects.filter(user=request.user, status='overdue').count(),
     }
     
     # Расчет процентного изменения по сравнению с предыдущим месяцем
@@ -34,6 +34,7 @@ def dashboard(request):
     status_trends = {}
     for status, count in status_counts.items():
         prev_count = Invoice.objects.filter(
+            user=request.user,
             status=status, 
             created_at__lt=month_ago
         ).count()
@@ -49,7 +50,7 @@ def dashboard(request):
         }
     
     # Топ-5 клиентов по сумме счетов
-    top_clients = Client.objects.annotate(
+    top_clients = Client.objects.filter(user=request.user).annotate(
         total_invoices=Sum('invoices__total')
     ).exclude(
         total_invoices=None
@@ -66,6 +67,7 @@ def dashboard(request):
     # Счета, оплаченные в течение 1-3 дней
     payment_time_stats.append(
         Invoice.objects.filter(
+            user=request.user,
             status='paid',
             payment_date__isnull=False,
             issue_date__isnull=False
@@ -80,6 +82,7 @@ def dashboard(request):
     # 4-7 дней
     payment_time_stats.append(
         Invoice.objects.filter(
+            user=request.user,
             status='paid',
             payment_date__isnull=False,
             issue_date__isnull=False
@@ -94,6 +97,7 @@ def dashboard(request):
     # 8-14 дней
     payment_time_stats.append(
         Invoice.objects.filter(
+            user=request.user,
             status='paid',
             payment_date__isnull=False,
             issue_date__isnull=False
@@ -108,6 +112,7 @@ def dashboard(request):
     # 15-30 дней
     payment_time_stats.append(
         Invoice.objects.filter(
+            user=request.user,
             status='paid',
             payment_date__isnull=False,
             issue_date__isnull=False
@@ -122,6 +127,7 @@ def dashboard(request):
     # >30 дней
     payment_time_stats.append(
         Invoice.objects.filter(
+            user=request.user,
             status='paid',
             payment_date__isnull=False,
             issue_date__isnull=False
@@ -141,6 +147,7 @@ def dashboard(request):
     # Данные по доходам за последние 30 дней
     last_30_days = now - timedelta(days=30)
     daily_revenue = Invoice.objects.filter(
+        user=request.user,
         issue_date__gte=last_30_days
     ).annotate(
         day=TruncDay('issue_date')
@@ -163,6 +170,7 @@ def dashboard(request):
     # Данные по месяцам за последние 6 месяцев
     last_6_months = now - timedelta(days=180)
     monthly_revenue = Invoice.objects.filter(
+        user=request.user,
         issue_date__gte=last_6_months
     ).annotate(
         month=TruncMonth('issue_date')
@@ -188,6 +196,7 @@ def dashboard(request):
     # Данные по месяцам за последний год
     last_year = now - timedelta(days=365)
     yearly_revenue = Invoice.objects.filter(
+        user=request.user,
         issue_date__gte=last_year
     ).annotate(
         month=TruncMonth('issue_date')
@@ -216,7 +225,7 @@ def dashboard(request):
     }
     
     # Последние 5 счетов
-    recent_invoices = Invoice.objects.all().order_by('-created_at')[:5]
+    recent_invoices = Invoice.objects.filter(user=request.user).order_by('-created_at')[:5]
     
     # Данные для круговой диаграммы статусов
     status_labels = [
@@ -266,6 +275,21 @@ def dashboard(request):
 @login_required
 def reports(request):
     """Страница отчетов"""
-    return render(request, 'analytics/reports.html', {
-        'title': 'Отчеты'
-    })
+    # Получаем данные только для текущего пользователя
+    invoices = Invoice.objects.filter(user=request.user)
+    clients = Client.objects.filter(user=request.user)
+    
+    # Базовая статистика для отчетов
+    stats = {
+        'total_invoices': invoices.count(),
+        'total_clients': clients.count(),
+        'paid_invoices': invoices.filter(status='paid').count(),
+        'overdue_invoices': invoices.filter(status='overdue').count(),
+    }
+    
+    context = {
+        'title': 'Отчеты',
+        'stats': stats
+    }
+    
+    return render(request, 'analytics/reports.html', context)

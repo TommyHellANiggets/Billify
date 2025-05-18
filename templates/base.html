@@ -202,109 +202,111 @@
                 {% endif %}
                 
                 <!-- Форма выбора языка для Django i18n -->
-                <div class="locale-dropdown">
-                    <div class="locale-dropdown-toggle">
-                        <div class="locale-current">
-                            <div class="locale-flag">
-                                {% if LANGUAGE_CODE == 'en' %}
-                                    <img src="{% static 'images/flags/gb.svg' %}" alt="English" class="locale-flag-img">
-                                {% elif LANGUAGE_CODE == 'de' %}
-                                    <img src="{% static 'images/flags/de.svg' %}" alt="Deutsch" class="locale-flag-img">
-                                {% else %}
-                                    <img src="{% static 'images/flags/ru.svg' %}" alt="Русский" class="locale-flag-img">
-                                {% endif %}
+                <div class="our-block" style="display: flex;">
+                    <div class="locale-dropdown">
+                        <div class="locale-dropdown-toggle">
+                            <div class="locale-current">
+                                <div class="locale-flag">
+                                    {% if LANGUAGE_CODE == 'en' %}
+                                        <img src="{% static 'images/flags/gb.svg' %}" alt="English" class="locale-flag-img">
+                                    {% elif LANGUAGE_CODE == 'de' %}
+                                        <img src="{% static 'images/flags/de.svg' %}" alt="Deutsch" class="locale-flag-img">
+                                    {% else %}
+                                        <img src="{% static 'images/flags/ru.svg' %}" alt="Русский" class="locale-flag-img">
+                                    {% endif %}
+                                </div>
+                                <span class="locale-currency">
+                                    {% if LANGUAGE_CODE == 'en' %}${% elif LANGUAGE_CODE == 'de' %}€{% else %}₽{% endif %}
+                                </span>
                             </div>
-                            <span class="locale-currency">
-                                {% if LANGUAGE_CODE == 'en' %}${% elif LANGUAGE_CODE == 'de' %}€{% else %}₽{% endif %}
-                            </span>
+                            <svg class="locale-dropdown-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16">
+                                <path d="M7 10l5 5 5-5z" />
+                            </svg>
                         </div>
-                        <svg class="locale-dropdown-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16">
-                            <path d="M7 10l5 5 5-5z" />
-                        </svg>
+                        <div class="locale-dropdown-content">
+                            <div class="locale-dropdown-section">
+                                <h3 class="locale-dropdown-title">{% trans "Язык" %} ({{ LANGUAGE_CODE }})</h3>
+                                <div class="locale-options">
+                                    <div class="locale-option {% if LANGUAGE_CODE == 'ru' %}active{% endif %}" data-lang="ru">
+                                        <div class="locale-flag">
+                                            <img src="{% static 'images/flags/ru.svg' %}" alt="Русский">
+                                        </div>
+                                        <div class="locale-details">
+                                            <div class="locale-name" style="margin-left: 15px;">{% trans "Русский" %}</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="locale-option {% if LANGUAGE_CODE == 'en' %}active{% endif %}" data-lang="en">
+                                        <div class="locale-flag">
+                                            <img src="{% static 'images/flags/gb.svg' %}" alt="English">
+                                        </div>
+                                        <div class="locale-details">
+                                            <div class="locale-name" style="margin-left: 15px;">{% trans "English" %}</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="locale-option {% if LANGUAGE_CODE == 'de' %}active{% endif %}" data-lang="de">
+                                        <div class="locale-flag">
+                                            <img src="{% static 'images/flags/de.svg' %}" alt="Deutsch">
+                                        </div>
+                                        <div class="locale-details">
+                                            <div class="locale-name" style="margin-left: 15px;">{% trans "Deutsch" %}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="locale-dropdown-section">
+                                <h3 class="locale-dropdown-title">{% trans "Валюта" %}</h3>
+                                <div class="locale-options">
+                                    <div class="locale-option active" data-currency="RUB">
+                                        <div class="locale-currency-symbol">₽</div>
+                                        <div class="locale-details">
+                                            <div class="locale-name">{% trans "Российский рубль" %}</div>
+                                            <div class="locale-code">RUB</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- <div class="locale-option" data-currency="USD">
+                                        <div class="locale-currency-symbol">$</div>
+                                        <div class="locale-details">
+                                            <div class="locale-name">{% trans "Доллар США" %}</div>
+                                            <div class="locale-code">USD</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="locale-option" data-currency="EUR">
+                                        <div class="locale-currency-symbol">€</div>
+                                        <div class="locale-details">
+                                            <div class="locale-name">{% trans "Евро" %}</div>
+                                            <div class="locale-code">EUR</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="locale-option" data-currency="GBP">
+                                        <div class="locale-currency-symbol">£</div>
+                                        <div class="locale-details">
+                                            <div class="locale-name">{% trans "Фунт стерлингов" %}</div>
+                                            <div class="locale-code">GBP</div>
+                                        </div>
+                                    </div> -->
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="locale-dropdown-content">
-                        <div class="locale-dropdown-section">
-                            <h3 class="locale-dropdown-title">{% trans "Язык" %} ({{ LANGUAGE_CODE }})</h3>
-                            <div class="locale-options">
-                                <div class="locale-option {% if LANGUAGE_CODE == 'ru' %}active{% endif %}" data-lang="ru">
-                                    <div class="locale-flag">
-                                        <img src="{% static 'images/flags/ru.svg' %}" alt="Русский">
-                                    </div>
-                                    <div class="locale-details">
-                                        <div class="locale-name">{% trans "Русский" %}</div>
-                                    </div>
-                                </div>
-                                
-                                <div class="locale-option {% if LANGUAGE_CODE == 'en' %}active{% endif %}" data-lang="en">
-                                    <div class="locale-flag">
-                                        <img src="{% static 'images/flags/gb.svg' %}" alt="English">
-                                    </div>
-                                    <div class="locale-details">
-                                        <div class="locale-name">{% trans "English" %}</div>
-                                    </div>
-                                </div>
-                                
-                                <div class="locale-option {% if LANGUAGE_CODE == 'de' %}active{% endif %}" data-lang="de">
-                                    <div class="locale-flag">
-                                        <img src="{% static 'images/flags/de.svg' %}" alt="Deutsch">
-                                    </div>
-                                    <div class="locale-details">
-                                        <div class="locale-name">{% trans "Deutsch" %}</div>
-                                    </div>
+                    
+                    <div class="user-menu" style="white-space: nowrap;">
+                        {% if user.is_authenticated %}
+                            <div class="user-dropdown">
+                                <span class="user-name">{{ user.username }}</span>
+                                <div class="user-dropdown-content">
+                                    <a href="{% url 'core:profile' %}" class="dropdown-item">{% trans "Профиль компании" %}</a>
+                                    <a href="#" id="logout-btn" class="dropdown-item">{% trans "Выйти" %}</a>
                                 </div>
                             </div>
-                        </div>
-                        <div class="locale-dropdown-section">
-                            <h3 class="locale-dropdown-title">{% trans "Валюта" %}</h3>
-                            <div class="locale-options">
-                                <div class="locale-option active" data-currency="RUB">
-                                    <div class="locale-currency-symbol">₽</div>
-                                    <div class="locale-details">
-                                        <div class="locale-name">{% trans "Российский рубль" %}</div>
-                                        <div class="locale-code">RUB</div>
-                                    </div>
-                                </div>
-                                
-                                <div class="locale-option" data-currency="USD">
-                                    <div class="locale-currency-symbol">$</div>
-                                    <div class="locale-details">
-                                        <div class="locale-name">{% trans "Доллар США" %}</div>
-                                        <div class="locale-code">USD</div>
-                                    </div>
-                                </div>
-                                
-                                <div class="locale-option" data-currency="EUR">
-                                    <div class="locale-currency-symbol">€</div>
-                                    <div class="locale-details">
-                                        <div class="locale-name">{% trans "Евро" %}</div>
-                                        <div class="locale-code">EUR</div>
-                                    </div>
-                                </div>
-                                
-                                <div class="locale-option" data-currency="GBP">
-                                    <div class="locale-currency-symbol">£</div>
-                                    <div class="locale-details">
-                                        <div class="locale-name">{% trans "Фунт стерлингов" %}</div>
-                                        <div class="locale-code">GBP</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        {% else %}
+                            <a href="{% url 'login' %}" class="btn btn-primary">{% trans "Вход" %}</a>
+                        {% endif %}
                     </div>
-                </div>
-                
-                <div class="user-menu" style="white-space: nowrap;">
-                    {% if user.is_authenticated %}
-                        <div class="user-dropdown">
-                            <span class="user-name">{{ user.username }}</span>
-                            <div class="user-dropdown-content">
-                                <a href="{% url 'core:profile' %}" class="dropdown-item">{% trans "Профиль компании" %}</a>
-                                <a href="#" id="logout-btn" class="dropdown-item">{% trans "Выйти" %}</a>
-                            </div>
-                        </div>
-                    {% else %}
-                        <a href="{% url 'login' %}" class="btn btn-primary">{% trans "Вход" %}</a>
-                    {% endif %}
                 </div>
                 <button class="mobile-menu-btn" title="{% trans "Открыть меню" %}">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -425,7 +427,7 @@
                         </div>
                     </div>
                     
-                    <div class="locale-option" data-currency="USD" data-symbol="$" data-name="{% trans "Доллар США" %}">
+                    <!-- <div class="locale-option" data-currency="USD" data-symbol="$" data-name="{% trans "Доллар США" %}">
                         <div class="locale-currency-symbol">$</div>
                         <div class="locale-details">
                             <div class="locale-name">{% trans "Доллар США" %}</div>
@@ -447,7 +449,7 @@
                             <div class="locale-name">{% trans "Фунт стерлингов" %}</div>
                             <div class="locale-code">GBP</div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>

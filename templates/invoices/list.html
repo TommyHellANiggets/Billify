@@ -94,6 +94,7 @@
                     <option value="paid" {% if status == 'paid' %}selected{% endif %}>{% trans "Оплачен" %}</option>
                     <option value="overdue" {% if status == 'overdue' %}selected{% endif %}>{% trans "Просрочен" %}</option>
                     <option value="cancelled" {% if status == 'cancelled' %}selected{% endif %}>{% trans "Отменен" %}</option>
+                    <option value="copy" {% if status == 'copy' %}selected{% endif %}>{% trans "Копия" %}</option>
                 </select>
             </div>
             
@@ -149,7 +150,7 @@
                             <td>{{ invoice.issue_date|date:"d.m.Y" }}</td>
                             <td>{{ invoice.total }} ₽</td>
                             <td>
-                                <span class="entity-badge {% if invoice.status == 'paid' %}client-badge{% elif invoice.status == 'overdue' %}supplier-badge{% else %}type-badge individual-badge{% endif %}">
+                                <span class="entity-badge {% if invoice.status == 'paid' %}client-badge{% elif invoice.status == 'overdue' %}supplier-badge{% elif invoice.status == 'copy' %}copy-badge{% else %}type-badge individual-badge{% endif %}">
                                     {% if invoice.status == 'new' %}
                                         {% trans "Новый" %}
                                     {% elif invoice.status == 'sent' %}
@@ -162,6 +163,8 @@
                                         {% trans "Просрочен" %}
                                     {% elif invoice.status == 'cancelled' %}
                                         {% trans "Отменен" %}
+                                    {% elif invoice.status == 'copy' %}
+                                        {% trans "Копия" %}
                                     {% else %}
                                         {{ invoice.status }}
                                     {% endif %}

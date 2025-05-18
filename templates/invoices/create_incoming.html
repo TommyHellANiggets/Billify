@@ -9,6 +9,27 @@
 <link rel="stylesheet" href="{% static 'css/invoices/scanner.css' %}">
 <link rel="stylesheet" href="{% static 'css/invoices/svg-icons.css' %}">
 <link rel="stylesheet" href="{% static 'css/invoices/create-responsive.css' %}">
+<style>
+    /* Дополнительные стили для хорошей видимости процентной скидки */
+    .discount-wrapper {
+        display: flex !important;
+        position: relative !important;
+    }
+    .discount-wrapper input[type="text"] {
+        width: 100% !important;
+        padding-right: 50px !important;
+    }
+    .discount-wrapper .item-discount-percent {
+        position: absolute !important;
+        right: 0 !important;
+        width: 45px !important;
+        height: 100% !important;
+        background-color: #f8f9fa !important;
+        border-left: 1px solid #e0e0e0 !important;
+        text-align: center !important;
+        padding-right: 15px !important;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -65,13 +86,13 @@
             <div class="form-section">
                 <h3 class="section-title">{% trans "Информация о поставщике" %}</h3>
                 
-                        <div class="form-grid-row">
-                    <div class="form-group">
+                <div class="form-grid">
+                    <div class="form-group form-span-2">
                         <label for="supplier">{% trans "Поставщик" %}</label>
                         <div class="select-wrapper">
                             <input type="hidden" id="supplier_id" name="supplier" value="{% if is_edit %}{{ invoice.supplier.id }}{% endif %}" required>
                             <div class="entity-select" id="supplier-select" tabindex="0">
-                                        <span>{% if is_edit %}{{ invoice.supplier.name }}{% else %}{% trans "Выберите поставщика" %}{% endif %}</span>
+                                <span>{% if is_edit %}{{ invoice.supplier.name }}{% else %}{% trans "Выберите поставщика" %}{% endif %}</span>
                             </div>
                             <div class="entity-dropdown" id="supplier-dropdown">
                                 <input type="text" class="select-search" id="supplier-search" placeholder="{% trans "Поиск поставщика..." %}">
@@ -149,6 +170,7 @@
                             <th>{% trans "Наименование" %}</th>
                             <th>{% trans "Количество" %}</th>
                             <th>{% trans "Цена, ₽" %}</th>
+                            <th>{% trans "Скидка, ₽" %}</th>
                             <th>{% trans "Сумма, ₽" %}</th>
                             <th></th>
                         </tr>
@@ -176,10 +198,14 @@
                                     <td>
                                         <input type="text" name="item_price[]" title="{% trans "Цена за единицу" %}" value="{{ item.price }}" required>
                                     </td>
+                                    <td>
+                                        <input type="text" name="item_discount_percent[]" title="{% trans "Скидка %" %}" class="item-discount-percent" placeholder="%">
+                                        <input type="hidden" name="item_discount[]" class="item-discount">
+                                    </td>
                                     <td class="item-total">{{ item.amount }}</td>
                                     <td>
                                         <button type="button" class="btn-icon remove-item" title="{% trans "Удалить позицию" %}">
-                                            <span class="svg-icon">
+                                            <span class="svg-icon icon-sm">
                                                 <svg><use xlink:href="#icon-trash"></use></svg>
                                             </span>
                                         </button>
@@ -206,6 +232,10 @@
                                 </td>
                                 <td>
                                     <input type="text" name="item_price[]" title="{% trans "Цена за единицу" %}" required>
+                                </td>
+                                <td>
+                                    <input type="text" name="item_discount_percent[]" title="{% trans "Скидка %" %}" class="item-discount-percent" placeholder="%">
+                                    <input type="hidden" name="item_discount[]" class="item-discount">
                                 </td>
                                 <td class="item-total">0,00</td>
                                 <td>
@@ -235,6 +265,11 @@
                     <div class="totals-row">
                         <span class="total-label">{% trans "НДС (20%):" %}</span>
                         <span class="total-value" id="tax">{% if is_edit %}{{ invoice.tax_amount }} ₽{% else %}0.00 ₽{% endif %}</span>
+                    </div>
+                    <div class="totals-row">
+                        <span class="total-label">{% trans "Скидка:" %}</span>
+                        <span class="total-value" id="discount-display">{% if is_edit %}{{ invoice.discount }} ₽{% else %}0,00 ₽{% endif %}</span>
+                        <input type="hidden" id="discount" name="discount" value="{% if is_edit %}{{ invoice.discount }}{% else %}0,00{% endif %}">
                     </div>
                     <div class="totals-row total-final">
                         <span class="total-label">{% trans "Итого:" %}</span>
@@ -414,6 +449,7 @@
             "description": "{{ item.description|escapejs }}",
             "quantity": {{ item.quantity }},
             "price": {{ item.price }},
+            "discount": {{ item.discount }},
             "amount": {{ item.amount }}
         }{% if not forloop.last %},{% endif %}
         {% endfor %}

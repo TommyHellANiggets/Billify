@@ -44,48 +44,75 @@ function updateTotals() {
     window.updateTotalsLoaded = true; // Отмечаем, что глобальная функция загружена
     
     let subtotal = 0;
+    let totalDiscount = 0;
     
     // Перебираем все строки товаров
     document.querySelectorAll('.invoice-item').forEach(item => {
         const quantityInput = item.querySelector('input[name="item_quantity[]"]');
         const priceInput = item.querySelector('input[name="item_price[]"]');
+        const discountPercentInput = item.querySelector('input[name="item_discount_percent[]"]');
+        const discountInput = item.querySelector('input[name="item_discount[]"]');
         
         // Заменяем запятую на точку для корректного преобразования
         const quantity = parseFloat((quantityInput.value || '0').replace(',', '.')) || 0;
         const price = parseFloat((priceInput.value || '0').replace(',', '.')) || 0;
-        const itemTotal = quantity * price;
+        const discountPercent = parseFloat((discountPercentInput?.value || '0').replace(',', '.')) || 0;
+        
+        // Вычисляем сумму по строке с учетом скидки
+        const rowTotal = quantity * price;
+        const rowDiscount = rowTotal * (discountPercent / 100);
+        const itemTotal = rowTotal - rowDiscount;
+        
+        // Обновляем скрытое поле со скидкой
+        if (discountInput) {
+            discountInput.value = rowDiscount.toFixed(2).replace('.', ',');
+        }
         
         // Обновляем сумму по строке (используем запятую для отображения)
         item.querySelector('.item-total').textContent = itemTotal.toFixed(2).replace('.', ',');
         
-        // Добавляем к подытогу
-        subtotal += itemTotal;
+        // Добавляем к подытогу и общей скидке
+        subtotal += rowTotal;
+        totalDiscount += rowDiscount;
         
-        // Форматируем отображаемое значение с запятой для UI
-        quantityInput.value = quantity.toString().replace('.', ',');
-        priceInput.value = price.toString().replace('.', ',');
+        // Форматируем отображаемое значение с запятой для UI только если в поле есть значение
+        if (quantityInput.value) {
+            quantityInput.value = quantity.toString().replace('.', ',');
+        }
+        if (priceInput.value) {
+            priceInput.value = price.toString().replace('.', ',');
+        }
+        if (discountPercentInput && discountPercentInput.value) {
+            discountPercentInput.value = discountPercent.toString().replace('.', ',');
+        }
     });
-    
-    // Получаем скидку, если она есть
-    let discount = 0;
-    const discountInput = document.getElementById('discount');
-    if (discountInput) {
-        discount = parseFloat((discountInput.value || '0').replace(',', '.')) || 0;
-        // Форматируем отображаемое значение с запятой для UI
-        discountInput.value = discount.toString().replace('.', ',');
-    }
-    
-    // Расчет НДС (20%)
-    const tax = subtotal * 0.2;
     
     // Обновляем итоговые значения
     const subtotalElem = document.getElementById('subtotal');
     const taxElem = document.getElementById('tax');
     const totalElem = document.getElementById('total');
+    const discountDisplay = document.getElementById('discount-display');
+    const discountInput = document.getElementById('discount');
     
     if (subtotalElem) subtotalElem.textContent = subtotal.toFixed(2).replace('.', ',') + ' ₽';
+    
+    // Обновляем отображение и скрытое поле общей скидки
+    if (discountDisplay) {
+        discountDisplay.textContent = totalDiscount.toFixed(2).replace('.', ',') + ' ₽';
+    }
+    if (discountInput) {
+        discountInput.value = totalDiscount.toFixed(2);
+    }
+    
+    // Применяем скидку к подытогу
+    const subtotalAfterDiscount = Math.max(0, subtotal - totalDiscount);
+    
+    // Расчет НДС (20%) от суммы после скидки
+    const tax = subtotalAfterDiscount * 0.2;
     if (taxElem) taxElem.textContent = tax.toFixed(2).replace('.', ',') + ' ₽';
-    if (totalElem) totalElem.textContent = (subtotal + tax - discount).toFixed(2).replace('.', ',') + ' ₽';
+    
+    // Обновляем общий итог
+    if (totalElem) totalElem.textContent = (subtotalAfterDiscount + tax).toFixed(2).replace('.', ',') + ' ₽';
 }
 
 // Функция для добавления новой строки товара - сделана глобальной
@@ -121,6 +148,10 @@ function addNewItemRow() {
         <td>
             <input type="text" name="item_price[]" title="Цена за единицу" required>
         </td>
+        <td>
+            <input type="text" name="item_discount_percent[]" title="Скидка %" class="item-discount-percent" placeholder="%">
+            <input type="hidden" name="item_discount[]" class="item-discount">
+        </td>
         <td class="item-total">0,00</td>
         <td>
             <button type="button" class="btn-icon remove-item" title="Удалить позицию">
@@ -132,21 +163,60 @@ function addNewItemRow() {
     // Добавляем в таблицу
     invoiceItems.appendChild(newRow);
     
-    // Добавляем обработчики событий для новых полей ввода
-    const inputs = newRow.querySelectorAll('input[name="item_quantity[]"], input[name="item_price[]"]');
-    inputs.forEach(input => {
-        input.addEventListener('input', updateTotals);
-    });
-    
-    // Добавляем обработчик для кнопки удаления
+    // Добавляем обработчики событий
+    const quantityInput = newRow.querySelector('input[name="item_quantity[]"]');
+    const priceInput = newRow.querySelector('input[name="item_price[]"]');
+    const discountPercentInput = newRow.querySelector('input[name="item_discount_percent[]"]');
+    const discountInput = newRow.querySelector('input[name="item_discount[]"]');
     const removeButton = newRow.querySelector('.remove-item');
+    
+    // Обработчик для кнопки удаления
     removeButton.addEventListener('click', function() {
         newRow.remove();
         updateTotals();
     });
     
-    // Фокус на поле с названием товара
-    newRow.querySelector('input[name="item_name[]"]').focus();
+    // Обработчики для полей ввода
+    [quantityInput, priceInput, discountPercentInput].forEach(input => {
+        if (!input) return;
+        
+        input.addEventListener('focus', function() {
+            if (input === discountPercentInput) {
+                this.value = this.value.replace(/\s/g, '').replace(',', '.').replace('%', '');
+            } else {
+                this.value = this.value.replace(/\s/g, '').replace(',', '.');
+            }
+        });
+        
+        input.addEventListener('blur', function() {
+            if (this.value) {
+                if (input === discountPercentInput) {
+                    let percent = parseFloat(this.value.replace(',', '.')) || 0;
+                    // Ограничиваем процент скидки от 0 до 100
+                    if (percent < 0) percent = 0;
+                    if (percent > 100) percent = 100;
+                    this.value = percent.toString().replace('.', ',');
+                    
+                    // Рассчитываем и обновляем сумму скидки
+                    const quantity = parseFloat(quantityInput.value.replace(',', '.')) || 0;
+                    const price = parseFloat(priceInput.value.replace(',', '.')) || 0;
+                    const itemTotal = quantity * price;
+                    const discount = itemTotal * (percent / 100);
+                    
+                    if (discountInput) {
+                        discountInput.value = discount.toFixed(2).replace('.', ',');
+                    }
+                } else {
+                    this.value = parseFloat(this.value.replace(',', '.')).toFixed(2).replace('.', ',');
+                }
+                updateTotals();
+            }
+        });
+        
+        input.addEventListener('input', function() {
+            updateTotals();
+        });
+    });
     
     // Обновляем итоги
     updateTotals();
@@ -788,23 +858,38 @@ function initializeEntitySelector(type) {
 function initializeInvoiceItems() {
     const itemsContainer = document.getElementById('invoice-items');
     const addItemButton = document.getElementById('add-item');
+    const discountInput = document.getElementById('discount');
     
     if (!itemsContainer || !addItemButton) {
+        console.error('Не найдены необходимые элементы для инициализации товаров');
         return;
     }
     
-    // Обработчик для добавления новой позиции
-    addItemButton.addEventListener('click', function() {
-        addInvoiceItem();
-    });
-    
-    // Добавляем обработчики событий для существующих позиций
+    // Добавляем обработчики для существующих строк
     updateExistingItemsHandlers();
     
-    // Выполняем первоначальный расчет итогов
-    calculateTotals();
+    // Добавляем обработчик для кнопки добавления новой позиции
+    addItemButton.addEventListener('click', addInvoiceItem);
     
-    // Добавляет новую позицию в таблицу
+    // Добавляем обработчики для поля общей скидки
+    if (discountInput) {
+        discountInput.addEventListener('input', function() {
+            calculateTotals();
+        });
+        
+        discountInput.addEventListener('focus', function() {
+            this.value = this.value.replace(/\s/g, '').replace(',', '.');
+        });
+        
+        discountInput.addEventListener('blur', function() {
+            if (this.value) {
+                this.value = parseFloat(this.value.replace(',', '.')).toFixed(2).replace('.', ',');
+                calculateTotals();
+            }
+        });
+    }
+    
+    // Функция для добавления новой позиции
     function addInvoiceItem() {
         const newRow = document.createElement('tr');
         newRow.className = 'invoice-item';
@@ -833,6 +918,9 @@ function initializeInvoiceItems() {
             </td>
             <td>
                 <input type="text" name="item_price[]" title="Цена за единицу" required>
+            </td>
+            <td>
+                <input type="text" name="item_discount[]" title="Скидка" class="item-discount">
             </td>
             <td class="item-total">0,00</td>
             <td>
@@ -874,9 +962,12 @@ function initializeInvoiceItems() {
             }
         });
         
-        // Обработчики ввода для полей количества и цены
+        // Обработчики ввода для полей количества, цены и скидки
         const quantityInput = row.querySelector('input[name="item_quantity[]"]');
         const priceInput = row.querySelector('input[name="item_price[]"]');
+        const discountPercentInput = row.querySelector('input[name="item_discount_percent[]"]');
+        const discountInput = row.querySelector('input[name="item_discount[]"]');
+        const totalCell = row.querySelector('.item-total');
         
         // Форматирование при фокусе и потере фокуса
         quantityInput.addEventListener('focus', function() {
@@ -901,6 +992,27 @@ function initializeInvoiceItems() {
             }
         });
         
+        if (discountPercentInput) {
+            discountPercentInput.addEventListener('focus', function() {
+                this.value = this.value.replace(/\s/g, '').replace(',', '.').replace('%', '');
+            });
+            
+            discountPercentInput.addEventListener('blur', function() {
+                if (this.value) {
+                    let percent = parseFloat(this.value.replace(',', '.')) || 0;
+                    // Ограничиваем процент скидки от 0 до 100
+                    if (percent < 0) percent = 0;
+                    if (percent > 100) percent = 100;
+                    this.value = percent.toString().replace('.', ',');
+                    calculateRowTotal(row);
+                }
+            });
+            
+            discountPercentInput.addEventListener('input', function() {
+                calculateRowTotal(row);
+            });
+        }
+        
         // Пересчет суммы при изменении количества или цены
         quantityInput.addEventListener('input', function() {
             calculateRowTotal(row);
@@ -915,11 +1027,33 @@ function initializeInvoiceItems() {
     function calculateRowTotal(row) {
         const quantityInput = row.querySelector('input[name="item_quantity[]"]');
         const priceInput = row.querySelector('input[name="item_price[]"]');
+        const discountPercentInput = row.querySelector('input[name="item_discount_percent[]"]');
+        const discountInput = row.querySelector('input[name="item_discount[]"]');
         const totalCell = row.querySelector('.item-total');
         
-        const quantity = parseFloat(quantityInput.value.replace(',', '.')) || 0;
-        const price = parseFloat(priceInput.value.replace(',', '.')) || 0;
-        const total = quantity * price;
+        // Только если поля не пустые, преобразуем значения
+        const quantity = quantityInput.value ? parseFloat(quantityInput.value.replace(',', '.')) || 0 : 0;
+        const price = priceInput.value ? parseFloat(priceInput.value.replace(',', '.')) || 0 : 0;
+        const itemTotal = quantity * price;
+        
+        // Если указан процент скидки, рассчитываем сумму скидки
+        let discount = 0;
+        if (discountPercentInput && discountPercentInput.value) {
+            const discountPercent = parseFloat(discountPercentInput.value.replace(',', '.')) || 0;
+            if (discountPercent > 100) {
+                discountPercent = 100;
+                discountPercentInput.value = "100";
+            }
+            discount = itemTotal * (discountPercent / 100);
+            
+            // Обновляем скрытое поле с суммой скидки
+            if (discountInput) {
+                discountInput.value = discount.toFixed(2).replace('.', ',');
+            }
+        }
+        
+        // Вычисляем сумму с учетом скидки
+        const total = itemTotal - discount;
         
         totalCell.textContent = total.toFixed(2).replace('.', ',');
         
@@ -932,46 +1066,69 @@ function initializeInvoiceItems() {
 function calculateTotals() {
     const rows = document.querySelectorAll('.invoice-item');
     let subtotal = 0;
+    let totalDiscount = 0;
     
     // Суммируем все позиции
     rows.forEach(row => {
+        const quantityInput = row.querySelector('input[name="item_quantity[]"]');
+        const priceInput = row.querySelector('input[name="item_price[]"]');
+        const discountPercentInput = row.querySelector('input[name="item_discount_percent[]"]');
+        const discountInput = row.querySelector('input[name="item_discount[]"]');
+        
+        if (!quantityInput || !priceInput) return;
+        
+        const quantity = parseFloat(quantityInput.value.replace(',', '.')) || 0;
+        const price = parseFloat(priceInput.value.replace(',', '.')) || 0;
+        const discountPercent = parseFloat(discountPercentInput?.value.replace(',', '.')) || 0;
+        
+        const rowTotal = quantity * price;
+        const rowDiscount = rowTotal * (discountPercent / 100);
+        
+        // Обновляем общие суммы
+        subtotal += rowTotal;
+        totalDiscount += rowDiscount;
+        
+        // Обновляем скрытое поле со скидкой
+        if (discountInput) {
+            discountInput.value = rowDiscount.toFixed(2).replace('.', ',');
+        }
+        
+        // Обновляем отображаемую сумму по строке
         const totalCell = row.querySelector('.item-total');
-        subtotal += parseFloat(totalCell.textContent.replace(/\s/g, '').replace(',', '.')) || 0;
+        if (totalCell) {
+            totalCell.textContent = (rowTotal - rowDiscount).toFixed(2).replace('.', ',');
+        }
     });
     
     // Обновляем подытог
     const subtotalElement = document.getElementById('subtotal');
     subtotalElement.textContent = subtotal.toFixed(2).replace('.', ',') + ' ₽';
     
-    // Вычисляем НДС (20%)
-    const tax = subtotal * 0.2;
+    // Обновляем отображение общей скидки
+    const discountElement = document.getElementById('discount-display');
+    const discountInput = document.getElementById('discount');
+    
+    if (discountElement) {
+        discountElement.textContent = totalDiscount.toFixed(2).replace('.', ',') + ' ₽';
+    }
+    
+    // Обновляем скрытое поле для передачи значения на сервер
+    if (discountInput) {
+        discountInput.value = totalDiscount.toFixed(2).replace('.', ',');
+    }
+    
+    // Применяем скидку к подытогу
+    const subtotalAfterDiscount = Math.max(0, subtotal - totalDiscount);
+    
+    // Вычисляем НДС (20%) от суммы после скидки
+    const tax = subtotalAfterDiscount * 0.2;
     const taxElement = document.getElementById('tax');
     taxElement.textContent = tax.toFixed(2).replace('.', ',') + ' ₽';
     
-    // Получаем скидку
-    const discountInput = document.getElementById('discount');
-    const discount = parseFloat(discountInput.value.replace(/\s/g, '').replace(',', '.')) || 0;
-    
     // Вычисляем итоговую сумму
-    const total = subtotal + tax - discount;
+    const total = subtotalAfterDiscount + tax;
     const totalElement = document.getElementById('total');
     totalElement.textContent = total.toFixed(2).replace('.', ',') + ' ₽';
-    
-    // Обработчик изменения скидки
-    discountInput.addEventListener('input', function() {
-        calculateTotals();
-    });
-    
-    discountInput.addEventListener('focus', function() {
-        this.value = this.value.replace(/\s/g, '').replace(',', '.');
-    });
-    
-    discountInput.addEventListener('blur', function() {
-        if (this.value) {
-            this.value = parseFloat(this.value.replace(',', '.')).toFixed(2).replace('.', ',');
-            calculateTotals();
-        }
-    });
 }
 
 // Форматирование полей с денежными значениями
@@ -980,10 +1137,14 @@ function formatCurrencyInputs() {
     
     currencyInputs.forEach(input => {
         input.addEventListener('focus', function() {
-            this.value = this.value.replace(/\s/g, '').replace(',', '.');
+            // При фокусе заменяем запятую на точку только если есть значение
+            if (this.value) {
+                this.value = this.value.replace(/\s/g, '').replace(',', '.');
+            }
         });
         
         input.addEventListener('blur', function() {
+            // При потере фокуса форматируем только если есть значение
             if (this.value) {
                 this.value = parseFloat(this.value.replace(',', '.')).toFixed(2).replace('.', ',');
             }

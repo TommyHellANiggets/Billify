@@ -24,8 +24,11 @@ def invoice_list(request):
     # Получаем тип счетов из параметров запроса
     invoice_type = request.GET.get('type', '')
     
-    # Получаем все счета
-    invoices = Invoice.objects.all()
+    # Обновляем статусы просроченных счетов
+    update_overdue_invoices(request.user)
+    
+    # Получаем счета только текущего пользователя
+    invoices = Invoice.objects.filter(user=request.user)
     
     # Фильтрация по типу (входящие/исходящие)
     # В данной реализации считаем, что если supplier_name совпадает с company_name пользователя,
@@ -45,24 +48,24 @@ def invoice_list(request):
             # Если профиль не найден, возвращаем пустой список
             invoices = Invoice.objects.none()
     
-    # Количество счетов по категориям
-    total_count = Invoice.objects.count()
+    # Количество счетов по категориям (только для текущего пользователя)
+    total_count = Invoice.objects.filter(user=request.user).count()
     
     # Считаем исходящие и входящие счета
     try:
         company_profile = request.user.company_profile
         company_name = company_profile.company_name
         
-        outgoing_count = Invoice.objects.filter(supplier_name=company_name).count()
-        incoming_count = Invoice.objects.exclude(supplier_name=company_name).count()
+        outgoing_count = Invoice.objects.filter(user=request.user, supplier_name=company_name).count()
+        incoming_count = Invoice.objects.filter(user=request.user).exclude(supplier_name=company_name).count()
     except:
         outgoing_count = 0
         incoming_count = 0
     
-    # Статистика по статусам
-    pending_count = Invoice.objects.filter(status='pending').count()
-    overdue_count = Invoice.objects.filter(status='overdue').count()
-    paid_count = Invoice.objects.filter(status='paid').count()
+    # Статистика по статусам (только для текущего пользователя)
+    pending_count = Invoice.objects.filter(user=request.user, status='pending').count()
+    overdue_count = Invoice.objects.filter(user=request.user, status='overdue').count()
+    paid_count = Invoice.objects.filter(user=request.user, status='paid').count()
     
     # Создаем контекст с информацией о выбранном типе
     context = {
@@ -79,11 +82,38 @@ def invoice_list(request):
     
     return render(request, 'invoices/list.html', context)
 
+def update_overdue_invoices(user):
+    """Обновляет статусы счетов - помечает просроченные"""
+    today = date.today()
+    
+    # Находим все неоплаченные счета с истекшим сроком оплаты
+    # Исключаем счета со статусом 'copy', так как они не переходят в просроченные
+    overdue_invoices = Invoice.objects.filter(
+        user=user,
+        due_date__lt=today,  # срок оплаты меньше текущей даты
+        status__in=['draft', 'sent', 'new']  # только неоплаченные счета
+    )
+    
+    # Обновляем их статус на 'overdue' (просрочен)
+    for invoice in overdue_invoices:
+        invoice.status = 'overdue'
+        invoice.save()
+    
+    return overdue_invoices.count()  # Возвращаем количество обновленных счетов
+
 @login_required
 def invoice_detail(request, pk):
     """Детальная информация о счете"""
     try:
+        # Обновляем статусы просроченных счетов
+        update_overdue_invoices(request.user)
+        
         invoice = Invoice.objects.prefetch_related('items').get(pk=pk)
+        
+        # Проверяем, принадлежит ли счет текущему пользователю
+        if invoice.user != request.user:
+            messages.error(request, 'У вас нет доступа к этому счету')
+            return redirect('invoices:list')
         
         # Проверяем, связан ли счет с текущим пользователем
         company_profile = request.user.company_profile
@@ -162,13 +192,20 @@ def invoice_create(request):
         print(f"DEBUG - invoice_create: количество клиентов: {clients.count()}")
     elif invoice_type == 'incoming':
         # Для входящего счета нужны поставщики из модели Supplier
-        suppliers = Supplier.objects.filter(is_active=True).order_by('name')
+        suppliers = Supplier.objects.filter(
+            user=request.user,
+            is_active=True
+        ).order_by('name')
         
         # Получаем выбранного поставщика, если указан ID
         selected_supplier = None
         if supplier_id:
             try:
-                selected_supplier = Supplier.objects.get(id=supplier_id)
+                selected_supplier = Supplier.objects.get(
+                    id=supplier_id,
+                    user=request.user,
+                    is_active=True
+                )
                 print(f"DEBUG - invoice_create: найден выбранный поставщик: {selected_supplier.id} - {selected_supplier.name}")
             except Supplier.DoesNotExist:
                 print(f"DEBUG - invoice_create: поставщик с ID {supplier_id} не найден")
@@ -196,38 +233,48 @@ def invoice_create(request):
         return render(request, 'invoices/create_outgoing.html', context)
 
 def get_next_invoice_number(user=None, invoice_type=None):
-    """Генерирует следующий номер счета, находя первый свободный номер.
-    Учитывает пользователя и тип счета для уникальности, но не включает имя пользователя в номер."""
-    # Получаем все существующие номера счетов этого пользователя
+    """Генерирует следующий номер счета, уникальный для каждого пользователя.
+    У каждого пользователя независимая нумерация счетов, начинающаяся с 00001.
+    Префикс зависит от типа счета: "Исх-" для исходящих, "Вход-" для входящих.
+    Если есть пропущенные номера в последовательности, функция вернет первый свободный номер."""
+    # Получаем все существующие номера счетов
     existing_invoices = Invoice.objects.all()
     
-    # Фильтруем счета по пользователю, если он указан
+    # Обязательно фильтруем счета по пользователю
     if user:
         existing_invoices = existing_invoices.filter(user=user)
+    else:
+        # Если пользователь не указан, не можем гарантировать уникальность
+        prefix = "Исх-" if invoice_type == "outgoing" else "Вход-"
+        return f'{prefix}Счёт№00001'
     
-    # Фильтруем счета по типу, если он указан
+    # Если нужно, дополнительно фильтруем счета по типу
     if invoice_type:
         existing_invoices = existing_invoices.filter(invoice_type=invoice_type)
     
-    # Если счетов еще нет, начинаем с номера 00001
-    if not existing_invoices.exists():
-        return f'Счет №00001'
+    # Устанавливаем префикс в зависимости от типа счета
+    prefix = "Исх-" if invoice_type == "outgoing" else "Вход-"
     
-    # Извлекаем числовые части из всех номеров счетов
+    # Если у пользователя еще нет счетов этого типа, начинаем с номера 00001
+    if not existing_invoices.exists():
+        return f'{prefix}Счёт№00001'
+    
+    # Извлекаем числовые части из всех номеров счетов этого пользователя
     existing_numbers = []
     
     for invoice in existing_invoices:
+        # Используем регулярное выражение, которое подходит для обоих форматов номеров
         number_match = re.search(r'№(\d+)', invoice.number)
         if number_match:
             existing_numbers.append(int(number_match.group(1)))
     
     if not existing_numbers:
-        return f'Счет №00001'
+        return f'{prefix}Счёт№00001'
     
     # Сортируем номера
     existing_numbers.sort()
     
-    # Находим первый свободный номер
+    # Ищем первый пропущенный номер
     expected_number = 1
     for num in existing_numbers:
         if num > expected_number:
@@ -236,14 +283,17 @@ def get_next_invoice_number(user=None, invoice_type=None):
         expected_number = num + 1
     
     # Форматируем номер с ведущими нулями
-    return f'Счет №{expected_number:05d}'
+    return f'{prefix}Счёт№{expected_number:05d}'
 
 @login_required
 def create_incoming(request):
     """Создание нового входящего счета"""
     
     # Получаем список всех активных поставщиков из модели Supplier
-    suppliers = Supplier.objects.filter(is_active=True).order_by('name')
+    suppliers = Supplier.objects.filter(
+        user=request.user,
+        is_active=True
+    ).order_by('name')
     print(f"DEBUG - найдено поставщиков: {suppliers.count()}")
     
     # Генерируем следующий номер счета
@@ -292,6 +342,7 @@ def create_incoming(request):
             item_descriptions = request.POST.getlist('item_description[]')
             item_quantities = request.POST.getlist('item_quantity[]')
             item_prices = request.POST.getlist('item_price[]')
+            item_discounts = request.POST.getlist('item_discount[]')
             
             # Создаем новый счет
             invoice = Invoice.objects.create(
@@ -328,16 +379,19 @@ def create_incoming(request):
                     try:
                         quantity = float(item_quantities[i].replace(',', '.')) if item_quantities[i] else 1
                         price = float(item_prices[i].replace(',', '.')) if item_prices[i] else 0
+                        discount = float(item_discounts[i].replace(',', '.')) if i < len(item_discounts) and item_discounts[i] else 0
                     except ValueError:
                         quantity = 1
                         price = 0
+                        discount = 0
                     
                     InvoiceItem.objects.create(
                         invoice=invoice,
                         description=item_names[i],
                         quantity=quantity,
                         price=price,
-                        amount=quantity * price
+                        discount=discount,
+                        amount=(quantity * price) - discount
                     )
             
             # Перенаправляем на страницу счета
@@ -440,6 +494,7 @@ def create_outgoing(request):
             item_descriptions = request.POST.getlist('item_description[]')
             item_quantities = request.POST.getlist('item_quantity[]')
             item_prices = request.POST.getlist('item_price[]')
+            item_discounts = request.POST.getlist('item_discount[]')
             
             # Обрабатываем скидку
             try:
@@ -483,16 +538,19 @@ def create_outgoing(request):
                     try:
                         quantity = float(item_quantities[i].replace(',', '.')) if item_quantities[i] else 1
                         price = float(item_prices[i].replace(',', '.')) if item_prices[i] else 0
+                        discount = float(item_discounts[i].replace(',', '.')) if i < len(item_discounts) and item_discounts[i] else 0
                     except ValueError:
                         quantity = 1
                         price = 0
+                        discount = 0
                     
                     InvoiceItem.objects.create(
                         invoice=invoice,
                         description=item_names[i],
                         quantity=quantity,
                         price=price,
-                        amount=quantity * price
+                        discount=discount,
+                        amount=(quantity * price) - discount
                     )
             
             # Перенаправляем на страницу счета
@@ -588,6 +646,10 @@ def mark_invoice_paid(request, pk):
     try:
         invoice = Invoice.objects.get(pk=pk)
         
+        # Проверяем, принадлежит ли счет текущему пользователю
+        if invoice.user != request.user:
+            return JsonResponse({'success': False, 'error': 'У вас нет доступа к этому счету'})
+        
         # Обновляем статус счета
         invoice.status = 'paid'
         invoice.payment_date = datetime.now().date()
@@ -606,6 +668,10 @@ def delete_invoice(request, pk):
     try:
         invoice = Invoice.objects.get(pk=pk)
         
+        # Проверяем, принадлежит ли счет текущему пользователю
+        if invoice.user != request.user:
+            return JsonResponse({'success': False, 'error': 'У вас нет доступа к этому счету'})
+        
         # Удаляем счет
         invoice.delete()
         
@@ -622,8 +688,8 @@ def duplicate_invoice(request, pk):
         # Получаем исходный счет
         original_invoice = Invoice.objects.get(pk=pk)
         
-        # Генерируем новый номер счета
-        next_invoice_number = get_next_invoice_number(original_invoice.user, original_invoice.invoice_type)
+        # Генерируем новый номер счета для текущего пользователя
+        next_invoice_number = get_next_invoice_number(request.user, original_invoice.invoice_type)
         
         # Создаем новый счет на основе существующего
         new_invoice = Invoice(
@@ -631,7 +697,7 @@ def duplicate_invoice(request, pk):
             client=original_invoice.client,
             issue_date=datetime.now().date(),
             due_date=datetime.now().date() + timedelta(days=15),  # Устанавливаем новый срок оплаты через 15 дней
-            status='draft',  # Новый счет всегда в статусе черновика
+            status='copy',  # Статус для копий
             supplier_name=original_invoice.supplier_name,
             supplier_address=original_invoice.supplier_address,
             supplier_inn=original_invoice.supplier_inn,
@@ -648,7 +714,9 @@ def duplicate_invoice(request, pk):
             discount=original_invoice.discount,
             total=original_invoice.total,
             director_name=original_invoice.director_name,
-            accountant_name=original_invoice.accountant_name
+            accountant_name=original_invoice.accountant_name,
+            user=request.user,  # Явно устанавливаем пользователя
+            invoice_type=original_invoice.invoice_type  # Сохраняем тип счета
         )
         new_invoice.save()
         
@@ -754,15 +822,29 @@ def edit_invoice(request, pk):
                 item_names = request.POST.getlist('item_name[]')
                 item_quantities = request.POST.getlist('item_quantity[]')
                 item_prices = request.POST.getlist('item_price[]')
+                item_discounts = request.POST.getlist('item_discount[]')
+                
+                # Получаем общую скидку
+                try:
+                    discount = float(request.POST.get('discount', '0').replace(',', '.'))
+                except ValueError:
+                    discount = 0
                 
                 # Создаем новые позиции
                 subtotal = 0
                 
                 for i in range(len(item_names)):
                     if item_names[i] and item_quantities[i] and item_prices[i]:
-                        quantity = float(item_quantities[i])
-                        price = float(item_prices[i])
-                        amount = quantity * price
+                        try:
+                            quantity = float(item_quantities[i].replace(',', '.'))
+                            price = float(item_prices[i].replace(',', '.'))
+                            item_discount = float(item_discounts[i].replace(',', '.')) if i < len(item_discounts) and item_discounts[i] else 0
+                            amount = (quantity * price) - item_discount
+                        except ValueError:
+                            quantity = 1
+                            price = 0
+                            item_discount = 0
+                            amount = 0
                         
                         invoice_item = InvoiceItem(
                             invoice=invoice,
@@ -770,6 +852,7 @@ def edit_invoice(request, pk):
                             quantity=quantity,
                             unit="шт.",  # Можно добавить поле для выбора единиц измерения
                             price=price,
+                            discount=item_discount,
                             amount=amount
                         )
                         invoice_item.save()
@@ -780,7 +863,8 @@ def edit_invoice(request, pk):
                 invoice.subtotal = subtotal
                 invoice.tax_rate = 20  # Можно сделать настраиваемым
                 invoice.tax_amount = subtotal * 0.20
-                invoice.total = invoice.subtotal + invoice.tax_amount
+                invoice.discount = discount
+                invoice.total = invoice.subtotal + invoice.tax_amount - invoice.discount
                 
                 # Сохраняем обновленный счет
                 invoice.save()

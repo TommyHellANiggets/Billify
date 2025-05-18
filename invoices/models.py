@@ -15,6 +15,8 @@ class Invoice(models.Model):
         ('paid', _('Оплачен')),
         ('overdue', _('Просрочен')),
         ('cancelled', _('Отменен')),
+        ('new', _('Новый')),
+        ('copy', _('Копия')),
     )
     
     INVOICE_TYPE_CHOICES = (
@@ -36,7 +38,7 @@ class Invoice(models.Model):
     issue_date = models.DateField(_('Дата выставления'), default=timezone.now)
     due_date = models.DateField(_('Срок оплаты'), default=timezone.now)
     payment_date = models.DateField('Дата оплаты', null=True, blank=True)
-    status = models.CharField(_('Статус'), max_length=20, choices=STATUS_CHOICES, default='draft')
+    status = models.CharField(_('Статус'), max_length=20, choices=STATUS_CHOICES, default='new')
     
     # Поля для поставщика
     supplier_name = models.CharField(_('Название поставщика'), max_length=255)
@@ -112,7 +114,7 @@ class Invoice(models.Model):
         if items:
             self.subtotal = items.aggregate(Sum('amount'))['amount__sum'] or Decimal('0.00')
             self.tax_amount = (self.subtotal * self.tax_rate / Decimal('100.00')).quantize(Decimal('0.01'))
-            self.total = self.subtotal + self.tax_amount
+            self.total = self.subtotal + self.tax_amount - self.discount
         return self.total
     
     def save(self, *args, **kwargs):
@@ -131,6 +133,7 @@ class InvoiceItem(models.Model):
     quantity = models.DecimalField(_('Количество'), max_digits=10, decimal_places=2)
     unit = models.CharField(_('Единица измерения'), max_length=10, default='шт.')
     price = models.DecimalField(_('Цена'), max_digits=15, decimal_places=2)
+    discount = models.DecimalField(_('Скидка'), max_digits=15, decimal_places=2, default=Decimal('0.00'))
     amount = models.DecimalField(_('Сумма'), max_digits=15, decimal_places=2)
     
     # Дополнительные поля для РФ
@@ -148,7 +151,9 @@ class InvoiceItem(models.Model):
         return f"{self.description[:50]}... ({self.quantity} {self.unit})"
     
     def calculate_amount(self):
-        """Расчет суммы позиции"""
+        """Расчет суммы позиции с учетом скидки"""
+        if self.discount:
+            return (self.quantity * self.price) - self.discount
         return self.quantity * self.price
     
     def calculate_vat(self):
@@ -156,8 +161,8 @@ class InvoiceItem(models.Model):
         return self.amount * (self.vat_rate / Decimal('100.00'))
     
     def save(self, *args, **kwargs):
-        # Автоматический расчет суммы
-        self.amount = self.quantity * self.price
+        # Автоматический расчет суммы с учетом скидки
+        self.amount = self.calculate_amount()
         super().save(*args, **kwargs)
         
         # Пересчитываем итоги счета

@@ -30,6 +30,12 @@
     color: #075985;
 }
 
+/* Стиль для бейджа статуса 'copy' (копия) */
+.entity-badge.copy-badge {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
 /* Стили для кнопок добавления */
 .btn-add.mr-2 {
     margin-right: 0.5rem;

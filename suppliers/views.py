@@ -5,6 +5,7 @@ from django.http import JsonResponse, Http404
 from django.views.decorators.http import require_GET
 from .models import Supplier
 import logging
+from django.urls import reverse
 
 @login_required
 def supplier_list(request):
@@ -43,9 +44,10 @@ def supplier_create(request):
         
         if not name:
             messages.error(request, 'Введите название поставщика')
-            return render(request, 'suppliers/form.html', {'title': 'Новый поставщик'})
+            return render(request, 'clients/create.html', {'title': 'Новый поставщик', 'is_supplier': True})
         
         supplier = Supplier.objects.create(
+            user=request.user,
             type=type_,
             name=name,
             email=email,
@@ -63,24 +65,80 @@ def supplier_create(request):
         )
         
         messages.success(request, f'Поставщик {supplier.name} успешно создан')
-        return redirect('suppliers:detail', supplier_id=supplier.id)
+        return redirect('clients:detail', client_id=f's_{supplier.id}')
     
     context = {
         'title': 'Создание нового поставщика',
-        'supplier_types': Supplier.TYPE_CHOICES
+        'is_supplier': True,
+        'supplier_types': Supplier.TYPE_CHOICES,
+        'active_tab': 'suppliers'
     }
     
-    return render(request, 'suppliers/form.html', context)
+    return render(request, 'clients/create.html', context)
 
 @login_required
 def supplier_edit(request, supplier_id):
-    supplier = get_object_or_404(Supplier, id=supplier_id)
-    # Здесь будет реализация редактирования поставщика
-    # с использованием форм Django
-    return render(request, 'suppliers/form.html', {
-        'supplier': supplier,
-        'active_tab': 'suppliers'
-    })
+    supplier = get_object_or_404(Supplier, id=supplier_id, user=request.user)
+    
+    if request.method == 'POST':
+        # Обновление данных поставщика
+        supplier.type = request.POST.get('type')
+        supplier.name = request.POST.get('name')
+        supplier.email = request.POST.get('email', '')
+        supplier.phone = request.POST.get('phone', '')
+        supplier.address = request.POST.get('address', '')
+        supplier.inn = request.POST.get('tax_id', '')
+        supplier.kpp = request.POST.get('kpp', '')
+        supplier.ogrn = request.POST.get('ogrn', '')
+        supplier.bank_name = request.POST.get('bank_name', '')
+        supplier.bank_account = request.POST.get('bank_account', '')
+        supplier.bank_bik = request.POST.get('bank_bik', '')
+        supplier.bank_corr_account = request.POST.get('bank_corr_account', '')
+        supplier.contact_person = request.POST.get('contact_person', '')
+        supplier.contact_email = request.POST.get('contact_email', '')
+        
+        if not supplier.name:
+            messages.error(request, 'Введите название поставщика')
+            return render(request, 'clients/create.html', {'title': 'Редактирование поставщика', 'entity': supplier, 'is_supplier': True})
+        
+        supplier.save()
+        messages.success(request, f'Данные поставщика {supplier.name} обновлены')
+        return redirect('clients:detail', client_id=f's_{supplier.id}')
+    
+    # Добавляем свойства для совместимости с шаблоном clients/create.html
+    supplier.entity_type = 'supplier'
+    supplier.get_edit_url = lambda: reverse('suppliers:edit', args=[supplier.id])
+    supplier.get_delete_url = lambda: reverse('suppliers:delete', args=[supplier.id])
+    
+    # Формируем данные для формы на основе существующего поставщика
+    form_data = {
+        'type': supplier.type,
+        'name': supplier.name,
+        'email': supplier.email,
+        'phone': supplier.phone,
+        'address': supplier.address,
+        'tax_id': supplier.inn,
+        'kpp': supplier.kpp,
+        'ogrn': supplier.ogrn,
+        'bank_name': supplier.bank_name,
+        'bank_account': supplier.bank_account,
+        'bank_bik': supplier.bank_bik,
+        'bank_corr_account': supplier.bank_corr_account,
+        'contact_person': supplier.contact_person,
+        'contact_email': supplier.contact_email,
+    }
+    
+    context = {
+        'title': 'Редактирование поставщика',
+        'entity': supplier,  # Используем имя entity вместо supplier для совместимости
+        'client': supplier,  # Для совместимости с шаблоном
+        'is_supplier': True,
+        'active_tab': 'suppliers',
+        'form_data': form_data,  # Передаем данные формы для заполнения полей
+        'edit_mode': True  # Флаг для шаблона, что это режим редактирования
+    }
+    
+    return render(request, 'clients/create.html', context)
 
 @login_required
 def supplier_delete(request, supplier_id):

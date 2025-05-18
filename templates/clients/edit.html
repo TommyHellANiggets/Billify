@@ -113,7 +113,7 @@
     <div class="page-header">
         <div class="breadcrumbs">
             <a href="{% url 'clients:list' %}">{% trans "Клиенты" %}</a> &gt; 
-            <a href="{% url 'clients:detail' client_id=client.id %}">{{ client.name }}</a> &gt;
+            <a href="{% url 'clients:detail' client_id=entity.id %}">{{ entity.name }}</a> &gt;
             <span>{% trans "Редактирование" %}</span>
         </div>
         
@@ -254,6 +254,11 @@
                     </div>
                 </div>
                 
+                <div class="form-group full-width">
+                    <label for="bank_corr_account">{% trans "Корр. счет банка" %}</label>
+                    <input type="text" id="bank_corr_account" name="bank_corr_account" class="form-control" maxlength="20" value="{{ entity.bank_corr_account }}">
+                </div>
+                
                 <div class="wizard-actions">
                     <button type="button" class="btn btn-light prev-step" data-goto="2">{% trans "Назад" %}</button>
                     <button type="button" class="btn btn-primary next-step" data-goto="4">{% trans "Далее" %}</button>
@@ -280,6 +285,10 @@
                 </div>
             </div>
         </form>
+        
+        <div class="form-actions full-width mt-3">
+            <a href="{% url 'clients:detail' client_id=entity.id %}" class="btn btn-secondary">{% trans "Отмена" %}</a>
+        </div>
     </div>
 </div>
 {% endblock %}

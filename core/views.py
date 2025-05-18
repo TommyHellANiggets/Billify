@@ -198,48 +198,48 @@ def home_inside(request):
     # Получаем количество поставщиков из модели Supplier
     from suppliers.models import Supplier
     context['suppliers_count'] = Supplier.objects.filter(
+        user=request.user,
         is_active=True
     ).count()
     
     # Получаем все счета и данные, связанные с ними
     try:
-        company_profile = getattr(request.user, 'company_profile', None)
-        if company_profile:
-            company_name = company_profile.company_name
-            
-            # Исходящие счета (генерирующие доход)
-            outgoing_invoices = Invoice.objects.filter(supplier_name=company_name)
-            context['invoices_count'] = outgoing_invoices.count()
-            
-            # Подсчет заработка (только по оплаченным счетам)
-            paid_invoices = outgoing_invoices.filter(status='paid')
-            earnings = paid_invoices.aggregate(Sum('total'))['total__sum']
-            if earnings:
-                context['total_earnings'] = earnings
-            
-            # Количество выполненных работ (оплаченных счетов)
-            context['completed_jobs'] = paid_invoices.count()
-            
-            # Получаем недавнюю активность (последние 5 созданных счетов)
-            recent_invoices = Invoice.objects.order_by('-created_at')[:5]
-            
-            # Формируем список активностей для отображения
-            activities = []
-            for invoice in recent_invoices:
-                # Определяем тип активности в зависимости от статуса счета
-                invoice_type = "Исходящий" if invoice.supplier_name == company_name else "Входящий"
-                icon_class = "fas fa-file-export" if invoice.supplier_name == company_name else "fas fa-file-import"
-                    
-                activity = {
-                    'icon': icon_class,
-                    'title': f"{invoice_type} счет №{invoice.number}",
-                    'description': f"{invoice.client.name} - {invoice.total} ₽",
-                    'time': invoice.created_at.strftime("%d.%m.%Y %H:%M"),
-                    'url': f"/invoices/{invoice.id}/"
-                }
-                activities.append(activity)
-            
-            context['recent_activities'] = activities
+        # Исходящие счета (генерирующие доход)
+        outgoing_invoices = Invoice.objects.filter(
+            user=request.user,
+            invoice_type='outgoing'
+        )
+        context['invoices_count'] = outgoing_invoices.count()
+        
+        # Подсчет заработка (только по оплаченным счетам)
+        paid_invoices = outgoing_invoices.filter(status='paid')
+        earnings = paid_invoices.aggregate(Sum('total'))['total__sum']
+        if earnings:
+            context['total_earnings'] = earnings
+        
+        # Количество выполненных работ (оплаченных счетов)
+        context['completed_jobs'] = paid_invoices.count()
+        
+        # Получаем недавнюю активность (последние 5 созданных счетов)
+        recent_invoices = Invoice.objects.filter(user=request.user).order_by('-created_at')[:5]
+        
+        # Формируем список активностей для отображения
+        activities = []
+        for invoice in recent_invoices:
+            # Определяем тип активности в зависимости от типа счета
+            invoice_type = "Исходящий" if invoice.invoice_type == 'outgoing' else "Входящий"
+            icon_class = "fas fa-file-export" if invoice.invoice_type == 'outgoing' else "fas fa-file-import"
+                
+            activity = {
+                'icon': icon_class,
+                'title': f"{invoice_type} счет №{invoice.number}",
+                'description': f"{invoice.client.name} - {invoice.total} ₽",
+                'time': invoice.created_at.strftime("%d.%m.%Y %H:%M"),
+                'url': f"/invoices/{invoice.id}/"
+            }
+            activities.append(activity)
+        
+        context['recent_activities'] = activities
     except Exception as e:
         # В случае ошибки логируем её, но не прерываем выполнение
         print(f"Error in dashboard: {e}")

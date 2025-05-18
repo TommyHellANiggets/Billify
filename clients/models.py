@@ -43,13 +43,13 @@ class Client(models.Model):
         return self.name
     
     def get_absolute_url(self):
-        return reverse('clients:detail', args=[str(self.id)])
+        return reverse('clients:detail', args=[f'c_{self.id}'])
     
     def get_edit_url(self):
-        return reverse('clients:edit', args=[str(self.id)])
+        return reverse('clients:edit', args=[f'c_{self.id}'])
     
     def get_delete_url(self):
-        return reverse('clients:delete', args=[str(self.id)])
+        return reverse('clients:delete', args=[f'c_{self.id}'])
         
     def get_full_address(self):
         return self.address

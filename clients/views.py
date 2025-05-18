@@ -6,6 +6,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_GET
 from django.db.models import Q
 import re
+from django.urls import reverse
 
 from .models import Client
 from suppliers.models import Supplier
@@ -115,8 +116,8 @@ def client_list(request):
     # Получаем клиентов текущего пользователя
     clients = Client.objects.filter(user=request.user, is_active=True)
     
-    # Получаем поставщиков (для всех пользователей)
-    suppliers = Supplier.objects.filter(is_active=True)
+    # Получаем поставщиков текущего пользователя
+    suppliers = Supplier.objects.filter(user=request.user, is_active=True)
     
     # Фильтрация по поисковому запросу
     if search_query:
@@ -189,13 +190,24 @@ def client_detail(request, client_id):
     if client_id.startswith('s_'):
         # Это поставщик
         supplier_id = client_id[2:]  # Убираем префикс s_
-        entity = get_object_or_404(Supplier, id=supplier_id, is_active=True)
+        entity = get_object_or_404(Supplier, id=supplier_id, user=request.user, is_active=True)
+        entity.entity_type = 'supplier'  # Добавляем свойство для шаблона
         is_supplier = True
+        # Добавляем методы для совместимости с шаблоном
+        entity.get_edit_url = lambda: reverse('clients:edit', args=[client_id])
+        entity.get_delete_url = lambda: reverse('clients:delete', args=[client_id])
+        entity.get_entity_type_display = lambda: 'Поставщик'
     else:
         # Это клиент
         if client_id.startswith('c_'):
-            client_id = client_id[2:]  # Убираем префикс c_, если есть
-        entity = get_object_or_404(Client, id=client_id, user=request.user, is_active=True)
+            client_id_clean = client_id[2:]  # Убираем префикс c_, если есть
+        else:
+            client_id_clean = client_id
+            client_id = f'c_{client_id}'  # Добавляем префикс для URL
+        
+        entity = get_object_or_404(Client, id=client_id_clean, user=request.user, is_active=True)
+        entity.entity_type = 'client'  # Добавляем свойство для шаблона
+        entity.get_entity_type_display = lambda: 'Клиент'
         is_supplier = False
     
     context = {
@@ -273,6 +285,7 @@ def client_create(request):
             if is_supplier:
                 # Создаем поставщика в модели Supplier
                 supplier = Supplier.objects.create(
+                    user=request.user,
                     type=type_,
                     name=name,
                     email=email,
@@ -342,7 +355,7 @@ def client_edit(request, client_id):
     if is_supplier:
         # Редактирование поставщика
         supplier_id = client_id[2:]  # Убираем префикс s_
-        entity = get_object_or_404(Supplier, id=supplier_id, is_active=True)
+        entity = get_object_or_404(Supplier, id=supplier_id, user=request.user, is_active=True)
         
         if request.method == 'POST':
             # Обновление данных поставщика
@@ -372,8 +385,11 @@ def client_edit(request, client_id):
     else:
         # Редактирование клиента
         if client_id.startswith('c_'):
-            client_id = client_id[2:]  # Убираем префикс c_, если есть
-        entity = get_object_or_404(Client, id=client_id, user=request.user, is_active=True)
+            client_id_clean = client_id[2:]  # Убираем префикс c_, если есть
+        else:
+            client_id_clean = client_id
+        
+        entity = get_object_or_404(Client, id=client_id_clean, user=request.user, is_active=True)
         
         if request.method == 'POST':
             # Обновление данных клиента
@@ -418,8 +434,11 @@ def client_delete(request, client_id):
     if is_supplier:
         # Удаление поставщика
         supplier_id = client_id[2:]  # Убираем префикс s_
-        entity = get_object_or_404(Supplier, id=supplier_id, is_active=True)
+        entity = get_object_or_404(Supplier, id=supplier_id, user=request.user, is_active=True)
         entity_name = entity.name
+        
+        # Добавляем id с префиксом для шаблона
+        entity.id = client_id
         
         if request.method == 'POST':
             entity.is_active = False
@@ -429,9 +448,18 @@ def client_delete(request, client_id):
     else:
         # Удаление клиента
         if client_id.startswith('c_'):
-            client_id = client_id[2:]  # Убираем префикс c_, если есть
-        entity = get_object_or_404(Client, id=client_id, user=request.user, is_active=True)
+            client_id_clean = client_id[2:]  # Убираем префикс c_, если есть
+        else:
+            client_id_clean = client_id
+        
+        entity = get_object_or_404(Client, id=client_id_clean, user=request.user, is_active=True)
         entity_name = entity.name
+        
+        # Добавляем id с префиксом для шаблона
+        if not client_id.startswith('c_'):
+            entity.id = f'c_{entity.id}'
+        else:
+            entity.id = client_id
         
         if request.method == 'POST':
             entity.is_active = False
@@ -441,7 +469,7 @@ def client_delete(request, client_id):
     
     context = {
         'title': f'Удаление {"поставщика" if is_supplier else "клиента"}',
-        'entity': entity,
+        'client': entity,  # Используем client вместо entity для соответствия шаблону
         'is_supplier': is_supplier
     }
     
@@ -458,7 +486,7 @@ def client_api_get(request, client_id):
         if is_supplier:
             # Получение данных поставщика
             supplier_id = client_id[2:]  # Убираем префикс s_
-            entity = get_object_or_404(Supplier, id=supplier_id, is_active=True)
+            entity = get_object_or_404(Supplier, id=supplier_id, user=request.user, is_active=True)
             
             data = {
                 'id': f's_{entity.id}',
@@ -481,8 +509,11 @@ def client_api_get(request, client_id):
         else:
             # Получение данных клиента
             if client_id.startswith('c_'):
-                client_id = client_id[2:]  # Убираем префикс c_, если есть
-            entity = get_object_or_404(Client, id=client_id, user=request.user, is_active=True)
+                client_id_clean = client_id[2:]  # Убираем префикс c_, если есть
+            else:
+                client_id_clean = client_id
+            
+            entity = get_object_or_404(Client, id=client_id_clean, user=request.user, is_active=True)
             
             data = {
                 'id': f'c_{entity.id}',

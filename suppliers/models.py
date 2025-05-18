@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 class Supplier(models.Model):
     TYPE_CHOICES = (
@@ -7,6 +8,7 @@ class Supplier(models.Model):
         ('business', 'Юридическое лицо'),
     )
     
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь', related_name='suppliers', null=True)
     type = models.CharField('Тип поставщика', max_length=20, choices=TYPE_CHOICES, default='business')
     name = models.CharField('Название организации / ФИО ИП', max_length=200)
     email = models.EmailField('Email', blank=True)

@@ -423,16 +423,14 @@ function applyScannedItems() {
  */
 function applyItemsToForm(items) {
     const invoiceItemsContainer = document.getElementById('invoice-items');
-    if (!invoiceItemsContainer) return;
     
-    // Удаляем существующие позиции, если они есть и пустые
-    const existingItems = invoiceItemsContainer.querySelectorAll('.invoice-item');
-    if (existingItems.length === 1) {
-        const nameInput = existingItems[0].querySelector('input[name="item_name[]"]');
-        if (nameInput && !nameInput.value.trim()) {
-            existingItems[0].remove();
-        }
+    if (!invoiceItemsContainer) {
+        console.error('Не найден контейнер для позиций счета');
+        return;
     }
+    
+    // Очищаем существующие позиции
+    invoiceItemsContainer.innerHTML = '';
     
     // Добавляем новые позиции
     items.forEach(item => {
@@ -441,24 +439,49 @@ function applyItemsToForm(items) {
             window.addNewItemRow();
             
             // Получаем последнюю добавленную строку
-            const newRow = invoiceItemsContainer.querySelector('.invoice-item:last-child');
+            const newRow = invoiceItemsContainer.lastElementChild;
             
             // Заполняем данные
             const nameInput = newRow.querySelector('input[name="item_name[]"]');
             const quantityInput = newRow.querySelector('input[name="item_quantity[]"]');
             const priceInput = newRow.querySelector('input[name="item_price[]"]');
+            const discountPercentInput = newRow.querySelector('input[name="item_discount_percent[]"]');
+            const discountInput = newRow.querySelector('input[name="item_discount[]"]');
             
-            if (nameInput) nameInput.value = item.name;
+            if (nameInput) nameInput.value = item.name || '';
             if (quantityInput) quantityInput.value = item.quantity.toString().replace('.', ',');
             if (priceInput) priceInput.value = item.price.toFixed(2).replace('.', ',');
+            
+            // Если есть скидка, вычисляем и устанавливаем ее процент
+            if (item.discount && item.discount > 0) {
+                const itemTotal = item.quantity * item.price;
+                if (itemTotal > 0) {
+                    const discountPercent = Math.min(100, Math.round((item.discount / itemTotal) * 100));
+                    if (discountPercentInput) {
+                        discountPercentInput.value = discountPercent.toString();
+                    }
+                }
+                if (discountInput) {
+                    discountInput.value = item.discount.toFixed(2).replace('.', ',');
+                }
+            }
         } else {
             // Создаем новую строку вручную
             const newRow = document.createElement('tr');
             newRow.className = 'invoice-item';
             
+            const discount = item.discount || 0;
+            let discountPercent = 0;
+            const itemTotal = item.quantity * item.price;
+            
+            // Вычисляем процент скидки
+            if (itemTotal > 0 && discount > 0) {
+                discountPercent = Math.min(100, Math.round((discount / itemTotal) * 100));
+            }
+            
             newRow.innerHTML = `
                 <td>
-                    <input type="text" name="item_name[]" title="Наименование товара/услуги" value="${item.name}" required>
+                    <input type="text" name="item_name[]" title="Наименование товара/услуги" value="${item.name || ''}" required>
                 </td>
                 <td>
                     <input type="text" name="item_quantity[]" title="Количество" value="${item.quantity.toString().replace('.', ',')}" required>
@@ -466,7 +489,11 @@ function applyItemsToForm(items) {
                 <td>
                     <input type="text" name="item_price[]" title="Цена за единицу" value="${item.price.toFixed(2).replace('.', ',')}" required>
                 </td>
-                <td class="item-total">${(item.quantity * item.price).toFixed(2).replace('.', ',')}</td>
+                <td>
+                    <input type="text" name="item_discount_percent[]" title="Скидка %" class="item-discount-percent" value="${discountPercent}" placeholder="%">
+                    <input type="hidden" name="item_discount[]" class="item-discount" value="${discount.toFixed(2).replace('.', ',')}">
+                </td>
+                <td class="item-total">${((item.quantity * item.price) - discount).toFixed(2).replace('.', ',')}</td>
                 <td>
                     <button type="button" class="btn-icon remove-item" title="Удалить позицию">
                         <i class="fas fa-trash"></i>

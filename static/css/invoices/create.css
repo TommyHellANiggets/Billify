@@ -261,6 +261,15 @@
     vertical-align: middle;
 }
 
+/* Добавляем равные отступы между ячейками */
+.invoice-items-table td:not(:last-child) {
+    padding-right: 0.8rem;
+}
+
+.invoice-items-table td:not(:first-child) {
+    padding-left: 0.8rem;
+}
+
 .invoice-items-table tr:last-child td {
     border-bottom: none;
 }
@@ -782,17 +791,18 @@
 .quantity-unit-wrapper {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 8px;
 }
 
 .quantity-unit-wrapper input {
-    flex: 0 0 60%; /* Задаем фиксированную ширину для количества */
+    flex: 0 0 75%; /* Задаем фиксированную ширину для количества - в 1,5 раза больше селекта */
     min-width: 50px;
 }
 
 .quantity-unit-wrapper .item-unit {
-    flex: 0 0 20%; /* Остальное пространство для единиц измерения */
-    min-width: 80px;
+    flex: 0 0 25%; /* Остальное пространство для единиц измерения */
+    min-width: 60px;
+    padding-right: 20px; /* Освобождаем место для стрелки */
 }
 
 /* Обновляем стили выпадающего списка единиц измерения */
@@ -831,5 +841,103 @@
     .item-name-cell,
     .item-quantity-cell {
         width: auto;
+    }
+}
+
+/* Клиентская информационная сетка */
+.client-info-grid {
+    display: grid;
+    grid-template-columns: 50% 25% 25%;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.client-select-group {
+    grid-column: 1;
+    width: 100%;
+}
+
+/* Адаптивные стили для клиентской информационной сетки */
+@media (max-width: 992px) {
+    .client-info-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .client-select-group {
+        grid-column: 1 / -1; /* Занимает полную ширину */
+    }
+}
+
+@media (max-width: 768px) {
+    .client-info-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Стили для процентной скидки */
+.discount-wrapper {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.discount-wrapper input[type="text"] {
+    width: 100%;
+    padding-right: 50px; /* Увеличиваем правый отступ для лучшей видимости селектора */
+}
+
+.discount-wrapper .item-discount-percent {
+    position: absolute;
+    right: 0;
+    width: 45px;
+    height: 100%;
+    border: none;
+    background-color: #f8f9fa;
+    color: #495057;
+    cursor: pointer;
+    font-size: 0.9em;
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    text-align: center;
+    border-left: 1px solid #e0e0e0;
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+    padding-right: 15px;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23adb5bd' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 5px center;
+    background-size: 10px;
+}
+
+.discount-wrapper .item-discount-percent:focus {
+    outline: none;
+    color: #0056b3;
+    background-color: #e9ecef;
+}
+
+/* Стиль для выбранного процента скидки */
+.discount-wrapper .item-discount-percent option {
+    text-align: center;
+    padding: 5px;
+}
+
+/* Обеспечиваем видимость границы и фона на мобильных устройствах */
+@media (max-width: 767px) {
+    .discount-wrapper {
+        flex-direction: row; /* Изменяем на строчное отображение даже на мобильных */
+    }
+    
+    .discount-wrapper input[type="text"] {
+        width: 70%;
+        padding-right: 0;
+    }
+    
+    .discount-wrapper .item-discount-percent {
+        position: relative;
+        width: 30%;
+        height: 38px;
+        border-left: 1px solid #e0e0e0;
+        border-radius: 0 12px 12px 0;
     }
 } 

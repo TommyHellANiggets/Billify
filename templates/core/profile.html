@@ -480,7 +480,6 @@
     {% endif %}
     
     <div class="profile-tabs" id="profile-tabs">
-        <button class="profile-tab active" data-tab="company">{% trans "Данные компании" %}</button>
         <button class="profile-tab" data-tab="bank">{% trans "Банковские реквизиты" %}</button>
         <button class="profile-tab" data-tab="email">{% trans "Электронная почта" %}</button>
         <button class="profile-tab" data-tab="preferences">{% trans "Настройки" %}</button>
@@ -890,7 +889,7 @@
                             </div>
                         </div>
                         
-                        <div class="currency-option {% if form.instance.preferred_currency == 'USD' %}active{% endif %}" data-currency="USD">
+                        <!-- <div class="currency-option {% if form.instance.preferred_currency == 'USD' %}active{% endif %}" data-currency="USD">
                             <div class="currency-symbol">$</div>
                             <div class="currency-details">
                                 <div class="currency-name">Доллар США</div>
@@ -912,7 +911,7 @@
                                 <div class="currency-name">Фунт стерлингов</div>
                                 <div class="currency-code">GBP</div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                     
                     <div class="profile-form-footer">
