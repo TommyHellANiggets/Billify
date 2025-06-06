@@ -17,4 +17,25 @@ urlpatterns = [
     path('terms/', views.terms, name='terms'),
     path('privacy/', views.privacy, name='privacy'),
     path('legal/', views.legal, name='legal'),
+    path('pricing/', views.pricing, name='pricing'),
+    path('help/', views.help_view, name='help'),
+    path('guide/', views.user_guide, name='guide'),
+    path('contact/', views.contact_us, name='contact'),
+    
+    # URL-маршруты для хранилища файлов
+    path('storage/', views.storage_home, name='storage_home'),
+    path('storage/folders/', views.storage_home, name='storage_folders'),
+    path('storage/folder/<int:folder_id>/', views.storage_folder_detail, name='storage_folder_detail'),
+    path('storage/favorites/', views.storage_favorites, name='storage_favorites'),
+    
+    # API для работы с хранилищем
+    path('storage/api/create-folder/', views.create_folder, name='storage_create_folder'),
+    path('storage/api/upload-file/', views.upload_file, name='storage_upload_file'),
+    path('storage/api/delete-file/<int:file_id>/', views.delete_file, name='storage_delete_file'),
+    path('storage/api/delete-folder/<int:folder_id>/', views.delete_folder, name='storage_delete_folder'),
+    path('storage/api/rename-file/<int:file_id>/', views.rename_file, name='storage_rename_file'),
+    path('storage/api/rename-folder/<int:folder_id>/', views.rename_folder, name='storage_rename_folder'),
+    path('storage/api/favorite/<int:file_id>/', views.toggle_favorite, name='storage_toggle_favorite'),
+    path('storage/api/move-file/<int:file_id>/', views.move_file, name='storage_move_file'),
+    path('storage/api/move-folder/<int:folder_id>/', views.move_folder, name='storage_move_folder'),
 ] 

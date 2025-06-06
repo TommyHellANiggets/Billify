@@ -142,3 +142,84 @@ class PricingPlan(models.Model):
             'support': self.feature_support
         }
         return features
+
+
+class StorageFolder(models.Model):
+    """Модель для папок в хранилище файлов"""
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='storage_folders', verbose_name='Пользователь')
+    name = models.CharField('Название папки', max_length=255)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, 
+                               related_name='subfolders', verbose_name='Родительская папка')
+    created_at = models.DateTimeField('Дата создания', auto_now_add=True)
+    updated_at = models.DateTimeField('Дата обновления', auto_now=True)
+    
+    class Meta:
+        verbose_name = 'Папка хранилища'
+        verbose_name_plural = 'Папки хранилища'
+        unique_together = [['user', 'name', 'parent']]
+        ordering = ['name']
+    
+    def __str__(self):
+        if self.parent:
+            return f"{self.parent}/{self.name}"
+        return self.name
+    
+    def get_path(self):
+        """Возвращает полный путь к папке"""
+        path = [self.name]
+        parent = self.parent
+        
+        while parent is not None:
+            path.insert(0, parent.name)
+            parent = parent.parent
+        
+        return '/'.join(path)
+    
+
+class StorageFile(models.Model):
+    """Модель для файлов в хранилище пользователей"""
+    FILE_TYPE_CHOICES = (
+        ('document', 'Документ'),
+        ('image', 'Изображение'),
+        ('pdf', 'PDF'),
+        ('archive', 'Архив'),
+        ('other', 'Другой'),
+    )
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='storage_files', verbose_name='Пользователь')
+    folder = models.ForeignKey(StorageFolder, on_delete=models.CASCADE, null=True, blank=True, 
+                               related_name='files', verbose_name='Папка')
+    name = models.CharField('Имя файла', max_length=255)
+    file = models.FileField('Файл', upload_to='storage_files/%Y/%m/%d/')
+    file_type = models.CharField('Тип файла', max_length=20, choices=FILE_TYPE_CHOICES, default='other')
+    size = models.PositiveIntegerField('Размер файла (в байтах)', default=0)
+    description = models.TextField('Описание', blank=True)
+    is_favorite = models.BooleanField('Избранное', default=False)
+    created_at = models.DateTimeField('Дата создания', auto_now_add=True)
+    updated_at = models.DateTimeField('Дата обновления', auto_now=True)
+    
+    class Meta:
+        verbose_name = 'Файл хранилища'
+        verbose_name_plural = 'Файлы хранилища'
+        ordering = ['-updated_at']
+    
+    def __str__(self):
+        return self.name
+    
+    def get_path(self):
+        """Возвращает полный путь к файлу"""
+        if self.folder:
+            return f"{self.folder.get_path()}/{self.name}"
+        return self.name
+        
+    def get_file_size_display(self):
+        """Возвращает размер файла в удобном для чтения формате"""
+        size = self.size
+        if size < 1024:
+            return f"{size} Б"
+        elif size < 1024 * 1024:
+            return f"{size/1024:.1f} КБ"
+        elif size < 1024 * 1024 * 1024:
+            return f"{size/(1024*1024):.1f} МБ"
+        else:
+            return f"{size/(1024*1024*1024):.1f} ГБ"

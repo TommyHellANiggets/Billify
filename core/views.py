@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import login, update_session_auth_hash, logout
 from django.contrib.auth.decorators import login_required
 from .forms import CustomUserCreationForm, CompanyProfileForm
-from .models import CompanyProfile, PricingPlan, EmailVerification
+from .models import CompanyProfile, PricingPlan, EmailVerification, StorageFolder, StorageFile
 from clients.models import Client
 from invoices.models import Invoice
 from decimal import Decimal
@@ -26,6 +26,8 @@ import hashlib
 import uuid
 from datetime import datetime, timedelta
 from urllib.parse import urlparse, urlunparse
+import os
+import mimetypes
 
 # Create your views here.
 
@@ -694,3 +696,473 @@ def privacy(request):
 def legal(request):
     """Страница правовой информации"""
     return render(request, 'core/legal.html', {'title': 'Правовая информация - Billify'})
+
+def pricing(request):
+    """Страница с тарифными планами"""
+    # Получаем данные о тарифных планах
+    from core.models import PricingPlan
+    
+    basic_plan = PricingPlan.objects.filter(plan_type='basic', subscription_period='month').first()
+    premium_plans = PricingPlan.objects.filter(plan_type='premium').order_by('subscription_period')
+    
+    context = {
+        'title': 'Тарифы - Billify',
+        'pricing_plans': {
+            'basic': basic_plan,
+            'premium': premium_plans.filter(subscription_period='month').first(),
+            'premium_week': premium_plans.filter(subscription_period='week').first(),
+            'premium_quarter': premium_plans.filter(subscription_period='quarter').first(),
+            'premium_half_year': premium_plans.filter(subscription_period='half_year').first(),
+            'premium_year': premium_plans.filter(subscription_period='year').first(),
+        }
+    }
+    
+    return render(request, 'core/pricing.html', context)
+
+@login_required
+def help_view(request):
+    """Страница помощи"""
+    return render(request, 'core/help.html', {'title': 'Помощь - Billify'})
+
+@login_required
+def user_guide(request):
+    """Руководство пользователя"""
+    return render(request, 'core/guide.html', {'title': 'Руководство пользователя - Billify'})
+
+def contact_us(request):
+    """Страница контактов"""
+    if request.method == 'POST':
+        # Обработка формы контактов (можно реализовать отправку email)
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        message = request.POST.get('message')
+        
+        if name and email and message:
+            # Здесь можно добавить отправку email
+            messages.success(request, 'Ваше сообщение успешно отправлено!')
+            return redirect('core:contact')
+    
+    return render(request, 'core/contact.html', {'title': 'Связаться с нами - Billify'})
+
+@login_required
+def storage_home(request):
+    """Главная страница хранилища файлов пользователя"""
+    # Получаем корневые папки (без родительской папки)
+    root_folders = StorageFolder.objects.filter(user=request.user, parent=None)
+    # Получаем файлы в корневом каталоге (не в папках)
+    root_files = StorageFile.objects.filter(user=request.user, folder=None)
+    
+    # Получаем информацию о занятом месте на диске
+    used_space = StorageFile.objects.filter(user=request.user).aggregate(total_size=Sum('size'))
+    used_bytes = used_space['total_size'] or 0
+    
+    # Конвертируем в мегабайты для отображения
+    used_mb = used_bytes / (1024 * 1024)
+    
+    # Получаем максимальное доступное пространство из тарифного плана (по умолчанию 1 ГБ)
+    max_space_mb = 1024  # 1 ГБ
+    
+    context = {
+        'root_folders': root_folders,
+        'root_files': root_files,
+        'used_space': used_mb,
+        'max_space': max_space_mb,
+        'space_percent': (used_mb / max_space_mb) * 100 if max_space_mb > 0 else 0,
+        'current_path': [],
+        'current_folder': None,
+    }
+    
+    return render(request, 'core/storage/index.html', context)
+
+
+@login_required
+def storage_folder_detail(request, folder_id):
+    """Просмотр содержимого папки"""
+    folder = get_object_or_404(StorageFolder, id=folder_id, user=request.user)
+    
+    # Получаем подпапки текущей папки
+    subfolders = StorageFolder.objects.filter(parent=folder)
+    
+    # Получаем файлы текущей папки
+    files = StorageFile.objects.filter(folder=folder)
+    
+    # Формируем путь к текущей папке для хлебных крошек
+    path = []
+    current = folder
+    while current is not None:
+        path.insert(0, current)
+        current = current.parent
+    
+    # Получаем информацию о занятом месте на диске
+    used_space = StorageFile.objects.filter(user=request.user).aggregate(total_size=Sum('size'))
+    used_bytes = used_space['total_size'] or 0
+    used_mb = used_bytes / (1024 * 1024)
+    max_space_mb = 1024  # 1 ГБ
+    
+    context = {
+        'current_folder': folder,
+        'subfolders': subfolders,
+        'files': files,
+        'current_path': path,
+        'used_space': used_mb,
+        'max_space': max_space_mb,
+        'space_percent': (used_mb / max_space_mb) * 100 if max_space_mb > 0 else 0,
+    }
+    
+    return render(request, 'core/storage/folder_detail.html', context)
+
+
+@login_required
+def storage_favorites(request):
+    """Просмотр избранных файлов"""
+    favorite_files = StorageFile.objects.filter(user=request.user, is_favorite=True)
+    
+    # Получаем информацию о занятом месте на диске
+    used_space = StorageFile.objects.filter(user=request.user).aggregate(total_size=Sum('size'))
+    used_bytes = used_space['total_size'] or 0
+    used_mb = used_bytes / (1024 * 1024)
+    max_space_mb = 1024  # 1 ГБ
+    
+    context = {
+        'files': favorite_files,
+        'used_space': used_mb,
+        'max_space': max_space_mb,
+        'space_percent': (used_mb / max_space_mb) * 100 if max_space_mb > 0 else 0,
+        'is_favorites_page': True,
+    }
+    
+    return render(request, 'core/storage/favorites.html', context)
+
+
+@login_required
+@require_POST
+def create_folder(request):
+    """Создание новой папки"""
+    folder_name = request.POST.get('folder_name', '').strip()
+    parent_id = request.POST.get('parent_id')
+    
+    if not folder_name:
+        return JsonResponse({'status': 'error', 'message': 'Необходимо указать название папки'})
+    
+    # Проверяем, существует ли родительская папка (если указана)
+    parent = None
+    if parent_id:
+        try:
+            parent = StorageFolder.objects.get(id=parent_id, user=request.user)
+        except StorageFolder.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Родительская папка не найдена'})
+    
+    # Проверяем, существует ли папка с таким именем в этом каталоге
+    if StorageFolder.objects.filter(user=request.user, parent=parent, name=folder_name).exists():
+        return JsonResponse({'status': 'error', 'message': 'Папка с таким именем уже существует'})
+    
+    # Создаем новую папку
+    new_folder = StorageFolder.objects.create(
+        user=request.user,
+        parent=parent,
+        name=folder_name
+    )
+    
+    return JsonResponse({
+        'status': 'success',
+        'message': 'Папка успешно создана',
+        'folder': {
+            'id': new_folder.id,
+            'name': new_folder.name,
+            'created_at': new_folder.created_at.strftime('%d.%m.%Y %H:%M')
+        }
+    })
+
+
+@login_required
+@require_POST
+def upload_file(request):
+    """Загрузка файла в хранилище"""
+    if 'file' not in request.FILES:
+        return JsonResponse({'status': 'error', 'message': 'Файл не выбран'})
+    
+    uploaded_file = request.FILES['file']
+    folder_id = request.POST.get('folder_id')
+    
+    # Проверяем размер файла
+    max_size = 50 * 1024 * 1024  # 50 MB - максимальный размер файла
+    if uploaded_file.size > max_size:
+        return JsonResponse({'status': 'error', 'message': 'Размер файла превышает максимально допустимый (50 МБ)'})
+    
+    # Проверяем свободное место
+    used_space = StorageFile.objects.filter(user=request.user).aggregate(total_size=Sum('size'))['total_size'] or 0
+    max_space = 1024 * 1024 * 1024  # 1 GB
+    
+    if used_space + uploaded_file.size > max_space:
+        return JsonResponse({'status': 'error', 'message': 'Недостаточно места в хранилище'})
+    
+    # Проверяем папку, если указана
+    folder = None
+    if folder_id:
+        try:
+            folder = StorageFolder.objects.get(id=folder_id, user=request.user)
+        except StorageFolder.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Папка не найдена'})
+    
+    # Генерируем уникальное имя файла, если файл с таким именем уже существует
+    file_name = uploaded_file.name
+    base_name, ext = os.path.splitext(file_name)
+    
+    counter = 1
+    while StorageFile.objects.filter(user=request.user, folder=folder, name=file_name).exists():
+        file_name = f"{base_name}_{counter}{ext}"
+        counter += 1
+    
+    # Определяем тип файла
+    content_type, _ = mimetypes.guess_type(uploaded_file.name)
+    file_type = 'other'
+    
+    if content_type:
+        if content_type.startswith('image/'):
+            file_type = 'image'
+        elif content_type == 'application/pdf':
+            file_type = 'pdf'
+        elif content_type.startswith('application/vnd.ms-') or content_type.startswith('application/vnd.openxmlformats-'):
+            file_type = 'document'
+        elif content_type in ['application/zip', 'application/x-rar-compressed', 'application/x-gzip']:
+            file_type = 'archive'
+    
+    # Создаем файл в хранилище
+    new_file = StorageFile.objects.create(
+        user=request.user,
+        folder=folder,
+        name=file_name,
+        file=uploaded_file,
+        file_type=file_type,
+        size=uploaded_file.size
+    )
+    
+    return JsonResponse({
+        'status': 'success',
+        'message': 'Файл успешно загружен',
+        'file': {
+            'id': new_file.id,
+            'name': new_file.name,
+            'type': new_file.file_type,
+            'size': new_file.get_file_size_display(),
+            'created_at': new_file.created_at.strftime('%d.%m.%Y %H:%M')
+        }
+    })
+
+
+@login_required
+@require_POST
+def delete_file(request, file_id):
+    """Удаление файла из хранилища"""
+    file = get_object_or_404(StorageFile, id=file_id, user=request.user)
+    
+    # Сохраняем информацию о файле для ответа
+    file_info = {
+        'id': file.id,
+        'name': file.name
+    }
+    
+    # Удаляем файл
+    file.file.delete(save=False)
+    file.delete()
+    
+    return JsonResponse({
+        'status': 'success',
+        'message': 'Файл успешно удален',
+        'file': file_info
+    })
+
+
+@login_required
+@require_POST
+def delete_folder(request, folder_id):
+    """Удаление папки и всех ее содержимых"""
+    folder = get_object_or_404(StorageFolder, id=folder_id, user=request.user)
+    
+    # Рекурсивно удаляем все файлы из папки и ее подпапок
+    def delete_folder_contents(storage_folder):
+        # Удаляем все файлы в папке
+        for file in StorageFile.objects.filter(folder=storage_folder):
+            file.file.delete(save=False)
+            file.delete()
+        
+        # Рекурсивно удаляем все подпапки и их содержимое
+        for subfolder in StorageFolder.objects.filter(parent=storage_folder):
+            delete_folder_contents(subfolder)
+            subfolder.delete()
+    
+    # Сохраняем информацию о папке для ответа
+    folder_info = {
+        'id': folder.id,
+        'name': folder.name
+    }
+    
+    # Удаляем содержимое папки и саму папку
+    delete_folder_contents(folder)
+    folder.delete()
+    
+    return JsonResponse({
+        'status': 'success',
+        'message': 'Папка успешно удалена',
+        'folder': folder_info
+    })
+
+
+@login_required
+@require_POST
+def rename_folder(request, folder_id):
+    """Переименование папки"""
+    folder = get_object_or_404(StorageFolder, id=folder_id, user=request.user)
+    new_name = request.POST.get('name', '').strip()
+    
+    if not new_name:
+        return JsonResponse({'status': 'error', 'message': 'Необходимо указать новое имя папки'})
+    
+    # Проверяем, существует ли папка с таким именем на этом же уровне
+    if StorageFolder.objects.filter(user=request.user, parent=folder.parent, name=new_name).exclude(id=folder.id).exists():
+        return JsonResponse({'status': 'error', 'message': 'Папка с таким именем уже существует'})
+    
+    # Переименовываем папку
+    folder.name = new_name
+    folder.save()
+    
+    return JsonResponse({
+        'status': 'success',
+        'message': 'Папка переименована',
+        'folder': {
+            'id': folder.id,
+            'name': folder.name
+        }
+    })
+
+
+@login_required
+@require_POST
+def rename_file(request, file_id):
+    """Переименование файла"""
+    file = get_object_or_404(StorageFile, id=file_id, user=request.user)
+    new_name = request.POST.get('name', '').strip()
+    
+    if not new_name:
+        return JsonResponse({'status': 'error', 'message': 'Необходимо указать новое имя файла'})
+    
+    # Проверяем расширение файла
+    _, old_ext = os.path.splitext(file.name)
+    _, new_ext = os.path.splitext(new_name)
+    
+    # Если расширение изменилось или отсутствует в новом имени, добавляем старое расширение
+    if old_ext != new_ext:
+        new_name = f"{new_name}{old_ext}"
+    
+    # Проверяем, существует ли файл с таким именем в этой папке
+    if StorageFile.objects.filter(user=request.user, folder=file.folder, name=new_name).exclude(id=file.id).exists():
+        return JsonResponse({'status': 'error', 'message': 'Файл с таким именем уже существует'})
+    
+    # Переименовываем файл
+    file.name = new_name
+    file.save()
+    
+    return JsonResponse({
+        'status': 'success',
+        'message': 'Файл переименован',
+        'file': {
+            'id': file.id,
+            'name': file.name
+        }
+    })
+
+
+@login_required
+@require_POST
+def toggle_favorite(request, file_id):
+    """Добавление/удаление файла из избранного"""
+    file = get_object_or_404(StorageFile, id=file_id, user=request.user)
+    
+    # Изменяем статус избранного
+    file.is_favorite = not file.is_favorite
+    file.save()
+    
+    return JsonResponse({
+        'status': 'success',
+        'message': 'Статус избранного изменен',
+        'file': {
+            'id': file.id,
+            'name': file.name,
+            'is_favorite': file.is_favorite
+        }
+    })
+
+
+@login_required
+@require_POST
+def move_file(request, file_id):
+    """Перемещение файла в другую папку"""
+    file = get_object_or_404(StorageFile, id=file_id, user=request.user)
+    target_folder_id = request.POST.get('folder_id')
+    
+    # Если target_folder_id пустой - перемещаем в корневой каталог
+    target_folder = None
+    if target_folder_id:
+        target_folder = get_object_or_404(StorageFolder, id=target_folder_id, user=request.user)
+        
+        # Проверяем, существует ли файл с таким именем в целевой папке
+        if StorageFile.objects.filter(user=request.user, folder=target_folder, name=file.name).exists():
+            return JsonResponse({'status': 'error', 'message': 'Файл с таким именем уже существует в целевой папке'})
+    
+    # Перемещаем файл
+    file.folder = target_folder
+    file.save()
+    
+    return JsonResponse({
+        'status': 'success',
+        'message': 'Файл перемещен',
+        'file': {
+            'id': file.id,
+            'name': file.name,
+            'folder_id': target_folder.id if target_folder else None
+        }
+    })
+
+
+@login_required
+@require_POST
+def move_folder(request, folder_id):
+    """Перемещение папки в другую папку"""
+    folder = get_object_or_404(StorageFolder, id=folder_id, user=request.user)
+    target_folder_id = request.POST.get('target_folder_id')
+    
+    # Если target_folder_id пустой - перемещаем в корневой каталог
+    target_folder = None
+    if target_folder_id:
+        target_folder = get_object_or_404(StorageFolder, id=target_folder_id, user=request.user)
+        
+        # Проверяем, не пытаемся ли переместить папку внутрь самой себя или своих подпапок
+        current = target_folder
+        while current is not None:
+            if current.id == folder.id:
+                return JsonResponse({
+                    'status': 'error', 
+                    'message': 'Нельзя переместить папку внутрь самой себя или её подпапок'
+                })
+            current = current.parent
+        
+        # Проверяем, существует ли папка с таким именем в целевой папке
+        if StorageFolder.objects.filter(user=request.user, parent=target_folder, name=folder.name).exists():
+            return JsonResponse({
+                'status': 'error', 
+                'message': 'Папка с таким именем уже существует в целевой папке'
+            })
+    
+    # Перемещаем папку
+    folder.parent = target_folder
+    folder.save()
+    
+    return JsonResponse({
+        'status': 'success',
+        'message': 'Папка перемещена',
+        'folder': {
+            'id': folder.id,
+            'name': folder.name,
+            'parent_id': target_folder.id if target_folder else None
+        }
+    })
