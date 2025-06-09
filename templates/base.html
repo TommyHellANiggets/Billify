@@ -195,6 +195,7 @@
                         <li class="nav-item"><a href="{% url 'clients:list' %}" {% if '/clients/' in request.path or '/clients-suppliers/' in request.path %}class="active"{% endif %}>{% trans "Клиенты и поставщики" %}</a></li>
                         <li class="nav-item"><a href="{% url 'invoices:list' %}" {% if '/invoices/' in request.path %}class="active"{% endif %}>{% trans "Счета" %}</a></li>
                         <li class="nav-item"><a href="{% url 'analytics:dashboard' %}" {% if '/analytics/' in request.path %}class="active"{% endif %}>{% trans "Аналитика" %}</a></li>
+                        <li class="nav-item"><a href="{% url 'core:storage_home' %}" {% if '/storage/' in request.path %}class="active"{% endif %}>{% trans "Хранилище" %}</a></li>
                     </ul>
                 </nav>
                 {% else %}
@@ -339,6 +340,7 @@
                 <li class="nav-item"><a href="{% url 'clients:list' %}" {% if '/clients/' in request.path or '/clients-suppliers/' in request.path %}class="active"{% endif %}>{% trans "Клиенты и поставщики" %}</a></li>
                 <li class="nav-item"><a href="{% url 'invoices:list' %}" {% if '/invoices/' in request.path %}class="active"{% endif %}>{% trans "Счета" %}</a></li>
                 <li class="nav-item"><a href="{% url 'analytics:dashboard' %}" {% if '/analytics/' in request.path %}class="active"{% endif %}>{% trans "Аналитика" %}</a></li>
+                <li class="nav-item"><a href="{% url 'core:storage_home' %}" {% if '/storage/' in request.path %}class="active"{% endif %}>{% trans "Хранилище" %}</a></li>
                 <li class="nav-item"><a href="{% url 'core:profile' %}">{% trans "Профиль компании" %}</a></li>
                 <li class="nav-item"><a href="#" id="mobile-logout-btn">{% trans "Выйти" %}</a></li>
                 {% else %}

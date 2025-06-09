@@ -587,6 +587,9 @@ def invoice_pdf(request, pk):
         # Получаем компанию пользователя
         company_profile = None
         logo_url = None
+        logo_path = None
+        logo_data_uri = None
+        
         try:
             company_profile = request.user.company_profile
             print(f"Company profile found: {company_profile}")
@@ -595,6 +598,28 @@ def invoice_pdf(request, pk):
                 # Конвертируем относительный URL в абсолютный
                 current_site = get_current_site(request)
                 logo_url = f"{request.scheme}://{current_site.domain}{company_profile.logo.url}"
+                # Получаем абсолютный путь к файлу логотипа
+                from django.conf import settings
+                import os
+                import base64
+                import mimetypes
+                
+                logo_path = os.path.join(settings.MEDIA_ROOT, company_profile.logo.name)
+                
+                # Создаем data URI для изображения
+                try:
+                    with open(logo_path, 'rb') as img_file:
+                        logo_binary = img_file.read()
+                        logo_base64 = base64.b64encode(logo_binary).decode('utf-8')
+                        mime_type, _ = mimetypes.guess_type(logo_path)
+                        if not mime_type:
+                            mime_type = 'image/png'  # По умолчанию
+                        logo_data_uri = f"data:{mime_type};base64,{logo_base64}"
+                        print("Logo embedded as data URI")
+                except Exception as e:
+                    print(f"Error creating data URI for logo: {str(e)}")
+                
+                print(f"Logo path: {logo_path}")
                 print(f"Absolute logo URL: {logo_url}")
         except Exception as e:
             print(f"Error getting company profile: {str(e)}")
@@ -605,12 +630,14 @@ def invoice_pdf(request, pk):
             'invoice': invoice,
             'invoice_items': invoice.items.all(),
             'company_profile': company_profile,
-            'logo_url': logo_url
+            'logo_url': logo_url,
+            'logo_path': logo_path,
+            'logo_data_uri': logo_data_uri
         }
         
         # Использовать HTML для создания PDF
         from django.template.loader import get_template
-        from weasyprint import HTML
+        from weasyprint import HTML, CSS
         import tempfile
         from django.conf import settings
         import os
@@ -627,8 +654,18 @@ def invoice_pdf(request, pk):
         filename = f"invoice_{invoice.number.replace(' ', '_').replace('/', '_')}.pdf"
         response['Content-Disposition'] = f'attachment; filename="{filename}"'
         
-        # Генерируем PDF из HTML с указанием base_url для ресурсов
-        HTML(string=html_string, base_url=base_url).write_pdf(response)
+        # Генерируем PDF из HTML с улучшенной обработкой ресурсов
+        # Создаем временный HTML файл для лучшей обработки ресурсов
+        with tempfile.NamedTemporaryFile(suffix='.html', delete=False, mode='w+', encoding='utf-8') as tmp:
+            tmp.write(html_string)
+            tmp_path = tmp.name
+        
+        # Используем временный файл для генерации PDF
+        pdf = HTML(filename=tmp_path, base_url=base_url).write_pdf()
+        response.write(pdf)
+        
+        # Удаляем временный файл
+        os.unlink(tmp_path)
         
         return response
         

@@ -39,6 +39,15 @@
             margin: 0 auto;
             position: relative;
         }
+        /* Стиль для логотипа */
+        .company-logo {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .company-logo img {
+            max-height: 80px;
+            max-width: 200px;
+        }
         .doc-header {
             text-align: center;
             margin-bottom: 15px;
@@ -213,6 +222,21 @@
 <body>
     <div class="watermark">Сгенерированно через Flowfy.ru</div>
     <div class="container">
+        <!-- Логотип компании -->
+        {% if logo_data_uri %}
+        <div class="company-logo">
+            <img src="{{ logo_data_uri }}" alt="Логотип компании">
+        </div>
+        {% elif logo_path %}
+        <div class="company-logo">
+            <img src="file://{{ logo_path }}" alt="Логотип компании">
+        </div>
+        {% elif logo_url %}
+        <div class="company-logo">
+            <img src="{{ logo_url }}" alt="Логотип компании">
+        </div>
+        {% endif %}
+        
         <!-- Заголовок документа -->
         <div class="doc-header">
             <div class="doc-title">СЧЕТ</div>
