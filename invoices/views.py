@@ -5,8 +5,9 @@ from .models import Invoice, InvoiceItem
 from django.db.models import Max
 import re
 from django.contrib import messages
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from datetime import datetime, date, timedelta
+from django.utils import timezone
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
@@ -246,7 +247,8 @@ def get_next_invoice_number(user=None, invoice_type=None):
     else:
         # Если пользователь не указан, не можем гарантировать уникальность
         prefix = "Исх-" if invoice_type == "outgoing" else "Вход-"
-        return f'{prefix}Счёт№00001'
+        timestamp = timezone.now().strftime("%y%m%d%H%M%S")
+        return f'{prefix}Счёт№{timestamp}'
     
     # Если нужно, дополнительно фильтруем счета по типу
     if invoice_type:
@@ -255,35 +257,40 @@ def get_next_invoice_number(user=None, invoice_type=None):
     # Устанавливаем префикс в зависимости от типа счета
     prefix = "Исх-" if invoice_type == "outgoing" else "Вход-"
     
-    # Если у пользователя еще нет счетов этого типа, начинаем с номера 00001
+    # Если у пользователя еще нет счетов этого типа, начинаем с номера, включающего дату
     if not existing_invoices.exists():
-        return f'{prefix}Счёт№00001'
+        year_month = timezone.now().strftime("%y%m")
+        return f'{prefix}{year_month}-00001'
     
     # Извлекаем числовые части из всех номеров счетов этого пользователя
     existing_numbers = []
+    year_month = timezone.now().strftime("%y%m")
     
     for invoice in existing_invoices:
-        # Используем регулярное выражение, которое подходит для обоих форматов номеров
-        number_match = re.search(r'№(\d+)', invoice.number)
+        # Используем регулярное выражение для новых форматов номеров (с датой)
+        number_match = re.search(fr'{prefix}(\d+)-(\d+)', invoice.number)
         if number_match:
-            existing_numbers.append(int(number_match.group(1)))
+            invoice_month = number_match.group(1)
+            if invoice_month == year_month:
+                existing_numbers.append(int(number_match.group(2)))
+        else:
+            # Старый формат - используем для совместимости
+            number_match = re.search(r'№(\d+)', invoice.number)
+            if number_match:
+                existing_numbers.append(int(number_match.group(1)))
     
     if not existing_numbers:
-        return f'{prefix}Счёт№00001'
+        return f'{prefix}{year_month}-00001'
     
     # Сортируем номера
     existing_numbers.sort()
     
-    # Ищем первый пропущенный номер
-    expected_number = 1
-    for num in existing_numbers:
-        if num > expected_number:
-            # Нашли пропуск в последовательности
-            break
-        expected_number = num + 1
+    # Находим максимальный номер и увеличиваем на 1
+    max_number = max(existing_numbers) if existing_numbers else 0
+    next_number = max_number + 1
     
-    # Форматируем номер с ведущими нулями
-    return f'{prefix}Счёт№{expected_number:05d}'
+    # Форматируем номер с ведущими нулями, включая год и месяц
+    return f'{prefix}{year_month}-{next_number:05d}'
 
 @login_required
 def create_incoming(request):
@@ -344,6 +351,22 @@ def create_incoming(request):
             item_prices = request.POST.getlist('item_price[]')
             item_discounts = request.POST.getlist('item_discount[]')
             
+            # Получаем общую скидку и обрабатываем ее
+            discount = request.POST.get('discount', '0')
+            try:
+                discount_value = Decimal(discount.replace(',', '.'))
+            except (ValueError, InvalidOperation):
+                discount_value = Decimal('0')
+                
+            # Проверяем, существует ли счет с таким номером
+            if Invoice.objects.filter(number=invoice_number).exists():
+                # Если номер уже занят, генерируем новый номер
+                invoice_number = get_next_invoice_number(request.user, 'incoming')
+                # На всякий случай проверяем еще раз с добавлением timestamp
+                if Invoice.objects.filter(number=invoice_number).exists():
+                    current_time = timezone.now().strftime('%H%M%S')
+                    invoice_number = f"{invoice_number}-{current_time}"
+            
             # Создаем новый счет
             invoice = Invoice.objects.create(
                 number=invoice_number,
@@ -353,6 +376,7 @@ def create_incoming(request):
                 notes=notes,
                 payment_details=payment_details,
                 invoice_type='incoming',
+                discount=discount_value,
                 user=request.user,
                 client=client,
                 supplier_name=supplier.name,
@@ -377,13 +401,13 @@ def create_incoming(request):
             for i in range(len(item_names)):
                 if item_names[i].strip():  # Проверяем, что название не пустое
                     try:
-                        quantity = float(item_quantities[i].replace(',', '.')) if item_quantities[i] else 1
-                        price = float(item_prices[i].replace(',', '.')) if item_prices[i] else 0
-                        discount = float(item_discounts[i].replace(',', '.')) if i < len(item_discounts) and item_discounts[i] else 0
-                    except ValueError:
-                        quantity = 1
-                        price = 0
-                        discount = 0
+                        quantity = Decimal(item_quantities[i].replace(',', '.')) if item_quantities[i] else Decimal('1')
+                        price = Decimal(item_prices[i].replace(',', '.')) if item_prices[i] else Decimal('0')
+                        discount = Decimal(item_discounts[i].replace(',', '.')) if i < len(item_discounts) and item_discounts[i] else Decimal('0')
+                    except (ValueError, InvalidOperation):
+                        quantity = Decimal('1')
+                        price = Decimal('0')
+                        discount = Decimal('0')
                     
                     InvoiceItem.objects.create(
                         invoice=invoice,
@@ -496,11 +520,21 @@ def create_outgoing(request):
             item_prices = request.POST.getlist('item_price[]')
             item_discounts = request.POST.getlist('item_discount[]')
             
-            # Обрабатываем скидку
+            # Получаем общую скидку и обрабатываем ее
+            discount = request.POST.get('discount', '0')
             try:
-                discount_value = float(discount.replace(',', '.'))
-            except ValueError:
-                discount_value = 0
+                discount_value = Decimal(discount.replace(',', '.'))
+            except (ValueError, InvalidOperation):
+                discount_value = Decimal('0')
+            
+            # Проверяем, существует ли счет с таким номером
+            if Invoice.objects.filter(number=invoice_number).exists():
+                # Если номер уже занят, генерируем новый номер
+                invoice_number = get_next_invoice_number(request.user, 'outgoing')
+                # На всякий случай проверяем еще раз с добавлением timestamp
+                if Invoice.objects.filter(number=invoice_number).exists():
+                    current_time = timezone.now().strftime('%H%M%S')
+                    invoice_number = f"{invoice_number}-{current_time}"
             
             # Создаем новый счет
             invoice = Invoice.objects.create(
@@ -536,13 +570,13 @@ def create_outgoing(request):
             for i in range(len(item_names)):
                 if item_names[i].strip():  # Проверяем, что название не пустое
                     try:
-                        quantity = float(item_quantities[i].replace(',', '.')) if item_quantities[i] else 1
-                        price = float(item_prices[i].replace(',', '.')) if item_prices[i] else 0
-                        discount = float(item_discounts[i].replace(',', '.')) if i < len(item_discounts) and item_discounts[i] else 0
-                    except ValueError:
-                        quantity = 1
-                        price = 0
-                        discount = 0
+                        quantity = Decimal(item_quantities[i].replace(',', '.')) if item_quantities[i] else Decimal('1')
+                        price = Decimal(item_prices[i].replace(',', '.')) if item_prices[i] else Decimal('0')
+                        discount = Decimal(item_discounts[i].replace(',', '.')) if i < len(item_discounts) and item_discounts[i] else Decimal('0')
+                    except (ValueError, InvalidOperation):
+                        quantity = Decimal('1')
+                        price = Decimal('0')
+                        discount = Decimal('0')
                     
                     InvoiceItem.objects.create(
                         invoice=invoice,
@@ -863,25 +897,25 @@ def edit_invoice(request, pk):
                 
                 # Получаем общую скидку
                 try:
-                    discount = float(request.POST.get('discount', '0').replace(',', '.'))
-                except ValueError:
-                    discount = 0
+                    discount = Decimal(request.POST.get('discount', '0').replace(',', '.'))
+                except (ValueError, InvalidOperation):
+                    discount = Decimal('0')
                 
                 # Создаем новые позиции
-                subtotal = 0
+                subtotal = Decimal('0')
                 
                 for i in range(len(item_names)):
                     if item_names[i] and item_quantities[i] and item_prices[i]:
                         try:
-                            quantity = float(item_quantities[i].replace(',', '.'))
-                            price = float(item_prices[i].replace(',', '.'))
-                            item_discount = float(item_discounts[i].replace(',', '.')) if i < len(item_discounts) and item_discounts[i] else 0
+                            quantity = Decimal(item_quantities[i].replace(',', '.'))
+                            price = Decimal(item_prices[i].replace(',', '.'))
+                            item_discount = Decimal(item_discounts[i].replace(',', '.')) if i < len(item_discounts) and item_discounts[i] else Decimal('0')
                             amount = (quantity * price) - item_discount
-                        except ValueError:
-                            quantity = 1
-                            price = 0
-                            item_discount = 0
-                            amount = 0
+                        except (ValueError, InvalidOperation):
+                            quantity = Decimal('1')
+                            price = Decimal('0')
+                            item_discount = Decimal('0')
+                            amount = Decimal('0')
                         
                         invoice_item = InvoiceItem(
                             invoice=invoice,
@@ -898,8 +932,8 @@ def edit_invoice(request, pk):
                 
                 # Обновляем итоговые суммы
                 invoice.subtotal = subtotal
-                invoice.tax_rate = 20  # Можно сделать настраиваемым
-                invoice.tax_amount = subtotal * 0.20
+                invoice.tax_rate = Decimal('20')  # Можно сделать настраиваемым
+                invoice.tax_amount = subtotal * Decimal('0.20')
                 invoice.discount = discount
                 invoice.total = invoice.subtotal + invoice.tax_amount - invoice.discount
                 
@@ -966,10 +1000,10 @@ def sample_invoice_pdf(request):
         'supplier_bank_account': '40702810123450101230',
         'supplier_bank_corr_account': '30101810200000000593',
         'accountant_name': 'Иванова А.А.',
-        'subtotal': 10000.00,
-        'tax_rate': 20,
-        'tax_amount': 2000.00,
-        'total': 12000.00,
+        'subtotal': Decimal('10000.00'),
+        'tax_rate': Decimal('20'),
+        'tax_amount': Decimal('2000.00'),
+        'total': Decimal('12000.00'),
         'payment_info': 'Оплата данного счета означает согласие с условиями договора-оферты.',
         'client': {
             'name': 'ИП Петров Петр Петрович',
@@ -985,17 +1019,17 @@ def sample_invoice_pdf(request):
     invoice_items = [
         {
             'description': 'Разработка веб-сайта',
-            'quantity': 1,
+            'quantity': Decimal('1'),
             'unit': 'усл.',
-            'price': 8000.00,
-            'amount': 8000.00,
+            'price': Decimal('8000.00'),
+            'amount': Decimal('8000.00'),
         },
         {
             'description': 'Настройка и оптимизация',
-            'quantity': 2,
+            'quantity': Decimal('2'),
             'unit': 'час',
-            'price': 1000.00,
-            'amount': 2000.00,
+            'price': Decimal('1000.00'),
+            'amount': Decimal('2000.00'),
         },
     ]
     
